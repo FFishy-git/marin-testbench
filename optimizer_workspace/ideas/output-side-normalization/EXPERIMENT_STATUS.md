@@ -82,22 +82,52 @@ system-site access to the existing Torch environment. Installed
 `zstandard==0.25.0` there and verified imports of the preparation dependencies.
 The shared Torch/CUDA installation was not changed.
 
-Executed the pinned `reproduce.marin.prepare_data` entry point with 16
-workers and the designated PVC `data/` output. It exited with code 1 during
+The initial attempt executed the pinned `reproduce.marin.prepare_data` entry
+point with 16 workers and the designated PVC `data/` output. It exited with code 1 during
 tokenizer initialization: the pinned Llama repository returned HTTP 401.
-No prepared token shards were created. No HF credential or exact tokenizer
-cache was found on any of the four nodes.
+That failed attempt created no prepared token shards.
 
-Direct 1024-byte source-file probes returned HTTP 206 for DCLM and Proof-Pile,
+Initial 1024-byte source-file probes returned HTTP 206 for DCLM and Proof-Pile,
 and HTTP 401 for StarCoderData and Paloma C4. These probes check reachability;
-they do not prepare or verify the corpus. The CPU suite was rerun and all
-18 tests passed. GPU preflight still found the existing workloads occupying
-all 32 devices; no training smoke was launched.
+they do not prepare or verify the corpus.
 
 Failure log:
 `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/prepare-data-attempt-20261115.log`.
+
+After the user supplied a local HF credential and granted the gated access,
+all four required source-file probes returned HTTP 206. The pinned tokenizer
+download succeeded with SHA256
+`76e48799b099d43365bd24ccd8ecc5aedac831718da780552f03b0a6eb4412aa`.
+The first shard of every required component was prepared with Toner's unchanged
+code and verified:
+
+| Component | Tokens | Documents |
+| --- | ---: | ---: |
+| DCLM | 10,971,222 | 9,472 |
+| StarCoder | 433,522 | 64 |
+| Proof-Pile | 254,590 | 128 |
+| Paloma C4 | 186,085 | 435 |
+
+Full preparation started on 2026-11-15 for all 2,876 pinned shards
+(101,782,148,820 bytes of token files). It was increased from 32 to 96 CPU
+workers after stopping the initial preparation process and preserving its
+verified shards. It is still running.
+`experiment.prepare` loads only `HF_TOKEN` from the local credential file,
+holds an output lock, and calls the unchanged upstream preparation entry point.
+It checks the complete plan and creates the training/C4 content receipt only
+after successful preparation. Partial data cannot authorize training.
+The CPU suite was rerun and all 18 tests passed. No GPU smoke has run.
+
+Current evidence under the PVC output root:
+
+- `run-preparation/access.json`
+- `run-preparation/source-file-access.json`
+- `run-preparation/first-shards.json`
+- `run-preparation/preparation-state.json`
+- `run-preparation/prepare-full-96workers-20261115.log`
+
 Authentication, isolated-environment, preparation, and verification commands
-are in `experiment/README.md`.
+are in `experiment/README.md`. Credentials are not in the evidence or Git.
 
 ## Launch Blockers
 
@@ -106,12 +136,9 @@ No experiment training has started.
 1. All 32 A100-SXM4-40GB GPUs are occupied at 100% utilization by the existing
    `hy_infuse_moe/gpu_matmul.py` workload. It has not been stopped. Owner
    confirmation is required before releasing these processes.
-2. The working proxy reaches Hugging Face, but the exact pinned Llama
-   tokenizer request returns HTTP 401 without authorized access. No approved
-   exact prepared-data directory has been supplied. The datasets/tokenizer
-   have not been substituted.
-   StarCoderData and Paloma also report automatic gating. The PVC access
-   receipt records the resolved full dataset revisions and HTTP status.
+2. Access is resolved and full preparation is running. The exact data receipt
+   is still pending; the first four verified shards are insufficient for
+   training. No datasets, revisions, or tokenizer have been substituted.
 3. GPU cotangent tests, NCCL statistics parity, A100 FA2, compiled full-model
    checks, four-arm real-data smoke, memory fit, and GPU checkpoint
    continuation remain pending. The validation receipt marks these false,
@@ -119,11 +146,11 @@ No experiment training has started.
 
 ## Next Actions
 
-After workload release and approved data access:
-
-1. Prepare the pinned data once and verify names, token/document counts,
-   token-ID range, and SHA256 receipts. Record full dataset revisions.
-   Use the prepared task-specific `.venv-data` environment.
+1. Await the existing preparation job. It verifies names, token/document counts,
+   token-ID range, and SHA256 receipts automatically. Confirm
+   `run-preparation/preparation-state.json` records `status: complete` and
+   `data/experiment_receipt.json` exists. Do not start a duplicate job.
+   Release only the identified GPU keepers after owner confirmation.
 2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
    candidate down updates with an independent FP32 matrix reference.
 3. Run full-model/context real-data three-update smoke for all first-wave arms.

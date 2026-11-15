@@ -6,3 +6,4 @@ huggingface-hub==0.36.2
 pyarrow==26.0.1
 pytest==9.0.3
 zstandard==0.25.0
+python-dotenv==1.2.1

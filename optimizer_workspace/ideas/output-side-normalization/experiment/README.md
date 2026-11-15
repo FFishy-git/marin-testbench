@@ -10,9 +10,10 @@ Implemented first-stage arms: Muon, input MuonT, outer-left down,
 inner+outer down, and down hybrid. Later controls, full Bi-MuonT, larger
 models, and bounded tuning are planned extensions.
 
-Run commands from this task directory. Use the existing Torch environment:
+Run commands from the parent of `experiment/`. Use the existing Torch environment:
 
 ```bash
+cd /root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
   python -m experiment.bootstrap --check-only
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
@@ -27,8 +28,9 @@ never overwritten. The large source artifacts remain outside Git.
 Prepare the exact data with the pinned script after authorized Hugging Face
 access is configured. Accept access terms for
 `meta-llama/Meta-Llama-3.1-8B`, `bigcode/starcoderdata`, and `allenai/paloma`
-using the account associated with the credential. Enter credentials only in
-the local interactive login prompt, never in tracked files or experiment logs.
+using the account associated with the credential. The preparation wrapper loads
+only `HF_TOKEN` from the designated local `.env` file. It does not export the
+GitHub or W&B credentials. Never put credentials in tracked files or logs.
 The source caches and token files are large. The script does not change
 tokenizer or skip count checks.
 
@@ -36,7 +38,6 @@ tokenizer or skip count checks.
 export HTTPS_PROXY=http://star-proxy.oa.com:3128
 export HTTP_PROXY=http://star-proxy.oa.com:3128
 export ALL_PROXY=http://star-proxy.oa.com:3128
-/opt/conda/envs/torch-base/bin/hf auth login
 ```
 
 The task-specific preparation environment is on the approved PVC. It inherits
@@ -48,26 +49,32 @@ was not modified.
 ROOT=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization
 uv venv --system-site-packages --python /opt/conda/envs/torch-base/bin/python \
   "$ROOT/.venv-data"
-uv pip install --python "$ROOT/.venv-data/bin/python" zstandard==0.25.0
+uv pip install --python "$ROOT/.venv-data/bin/python" \
+  zstandard==0.25.0 python-dotenv==1.2.1
 ```
 
 For the existing environment, skip creation and proceed with:
 
 ```bash
 ROOT=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization
-export PYTHONPATH="$PWD/artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c"
 uv run --no-project --python "$ROOT/.venv-data/bin/python" \
-  python -m reproduce.marin.prepare_data --out "$ROOT/data" --workers 16
-uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
-  python -m experiment.data_access --data "$ROOT/data" \
+  python -m experiment.prepare --out "$ROOT/data" --workers 96 \
+  --env-file /root/dl/runtime/script/.env \
+  --proxy http://star-proxy.oa.com:3128 \
+  --state "$ROOT/run-preparation/preparation-state.json" \
   --receipt "$ROOT/data/experiment_receipt.json"
 ```
 
 The inspected versions are recorded in `experiment/requirements.txt`.
-The preparation attempt on 2026-11-15 failed during tokenizer initialization
-with HTTP 401 before any token shards were created. Direct source-file probes
-returned HTTP 206 for DCLM and Proof-Pile, and HTTP 401 for StarCoderData and
-Paloma C4. Repository metadata access alone does not establish file access.
+After access was granted on 2026-11-15, direct source-file requests returned
+HTTP 206 for all four required components. The first shard of DCLM, StarCoder,
+Proof-Pile and Paloma C4 was prepared and verified against the pinned counts.
+The wrapper calls Toner's unchanged preparation entry point, reuses only
+verified existing shards, checks all 2,876 shards, then creates the full
+training/C4 content receipt. A per-output filesystem lock prevents duplicate
+preparation jobs. The state file records the PID and lifecycle; only
+`status: complete` establishes successful preparation and verification.
+Partial shards and access probes cannot authorize training.
 
 A single-node execution check uses the full model/context and reference
 schedule; `--max-steps` is an early-stop execution check.
@@ -84,6 +91,9 @@ Checkpoint directories have one atomic file per rank and a `complete.json`
 receipt written only after all ranks finish saving. Resume requires the
 original configuration/world size. Saved state includes input bases and
 output roots, avoiding an implicit root reset.
+The execution check saves at its final update, so the command above creates
+`checkpoints/step_000002`. `--max-steps` is a total update limit; resuming that
+checkpoint with `--max-steps 3` executes one additional update.
 Checkpoint identities also bind source hashes, the full configuration, and
 the prepared-data receipt. A resume refuses mismatched identities before
 loading weights; changing source code requires a separately reviewed migration.
@@ -98,7 +108,10 @@ loading weights; changing source code requires a separately reviewed migration.
   --max-steps 3
 ```
 
-Preflight is read-only and records GPU occupancy on all four nodes:
+CPU validation and launch preflight do not stop or replace running workloads.
+Deployment copies task-owned files to workers and may update files that match
+the previous deployment receipt. The launch preflight records GPU occupancy on
+all four nodes:
 
 ```bash
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
@@ -140,6 +153,9 @@ post-warmup root-state continuation.
 The numerical probe waits for pending host refreshes between updates so
 thread scheduling does not change which bases are ready at the next update.
 Production retains Toner's asynchronous host-refresh pipeline.
+This probe establishes continuation of saved numerical state with controlled
+refresh readiness. It does not establish bitwise production trajectories when
+asynchronous host refreshes become ready at different updates.
 CUDA graph objects are process-local. Resume retains the saved EMAs, bases,
 tolerances, momenta, output roots, and pending host refreshes, then performs
 one eager root warmup before capturing fresh graphs. The cached-root
