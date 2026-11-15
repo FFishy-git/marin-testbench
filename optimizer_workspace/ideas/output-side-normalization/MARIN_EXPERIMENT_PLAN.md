@@ -312,10 +312,27 @@ Triton, driver, attention implementation, source hashes, and GPU model.
 Initial environment inspection found Torch 2.10.0/CUDA 12.9; this is not a
 claim of parity with the README's integration-check environment.
 
+The 2026-11-15 A100 correctness checks required FP32 root products and
+upstream per-matrix Newton-Schulz for candidate down updates. Split-precision
+products and batched BF16 NS exceeded the existing parity tolerance.
+Non-down updates retain the pinned fast backend. Record the extra candidate
+launch overhead in throughput comparisons. Disable only the optional TCCL
+Inspector instrumentation with `NCCL_INSPECTOR_ENABLE=0`; it caused SIGILL
+during NCCL initialization. Record this setting in validation and launch
+receipts, with model compilation and root CUDA graphs still enabled.
+
 If microbatch 8 exceeds 40 GB, reduce it identically across all arms and
 increase accumulation to preserve global batch. This is a recorded runtime
 adaptation requiring gradient/statistic parity tests. Do not change model,
 context, token budget, or data to get around memory pressure.
+
+The first full-model smoke on 2026-11-15 exhausted A100 memory during
+compiled-head autotuning at microbatch 8 (7.83 GiB requested with 7.72 GiB
+free). The active generated configs therefore use microbatch 4 for every arm.
+At 0.5M batch this means accumulation 4, world size 8, and global batch
+128 sequences. The GPU microbatch-partition gradient/statistic check passed.
+The reference microbatch values above remain the author recipe; these active
+configs are a documented A100 runtime adaptation.
 
 ## Output Statistic and Update Definitions
 

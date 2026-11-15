@@ -29,7 +29,7 @@ def configuration(arm, batch, seed, microbatch):
         "checkpoint_every": 250,
         "diagnostic_every": 250,
         "expected_model_parameters": 265585152,
-        "hardware_adaptation": "A100 FA2; reference world size 8",
+        "hardware_adaptation": f"A100 FA2; world size 8; microbatch {microbatch}, global batch unchanged",
     }
     total = microbatch * config["training"]["world_size"]
     if config["training"]["global_batch_sequences"] % total:

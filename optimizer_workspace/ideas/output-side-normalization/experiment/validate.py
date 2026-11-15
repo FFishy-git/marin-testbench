@@ -15,7 +15,7 @@ from reproduce.marin.model import Model
 
 from .bootstrap import verify_snapshot
 from .data_access import require_receipt
-from .launch import OUTPUT_ROOT, WAVE
+from .launch import ENVIRONMENT, OUTPUT_ROOT, WAVE
 from .records import atomic_json, compare_continuation, sha256, utc_now
 from .reference import TASK, UPSTREAM
 
@@ -41,6 +41,7 @@ def main():
     count = sum(parameter.numel() for parameter in model.parameters())
     receipt = {
         "time": utc_now(),
+        "environment": ENVIRONMENT,
         "source_sha256": {
             str(path.relative_to(TASK)): sha256(path) for path in sorted((TASK / "experiment").rglob("*.py"))
         },
@@ -56,6 +57,7 @@ def main():
             "checkpoint_continuation": False,
             "gpu_down_updates": False,
             "cached_root_continuation": False,
+            "microbatch_partition": False,
         },
         "evidence": {
             "cpu_test_command": result.args,
@@ -88,7 +90,9 @@ def main():
 
     def execute(command, log):
         with log.open("x") as stream:
-            status = subprocess.run(command, cwd=TASK, stdout=stream, stderr=subprocess.STDOUT).returncode
+            status = subprocess.run(
+                command, cwd=TASK, stdout=stream, stderr=subprocess.STDOUT, env={**os.environ, **ENVIRONMENT}
+            ).returncode
         record = {"command": command, "log": str(log), "exit_code": status, "log_sha256": sha256(log)}
         receipt["evidence"]["gpu_commands"].append(record)
         atomic_json(args.receipt, receipt)
@@ -102,7 +106,14 @@ def main():
         args.work / "gpu_checks.log",
     )
     checked = json.loads(gpu_receipt.read_text())
-    for name in ("gpu_collector", "distributed_statistics", "fa2", "gpu_down_updates", "cached_root_continuation"):
+    for name in (
+        "gpu_collector",
+        "distributed_statistics",
+        "fa2",
+        "gpu_down_updates",
+        "cached_root_continuation",
+        "microbatch_partition",
+    ):
         receipt["checks"][name] = checked["checks"][name]
     receipt["evidence"]["gpu_receipt"] = str(gpu_receipt)
     smoke_records = {}

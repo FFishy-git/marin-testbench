@@ -151,27 +151,44 @@ are in `experiment/README.md`. Credentials are not in the evidence or Git.
 
 ## Launch Blockers
 
-No experiment training has started.
+No full-budget experiment training has started. The owner confirmed keeper
+release on 2026-11-15. Only the four verified keeper parents were sent
+SIGTERM; all 32 GPUs became idle. The release receipt is
+`run-preparation/keeper-release-20261115.json` under the PVC output root.
 
-1. All 32 A100-SXM4-40GB GPUs are occupied at 100% utilization by the existing
-   `hy_infuse_moe/gpu_matmul.py` workload. It has not been stopped. Owner
-   confirmation is required before releasing these processes.
-2. GPU cotangent tests, NCCL statistics parity, A100 FA2, compiled full-model
-   checks, four-arm real-data smoke, memory fit, and GPU checkpoint
-   continuation remain pending. The validation receipt marks these false,
-   and the launcher refuses a full wave.
+The synthetic two-rank GPU checks passed: compiled cotangent transparency
+and independent sums, unequal-count NCCL pooling, FA2, down-update equations
+in FP32 and configured BF16-input/FP32-output NS, compiled hybrid body parity,
+and cached-root checkpoint continuation after 22 updates with CUDA graphs.
+Evidence is in `validation/attempt_20261115_1348/gpu_checks.json` and its log
+under the PVC output root.
+
+The initial communicator initialization failed with SIGILL in the optional
+TCCL Inspector plugin. Validation and launch now record
+`NCCL_INSPECTOR_ENABLE=0`; NCCL and root CUDA graphs remain enabled.
+Candidate down updates now use FP32 root products and upstream per-matrix
+NS because split-product/batched BF16 updates exceeded the existing parity
+tolerance. Compiled transparency probes compare compiled reference paths to
+avoid conflating compiler BF16 rounding with collector changes.
+
+Eight-rank full-model real-data smoke, memory fit, and full-model continuation
+remain pending. The launcher still refuses a full wave until they pass.
+
+The first Muon full-model attempt exhausted A100 memory during compiled-head
+autotuning at microbatch 8. All 20 active configs now use microbatch 4 and
+preserve their original global batches and token budgets. The 0.5M first wave
+uses accumulation 4 on eight GPUs. All synthetic GPU gates, including the
+added partition gradient/statistic check, passed again in
+`validation/attempt_20261115_1353/gpu_checks.json`. Full-model checks are running
+under the adapted configs.
 
 Data access, full preparation, and data verification are resolved.
 No datasets, revisions, or tokenizer have been substituted.
 
 ## Next Actions
 
-1. Release only the identified GPU keepers after owner confirmation.
-   The preparation job is complete; do not launch another preparation job.
-2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
-   candidate down updates with Toner's per-matrix reference in both FP32 and
-   the configured BF16-input/FP32-output Newton-Schulz mode. These checks
-   are implemented but remain unexecuted.
+1. Reuse the completed prepared corpus and released GPUs.
+2. Preserve the passing synthetic GPU checks when their source inputs match.
 3. Run full-model/context real-data three-update smoke for all first-wave arms.
    Measure memory and lower microbatch identically only if required.
 4. Compare uninterrupted and resumed GPU trajectories, including input bases,

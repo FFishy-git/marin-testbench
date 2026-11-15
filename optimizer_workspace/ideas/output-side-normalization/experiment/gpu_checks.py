@@ -45,13 +45,16 @@ def test_collector(device):
         fullgraph=True,
         mode="max-autotune-no-cudagraphs",
     )
+    # Match compiled BF16 weight-gradient accumulation on the unobserved path.
+    unobserved = torch.compile(plain, fullgraph=True, mode="max-autotune-no-cudagraphs")
     expected_sum = torch.zeros_like(sums)
     for _ in range(2):
         x = torch.randn(2, 16, 256, device=device)
         target = torch.randn(2, 16, 256, device=device)
         with torch.autocast("cuda", dtype=torch.bfloat16):
             value = observed(x)
-            reference = plain(x)
+            reference = unobserved(x)
+        torch.testing.assert_close(value, reference, rtol=1e-5, atol=1e-5)
         ((value.float() - target).square().sum() / scale).backward()
         ((reference.float() - target).square().sum() / scale).backward()
         # Gradients through BF16 output are rounded before the collector sees them.
@@ -118,6 +121,39 @@ def test_attention(device):
     expected_grad = torch.autograd.grad(expected, (q, k, v), gradient)
     for actual_value, expected_value in zip(actual_grad, expected_grad, strict=True):
         torch.testing.assert_close(actual_value, expected_value, rtol=0.02, atol=0.02)
+
+
+def test_microbatch_partition(device):
+    torch.manual_seed(43)
+    x = torch.randn(16, 16, 256, device=device)
+    cotangent = torch.randn_like(x).to(torch.bfloat16)
+    weight = torch.randn(256, 256, device=device) * 0.05
+    results = []
+    for micro in (8, 4):
+        linear = nn.Linear(256, 256, bias=False).to(device)
+        with torch.no_grad():
+            linear.weight.copy_(weight)
+        sums = torch.zeros(256, 256, device=device)
+        count = torch.zeros((), dtype=torch.int64, device=device)
+        positions = torch.tensor([0, 2, 7, 15], device=device)
+        accumulation = 16 // micro
+        scale = torch.tensor(float(16 * 16), device=device)
+        observed = torch.compile(
+            OutputLinear(linear, sums, count, positions, scale),
+            fullgraph=True,
+            mode="max-autotune-no-cudagraphs",
+        )
+        for start in range(0, 16, micro):
+            with torch.autocast("cuda", dtype=torch.bfloat16):
+                value = observed(x[start : start + micro])
+            loss = (value.float() * cotangent[start : start + micro].float()).sum() / (micro * 16)
+            (loss / accumulation).backward()
+        results.append((linear.weight.grad.clone(), sums.clone(), count.clone()))
+    for actual, expected in zip(results[1], results[0], strict=True):
+        torch.testing.assert_close(actual, expected, rtol=1e-5, atol=1e-3)
+    rows = cotangent[:, positions].reshape(-1, 256).float()
+    torch.testing.assert_close(results[1][1], rows.mT @ rows, rtol=1e-5, atol=1e-3)
+    assert results[1][2].item() == 64
 
 
 def test_down_matrix_updates(device):
@@ -193,12 +229,13 @@ def test_compiled_body(device):
     output = OutputMoments(candidate, positions, OutputSettings(), world=1, rank=0, device=device)
     output.begin(64)
     compiled = torch.compile(candidate.body, mode="max-autotune-no-cudagraphs", fullgraph=True)
+    pinned_body = torch.compile(reference.body, mode="max-autotune-no-cudagraphs", fullgraph=True)
     tokens = np.arange(64, dtype=np.uint32).reshape(1, 64)
     tok, _, cu, meta = pack(tokens, 34, EOS=128001)
     tok, cu = tok.to(device), cu.to(device)
     with torch.autocast("cuda", dtype=torch.bfloat16):
         actual = compiled(tok, cu, meta)
-        expected = reference.body(tok, cu, meta)
+        expected = pinned_body(tok, cu, meta)
     torch.testing.assert_close(actual, expected, rtol=0.02, atol=0.02)
     actual.float().square().mean().backward()
     expected.float().square().mean().backward()
@@ -334,6 +371,7 @@ def main():
     try:
         for name, check in (
             ("gpu_collector", lambda: test_collector(device)),
+            ("microbatch_partition", lambda: test_microbatch_partition(device)),
             ("distributed_statistics", lambda: test_distributed_moments(device, world, rank)),
             ("fa2", lambda: test_attention(device)),
             ("gpu_down_updates", lambda: test_down_matrix_updates(device)),

@@ -5,6 +5,7 @@
 
 import argparse
 import json
+import os
 import shlex
 import subprocess
 from pathlib import Path
@@ -17,6 +18,7 @@ NODES = tuple(CLUSTER["nodes"])
 WAVE = tuple(CLUSTER["wave"])
 PYTHON = CLUSTER["python"]
 OUTPUT_ROOT = Path(CLUSTER["output_root"])
+ENVIRONMENT = CLUSTER["environment"]
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=10"]
 
 
@@ -124,6 +126,8 @@ def main():
         blockers.append("GPU/distributed/full-model smoke/continuation validation receipt is missing")
     else:
         receipt = json.loads(args.validation_receipt.read_text())
+        if receipt.get("environment") != ENVIRONMENT:
+            blockers.append("Validation used different cluster runtime settings")
         expected = {str(p.relative_to(TASK)): sha256(p) for p in sorted((TASK / "experiment").rglob("*.py"))}
         if receipt["source_sha256"] != expected:
             blockers.append("Validation receipt is stale for the current experiment code")
@@ -141,6 +145,7 @@ def main():
                 "checkpoint_continuation",
                 "gpu_down_updates",
                 "cached_root_continuation",
+                "microbatch_partition",
             )
         ):
             blockers.append("Required numerical and real-data checks have not all passed")
@@ -151,7 +156,7 @@ def main():
         for execution in receipt.get("evidence", {}).get("gpu_commands", []):
             if execution["exit_code"] != 0 or sha256(Path(execution["log"])) != execution["log_sha256"]:
                 blockers.append("Validation command evidence failed or changed")
-    report = {"time": utc_now(), "nodes": reports, "blockers": blockers, "launches": []}
+    report = {"time": utc_now(), "environment": ENVIRONMENT, "nodes": reports, "blockers": blockers, "launches": []}
     args.report.parent.mkdir(parents=True, exist_ok=True)
     atomic_json(args.report, report)
     print(json.dumps(report, indent=2), flush=True)
@@ -211,8 +216,13 @@ def start_local(config, data, receipt, out):
             stdout=stream,
             stderr=subprocess.STDOUT,
             start_new_session=True,
+            env={**os.environ, **ENVIRONMENT},
         )
-    print(json.dumps({"pid": process.pid, "log": str(log), "out": str(out), "command": command}))
+    print(
+        json.dumps(
+            {"pid": process.pid, "log": str(log), "out": str(out), "command": command, "environment": ENVIRONMENT}
+        )
+    )
 
 
 if __name__ == "__main__":

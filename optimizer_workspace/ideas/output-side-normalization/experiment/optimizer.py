@@ -14,11 +14,11 @@ from toner.fast.engine import FastTonerCore, gather_uneven
 
 
 def accurate_right(matrix, root):
-    return PR.apply16_raw(matrix, PR.rows_lo(root))
+    return matrix @ root
 
 
 def accurate_left(root, matrix):
-    return accurate_right(matrix.mT, root.mT).mT
+    return root @ matrix
 
 
 def down_update(
@@ -46,7 +46,10 @@ def down_update(
         source = right_product(source, right_inner)
         if arm == "inner_outer_down":
             source = left_product(left_inner, source)
-    direction = MU.newton_schulz_batched(source, args.muon_ns_steps, args.muon_eps, args.muon_ns_mode)
+    # BF16 NS amplifies small GEMM differences; preserve the per-matrix reference.
+    direction = torch.stack(
+        [MU.newton_schulz(matrix, args.muon_ns_steps, args.muon_eps, args.muon_ns_mode) for matrix in source]
+    )
     if arm == "down_hybrid":
         decay = left_product(left_outer, left_product(left_outer, weight))
     else:

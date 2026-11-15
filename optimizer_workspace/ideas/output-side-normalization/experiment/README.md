@@ -154,8 +154,15 @@ comparison includes model, auxiliary optimizer, fast input state, output
 moments/roots, data position, and RNG state. A failure preserves command logs
 and leaves the corresponding launch gates pending.
 Down-update checks cover FP32 and the configured BF16-input/FP32-output
-Newton-Schulz mode, using Toner's per-matrix routine as the reference for the
-candidate's batched implementation. Both modes use the same update tolerance.
+Newton-Schulz mode, using Toner's per-matrix routine as the reference.
+Candidate down updates use FP32 root products and per-matrix Newton-Schulz:
+the initial split-product/batched implementation exceeded the existing BF16
+parity tolerance on A100. This increases launch overhead for candidate down
+updates; include that cost in throughput comparisons. Non-down input updates
+retain the pinned fast backend. Both modes use the same update tolerance.
+Collector and body transparency checks compare compiled observed and
+compiled unobserved paths; eager BF16 accumulation differs from compiled
+accumulation. The collector also has an independent raw-cotangent reference.
 The synthetic continuation probe separately runs 24 optimizer updates with
 the configured 20-update exact-root startup, saves after update 22, and
 compares a restored two-update continuation. It requires that cached-root
@@ -184,6 +191,21 @@ the current data receipt, and source/configuration hashes.
 `experiment/cluster.json` records the four nodes
 and the approved PVC output root. Outputs default to
 `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/runs/wave0`.
+
+The cluster runtime sets `NCCL_INSPECTOR_ENABLE=0` for validation and training.
+The optional TCCL Inspector plugin caused SIGILL during communicator
+initialization on these nodes; disabling its instrumentation allowed a GPU
+all-reduce and the two-rank numerical checks to pass. NCCL communication,
+model compilation, and root CUDA graphs remain enabled. The launcher records
+these environment settings and requires the validation receipt to match.
+Direct `torchrun` invocations on this cluster also need that environment setting.
+
+The active generated configs use microbatch 4 across all arms. Microbatch 8
+exhausted the A100 40GB memory during full-model compiled-head autotuning.
+Global batches, schedules, contexts, model dimensions, and token budgets are
+unchanged; the 0.5M configs accumulate four microbatches on each of eight GPUs.
+The synthetic GPU partition check compares gradients and collected output
+statistics for the two partitions and checks the independent raw moment.
 
 ```bash
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \

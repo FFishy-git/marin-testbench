@@ -15,7 +15,7 @@
   },
   "training": {
     "global_batch_sequences": 256,
-    "micro_batch_size": 8,
+    "micro_batch_size": 4,
     "steps": 2560,
     "world_size": 8,
     "heldout_windows": 64,
@@ -84,6 +84,6 @@
     "checkpoint_every": 250,
     "diagnostic_every": 250,
     "expected_model_parameters": 265585152,
-    "hardware_adaptation": "A100 FA2; reference world size 8"
+    "hardware_adaptation": "A100 FA2; world size 8; microbatch 4, global batch unchanged"
   }
 }
