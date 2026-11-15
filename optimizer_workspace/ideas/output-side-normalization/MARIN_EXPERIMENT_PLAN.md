@@ -142,7 +142,10 @@ The access probe resolved these commits on 2026-11-15:
 | Paloma | `65cd6fc59dba021b21db414fa5e8d7765ffbe5e6` |
 
 StarCoderData and Paloma report automatic gating; readable repository metadata
-does not establish source-file access. The exact tokenizer still returned 401.
+does not establish source-file access. After authorized access was granted on
+2026-11-15, the pinned tokenizer download and source-file probes for all four
+required components succeeded. Full corpus preparation and verification are
+still in progress.
 The weights normalize approximately to 92.5700%, 6.0901%, and 1.3398%.
 The actual loader uses 2048-sequence mixture blocks, integer allocation,
 and remainder correction: 1897 DCLM, 124 code, and 27 math windows per block.
@@ -183,8 +186,11 @@ new shard, new tokenizer, or substitute dataset is allowed in the main
 comparison. C4 is an evaluation corpus here.
 
 Access prerequisites: authorized Hugging Face access to the tokenizer and
-any gated data, or an approved exact prepared-data directory. Initial
-tokenizer access returned HTTP 401 and no configured HF token was found.
+any gated data, or an approved exact prepared-data directory. The initial
+HTTP 401 was resolved with the supplied local HF credential and access grants.
+The preparation wrapper loads only that credential, writes new shards to
+local scratch, copies them to the approved PVC, and verifies the complete plan
+before issuing a training content receipt.
 Do not silently replace the tokenizer to work around this prerequisite.
 
 ## Objective and Evaluation
@@ -555,8 +561,8 @@ The four-node launcher must refuse training until:
 - a real-data smoke run succeeds with no nonfinite values or OOM;
 - checkpoint save/restore is validated.
 
-Initial blockers are occupied GPUs and unavailable authorized tokenizer
-access. Implementation can proceed while these prerequisites are resolved.
+Current prerequisites are full prepared-data verification and release of the
+identified GPU keepers with owner approval. Tokenizer/source access is resolved.
 Synthetic data may be used only for labeled correctness checks; it cannot
 be reported as the Marin experiment.
 
