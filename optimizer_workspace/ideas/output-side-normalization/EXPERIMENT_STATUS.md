@@ -20,11 +20,16 @@ Updated: 2026-11-15.
 - Added a clean-checkout bootstrap with archive and 112-file source hash
   verification, an A100/NCCL validation driver, and real-data smoke and
   checkpoint-continuation orchestration. These accelerator checks are pending.
-- Created the GitHub tracking branch `output-side-normalization-marin`.
-  Publication is pending the current lint/commit pass.
+- Published the implementation to `FFishy-git/marin-testbench`, branch
+  `output-side-normalization-marin`, commit
+  `280d40ed7302e77a7117774de219832dc10ca244`. Remote-ref and commit-pinned
+  file retrieval both verified publication.
 - Created the approved PVC output directories under
   `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
   Deployment receipts identify each source version; redeploy after edits.
+- Deployed the current 154-file task snapshot to all three workers.
+  Final preflight verified matching experiment source/configuration hashes
+  on all four nodes.
 
 ## Executed Verification
 
@@ -69,6 +74,8 @@ No experiment training has started.
    tokenizer request returns HTTP 401 without authorized access. No approved
    exact prepared-data directory has been supplied. The datasets/tokenizer
    have not been substituted.
+   StarCoderData and Paloma also report automatic gating. The PVC access
+   receipt records the resolved full dataset revisions and HTTP status.
 3. GPU cotangent tests, NCCL statistics parity, A100 FA2, compiled full-model
    checks, four-arm real-data smoke, memory fit, and GPU checkpoint
    continuation remain pending. The validation receipt marks these false,
