@@ -75,6 +75,30 @@ Current access and validation receipts are also written under the PVC
 `output-side-normalization/run-preparation/` directory. The source bootstrap
 passed a fresh temporary extraction and verified all 112 pinned files.
 
+## Data Preparation Attempt
+
+On 2026-11-15, created `.venv-data` under the approved PVC output root with
+system-site access to the existing Torch environment. Installed
+`zstandard==0.25.0` there and verified imports of the preparation dependencies.
+The shared Torch/CUDA installation was not changed.
+
+Executed the pinned `reproduce.marin.prepare_data` entry point with 16
+workers and the designated PVC `data/` output. It exited with code 1 during
+tokenizer initialization: the pinned Llama repository returned HTTP 401.
+No prepared token shards were created. No HF credential or exact tokenizer
+cache was found on any of the four nodes.
+
+Direct 1024-byte source-file probes returned HTTP 206 for DCLM and Proof-Pile,
+and HTTP 401 for StarCoderData and Paloma C4. These probes check reachability;
+they do not prepare or verify the corpus. The CPU suite was rerun and all
+18 tests passed. GPU preflight still found the existing workloads occupying
+all 32 devices; no training smoke was launched.
+
+Failure log:
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/prepare-data-attempt-20261115.log`.
+Authentication, isolated-environment, preparation, and verification commands
+are in `experiment/README.md`.
+
 ## Launch Blockers
 
 No experiment training has started.
@@ -99,7 +123,7 @@ After workload release and approved data access:
 
 1. Prepare the pinned data once and verify names, token/document counts,
    token-ID range, and SHA256 receipts. Record full dataset revisions.
-   Install missing preparation dependencies in a task-specific environment.
+   Use the prepared task-specific `.venv-data` environment.
 2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
    candidate down updates with an independent FP32 matrix reference.
 3. Run full-model/context real-data three-update smoke for all first-wave arms.

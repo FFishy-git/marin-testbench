@@ -25,25 +25,49 @@ SHA256 and all 112 source-file hashes. Existing differing source files are
 never overwritten. The large source artifacts remain outside Git.
 
 Prepare the exact data with the pinned script after authorized Hugging Face
-access is configured. The source caches and token files are large. The script
-does not change tokenizer or skip count checks.
+access is configured. Accept access terms for
+`meta-llama/Meta-Llama-3.1-8B`, `bigcode/starcoderdata`, and `allenai/paloma`
+using the account associated with the credential. Enter credentials only in
+the local interactive login prompt, never in tracked files or experiment logs.
+The source caches and token files are large. The script does not change
+tokenizer or skip count checks.
 
 ```bash
 export HTTPS_PROXY=http://star-proxy.oa.com:3128
 export HTTP_PROXY=http://star-proxy.oa.com:3128
+export ALL_PROXY=http://star-proxy.oa.com:3128
+/opt/conda/envs/torch-base/bin/hf auth login
+```
+
+The task-specific preparation environment is on the approved PVC. It inherits
+the inspected Torch environment and installs only the missing decompressor.
+It was created and import-checked on 2026-11-15; the shared Torch/CUDA stack
+was not modified.
+
+```bash
+ROOT=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization
+uv venv --system-site-packages --python /opt/conda/envs/torch-base/bin/python \
+  "$ROOT/.venv-data"
+uv pip install --python "$ROOT/.venv-data/bin/python" zstandard==0.25.0
+```
+
+For the existing environment, skip creation and proceed with:
+
+```bash
+ROOT=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization
 export PYTHONPATH="$PWD/artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c"
+uv run --no-project --python "$ROOT/.venv-data/bin/python" \
+  python -m reproduce.marin.prepare_data --out "$ROOT/data" --workers 16
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
-  python -m reproduce.marin.prepare_data --out /APPROVED/DATA --workers 16
-uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
-  python -m experiment.data_access --data /APPROVED/DATA \
-  --receipt /APPROVED/DATA/experiment_receipt.json
+  python -m experiment.data_access --data "$ROOT/data" \
+  --receipt "$ROOT/data/experiment_receipt.json"
 ```
 
 The inspected versions are recorded in `experiment/requirements.txt`.
-Preparation also requires `zstandard`, which was missing from the inspected
-Torch environment. Install it in a task-specific environment without replacing
-the shared Torch/CUDA stack. The exact pinned tokenizer returned HTTP 401
-without configured Hugging Face authorization.
+The preparation attempt on 2026-11-15 failed during tokenizer initialization
+with HTTP 401 before any token shards were created. Direct source-file probes
+returned HTTP 206 for DCLM and Proof-Pile, and HTTP 401 for StarCoderData and
+Paloma C4. Repository metadata access alone does not establish file access.
 
 A single-node execution check uses the full model/context and reference
 schedule; `--max-steps` is an early-stop execution check.
