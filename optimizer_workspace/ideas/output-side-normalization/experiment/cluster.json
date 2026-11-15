@@ -10,7 +10,8 @@
   "gpus_per_run": 8,
   "environment": {
     "NCCL_INSPECTOR_ENABLE": "0",
-    "PYTHONFAULTHANDLER": "1"
+    "PYTHONFAULTHANDLER": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
   },
   "wave": [
     "muon",

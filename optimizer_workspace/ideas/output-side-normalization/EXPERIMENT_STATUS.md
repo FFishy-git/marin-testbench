@@ -182,6 +182,18 @@ added partition gradient/statistic check, passed again in
 `validation/attempt_20261115_1353/gpu_checks.json`. Full-model checks are running
 under the adapted configs.
 
+The unrestricted-autotune Muon smoke completed three finite-loss real-data
+updates and saved checkpoints, but its uninterrupted/resumed comparison
+failed at embedding weights. The active configs now request deterministic
+algorithms, fixed ATEN body/head GEMMs, explicit precision casts, and
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`; validation must establish continuation
+without changing tolerances.
+Full-model output-arm backward also exposed shared-buffer version counters
+across compiled segments. Observation buffers now have independent storage
+per layer and stack only for pooling. CPU and synthetic GPU checks passed
+after this change in `validation/attempt_20261115_1407`; full-model checks
+are rerunning locally and on each assigned worker.
+
 Data access, full preparation, and data verification are resolved.
 No datasets, revisions, or tokenizer have been substituted.
 

@@ -65,6 +65,7 @@ def main():
     random.seed(seed)
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
+    torch.use_deterministic_algorithms(runtime["deterministic"])
     micro, seq = training["micro_batch_size"], model_config["sequence_length"]
     batch = training["global_batch_sequences"]
     accumulation = batch // (world * micro)
@@ -114,13 +115,19 @@ def main():
             args.resume, model, optimizers, fast, output, config=config, rank=rank, world=world, identity=identity
         )
     compile_mode = runtime["compile"]
-    body = model.body if compile_mode == "eager" else torch.compile(model.body, mode=compile_mode, dynamic=False)
+    body = (
+        model.body
+        if compile_mode == "eager"
+        else torch.compile(model.body, options=runtime["compile_options"], dynamic=False)
+    )
 
     def compiled_loss(h, weight, target):
         return F.cross_entropy(F.linear(h, weight.to(torch.bfloat16)).float(), target, ignore_index=-100)
 
     loss_fn = (
-        compiled_loss if compile_mode == "eager" else torch.compile(compiled_loss, mode=compile_mode, dynamic=False)
+        compiled_loss
+        if compile_mode == "eager"
+        else torch.compile(compiled_loss, options=runtime["compile_options"], dynamic=False)
     )
 
     def forward_loss(tokens, target, cu, meta):

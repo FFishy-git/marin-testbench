@@ -334,6 +334,13 @@ At 0.5M batch this means accumulation 4, world size 8, and global batch
 The reference microbatch values above remain the author recipe; these active
 configs are a documented A100 runtime adaptation.
 
+The first full-model continuation check failed under unrestricted compiler
+autotuning. The active configs restrict compiled body/head GEMMs to ATEN,
+emulate precision casts, and enable deterministic CUDA algorithms with
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`. These options apply to every arm and need
+full-model continuation validation at the existing tolerance. Root CUDA
+graphs remain enabled. Include the runtime cost in performance comparisons.
+
 ## Output Statistic and Update Definitions
 
 Let `C = E[x x^T]` and `B_obs = E[delta delta^T]`, where `delta` is the

@@ -66,7 +66,14 @@
     "head": "compiled",
     "capture": "recompute",
     "eval_every": 250,
-    "eval_max_windows": 0
+    "eval_max_windows": 0,
+    "deterministic": true,
+    "compile_options": {
+      "max_autotune": true,
+      "triton.cudagraphs": false,
+      "max_autotune_gemm_backends": "ATEN",
+      "emulate_precision_casts": true
+    }
   },
   "reference_validation_loss": 3.4505794264657865,
   "statistics": {

@@ -207,6 +207,16 @@ unchanged; the 0.5M configs accumulate four microbatches on each of eight GPUs.
 The synthetic GPU partition check compares gradients and collected output
 statistics for the two partitions and checks the independent raw moment.
 
+The active model/head compiler options retain compilation with CUDA graphs
+off for those two surfaces, restrict GEMM selection to ATEN, and emulate
+precision casts. Training enables deterministic algorithms and sets
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`. The original unrestricted autotune paths
+produced different full-model trajectories across process starts and failed
+the existing checkpoint-continuation tolerance. These options apply to every
+arm and remain subject to full-model validation; root CUDA graphs are separate.
+Output observation buffers have independent storage per layer so compiled
+backward segments cannot invalidate other layers' saved-buffer versions.
+
 ```bash
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
   python -m experiment.launch --launch \

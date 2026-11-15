@@ -183,8 +183,10 @@ class OutputMoments:
         start = sum(self.counts_per_rank[:rank])
         self.owned_layers = list(range(start, start + self.counts_per_rank[rank]))
         width = model.body.blocks[0].down.weight.shape[0]
-        self.sums = torch.zeros(self.layers, width, width, device=device)
-        self.counts = torch.zeros(self.layers, dtype=torch.int64, device=device)
+        # Independent storage prevents one layer's backward mutation from changing
+        # another layer's saved-buffer version counter in AOTAutograd/DDP.
+        self.layer_sums = [torch.zeros(width, width, device=device) for _ in range(self.layers)]
+        self.layer_counts = [torch.zeros((), dtype=torch.int64, device=device) for _ in range(self.layers)]
         self.scaling = torch.ones((), device=device)
         self.positions = torch.tensor(positions, dtype=torch.int64, device=device)
         self.moment = torch.zeros(len(self.owned_layers), width, width, device=device)
@@ -193,26 +195,36 @@ class OutputMoments:
         self.steps, self.weight, self.root_step = 0, 0.0, -1
         self.pg = dist.new_group(backend=dist.get_backend()) if world > 1 else None
         for layer, block in enumerate(model.body.blocks):
-            block.down = OutputLinear(block.down, self.sums[layer], self.counts[layer], self.positions, self.scaling)
+            block.down = OutputLinear(
+                block.down, self.layer_sums[layer], self.layer_counts[layer], self.positions, self.scaling
+            )
+
+    @property
+    def sums(self):
+        return torch.stack(self.layer_sums)
+
+    @property
+    def counts(self):
+        return torch.stack(self.layer_counts)
 
     def begin(self, inverse_loss_scale):
-        self.sums.zero_()
-        self.counts.zero_()
+        for value in self.layer_sums + self.layer_counts:
+            value.zero_()
         self.scaling.fill_(inverse_loss_scale)
 
     @torch.no_grad()
     def update(self, expected_local_count):
-        if not torch.all(self.counts == expected_local_count).item():
-            raise RuntimeError(f"Output capture count mismatch: {self.counts.tolist()}")
-        if not torch.isfinite(self.sums).all().item():
+        sums, counts = self.sums, self.counts
+        if not torch.all(counts == expected_local_count).item():
+            raise RuntimeError(f"Output capture count mismatch: {counts.tolist()}")
+        if not torch.isfinite(sums).all().item():
             raise FloatingPointError("Nonfinite output moment sum")
-        counts = self.counts.clone()
         pooled = torch.empty_like(self.moment)
         if self.world > 1:
             dist.all_reduce(counts, group=self.pg)
-            dist.reduce_scatter_tensor(pooled, self.sums, group=self.pg)
+            dist.reduce_scatter_tensor(pooled, sums, group=self.pg)
         else:
-            pooled.copy_(self.sums)
+            pooled.copy_(sums)
         start = self.owned_layers[0]
         means = pooled / counts[start : start + len(self.owned_layers), None, None]
         beta = self.settings.momentum

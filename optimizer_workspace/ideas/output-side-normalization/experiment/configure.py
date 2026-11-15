@@ -20,6 +20,13 @@ def configuration(arm, batch, seed, microbatch):
     path = UPSTREAM / "reproduce" / "marin" / "configs" / "130m" / f"{base}_{batch}.json"
     config = json.loads(path.read_text())
     config["runtime"]["attention"] = "FA2"
+    config["runtime"]["deterministic"] = True
+    config["runtime"]["compile_options"] = {
+        "max_autotune": True,
+        "triton.cudagraphs": False,
+        "max_autotune_gemm_backends": "ATEN",
+        "emulate_precision_casts": True,
+    }
     config["training"]["seed"] = seed
     config["training"]["micro_batch_size"] = microbatch
     config["experiment"] = {
