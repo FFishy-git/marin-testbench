@@ -27,7 +27,7 @@ Updated: 2026-11-15.
 - Created the approved PVC output directories under
   `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
   Deployment receipts identify each source version; redeploy after edits.
-- Deployed the current 154-file task snapshot to all three workers.
+- Deployed the task snapshot to all three workers.
   Final preflight verified matching experiment source/configuration hashes
   on all four nodes.
 
@@ -169,7 +169,9 @@ No datasets, revisions, or tokenizer have been substituted.
 1. Release only the identified GPU keepers after owner confirmation.
    The preparation job is complete; do not launch another preparation job.
 2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
-   candidate down updates with an independent FP32 matrix reference.
+   candidate down updates with Toner's per-matrix reference in both FP32 and
+   the configured BF16-input/FP32-output Newton-Schulz mode. These checks
+   are implemented but remain unexecuted.
 3. Run full-model/context real-data three-update smoke for all first-wave arms.
    Measure memory and lower microbatch identically only if required.
 4. Compare uninterrupted and resumed GPU trajectories, including input bases,

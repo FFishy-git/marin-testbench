@@ -153,6 +153,9 @@ continuously, then two updates plus a restored third update. Checkpoint
 comparison includes model, auxiliary optimizer, fast input state, output
 moments/roots, data position, and RNG state. A failure preserves command logs
 and leaves the corresponding launch gates pending.
+Down-update checks cover FP32 and the configured BF16-input/FP32-output
+Newton-Schulz mode, using Toner's per-matrix routine as the reference for the
+candidate's batched implementation. Both modes use the same update tolerance.
 The synthetic continuation probe separately runs 24 optimizer updates with
 the configured 20-update exact-root startup, saves after update 22, and
 compares a restored two-update continuation. It requires that cached-root

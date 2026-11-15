@@ -124,7 +124,6 @@ def test_down_matrix_updates(device):
     torch.manual_seed(31)
     config = configuration("down_hybrid", "0p5m", 0, 8)
     args = fast_arguments(config)
-    args.muon_ns_mode = "f32"
     weight = torch.randn(2, 256, 512, device=device) * 0.05
     gradient = torch.randn_like(weight)
     momentum = torch.randn_like(weight)
@@ -132,37 +131,48 @@ def test_down_matrix_updates(device):
     right = torch.randn(2, 512, 64, device=device)
     li, lo = inverse_factors(left @ left.mT, OutputSettings(damping=0.01))
     ri, ro = inverse_factors(right @ right.mT, OutputSettings(damping=0.01))
-    for arm in ("outer_left_down", "inner_outer_down", "down_hybrid"):
-        actual_m, delta = down_update(
-            weight,
-            gradient,
-            momentum,
-            arm=arm,
-            left_inner=li,
-            left_outer=lo,
-            right_inner=ri,
-            right_outer=ro,
-            args=args,
-            lr=0.02,
-            weight_decay=0.1,
-            right_product=accurate_right,
-            left_product=accurate_left,
-        )
-        expected_m = args.muon_momentum * momentum + gradient
-        source = gradient + args.muon_momentum * expected_m
-        if arm == "down_hybrid":
-            source = li @ source
-            direction = lo @ MU.newton_schulz_batched(source, 10, 1e-5, "f32")
-            decay = lo @ lo @ weight
-        else:
-            source = source @ ri
-            if arm == "inner_outer_down":
+    for mode in ("f32", config["optimizer"]["ns_mode"]):
+        args.muon_ns_mode = mode
+        for arm in ("outer_left_down", "inner_outer_down", "down_hybrid"):
+            actual_m, delta = down_update(
+                weight,
+                gradient,
+                momentum,
+                arm=arm,
+                left_inner=li,
+                left_outer=lo,
+                right_inner=ri,
+                right_outer=ro,
+                args=args,
+                lr=0.02,
+                weight_decay=0.1,
+                right_product=accurate_right,
+                left_product=accurate_left,
+            )
+            expected_m = args.muon_momentum * momentum + gradient
+            source = gradient + args.muon_momentum * expected_m
+            if arm == "down_hybrid":
                 source = li @ source
-            ron = ro * (512**0.5 / ro.norm(dim=(-2, -1), keepdim=True))
-            direction = lo @ MU.newton_schulz_batched(source, 10, 1e-5, "f32") @ ron
-            decay = weight @ ron @ ron
-        torch.testing.assert_close(actual_m, expected_m, rtol=0, atol=0)
-        torch.testing.assert_close(delta, -0.02 * (direction + 0.1 * decay), rtol=0.003, atol=5e-5)
+                decay = lo @ lo @ weight
+            else:
+                source = source @ ri
+                if arm == "inner_outer_down":
+                    source = li @ source
+                ron = ro * (512**0.5 / ro.norm(dim=(-2, -1), keepdim=True))
+                decay = weight @ ron @ ron
+            # Use the upstream per-matrix routine, not the candidate's batched NS.
+            orthogonal = torch.stack([MU.newton_schulz(matrix, 10, 1e-5, mode) for matrix in source])
+            direction = lo @ orthogonal
+            if arm != "down_hybrid":
+                direction = direction @ ron
+            torch.testing.assert_close(actual_m, expected_m, rtol=0, atol=0)
+            torch.testing.assert_close(
+                delta,
+                -0.02 * (direction + 0.1 * decay),
+                rtol=0.003,
+                atol=5e-5,
+                msg=f"{arm}.{mode}",
+            )
 
 
 def test_compiled_body(device):
@@ -347,7 +357,14 @@ def main():
                     "source_sha256": {
                         str(p.relative_to(TASK)): sha256(p) for p in sorted((TASK / "experiment").rglob("*.py"))
                     },
-                    "evidence": {"command": sys.argv, "gpu": torch.cuda.get_device_name(device)},
+                    "evidence": {
+                        "command": sys.argv,
+                        "gpu": torch.cuda.get_device_name(device),
+                        "down_update_ns_modes": [
+                            "f32",
+                            configuration("down_hybrid", "0p5m", 0, 8)["optimizer"]["ns_mode"],
+                        ],
+                    },
                     "limitation": "Synthetic GPU correctness is not real-data Marin training evidence.",
                 },
             )
