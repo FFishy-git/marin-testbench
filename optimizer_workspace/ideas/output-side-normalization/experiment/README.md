@@ -59,6 +59,7 @@ For the existing environment, skip creation and proceed with:
 ROOT=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization
 uv run --no-project --python "$ROOT/.venv-data/bin/python" \
   python -m experiment.prepare --out "$ROOT/data" --workers 96 \
+  --scratch /tmp/output-side-normalization-data \
   --env-file /root/dl/runtime/script/.env \
   --proxy http://star-proxy.oa.com:3128 \
   --state "$ROOT/run-preparation/preparation-state.json" \
@@ -71,7 +72,10 @@ HTTP 206 for all four required components. The first shard of DCLM, StarCoder,
 Proof-Pile and Paloma C4 was prepared and verified against the pinned counts.
 The wrapper calls Toner's unchanged preparation entry point, reuses only
 verified existing shards, checks all 2,876 shards, then creates the full
-training/C4 content receipt. A per-output filesystem lock prevents duplicate
+training/C4 content receipt. New shards are written to local scratch to avoid
+small-write latency on the PVC's FUSE mount, then copied in blocks to the PVC
+and verified there. Scratch retains completed files for retries and needs
+approximately 102 GB. A per-output filesystem lock prevents duplicate
 preparation jobs. The state file records the PID and lifecycle; only
 `status: complete` establishes successful preparation and verification.
 Partial shards and access probes cannot authorize training.

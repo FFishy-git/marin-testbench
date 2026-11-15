@@ -111,7 +111,9 @@ code and verified:
 Full preparation started on 2026-11-15 for all 2,876 pinned shards
 (101,782,148,820 bytes of token files). It was increased from 32 to 96 CPU
 workers after stopping the initial preparation process and preserving its
-verified shards. It is still running.
+verified shards. Small-write waits on the PVC's FUSE path prompted a switch to
+local scratch with block copies to the PVC. Toner's tokenization code is
+unchanged. Full preparation is still pending.
 `experiment.prepare` loads only `HF_TOKEN` from the local credential file,
 holds an output lock, and calls the unchanged upstream preparation entry point.
 It checks the complete plan and creates the training/C4 content receipt only
@@ -124,7 +126,7 @@ Current evidence under the PVC output root:
 - `run-preparation/source-file-access.json`
 - `run-preparation/first-shards.json`
 - `run-preparation/preparation-state.json`
-- `run-preparation/prepare-full-96workers-20261115.log`
+- `run-preparation/prepare-full-scratch-20261115.log`
 
 Authentication, isolated-environment, preparation, and verification commands
 are in `experiment/README.md`. Credentials are not in the evidence or Git.
