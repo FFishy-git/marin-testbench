@@ -11,7 +11,7 @@ import torch.multiprocessing as mp
 from experiment.capture import OutputLinear, OutputMoments
 from experiment.factors import OutputSettings, direction_and_decay, inverse_factors
 from experiment.optimizer import down_update
-from experiment.records import restore_checkpoint, save_checkpoint
+from experiment.records import checkpoint_identity, restore_checkpoint, save_checkpoint
 from toner.fast.muon import newton_schulz_batched
 from torch import nn
 
@@ -168,6 +168,9 @@ def test_checkpoint_continuation_preserves_optimizer_and_rng(tmp_path):
     model = nn.Linear(4, 3)
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.01)
     config = {"training": {"global_batch_sequences": 8}}
+    data_receipt = tmp_path / "data.json"
+    data_receipt.write_text('{"dataset": "synthetic_cpu_check"}\n')
+    identity = checkpoint_identity(config, data_receipt)
 
     def step(network, opt):
         opt.zero_grad()
@@ -175,7 +178,7 @@ def test_checkpoint_continuation_preserves_optimizer_and_rng(tmp_path):
         opt.step()
 
     step(model, optimizer)
-    save_checkpoint(tmp_path, model, [optimizer], None, None, step=1, config=config, rank=0, world=1)
+    save_checkpoint(tmp_path, model, [optimizer], None, None, step=1, config=config, rank=0, world=1, identity=identity)
     step(model, optimizer)
     expected = copy.deepcopy(model.state_dict())
     restored = nn.Linear(4, 3)
@@ -189,11 +192,158 @@ def test_checkpoint_continuation_preserves_optimizer_and_rng(tmp_path):
         config=config,
         rank=0,
         world=1,
+        identity=identity,
     )
     step(restored, restored_optimizer)
     assert resumed == 1
     for name, value in restored.state_dict().items():
         torch.testing.assert_close(value, expected[name], rtol=0, atol=0)
+
+
+def test_checkpoint_changed_data_receipt_refuses_resume_before_loading_weights(tmp_path):
+    config = {"training": {"global_batch_sequences": 8}}
+    data = tmp_path / "data.json"
+    data.write_text('{"tokens_sha256": "original"}\n')
+    model = nn.Linear(4, 3)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.01)
+    original_identity = checkpoint_identity(config, data)
+    save_checkpoint(
+        tmp_path,
+        model,
+        [optimizer],
+        None,
+        None,
+        step=1,
+        config=config,
+        rank=0,
+        world=1,
+        identity=original_identity,
+    )
+    restored = nn.Linear(4, 3)
+    before = copy.deepcopy(restored.state_dict())
+    data.write_text('{"tokens_sha256": "changed"}\n')
+    with pytest.raises(ValueError, match="prepared-data identity"):
+        restore_checkpoint(
+            tmp_path / "checkpoints/step_000001",
+            restored,
+            [optimizer],
+            None,
+            None,
+            config=config,
+            rank=0,
+            world=1,
+            identity=checkpoint_identity(config, data),
+        )
+    for name, parameter in restored.state_dict().items():
+        torch.testing.assert_close(parameter, before[name], rtol=0, atol=0)
+
+
+def test_checkpoint_wrong_rank_ownership_refuses_resume_before_loading_weights(tmp_path):
+    config = {"training": {"global_batch_sequences": 8}}
+    data = tmp_path / "data.json"
+    data.write_text('{"dataset": "synthetic_ownership_check"}\n')
+    identity = checkpoint_identity(config, data)
+    model = nn.Linear(4, 3)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.01)
+    save_checkpoint(
+        tmp_path,
+        model,
+        [optimizer],
+        None,
+        None,
+        step=1,
+        config=config,
+        rank=0,
+        world=1,
+        identity=identity,
+    )
+    directory = tmp_path / "checkpoints/step_000001"
+    state = torch.load(directory / "rank_0.pt", weights_only=False)
+    state["rank"] = 1
+    torch.save(state, directory / "rank_0.pt")
+    restored = nn.Linear(4, 3)
+    before = copy.deepcopy(restored.state_dict())
+    with pytest.raises(ValueError, match="ownership"):
+        restore_checkpoint(
+            directory,
+            restored,
+            [optimizer],
+            None,
+            None,
+            config=config,
+            rank=0,
+            world=1,
+            identity=identity,
+        )
+    for name, parameter in restored.state_dict().items():
+        torch.testing.assert_close(parameter, before[name], rtol=0, atol=0)
+
+
+def test_checkpoint_output_moment_roots_and_accumulated_backward_continue(tmp_path):
+    config = {"training": {"global_batch_sequences": 8}}
+    data = tmp_path / "data.json"
+    data.write_text('{"dataset": "synthetic_output_checkpoint"}\n')
+    identity = checkpoint_identity(config, data)
+
+    def construct():
+        model = nn.Module()
+        model.body = nn.Module()
+        block = nn.Module()
+        block.down = nn.Linear(4, 3, bias=False)
+        model.body.blocks = nn.ModuleList([block])
+        output = OutputMoments(model, [0, 2], OutputSettings(refresh=2), world=1, rank=0, device="cpu")
+        optimizer = torch.optim.AdamW(model.parameters(), lr=0.01)
+        return model, output, optimizer
+
+    def update(model, output, optimizer):
+        optimizer.zero_grad()
+        output.begin(8)
+        for _ in range(2):
+            x = torch.randn(1, 4, 4)
+            model.body.blocks[0].down(x).square().sum().div(8).backward()
+        output.update(4)
+        optimizer.step()
+
+    torch.manual_seed(34)
+    model, output, optimizer = construct()
+    for _ in range(2):
+        update(model, output, optimizer)
+    save_checkpoint(
+        tmp_path,
+        model,
+        [optimizer],
+        None,
+        output,
+        step=2,
+        config=config,
+        rank=0,
+        world=1,
+        identity=identity,
+    )
+    for _ in range(2):
+        update(model, output, optimizer)
+    expected_parameters = copy.deepcopy(model.state_dict())
+    expected_output = copy.deepcopy(output.state_dict())
+    restored, restored_output, restored_optimizer = construct()
+    restore_checkpoint(
+        tmp_path / "checkpoints/step_000002",
+        restored,
+        [restored_optimizer],
+        None,
+        restored_output,
+        config=config,
+        rank=0,
+        world=1,
+        identity=identity,
+    )
+    for _ in range(2):
+        update(restored, restored_output, restored_optimizer)
+    for name, parameter in restored.state_dict().items():
+        torch.testing.assert_close(parameter, expected_parameters[name], rtol=0, atol=0)
+    for name in ("moment", "inner", "outer"):
+        torch.testing.assert_close(restored_output.state_dict()[name], expected_output[name], rtol=0, atol=0)
+    assert restored_output.steps == expected_output["steps"]
+    assert restored_output.root_step == expected_output["root_step"]
 
 
 def distributed_moment_worker(rank, rendezvous, directory):

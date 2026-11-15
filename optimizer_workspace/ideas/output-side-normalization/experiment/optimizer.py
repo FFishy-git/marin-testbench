@@ -165,7 +165,7 @@ def build(model, config, output, *, rows_total, world, rank, device):
 
 
 def fast_runtime_state(fast):
-    """Save owned state including cached bases; no root recomputation on resume."""
+    """Save numerical root state, including cached bases and pending refreshes."""
     fast.side.synchronize()
     for group in fast.groups.values():
         for pending in group.pending:
@@ -177,6 +177,7 @@ def fast_runtime_state(fast):
             "C": group.C,
             "tol": group.tol,
             "basis_step": group.basis_step,
+            "warm": group.warm,
             "SB": None if group.basis is None else group.basis.SB,
             "S2": None if group.basis is None else group.basis.S2,
             "pending": [
@@ -212,6 +213,9 @@ def restore_fast(fast, state):
         group.C.copy_(saved["C"])
         group.tol.copy_(saved["tol"])
         group.basis_step = saved["basis_step"]
+        # CUDA graphs and process-local kernel compilation are not serializable.
+        # Rewarm against the restored numerical state before capturing fresh graphs.
+        group.warm = False
         if saved["S2"] is not None:
             group.basis = PR.Basis.of_splits(saved["S2"].to(fast.device))
             group.basis.SB = saved["SB"].to(fast.device)

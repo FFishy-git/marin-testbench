@@ -33,7 +33,7 @@ Updated: 2026-11-15.
 
 ## Executed Verification
 
-The CPU suite passed 15 tests, including:
+The CPU suite passed 18 tests, including:
 
 - exact-SVD direction and transpose orientation;
 - inverse-factor eigenvalue and scale checks;
@@ -43,6 +43,18 @@ The CPU suite passed 15 tests, including:
 - unequal two-rank sample-count pooling using Gloo;
 - CPU optimizer/RNG checkpoint continuation.
 - actual finite-NS down direction/decay equations for all three candidate arms.
+- output EMA and cached-root continuation through an actual checkpoint;
+- changed data-receipt rejection before checkpoint weights are loaded.
+- corrupt rank-ownership rejection before checkpoint weights are loaded.
+
+Checkpoint state now binds source hashes, full configuration, prepared-data
+identity, and rank ownership. A new synthetic GPU gate saves after update 22
+and continues through update 24, covering Toner's cached-root CUDA graphs
+after its 20-update exact-root startup. This gate is implemented but unexecuted
+while the GPUs remain occupied.
+Restored input factors rewarm and recapture process-local CUDA graphs without
+resetting numerical root or momentum state. The new GPU continuation gate
+must verify this adaptation before training resumes are accepted.
 
 The constructed pinned architecture contains 265,585,152 parameters.
 The full scoped repository lint entry point passed Ruff, Black, license headers,
@@ -90,7 +102,7 @@ After workload release and approved data access:
    Install missing preparation dependencies in a task-specific environment.
 2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
    candidate down updates with an independent FP32 matrix reference.
-3. Run full-model/context real-data two-step smoke for all first-wave arms.
+3. Run full-model/context real-data three-update smoke for all first-wave arms.
    Measure memory and lower microbatch identically only if required.
 4. Compare uninterrupted and resumed GPU trajectories, including input bases,
    output moments/roots, optimizer state, and data position.

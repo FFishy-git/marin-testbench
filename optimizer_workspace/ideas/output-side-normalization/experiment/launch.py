@@ -140,6 +140,7 @@ def main():
                 "real_data_four_arm_smoke",
                 "checkpoint_continuation",
                 "gpu_down_updates",
+                "cached_root_continuation",
             )
         ):
             blockers.append("Required numerical and real-data checks have not all passed")

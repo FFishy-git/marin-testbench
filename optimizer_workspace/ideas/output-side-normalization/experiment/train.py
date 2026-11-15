@@ -27,7 +27,7 @@ from .capture import OutputMoments, build_model
 from .data_access import require_receipt
 from .factors import OutputSettings
 from .optimizer import build
-from .records import atomic_json, manifest, restore_checkpoint, save_checkpoint, utc_now
+from .records import atomic_json, checkpoint_identity, manifest, restore_checkpoint, save_checkpoint, utc_now
 
 
 def main():
@@ -53,6 +53,7 @@ def main():
     if args.max_steps is not None and args.max_steps <= 0:
         raise ValueError("--max-steps must be positive")
     require_receipt(args.data, args.data_receipt)
+    identity = checkpoint_identity(config, args.data_receipt)
     torch.cuda.set_device(local)
     device = torch.device("cuda", local)
     if torch.cuda.get_device_capability() != (8, 0):
@@ -110,7 +111,7 @@ def main():
     start_step = 0
     if args.resume:
         start_step = restore_checkpoint(
-            args.resume, model, optimizers, fast, output, config=config, rank=rank, world=world
+            args.resume, model, optimizers, fast, output, config=config, rank=rank, world=world, identity=identity
         )
     compile_mode = runtime["compile"]
     body = model.body if compile_mode == "eager" else torch.compile(model.body, mode=compile_mode, dynamic=False)
@@ -279,6 +280,7 @@ def main():
                     config=config,
                     rank=rank,
                     world=world,
+                    identity=identity,
                 )
                 metrics["checkpoint_seconds"] = time.perf_counter() - save_start
             metrics["end_to_end_seconds"] = time.perf_counter() - wall_start

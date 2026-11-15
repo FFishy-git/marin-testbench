@@ -60,6 +60,9 @@ Checkpoint directories have one atomic file per rank and a `complete.json`
 receipt written only after all ranks finish saving. Resume requires the
 original configuration/world size. Saved state includes input bases and
 output roots, avoiding an implicit root reset.
+Checkpoint identities also bind source hashes, the full configuration, and
+the prepared-data receipt. A resume refuses mismatched identities before
+loading weights; changing source code requires a separately reviewed migration.
 
 ```bash
 /opt/conda/envs/torch-base/bin/python -m torch.distributed.run \
@@ -104,6 +107,19 @@ continuously, then two updates plus a restored third update. Checkpoint
 comparison includes model, auxiliary optimizer, fast input state, output
 moments/roots, data position, and RNG state. A failure preserves command logs
 and leaves the corresponding launch gates pending.
+The synthetic continuation probe separately runs 24 optimizer updates with
+the configured 20-update exact-root startup, saves after update 22, and
+compares a restored two-update continuation. It requires that cached-root
+CUDA graphs were active before saving and covers input MuonT, outer-left down,
+and down hybrid. The three-update real-data smoke alone does not establish
+post-warmup root-state continuation.
+The numerical probe waits for pending host refreshes between updates so
+thread scheduling does not change which bases are ready at the next update.
+Production retains Toner's asynchronous host-refresh pipeline.
+CUDA graph objects are process-local. Resume retains the saved EMAs, bases,
+tolerances, momenta, output roots, and pending host refreshes, then performs
+one eager root warmup before capturing fresh graphs. The cached-root
+continuation gate checks this runtime adaptation.
 
 The full launch requires available GPUs, exact prepared data, and a validation
 receipt for the current source hashes. The receipt must record passing
@@ -111,8 +127,9 @@ receipt for the current source hashes. The receipt must record passing
 `real_data_four_arm_smoke`, and `checkpoint_continuation` checks with supporting
 evidence paths. Do not mark unexecuted checks as passing. The launcher schedules
 Muon, MuonT, outer-left down, and down hybrid on one eight-GPU node each.
-The launcher also requires `gpu_down_updates`, the current data receipt, and
-source/configuration hashes. `experiment/cluster.json` records the four nodes
+The launcher also requires `gpu_down_updates`, `cached_root_continuation`,
+the current data receipt, and source/configuration hashes.
+`experiment/cluster.json` records the four nodes
 and the approved PVC output root. Outputs default to
 `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/runs/wave0`.
 

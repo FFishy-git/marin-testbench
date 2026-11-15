@@ -55,6 +55,7 @@ def main():
             "real_data_four_arm_smoke": False,
             "checkpoint_continuation": False,
             "gpu_down_updates": False,
+            "cached_root_continuation": False,
         },
         "evidence": {
             "cpu_test_command": result.args,
@@ -101,7 +102,7 @@ def main():
         args.work / "gpu_checks.log",
     )
     checked = json.loads(gpu_receipt.read_text())
-    for name in ("gpu_collector", "distributed_statistics", "fa2", "gpu_down_updates"):
+    for name in ("gpu_collector", "distributed_statistics", "fa2", "gpu_down_updates", "cached_root_continuation"):
         receipt["checks"][name] = checked["checks"][name]
     receipt["evidence"]["gpu_receipt"] = str(gpu_receipt)
     smoke_records = {}

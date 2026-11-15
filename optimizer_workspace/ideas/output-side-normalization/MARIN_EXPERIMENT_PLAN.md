@@ -360,6 +360,11 @@ pool them over all microbatches and devices, then update raw-moment EMA,
 then trace-normalize. Do not average inverse roots across devices.
 Freeze collection during evaluation and guard against rematerialization
 double-counting. Moments, roots, and counters belong to checkpoint state.
+Checkpoint identities bind source, configuration, prepared-data hashes,
+and rank ownership. Continuation checks include both the three-update
+full-model real-data smoke and a synthetic 24-update probe that saves after
+cached-root CUDA graphs are active. The latter gate must pass before
+accepting post-warmup resume behavior.
 
 ## Arms and Ablations
 
@@ -429,7 +434,7 @@ Required survivor controls:
    validate token receipts, attention backend, model count, and environment.
 2. Correctness: CPU math tests, GPU collector tests, two-rank sum/count
    parity, compiled backward parity, and checkpoint continuation.
-3. Two-step configured smoke: real data, full model/context, all four arms;
+3. Three-update configured smoke: real data, full model/context, all four arms;
    these checks retain the full schedule and are not short training studies.
 4. First four-node wave: full 0.5M-budget runs above, seed 0, with checkpoint
    spectra and common evaluation. Treat it as exploratory reproduction.

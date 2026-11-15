@@ -5,6 +5,7 @@
 
 import argparse
 import copy
+import io
 import json
 import os
 import sys
@@ -26,8 +27,8 @@ from .bootstrap import verify_snapshot
 from .capture import OutputLinear, OutputMoments, build_model
 from .configure import configuration
 from .factors import OutputSettings, inverse_factors
-from .optimizer import DownToner, accurate_left, accurate_right, down_update
-from .records import atomic_json, sha256, utc_now
+from .optimizer import DownToner, accurate_left, accurate_right, build, down_update, fast_runtime_state, restore_fast
+from .records import atomic_json, compare_tree, sha256, utc_now
 from .reference import TASK
 
 
@@ -202,6 +203,110 @@ def test_compiled_body(device):
     fast.pool.shutdown(wait=True)
 
 
+def serialized_state(state):
+    buffer = io.BytesIO()
+    torch.save(state, buffer)
+    buffer.seek(0)
+    return torch.load(buffer, map_location="cpu", weights_only=False)
+
+
+def test_cached_root_continuation(device, world, rank):
+    for arm in ("muont", "outer_left_down", "down_hybrid"):
+        config = configuration(arm, "0p5m", 0, 1)
+        config["model"].update(hidden=256, mlp=1024, heads=4, layers=world, sequence_length=16, vocab_size=256)
+        positions, rows = [0, 2, 4, 6], 16
+
+        def construct(config, positions, rows, arm):
+            network = build_model(
+                config,
+                positions=positions,
+                row_capacity=rows,
+                rows_per_microbatch=len(positions),
+                device=device,
+            )
+            initialize_model(network, 0)
+            output = (
+                None
+                if arm == "muont"
+                else OutputMoments(network, positions, OutputSettings(), world=world, rank=rank, device=device)
+            )
+            optimizers, fast, _ = build(
+                network, config, output, rows_total=rows * world, world=world, rank=rank, device=device
+            )
+            fast.param_groups[0]["lr"] = config["optimizer"]["lr"]
+            return network, output, fast, optimizers[-1]
+
+        def update(network, output, fast, step, positions):
+            for block in network.body.blocks:
+                for name, value in block.named_buffers():
+                    if name.startswith("input_rows_"):
+                        grid = torch.arange(value.numel(), device=device).reshape(value.shape).float()
+                        value.copy_(torch.sin(grid * 0.017 + step * 0.0001 + rank * 0.1))
+            for index, parameter in enumerate(fast.params):
+                grid = torch.arange(parameter.numel(), device=device).reshape(parameter.shape)
+                parameter.grad = torch.cos(grid * 0.01 + index * 0.1 + step * 0.001).float() * 0.01
+            if output is not None:
+                output.begin(16)
+                for block in network.body.blocks:
+                    x = torch.ones(1, 8, 1024, device=device) * (1 + step * 0.001)
+                    (block.down(x).square().mean() / 16).backward()
+                output.update(len(positions))
+            fast.begin()
+            fast.step()
+            # Control host completion in this numerical probe, not in production.
+            fast.side.synchronize()
+            for group in fast.groups.values():
+                for pending in group.pending:
+                    if pending is not None:
+                        pending[0].result()
+
+        network, output, fast, auxiliary = construct(config, positions, rows, arm)
+        try:
+            for step in range(22):
+                update(network, output, fast, step, positions)
+            if not all(group.graph is not None for group in fast.groups.values() if group.per):
+                raise AssertionError("Continuation probe did not reach cached-root CUDA graphs")
+            saved = serialized_state(
+                {
+                    "model": network.state_dict(),
+                    "fast": fast_runtime_state(fast),
+                    "output": None if output is None else output.state_dict(),
+                }
+            )
+            for step in range(22, 24):
+                update(network, output, fast, step, positions)
+            expected = serialized_state(
+                {
+                    "model": network.state_dict(),
+                    "fast": fast_runtime_state(fast),
+                    "output": None if output is None else output.state_dict(),
+                }
+            )
+        finally:
+            fast.side.synchronize()
+            fast.pool.shutdown(wait=True)
+        del network, output, fast, auxiliary
+        restored, output, fast, _auxiliary = construct(config, positions, rows, arm)
+        try:
+            restored.load_state_dict(saved["model"])
+            restore_fast(fast, saved["fast"])
+            if output is not None:
+                output.load_state_dict(saved["output"])
+            for step in range(22, 24):
+                update(restored, output, fast, step, positions)
+            actual = serialized_state(
+                {
+                    "model": restored.state_dict(),
+                    "fast": fast_runtime_state(fast),
+                    "output": None if output is None else output.state_dict(),
+                }
+            )
+            compare_tree(actual, expected, f"cached_root_resume.{arm}", [])
+        finally:
+            fast.side.synchronize()
+            fast.pool.shutdown(wait=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", type=Path, required=True)
@@ -223,6 +328,7 @@ def main():
             ("fa2", lambda: test_attention(device)),
             ("gpu_down_updates", lambda: test_down_matrix_updates(device)),
             ("synthetic_compiled_body", lambda: test_compiled_body(device)),
+            ("cached_root_continuation", lambda: test_cached_root_continuation(device, world, rank)),
         ):
             check()
             dist.barrier()
