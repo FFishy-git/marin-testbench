@@ -2,6 +2,64 @@
 
 Updated: 2026-11-15.
 
+## Current Run
+
+All four full-budget jobs launched on 2026-11-15 at approximately 14:39 UTC
+(22:39 Asia/Shanghai). Live verification at 14:43 UTC confirmed eight
+`experiment.train` GPU processes per node, all 32 A100s assigned to the
+intended runs, finite advancing losses, and durable JSONL metrics.
+
+| Arm | Node | Torchrun PID | Verified Update | Training Loss |
+| --- | --- | ---: | ---: | ---: |
+| Muon | `28.216.17.9` | 2192169 | 152 | 5.198298 |
+| Input MuonT | `28.216.17.80` | 190062 | 33 | 6.551866 |
+| Outer-left down | `28.216.17.144` | 187735 | 29 | 6.661978 |
+| Down hybrid | `28.216.17.139` | 184544 | 35 | 6.501293 |
+
+These observations were taken at different update counts and cannot compare
+optimizer quality. Every run uses seed 0, the pinned 265,585,152-parameter
+model, 4,096-token context, global batch 128 sequences, microbatch 4,
+accumulation 4 on eight ranks, and a 5,120-update/2,684,354,560-token budget.
+The source is commit `36b75289c4d8611d0231df5de617046aa1103fc6`,
+verified on GitHub and deployed to all workers.
+
+Outputs are under the approved PVC root at `runs/wave0/ARM`.
+The directory slugs are `muon`, `muont`, `outer_left_down`, and `down_hybrid`
+in table order. `run-preparation/wave0.json` records exact `out`, `log`,
+`command`, `pid`, `node`, and `arm` fields for every launch.
+Logs are `runs/wave0/ARM.torchrun.log`; metrics are
+`runs/wave0/ARM/metrics_from_000000.jsonl`. Checkpoints are scheduled every
+250 updates and at completion. Muon's first scheduled checkpoint completed
+at 14:44:52 UTC with all eight rank files and
+`runs/wave0/muon/checkpoints/step_000250/complete.json`.
+The cached-root transition caused additional
+compilation after update 20. At live verification MuonT had two input-root
+fallbacks, outer-left had one, and hybrid had none; all continued with finite
+losses. Retain compilation costs and
+fallback counters when interpreting throughput.
+
+All launch gates passed at 14:37:35 UTC. The real-data continuous-three versus
+two-plus-resume comparison had zero maximum absolute tensor error for all
+four arms, covering 3,707 Muon, 2,003 MuonT, 2,027 outer-left, and 1,995 hybrid
+tensor comparisons across eight ranks. The CPU suite passed all 18 tests;
+synthetic A100/NCCL, FA2, collector, down updates, microbatch partition and
+cached-root continuation gates also passed. No numerical tolerance was
+relaxed.
+Full-model real-data resume coverage currently ends at update 3.
+Post-update-20 cached-root continuation was checked on synthetic optimizer
+inputs. Full-model continuation in that later regime remains unverified;
+check it before using a production checkpoint to restart a run.
+
+Evidence under the approved PVC root:
+
+- `run-preparation/validation-gpu.json`
+- `validation/attempt_20261115_1418/`
+- `run-preparation/wave0.json`
+- `run-preparation/wave0-live.json`
+
+The jobs are running; full-budget results and the fair-tuning/paired-seed
+campaign are not complete.
+
 ## Completed
 
 - Removed the fresh `artifacts/external-sources/Toner` clone.
@@ -21,8 +79,8 @@ Updated: 2026-11-15.
   verification, an A100/NCCL validation driver, and real-data smoke and
   checkpoint-continuation orchestration.
 - Published the implementation to `FFishy-git/marin-testbench`, branch
-  `output-side-normalization-marin`. Latest published implementation revision:
-  `daed57bf315a7cb8a841a75342fd42c082c0fed0`.
+  `output-side-normalization-marin`. Training implementation revision:
+  `36b75289c4d8611d0231df5de617046aa1103fc6`.
 - Created the approved PVC output directories under
   `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
   Deployment receipts identify each source version; redeploy after edits.
@@ -149,9 +207,9 @@ Current evidence under the PVC output root:
 Authentication, isolated-environment, preparation, and verification commands
 are in `experiment/README.md`. Credentials are not in the evidence or Git.
 
-## Launch Blockers
+## Validation History
 
-No full-budget experiment training has started. The owner confirmed keeper
+The owner confirmed keeper
 release on 2026-11-15. Only the four verified keeper parents were sent
 SIGTERM; all 32 GPUs became idle. The release receipt is
 `run-preparation/keeper-release-20261115.json` under the PVC output root.
@@ -177,8 +235,8 @@ Muon, 1.50-2.59 seconds for MuonT, 1.52-2.62 seconds for outer-left down, and
 1.35-1.94 seconds for down hybrid. Peak allocations were approximately
 19-20.4 GiB per GPU. These are short execution probes, not steady-state
 benchmarks or optimizer quality measurements. Their continuation comparisons
-failed under the original DDP bucket behavior. The launcher still refuses
-full-budget training until every required gate passes.
+failed under the original DDP bucket behavior. Fixed-bucket validation later
+passed every required gate and authorized the current wave.
 
 The first Muon full-model attempt exhausted A100 memory during compiled-head
 autotuning at microbatch 8. All 20 active configs now use microbatch 4 and
@@ -208,26 +266,24 @@ The current local runner uses `find_unused_parameters=True` to keep the
 initial DDP gradient bucket assignment across fresh and resumed processes.
 The full eight-rank Muon continuation comparison passed, including model,
 optimizer and RNG state. The previously failing gate weight is identical.
-The remaining arms are being checked in
-`validation/attempt_20261115_1418`. This source change is not yet published
-or deployed to the workers. No tolerances or Newton-Schulz settings were
-relaxed.
+All remaining arms also passed in `validation/attempt_20261115_1418`,
+with zero maximum absolute tensor error. The fixed-bucket source was
+published and deployed before launch. No tolerances or Newton-Schulz
+settings were relaxed.
 
 Data access, full preparation, and data verification are resolved.
 No datasets, revisions, or tokenizer have been substituted.
 
 ## Next Actions
 
-1. Reuse the completed prepared corpus and released GPUs.
-2. Preserve the passing synthetic GPU checks when their source inputs match.
-3. Complete fixed-bucket full-model/context continuation for all first-wave arms.
-4. Compare uninterrupted and resumed GPU trajectories, including input bases,
-   output moments/roots, optimizer state, and data position.
-5. Issue an evidence-backed passing validation receipt, then launch Muon,
-   input MuonT, outer-left down, and down hybrid across all four nodes.
-6. Monitor logs, losses, checkpoints, root fallbacks, memory, and throughput.
-   Treat the first wave as exploratory, then execute the plan's fair tuning
-   and paired-seed confirmation gates.
+1. Monitor the current runs' losses, checkpoints, root fallbacks, memory,
+   and throughput through full-budget completion.
+2. Verify scheduled and final checkpoints and run status. Before a restart,
+   validate full-model continuation after the cached-root transition without
+   relaxing tolerances.
+3. Compare matched-token evaluation losses and time/memory costs. Treat
+   this first wave as exploratory.
+4. Execute the plan's fair tuning and paired-seed confirmation gates.
 
 Later control arms, full Bi-MuonT/full hybrid, detailed spectral/curvature
 diagnostics, the tuning campaign, and larger-model extensions are planned.

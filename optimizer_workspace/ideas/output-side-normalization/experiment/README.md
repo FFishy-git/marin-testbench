@@ -232,7 +232,8 @@ Training also uses DDP `find_unused_parameters=True` to keep its initial
 gradient bucket assignment across process restarts. Without this setting,
 the startup and rebuilt buckets produced small gradient differences amplified
 by BF16 Newton-Schulz, failing full-model continuation at unchanged tolerances.
-The eight-rank Muon comparison passed with fixed buckets. DDP warns that no
+All four eight-rank full-model continuation comparisons passed with fixed
+buckets and zero maximum tensor error. DDP warns that no
 parameters are unused; the flag deliberately prevents bucket rebuilding and
 adds a graph traversal. Record the cost in throughput comparisons.
 
@@ -247,7 +248,7 @@ uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
 
 The CPU numerical suite and synthetic A100/NCCL checks have passed.
 All four first-wave arms completed three-update full-model real-data smoke
-runs. Fixed-bucket full-model continuation is still being checked for the
-remaining arms. The launcher requires a passing receipt for all current
-source/configuration hashes. Short smoke losses do not establish optimizer
-quality.
+runs and checkpoint continuation. The current four-job wave is running on
+all 32 A100s; see `../EXPERIMENT_STATUS.md` for launch identities and evidence.
+The launcher requires a passing receipt for all current source/configuration
+hashes. Short smoke losses do not establish optimizer quality.
