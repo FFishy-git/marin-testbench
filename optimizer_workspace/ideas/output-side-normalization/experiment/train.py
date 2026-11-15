@@ -139,7 +139,12 @@ def main():
         model
         if world == 1
         else nn.parallel.DistributedDataParallel(
-            model, device_ids=None, gradient_as_bucket_view=True, broadcast_buffers=False
+            model,
+            device_ids=None,
+            gradient_as_bucket_view=True,
+            broadcast_buffers=False,
+            # Keep bucket layouts fixed across fresh and resumed processes.
+            find_unused_parameters=True,
         )
     )
     armed = {"value": False}

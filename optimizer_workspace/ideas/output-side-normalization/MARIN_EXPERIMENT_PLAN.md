@@ -341,6 +341,15 @@ emulate precision casts, and enable deterministic CUDA algorithms with
 full-model continuation validation at the existing tolerance. Root CUDA
 graphs remain enabled. Include the runtime cost in performance comparisons.
 
+The deterministic compiler settings alone did not pass full-model restart
+parity. DDP's startup bucket layout differed from its rebuilt layout on later
+updates. The runner uses `find_unused_parameters=True` to retain the initial
+bucket assignment across fresh and resumed processes. The full eight-rank
+Muon continuation comparison passed with this setting. Every arm uses it.
+It adds autograd graph traversal and may reduce communication overlap; report
+measured throughput with the setting enabled. Disabling Dynamo's DDP graph
+partitioning alone did not fix the mismatch and is not retained.
+
 ## Output Statistic and Update Definitions
 
 Let `C = E[x x^T]` and `B_obs = E[delta delta^T]`, where `delta` is the

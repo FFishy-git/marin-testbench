@@ -89,6 +89,9 @@ A single-node execution check uses the full model/context and reference
 schedule; `--max-steps` is an early-stop execution check.
 
 ```bash
+export NCCL_INSPECTOR_ENABLE=0
+export PYTHONFAULTHANDLER=1
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
 /opt/conda/envs/torch-base/bin/python -m torch.distributed.run \
   --standalone --nproc_per_node=8 -m experiment.train \
   --config experiment/configs/down_hybrid_0p5m_seed0.json \
@@ -100,6 +103,7 @@ Checkpoint directories have one atomic file per rank and a `complete.json`
 receipt written only after all ranks finish saving. Resume requires the
 original configuration/world size. Saved state includes input bases and
 output roots, avoiding an implicit root reset.
+Run the resume command in the same environment, including the exports above.
 The execution check saves at its final update, so the command above creates
 `checkpoints/step_000002`. `--max-steps` is a total update limit; resuming that
 checkpoint with `--max-steps 3` executes one additional update.
@@ -143,7 +147,7 @@ real-data gates:
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
   python -m experiment.validate --gpu \
   --data /APPROVED/DATA --data-receipt /APPROVED/DATA/experiment_receipt.json \
-  --work /apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/validation \
+  --work /apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/validation/UNIQUE_ATTEMPT \
   --receipt artifacts/run-preparation/validation.json
 ```
 
@@ -159,7 +163,12 @@ Candidate down updates use FP32 root products and per-matrix Newton-Schulz:
 the initial split-product/batched implementation exceeded the existing BF16
 parity tolerance on A100. This increases launch overhead for candidate down
 updates; include that cost in throughput comparisons. Non-down input updates
-retain the pinned fast backend. Both modes use the same update tolerance.
+retain the pinned fast backend. The `f32` and `tpu` NS modes both use
+`rtol=0.003, atol=5e-5` for the resulting down parameter delta.
+Checkpoint tensor comparisons use `rtol=1e-5, atol=1e-6` for every tensor;
+scalars, source/data identities and counters must match exactly.
+The elementwise rule is `abs(actual - expected) <= atol + rtol * abs(expected)`.
+Passing continuation receipts report the maximum absolute tensor error.
 Collector and body transparency checks compare compiled observed and
 compiled unobserved paths; eager BF16 accumulation differs from compiled
 accumulation. The collector also has an independent raw-cotangent reference.
@@ -205,7 +214,9 @@ exhausted the A100 40GB memory during full-model compiled-head autotuning.
 Global batches, schedules, contexts, model dimensions, and token budgets are
 unchanged; the 0.5M configs accumulate four microbatches on each of eight GPUs.
 The synthetic GPU partition check compares gradients and collected output
-statistics for the two partitions and checks the independent raw moment.
+statistics for the same 16 sequences partitioned as two microbatches of 8
+or four microbatches of 4, using the same effective batch and loss scaling.
+It also checks the independent raw moment.
 
 The active model/head compiler options retain compilation with CUDA graphs
 off for those two surfaces, restrict GEMM selection to ATEN, and emulate
@@ -217,6 +228,14 @@ arm and remain subject to full-model validation; root CUDA graphs are separate.
 Output observation buffers have independent storage per layer so compiled
 backward segments cannot invalidate other layers' saved-buffer versions.
 
+Training also uses DDP `find_unused_parameters=True` to keep its initial
+gradient bucket assignment across process restarts. Without this setting,
+the startup and rebuilt buckets produced small gradient differences amplified
+by BF16 Newton-Schulz, failing full-model continuation at unchanged tolerances.
+The eight-rank Muon comparison passed with fixed buckets. DDP warns that no
+parameters are unused; the flag deliberately prevents bucket rebuilding and
+adds a graph traversal. Record the cost in throughput comparisons.
+
 ```bash
 uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
   python -m experiment.launch --launch \
@@ -226,7 +245,9 @@ uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
   --report artifacts/run-preparation/wave0.json
 ```
 
-The code has CPU numerical coverage. Until the GPU/real-data gates execute,
-compiled full-model correctness, A100 throughput, memory fit, and scientific
-outcomes remain unverified. Synthetic correctness checks are never Marin
-training evidence.
+The CPU numerical suite and synthetic A100/NCCL checks have passed.
+All four first-wave arms completed three-update full-model real-data smoke
+runs. Fixed-bucket full-model continuation is still being checked for the
+remaining arms. The launcher requires a passing receipt for all current
+source/configuration hashes. Short smoke losses do not establish optimizer
+quality.

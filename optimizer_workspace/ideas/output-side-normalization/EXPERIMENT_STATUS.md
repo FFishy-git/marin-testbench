@@ -19,11 +19,10 @@ Updated: 2026-11-15.
   data checksums, source manifests, deployment, and launch preflight.
 - Added a clean-checkout bootstrap with archive and 112-file source hash
   verification, an A100/NCCL validation driver, and real-data smoke and
-  checkpoint-continuation orchestration. These accelerator checks are pending.
+  checkpoint-continuation orchestration.
 - Published the implementation to `FFishy-git/marin-testbench`, branch
-  `output-side-normalization-marin`, commit
-  `280d40ed7302e77a7117774de219832dc10ca244`. Remote-ref and commit-pinned
-  file retrieval both verified publication.
+  `output-side-normalization-marin`. Latest published implementation revision:
+  `daed57bf315a7cb8a841a75342fd42c082c0fed0`.
 - Created the approved PVC output directories under
   `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
   Deployment receipts identify each source version; redeploy after edits.
@@ -50,11 +49,11 @@ The CPU suite passed 18 tests, including:
 Checkpoint state now binds source hashes, full configuration, prepared-data
 identity, and rank ownership. A new synthetic GPU gate saves after update 22
 and continues through update 24, covering Toner's cached-root CUDA graphs
-after its 20-update exact-root startup. This gate is implemented but unexecuted
-while the GPUs remain occupied.
+after its 20-update exact-root startup. This gate passed on all four nodes.
 Restored input factors rewarm and recapture process-local CUDA graphs without
 resetting numerical root or momentum state. The new GPU continuation gate
-must verify this adaptation before training resumes are accepted.
+verified this adaptation on synthetic optimizer inputs; full-model checks
+remain a separate requirement.
 
 The constructed pinned architecture contains 265,585,152 parameters.
 The full scoped repository lint entry point passed Ruff, Black, license headers,
@@ -121,9 +120,10 @@ Both scratch and PVC checks verified all 2,876 shards. The training/C4 receipt
 records 2,311 required shards, 25,386,955,482 tokens, and 20,425,515 documents.
 It verifies names, token/document counts, token-ID bounds, SHA256, size and
 modification timestamps. Partial data cannot authorize training.
-The CPU suite was rerun and all 18 tests passed. No GPU smoke has run.
-The full-data CPU loader check passed the deterministic mixture allocation
-`[1897, 124, 27]`, 64 held-out windows per source, held-out exclusion, 236 C4
+The CPU suite was rerun and all 18 tests passed.
+The full-data CPU loader check passed the deterministic allocation of each
+2,048-window block: DCLM 1,897, StarCoder 124, and Proof-Pile 27 sequence
+windows. It also checked 64 held-out windows per source, held-out exclusion, 236 C4
 evaluation windows, and packed batches at the beginning and end of the
 configured training trajectory.
 
@@ -133,8 +133,8 @@ Prepared data:
 Training receipt: `data/experiment_receipt.json`, SHA256
 `e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10`.
 The data-ready preflight accepted this receipt on all four nodes and found
-matching experiment code/configuration hashes. The remaining preflight blockers
-are the GPU keepers and unexecuted GPU/full-model validation.
+matching experiment code/configuration hashes. The GPU keepers were released
+after owner confirmation; full-model continuation remains the launch gate.
 
 Current evidence under the PVC output root:
 
@@ -171,15 +171,21 @@ NS because split-product/batched BF16 updates exceeded the existing parity
 tolerance. Compiled transparency probes compare compiled reference paths to
 avoid conflating compiler BF16 rounding with collector changes.
 
-Eight-rank full-model real-data smoke, memory fit, and full-model continuation
-remain pending. The launcher still refuses a full wave until they pass.
+All four arms completed eight-rank full-model/context real-data smoke and
+checkpoints at microbatch 4. Later updates took approximately 1.07 seconds for
+Muon, 1.50-2.59 seconds for MuonT, 1.52-2.62 seconds for outer-left down, and
+1.35-1.94 seconds for down hybrid. Peak allocations were approximately
+19-20.4 GiB per GPU. These are short execution probes, not steady-state
+benchmarks or optimizer quality measurements. Their continuation comparisons
+failed under the original DDP bucket behavior. The launcher still refuses
+full-budget training until every required gate passes.
 
 The first Muon full-model attempt exhausted A100 memory during compiled-head
 autotuning at microbatch 8. All 20 active configs now use microbatch 4 and
 preserve their original global batches and token budgets. The 0.5M first wave
 uses accumulation 4 on eight GPUs. All synthetic GPU gates, including the
 added partition gradient/statistic check, passed again in
-`validation/attempt_20261115_1353/gpu_checks.json`. Full-model checks are running
+`validation/attempt_20261115_1353/gpu_checks.json`. Full-model smoke passed
 under the adapted configs.
 
 The unrestricted-autotune Muon smoke completed three finite-loss real-data
@@ -192,7 +198,20 @@ Full-model output-arm backward also exposed shared-buffer version counters
 across compiled segments. Observation buffers now have independent storage
 per layer and stack only for pooling. CPU and synthetic GPU checks passed
 after this change in `validation/attempt_20261115_1407`; full-model checks
-are rerunning locally and on each assigned worker.
+completed locally and on each assigned worker.
+
+Deterministic body/head compilation made printed training losses agree, but
+all four full-model continuation checks still failed at
+`body.blocks.0.gate.weight`. The Muon gate had maximum absolute error
+`7.715e-6`. Disabling Dynamo DDP partitioning alone did not fix this.
+The current local runner uses `find_unused_parameters=True` to keep the
+initial DDP gradient bucket assignment across fresh and resumed processes.
+The full eight-rank Muon continuation comparison passed, including model,
+optimizer and RNG state. The previously failing gate weight is identical.
+The remaining arms are being checked in
+`validation/attempt_20261115_1418`. This source change is not yet published
+or deployed to the workers. No tolerances or Newton-Schulz settings were
+relaxed.
 
 Data access, full preparation, and data verification are resolved.
 No datasets, revisions, or tokenizer have been substituted.
@@ -201,8 +220,7 @@ No datasets, revisions, or tokenizer have been substituted.
 
 1. Reuse the completed prepared corpus and released GPUs.
 2. Preserve the passing synthetic GPU checks when their source inputs match.
-3. Run full-model/context real-data three-update smoke for all first-wave arms.
-   Measure memory and lower microbatch identically only if required.
+3. Complete fixed-bucket full-model/context continuation for all first-wave arms.
 4. Compare uninterrupted and resumed GPU trajectories, including input bases,
    output moments/roots, optimizer state, and data position.
 5. Issue an evidence-backed passing validation receipt, then launch Muon,
