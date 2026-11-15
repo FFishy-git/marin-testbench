@@ -1,0 +1,8 @@
+# Large source archives, papers, preparation evidence, and run data stay on PVC.
+artifacts/
+!artifacts/
+artifacts/*
+!artifacts/SOURCES.md
+*.pt
+*.bin
+*.tmp
