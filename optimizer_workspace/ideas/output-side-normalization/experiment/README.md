@@ -70,6 +70,11 @@ The inspected versions are recorded in `experiment/requirements.txt`.
 After access was granted on 2026-11-15, direct source-file requests returned
 HTTP 206 for all four required components. The first shard of DCLM, StarCoder,
 Proof-Pile and Paloma C4 was prepared and verified against the pinned counts.
+Full preparation subsequently completed with exit code 0. All 2,876 shards
+passed scratch and PVC verification. The existing prepared corpus is
+`$ROOT/data`; skip preparation and reuse its `experiment_receipt.json`.
+The receipt covers 2,311 required training/C4 shards and has SHA256
+`e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10`.
 The wrapper calls Toner's unchanged preparation entry point, reuses only
 verified existing shards, checks all 2,876 shards, then creates the full
 training/C4 content receipt. New shards are written to local scratch to avoid

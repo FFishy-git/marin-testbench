@@ -113,12 +113,28 @@ Full preparation started on 2026-11-15 for all 2,876 pinned shards
 workers after stopping the initial preparation process and preserving its
 verified shards. Small-write waits on the PVC's FUSE path prompted a switch to
 local scratch with block copies to the PVC. Toner's tokenization code is
-unchanged. Full preparation is still pending.
+unchanged. Full preparation and verification completed on 2026-11-15 at
+10:05:40 UTC (18:05:40 Asia/Shanghai), with process exit code 0.
 `experiment.prepare` loads only `HF_TOKEN` from the local credential file,
 holds an output lock, and calls the unchanged upstream preparation entry point.
-It checks the complete plan and creates the training/C4 content receipt only
-after successful preparation. Partial data cannot authorize training.
+Both scratch and PVC checks verified all 2,876 shards. The training/C4 receipt
+records 2,311 required shards, 25,386,955,482 tokens, and 20,425,515 documents.
+It verifies names, token/document counts, token-ID bounds, SHA256, size and
+modification timestamps. Partial data cannot authorize training.
 The CPU suite was rerun and all 18 tests passed. No GPU smoke has run.
+The full-data CPU loader check passed the deterministic mixture allocation
+`[1897, 124, 27]`, 64 held-out windows per source, held-out exclusion, 236 C4
+evaluation windows, and packed batches at the beginning and end of the
+configured training trajectory.
+
+Prepared data:
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/data`.
+
+Training receipt: `data/experiment_receipt.json`, SHA256
+`e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10`.
+The data-ready preflight accepted this receipt on all four nodes and found
+matching experiment code/configuration hashes. The remaining preflight blockers
+are the GPU keepers and unexecuted GPU/full-model validation.
 
 Current evidence under the PVC output root:
 
@@ -127,6 +143,8 @@ Current evidence under the PVC output root:
 - `run-preparation/first-shards.json`
 - `run-preparation/preparation-state.json`
 - `run-preparation/prepare-full-scratch-20261115.log`
+- `run-preparation/full-loader.json`
+- `run-preparation/preflight-data-ready.json`
 
 Authentication, isolated-environment, preparation, and verification commands
 are in `experiment/README.md`. Credentials are not in the evidence or Git.
@@ -138,21 +156,18 @@ No experiment training has started.
 1. All 32 A100-SXM4-40GB GPUs are occupied at 100% utilization by the existing
    `hy_infuse_moe/gpu_matmul.py` workload. It has not been stopped. Owner
    confirmation is required before releasing these processes.
-2. Access is resolved and full preparation is running. The exact data receipt
-   is still pending; the first four verified shards are insufficient for
-   training. No datasets, revisions, or tokenizer have been substituted.
-3. GPU cotangent tests, NCCL statistics parity, A100 FA2, compiled full-model
+2. GPU cotangent tests, NCCL statistics parity, A100 FA2, compiled full-model
    checks, four-arm real-data smoke, memory fit, and GPU checkpoint
    continuation remain pending. The validation receipt marks these false,
    and the launcher refuses a full wave.
 
+Data access, full preparation, and data verification are resolved.
+No datasets, revisions, or tokenizer have been substituted.
+
 ## Next Actions
 
-1. Await the existing preparation job. It verifies names, token/document counts,
-   token-ID range, and SHA256 receipts automatically. Confirm
-   `run-preparation/preparation-state.json` records `status: complete` and
-   `data/experiment_receipt.json` exists. Do not start a duplicate job.
-   Release only the identified GPU keepers after owner confirmation.
+1. Release only the identified GPU keepers after owner confirmation.
+   The preparation job is complete; do not launch another preparation job.
 2. Execute GPU kernel/collector parity and two-rank NCCL checks. Compare
    candidate down updates with an independent FP32 matrix reference.
 3. Run full-model/context real-data three-update smoke for all first-wave arms.

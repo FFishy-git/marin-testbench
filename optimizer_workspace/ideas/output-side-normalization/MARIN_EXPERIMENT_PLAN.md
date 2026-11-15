@@ -145,7 +145,9 @@ StarCoderData and Paloma report automatic gating; readable repository metadata
 does not establish source-file access. After authorized access was granted on
 2026-11-15, the pinned tokenizer download and source-file probes for all four
 required components succeeded. Full corpus preparation and verification are
-still in progress.
+complete: all 2,876 pinned shards passed scratch and PVC verification on
+2026-11-15. The training/C4 receipt covers 2,311 required shards; see
+[`EXPERIMENT_STATUS.md`](EXPERIMENT_STATUS.md) for its path and digest.
 The weights normalize approximately to 92.5700%, 6.0901%, and 1.3398%.
 The actual loader uses 2048-sequence mixture blocks, integer allocation,
 and remainder correction: 1897 DCLM, 124 code, and 27 math windows per block.
@@ -561,8 +563,9 @@ The four-node launcher must refuse training until:
 - a real-data smoke run succeeds with no nonfinite values or OOM;
 - checkpoint save/restore is validated.
 
-Current prerequisites are full prepared-data verification and release of the
-identified GPU keepers with owner approval. Tokenizer/source access is resolved.
+Current prerequisites are release of the identified GPU keepers with owner
+approval and execution of the GPU correctness/full-model/continuation checks.
+Tokenizer/source access and full prepared-data verification are resolved.
 Synthetic data may be used only for labeled correctness checks; it cannot
 be reported as the Marin experiment.
 
