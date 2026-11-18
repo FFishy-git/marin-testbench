@@ -8,7 +8,7 @@ Unqualified clock times in the November 16-18 continuation use Asia/Shanghai
 
 ## Current Experiment State
 
-Evidence checkpoint, November 18, 2026 14:55:46 Asia/Shanghai.
+Evidence checkpoint, November 18, 2026 16:10:24 Asia/Shanghai.
 Receipt and explicit live-observation times are shown below. Saved
 receipts alone do not establish current GPU occupancy.
 `PVC` denotes
@@ -33,7 +33,8 @@ receipts alone do not establish current GPU occupancy.
 | Saved-NS GPU owner, adapter and worker | Diagnostic-parent successor CPU/archive-verified; historical live-predecessor denial preserved | Distinct receipt at 11:32:40 binds 78 helpers, two pinned-source fixtures and 67 passing tests in 49.15 seconds. Archived freeze/fresh-check/start and retained-output reconstruction have CPU coverage. A missing `diagnostics/` parent is corrected; an isolated execute test verifies restoration after child-spawn failure. Scoped lint passes. The 11:34:47 archived-entry denial remains historical evidence. Receipt: `PVC/run-preparation/saved-ns-gpu-adapter-cpu/diagnostic-parent-20261118T1132/receipt.json`. After original terminal/restoration authentication, this exact archive supplies the separately frozen replay below; mutable checkout helpers are not executed. |
 | Saved-input NS CUDA replay | Diagnostic complete; exact same-input/saved-output reproduction and restoration independently verified | Two fresh full-batch `C,R,C,R` processes exit zero with zero cleanup; controller terminal/restoration at 12:08:51. Independent frozen-helper reconstruction at 12:12:17 verifies 4/4 exact finite within-process repeats, 8/8 exact corresponding saved-GPU-output comparisons and 4/4 exact cross-process comparisons. Source pair passes tolerance (relative Frobenius error `1.4513e-6`); its reproduced output pair fails with relative error `0.03693455` and 4,191,329 mismatching elements. Controller/workers are absent; exact healthy keeper `1268038/930907131` is restored on all eight original A100s. Receipt: `PVC/run-preparation/saved-ns-terminal-result-observation-20261118T1212.json`; retained comparison: `PVC/diagnostics/saved-ns-replay-20261118/comparison.json`. This localizes one saved NS occurrence to input sensitivity, not the upstream root cause, full-model continuation or a production gate. |
 | Contingent restored-root preparation helper | Historical standalone CPU/archive acceptance; integrated into the separate diagnostic candidate below | `tracking/prepare_restored_roots.py` prepares eligible cached-root kernels using independent `C/tol/SB/S2` scratch, then commits readiness after side-stream success. Its original bytes are retained. Archived 12-test lifecycle suite passes at 11:47:54; integrated 296 tests pass. CPU staging of authenticated rank-0/update-23 continuous/resumed `d/f` inputs passes 16 exact tensor/layout/storage-isolation comparisons at 11:49:05. Receipt: `PVC/run-preparation/restored-roots-cpu/20261118T1153/receipt.json`; scratch result: `PVC/run-preparation/saved-root-scratch-20261118T1154.json`. This standalone receipt issued no GPU execution; the integrated helper is now exercised by the separately frozen diagnostic below. |
-| Restored-root scratch-readiness diagnostic | All 12 commands exited zero with 12 saved trajectories; both trace transparencies independently exact; prepared continuation fails; original reconstruction ongoing | Candidate `PVC/candidates/root-preparation-testroot-diagnostic-20261118T1233` has 172-test/304-source acceptance; its executor archive passes 133 tests with 72 helpers/nine fixtures. Controller `1322053/931372042`, validator `1322447/931376704` and original document monitor remain independently authenticated at 14:55:46. Cold safety is exact within/across processes; historical continuous `f` capture/replay still fail tolerance. Independent prepared-control reconstruction finds 97 rank-0 model failures at update 23 and 460 all-rank failures at 24, plus 4/39 failed scalar checks. Prepared transparency completes at 14:46:26 with six exact eight-rank checkpoint pairs and 39/39 scalar passes per mode. Rank-0/update-23 localization at 14:47:48 finds exact gradients/root inputs and small root/NS-source discrepancies preceding failed NS outputs. Direct prepared/unprepared stage comparison at 14:52:25 finds all 662 stable tensor values exactly equal per continuous/resumed mode; only expected readiness/graph flags differ in resumed mode. Canonical receipt: `PVC/run-preparation/diagnostic-root-preparation-gpu-20261118.json`; prepared transparency: `PVC/run-preparation/root-prepared-transparency-20261118T1434/receipt.json`; localization: `PVC/run-preparation/root-prepared-stages-20261118T1447/receipt.json`; intervention comparison: `PVC/run-preparation/root-intervention-stages-20261118T1451/receipt.json`; latest owner observation: `PVC/run-preparation/root-command-prefix-observation-20261118T1456.json`. Original-control reproduction, full diagnostic reconstruction, terminal cleanup and exact keeper restoration remain pending. All original production gates remain required. |
+| Restored-root scratch-readiness diagnostic | Terminal `needs_attention`; all 12 GPU commands exited zero; exact owner absence and keeper restoration verified | Validator fails at 15:59:34 on the before-call lifecycle expectation; controller records terminal failure at 15:59:52. The original receipt has no completed `analysis` and is preserved unchanged. Separate prepared-control comparisons retain 97 rank-0 failures at update 23 and 460 all-rank failures at 24, plus 4/39 failed scalar checks. Both trace transparencies are exact; prepared/unprepared rank-0/update-23 stable stages are all 662 exact per mode. Fresh issued-helper observation at 16:10:24 verifies controller `1322053/931372042` and validator `1322447/931376704` absent, no child marker, and exact healthy restored keeper `1423935/932293205`, ranks `1424069` through `1424076`, on the original eight A100s. Failed receipt: `PVC/run-preparation/diagnostic-root-preparation-gpu-20261118.json`; independent failure/restoration observation: `PVC/run-preparation/root-failed-owner-observation-20261118T1610.json`. Separate full failed-diagnostic reconstruction remains pending; all production gates remain required. |
+| Root-kernel stage recorder and crossed replay successor | Earlier immutable CPU archive accepted; revised terminal verifier CPU-tested; GPU-unissued | The unchanged 15:50 archive binds 86 helpers/five fixtures and passes 42 archived tests. Revised checkout terminal/output reconstruction passes 48 tests in 63.67 seconds. Corrected before-call lifecycle regression passes four tests in 1.35 seconds using the pinned engine state machine. This revision still needs a distinct exact source archive and authenticated failed-predecessor reconstruction. The original success-only predecessor gate refuses terminal `needs_attention`; its historical 15:50 live-predecessor refusal remains preserved. No GPU binding, CUDA transparency result or launch exists. Earlier receipt: `PVC/run-preparation/root-stage-replay-cpu/owner-reconstruction-20261118T1550/receipt.json`; latest lifecycle XML: `PVC/run-preparation/test-root-before-call-lifecycle-20261118T1613.xml`. |
 | Proposed Waves 13-15, full-budget attribution LR study | GPU-denied after continuation failure; no production candidate, release or launch | Three LR waves each compare MuonT, fused normalization and identity-outer matched null, with balanced assignments across `.9`/`.80`/`.144` and `.139` untouched. Controller/preparer/Bash-monitor implementation remains mutable and unissued. Saved-state CPU diagnosis, a distinct corrected candidate and complete unchanged-tolerance GPU validation are required before production acceptance. Each successor also waits for preceding complete histories, large-window analysis, cloud verification and exact restoration; settings and gates are in "Full-Budget Attribution Wave Plan" below. |
 
 Wave 12 fused's final C4/selection loss deltas versus same-wave MuonT are
@@ -41,6 +42,349 @@ Wave 12 fused's final C4/selection loss deltas versus same-wave MuonT are
 mean deltas are -0.001806/-0.002909 nats. Recorded main-function time
 is 9.02% higher. These exploratory seed-0 results establish no efficiency
 win, full-budget tuned superiority or fresh-seed confirmation.
+The research goal remains active.
+
+Failure/restoration observation, November 18 16:10:24:
+`PVC/run-preparation/root-failed-owner-observation-20261118T1610.json`,
+SHA-256 `008e0b9a54fde7425570933b1b131c50a73a1245001026c0d51448ad96eec0c8`,
+authenticates the issued helper closure, failed binding/state/receipt,
+both owner logs, all 12 integer-zero command logs and retained trajectory
+identities. Original owners and child markers are absent; the exact restored
+keeper is healthy on all eight original physical A100s.
+The original Bash monitor `3776115/919963640` remains live under parent 1
+with `sleep 900`. Its 16:10:18 scheduled render refuses a concurrent
+manual document change and preserves that change; the next cycle remains
+scheduled. No replacement monitor, original-owner restart, production run
+or new SwanLab history is issued.
+
+The four pinned-engine before-call lifecycle regressions pass in 1.35 seconds
+with CUDA hidden and unchanged 60/600-second bounds and safety exclusions.
+XML: `PVC/run-preparation/test-root-before-call-lifecycle-20261118T1613.xml`.
+The initial invocation lacks the issued pytest guard on `PYTHONPATH` and
+stops before collection; the corrected invocation explicitly includes the
+original helper directory. Numerical tolerances remain unchanged.
+Next: archive the revised executor and reconstructor, run the exact archived
+CPU tests, independently reconstruct the preserved failed diagnostic into
+a separate receipt, and require that evidence plus exact live restoration
+before a separately owned root-stage replay. Waves 13-15 remain denied.
+
+Original restored-root diagnostic terminal failure, November 18 15:59-16:07:
+validator `1322447/931376704` stops at 15:59:34 with
+`ValueError: Root trace first-capture/next-replay lifecycle differs`.
+Controller `1322053/931372042` records terminal `needs_attention` at
+15:59:52, validator execution/cleanup exits 1/1, descendant absence and
+keeper restoration 0. The original GPU receipt is preserved with all
+12 integer-zero commands and all recorded trajectories, but without
+completed `analysis`. No original evidence is rewritten as successful.
+Failed receipt:
+`PVC/run-preparation/diagnostic-root-preparation-gpu-20261118.json`,
+SHA-256 `0f64ced3dbd46675275181d49f856eb909702415403c17ed2afd764cad68e303`.
+Terminal state:
+`PVC/run-preparation/root-preparation-state-20261118.json`,
+SHA-256 `da27f7f677d4612401d9d84a9ff584680a62b4c30109934e0ce3771ac150a1a5`.
+Fresh frozen-helper process/keeper inspection confirms original controller
+and validator absent, no child marker and exact healthy restored keeper
+`1423935/932293205`, ranks `1424069` through `1424076`, on the original
+eight physical A100s. The document monitor remains live.
+
+Read-only saved lifecycle inspection covers all eight ranks and updates
+22/23/24 in both prepared/unprepared continuous/resumed trajectories.
+Before-call flags at update 22 are `warm=True, graph_active=False` in
+all four histories: with inline steps 20, update 21 warms eagerly and
+update 22 is the initial continuous capture. Unprepared resumed update 23
+is `False/False`; update 24 is `True/False`, immediately before its
+initial capture. Prepared resumed update 23 is `True/False`, update 24
+`True/True`. Both continuous histories show `True/True` at 23 and 24.
+The executed tracer wraps `_roots_graphed` and snapshots **before** the
+call; the original expectation incorrectly required an existing graph at
+continuous boundary 22 and unprepared resumed update 24.
+This is a checker discrepancy, not a correction of failed continuation.
+
+Separate unissued `tracking/root_preparation_reconstruction.py` retains
+the original source/plan/command/trajectory/checkpoint/loss/transparency
+comparisons and will publish a separate failed-diagnostic reconstruction.
+Its lifecycle regression uses the unchanged pinned engine method with
+fake CUDA graph I/O, not new numerical roots. Full source-archived
+CPU acceptance and all-rank saved reconstruction remain pending.
+The new root-stage terminal verifier passes 48 CPU tests in 63.67 seconds:
+`PVC/run-preparation/test-root-stage-terminal-fixed-20261118T1606.xml`.
+It binds two distinct acknowledged worker generations, complete retained
+outputs, original-handle/child-marker absence and exact restored keeper
+without accepting historical-output failures as production correctness.
+This changed source requires a new immutable CPU archive; the earlier
+15:50 accepted archive is retained unchanged. The earlier live-predecessor
+observer now correctly refuses absent/exited handles; no restart is issued.
+Both successor GPU issuance and Waves 13-15 remain denied pending
+independent failed-owner reconstruction/restoration evidence.
+
+Root-stage executor acceptance checkpoint, November 18 15:47-15:51:
+all 42 focused CPU tests pass in 37.76 seconds, and the integrated
+recorder/owner/analyzer/restored-root suite passes 88 tests in 39.41 seconds.
+XMLs:
+`PVC/run-preparation/test-root-stage-owner-json-roundtrip-20261118T1550.xml`,
+SHA-256 `b0aac716fd6eb4b8aef95a7676472c9fe34870a1b0e33eb110030e4cf45fc025`,
+and `PVC/run-preparation/test-root-stage-owner-integrated-20261118T1550.xml`,
+SHA-256 `40ea67c6fbaf8dd20494177e793eb9569076eccc66bacc9fa87fe07ed9dcf35c`.
+Archived start tests observe exact executable acknowledgment, persist
+spawn failure and refuse reusing any existing intent. Persisted-output
+tests independently reconstruct both process reports, reject false
+metrics and replaced tensor files, and expose changed outputs or stages.
+The preceding reconstruction attempt's 39 passes/three failures are
+preserved in
+`PVC/run-preparation/test-root-stage-owner-reconstruction-20261118T1548.xml`.
+Those failures identify tuple/list JSON coordinate mismatch, corrected
+by emitting JSON-native ordered coordinates. No numerical tolerance
+or acceptance assertion is relaxed.
+
+GPU input staging now explicitly orders the root side stream after
+host-to-device copies. Complete same-input captured/replayed stages
+and cross-process corresponding stages must be exactly finite before
+intermediate interpretation; equal final outputs alone do not suffice.
+The actual GPU implementation remains unexecuted, so CPU acceptance
+does not establish correct CUDA lifetime, graph transparency or
+historical root reproduction. All seven successor helper/test files
+pass required scoped Ruff/Black and content checks.
+
+The exact executor CPU entry finishes at 15:50:02 with integer exit 0,
+42 archived-source test passes in 45.39 seconds, 86 helpers and five
+pinned numerical/configuration fixtures. Receipt:
+`PVC/run-preparation/root-stage-replay-cpu/owner-reconstruction-20261118T1550/receipt.json`,
+SHA-256 `dfee669de0033afd3342b68abf3dc977e24f271be49e31b1e5d98ab1cdf107f8`.
+Its `source.tar` SHA-256 is
+`3a161cfb9687422f8fe30935a09758095463c969ff4dec19bc7c044e1ee9790e`;
+its `tests.xml` SHA-256 is
+`a71ba28169eaded57071aaa4809fc6b97f5fc8456f74b32ece51cec8646d8a47`.
+CPU invocation selects matching Python 3.13, hides CUDA, uses offline
+dependencies and retains all seven safety exclusions and 60/600-second
+test/session bounds. The initial `python -P` invocation omitted the
+explicit tracking `PYTHONPATH` and exited before importing the controller
+or creating evidence; the subsequent exact invocation and emitted
+archived test command are retained in this accepted receipt.
+
+Fresh accepted-archive `--phase freeze` at 15:50 refuses with original
+reconstruction/cleanup/restoration incomplete, before GPU inventory or
+allocation transfer. The original frozen observer at 15:51:45 authenticates
+controller `1322053/931372042`, validator `1322447/931376704`,
+document monitor `3776115/919963640`, and all 12 integer-zero command/log
+identities. Receipt:
+`PVC/run-preparation/root-command-prefix-observation-20261118T1553.json`.
+The preceding 15:49:13 observation is preserved at
+`PVC/run-preparation/root-command-prefix-observation-20261118T1550.json`,
+SHA-256 `9f21a42cea2b696b1ce97b28d1f5e5e01e33a2cd2188bb84e9e666a010467a90`.
+Original GPU receipt remains `diagnosing`, executor state `validating`;
+exact restoration is not yet available.
+
+Next: let the original reconstruction finish; execute its already frozen
+independent terminal verifier to
+`PVC/run-preparation/root-terminal-observation-20261118.json`; authenticate
+the original exact restored keeper; freeze/check/start this accepted
+successor from its immutable archive; independently reconstruct all
+retained root stages, transparency and restoration. Only accepted
+localization can motivate a distinct numerical correction and a rerun
+of every original production gate. Waves 13-15 remain production-denied.
+No new training history or SwanLab upload is produced by CPU acceptance.
+The authoritative document's content checks pass; its pre-existing
+500KiB size-policy failure remains, with historical evidence preserved.
+
+Document/executor evidence archive completes at November 18 15:53:54.
+All 98 regular members are byte-verified, including the authoritative
+document, accepted immutable CPU source archive, 86 helper files,
+focused/integrated XMLs and preserved failed attempts. Receipt:
+`PVC/run-preparation/endeavor-root-stage-executor-checkpoint-20261118T1555/receipt.json`,
+SHA-256 `d73374127407ab3907cc7fde03c6e215e64d385389e6e61ee1efc4bb68e51348`.
+Archive:
+`PVC/run-preparation/endeavor-root-stage-executor-checkpoint-20261118T1555/source-document-and-root-stage-executor-cpu.tar`,
+SHA-256 `e425ce7c106d0d88a81f7380ae01b66a617a8385aa08478a948a582dfd89881d`.
+The archive predates this entry and issues no GPU binding or launch.
+The original scheduled document refresh refuses at 15:53:11 because
+manual edits occur during its read/render interval; its concurrent-edit
+guard preserves the manual evidence and returns to the original
+900-second retry cadence. Monitor `3776115/919963640` and original
+diagnostic controller/validator are still live at 15:54:06.
+A clean manual ledger refresh follows the final milestone edit.
+
+Root-stage execution implementation checkpoint, November 18 15:40-15:43:
+the original diagnostic controller `1322053/931372042` and validator
+`1322447/931376704` remain live. The frozen read-only observer authenticates
+all 12 integer-zero command/log identities at 15:43:08; GPU receipt
+remains `diagnosing` and executor state remains `validating`. Receipt:
+`PVC/run-preparation/root-command-prefix-observation-20261118T1543.json`.
+The original Bash document monitor `3776115/919963640` refreshes
+successfully at 15:35:47 and retains its unchanged 900-second sleep.
+No original process, issued source, checkpoint or failed receipt is replaced.
+
+The separate unissued owner/controller/worker now requires the original
+independent terminal-reconstruction receipt and exact live restored keeper
+before freezing or transferring the allocation. GPU workers require an
+acknowledged direct-child generation, the bound physical UUID, and held
+node and keeper-manager locks. The planned numerical protocol preserves
+the unchanged reference roots, compilation, `TONER_SYM=1` and cached-root
+graphs; process 1 reverses the trace-off/on order. Each process retains
+both full historical `d/f` groups through eager, initial capture and replay.
+Intermediate references are snapshotted only after stream synchronization.
+Complete pinned split-root stage sequences and all seven candidate output
+tensors are required. Retained intermediates can affect allocation or graph
+pools, so CUDA trace transparency remains a required interpretation gate.
+No training equation or numerical tolerance is changed.
+
+The first owner/archive-fixture attempt retains 32 passes and two fixture
+setup errors in
+`PVC/run-preparation/test-root-stage-owner-archive-first-20261118T1540.xml`.
+Creating the missing synthetic archive parent fixes those errors; the
+corrected suite passes 34 tests in 23.44 seconds. XML:
+`PVC/run-preparation/test-root-stage-owner-archive-fixed-20261118T1545.xml`.
+The filename is an evidence identity, not the exact execution clock.
+Required scoped code lint passes after formatting. All CPU commands hide
+CUDA, preserve all seven safety exclusions and retain
+`--timeout=60 --session-timeout=600`; `rtol=1e-5, atol=1e-6` remains unchanged.
+Archived start and full report-reconstruction regressions, exact executor
+CPU/source-archive acceptance, original terminal restoration and separately
+issued CUDA execution remain pending at this checkpoint.
+Waves 13-15 remain production-denied; no new production result or SwanLab
+history has been created. Completed waves must still receive full shared
+large-token-window analysis, exact matched evaluations and full-history
+private cloud verification before their successors.
+
+Root-stage successor initial checkpoint, November 18 15:08-15:11:
+the original diagnostic remains in CPU reconstruction after all 12
+integer-zero commands and retained trajectories. Frozen read-only observer
+`PVC/run-preparation/probes/observe-root-prefix-20261118T1343.py`
+authenticates the unchanged controller `1322053/931372042`, validator
+`1322447/931376704`, document monitor `3776115/919963640` and all
+command/log identities at 15:08:59. Receipt:
+`PVC/run-preparation/root-command-prefix-observation-20261118T1510.json`.
+The filename is an evidence identifier; the embedded observation time
+is 15:08:59. Receipt state remains `diagnosing`; executor state remains
+`validating`. No original controller or validator is replaced.
+The original Bash monitor's latest successful scheduled refresh is
+15:01:02; its unchanged 900-second sleep cadence remains active.
+
+The proposed crossed root-stage replay now has three unissued checkout
+files: `tracking/root_stage_trace.py`, `tracking/replay_saved_roots.py`
+and `tracking/test_root_stage_trace.py`. The recorder wraps existing
+`basis_transform`, `start`, split products, fixed-point iterations,
+square-root iterations and root formation. It retains tensor references
+without new numerical copies or reductions during computation; independent
+CPU snapshots are taken only after the call, outside CUDA capture.
+Kernel functions are restored on failure and nested observation is refused.
+Complete ordered stage coordinates are compared; unequal iteration
+sequences are never prefix-paired. The CPU replay retains four independent
+snapshots in `C,R,C,R` order, compares repeated and crossed outputs and
+rejects mutation of either source or historical evidence.
+
+The initial focused CPU suite passes 12 tests in 2.00 seconds, using pinned
+root equations with explicitly substituted CPU matrix products. XML:
+`PVC/run-preparation/test-root-stage-crossed-replay-20261118T1507.xml`.
+Scoped required lint passes for all three files at 15:08.
+The historical saved-input loader has been exercised on the complete
+`d` input group. Its source/config/data identity authentication and
+full-shaped historical output validation still need additional checks
+and regression coverage at this initial checkpoint. The subsequent
+verification is recorded below. This read-only load is not a numerical replay.
+The actual split-root engine uses `roots.py::froot_state`; the pinned
+reference root source has SHA-256
+`6a61bdefa6fd3fca6365e571baac4208c53d73e9187978be5d75a6e1951f331c`.
+Default compilation options in the fixed-point kernels are a hypothesis
+boundary only; no cause or numerical correction has been established.
+
+Retaining intermediate references can change tensor lifetimes and
+allocation or graph pools. Require separately owned uninstrumented/
+instrumented CUDA parity and graph transparency before interpreting
+intermediate discrepancies. This successor has no accepted CPU executor
+archive, owner/adapter/worker, issued binding or CUDA run. It must wait
+for original terminal reconstruction and independent exact keeper
+restoration. Waves 13-15 remain production-denied. No new full-budget
+result or SwanLab history is created by this implementation checkpoint.
+
+Root-stage successor verification, November 18 15:16-15:21:
+the completed saved loader authenticates the full candidate source closure
+through retained canonical file descriptors, then runs the executed
+`records.py::checkpoint_identity` definition against its source tree,
+configuration and bound data receipt. Both historical trace identities
+must equal that independently reconstructed identity. The executed
+`fast_arguments` definition confirms reference split-root graphs,
+two iterations and inner/outer powers `0.5/0.125`.
+Saved basis storage is FP16, shaped `[batch,2*width,width]` for `SB`
+and `[batch,width,2*width]` for `S2`; covariance/tolerance are FP32.
+The loader checks all input shapes, dtypes and finite values, both
+root outputs, transformed `B`, flags and the three fixed-point state
+tensors. It rejects incomplete or nonfinite historical candidates.
+
+Twenty focused CPU tests pass in 4.25 seconds. Regression coverage
+includes equal-but-wrong trace identities, complete output structure,
+split layouts, independent evidence storage, omitted kernel outputs,
+finite failures and source replacement during analysis. XML:
+`PVC/run-preparation/test-root-stage-loader-regressions-20261118T1518.xml`,
+SHA-256 `7947a8d23e3c8393f5581c27c0ef83b778fe5d6995cba01abd80c6b32fd24b34`.
+The integrated recorder/analyzer/preparation suite passes 66 tests in
+5.96 seconds. XML:
+`PVC/run-preparation/test-root-stage-integrated-20261118T1520.xml`,
+SHA-256 `321873c16db47a5c0135fd92a49c6cd43bca88c5a18c5f77e5b40b9644474af7`.
+Both runs hide CUDA, retain all seven safety-marker exclusions and use
+`--timeout=60 --session-timeout=600`. The matching Python 3.13 interpreter
+is selected explicitly; no training-environment packages are changed.
+The preceding Python/Torch ABI mismatch remains as a failed collection
+in `PVC/run-preparation/test-root-stage-first-loader-20261118T1514.xml`.
+The rerun of scoped required code lint passes after formatting.
+
+The source-bound read-only loader receipt completes at 15:20:36.
+It binds 36 loaded helpers and 61 executed Python sources to the
+configuration/data identity, authenticates both complete historical
+rank-0/update-23 groups, and reports exactly equal `C/tol/SB/S2`
+inputs per group. Each historical candidate has seven finite tensor
+comparisons. The `d` historical output pair passes the unchanged tolerance.
+The `f` first root still fails in two elements, maximum absolute error
+`2.86102294921875e-6` and relative Frobenius error
+`3.9861964477896007e-7`. Its `B` remains exact. This reads and compares
+already executed outputs; no new root numerical replay occurs.
+Receipt:
+`PVC/run-preparation/root-stage-loader-verified-20261118T1522.json`,
+SHA-256 `c58a5f88909f045569a07e1c6f75a22a95ca559197066ead04aadd19ff1596d4`.
+
+The original monitor refreshes successfully at 15:18:21, preserving
+the manual successor entries and returning to its unchanged `sleep 900`.
+Fresh frozen observation at 15:21:10 authenticates original controller,
+validator and document-monitor generations and all 12 command/log
+identities. Receipt:
+`PVC/run-preparation/root-command-prefix-observation-20261118T1522.json`,
+SHA-256 `9cd61cfd68ac70ab7ddbd6c3b7b51ac4fda2a312051e6fc6bb1d9bcd3cfd2193`.
+Original GPU receipt remains `diagnosing`; executor state remains
+`validating`. Terminal reconstruction and exact restored keeper remain
+unverified. The CPU helper and saved-input checks do not authorize CUDA.
+
+Next experiment remains separately owned crossed root-stage replay in
+two fresh processes. First build/test/archive its owner, adapter and
+worker; wait for original terminal reconstruction and exact keeper
+restoration; verify uninstrumented/instrumented parity with compilation
+and graphs enabled; then compare complete intermediate sequences and
+historical outputs at the original tolerance. Use accepted localization
+to choose a distinct correction before rerunning every production gate.
+Waves 13-15 remain unlaunched, and completed production histories still
+require large shared-token windows, exact matched evaluations and
+full-history private SwanLab verification before a successor wave.
+No optimizer efficiency or fresh-seed superiority claim is established.
+Document content checks, `git diff --check` and Bash syntax pass.
+The existing 500KiB file-size policy remains the only document lint
+failure; historical evidence is preserved. Reporting source is unchanged
+and its historical 225-test suite is not rerun.
+
+Root-stage document/source archive completes at November 18 15:23:44.
+All 46 regular document/helper/test/receipt members are byte-verified;
+this archive establishes no executor or GPU acceptance. Receipt:
+`PVC/run-preparation/endeavor-root-stage-checkpoint-20261118T1525/receipt.json`,
+SHA-256 `731eda2a22409317fd17febdd363ff6300ed4cb17ad57d7484147c21ec1b06fe`.
+Archive:
+`PVC/run-preparation/endeavor-root-stage-checkpoint-20261118T1525/source-document-and-root-stage-cpu.tar`,
+SHA-256 `7d75a1d8530a6456d9be3590398f4aa05d2a7592724a1068263e8e9a89d1aa72`.
+The archive predates this final entry.
+Fresh frozen read-only observation at 15:24:05 again authenticates
+the original controller, validator, document monitor and all 12
+integer-zero command/log identities:
+`PVC/run-preparation/root-command-prefix-observation-20261118T1525.json`.
+Receipt `diagnosing` and executor `validating` remain current.
+The original monitor retains its 900-second sleep after the 15:18:21
+successful refresh. All independent foreground tool sessions for this
+checkpoint have completed; the original background owners continue.
 The research goal remains active.
 
 The earlier Wave-2-running status is historical. Wave 2 completed on
@@ -9027,7 +9371,7 @@ monitor continues across waves.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-18 14:58:39, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-18 16:15:01, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -9506,8 +9850,11 @@ CPU evidence establishes no GPU result, production gate or optimizer-quality cla
 `PVC/run-preparation/root-preparation-binding-20261118.json`.
 Saved diagnostic freeze at 2026-11-18 13:24:37; twelve bounded commands.
 Saved controller intent `acknowledged` at 2026-11-18 13:26:04.
-Saved executor state `validating` at 2026-11-18 14:28:44.
-Saved GPU receipt `diagnosing` at 2026-11-18 14:34:49: 2/2 cold-probe exits and 12/12 full-model exits are integer zero.
+Saved executor state `needs_attention` at 2026-11-18 15:59:52.
+Recorded keeper restoration: `0`.
+Preserved executor error: `RuntimeError: Root diagnostic validator failed`.
+Saved GPU receipt `needs_attention` at 2026-11-18 15:59:34: 2/2 cold-probe exits and 12/12 full-model exits are integer zero.
+Preserved GPU error: `ValueError: Root trace first-capture/next-replay lifecycle differs`.
 Saved receipts do not establish live occupancy. No production acceptance, full-budget result or SwanLab import is inferred; all original gates remain required.
 
 ### Wave-11 Selected-LR Production CPU
