@@ -65,7 +65,7 @@
     "attention": "FA2",
     "head": "compiled",
     "capture": "recompute",
-    "eval_every": 250,
+    "eval_every": 125,
     "eval_max_windows": 0,
     "deterministic": true,
     "compile_options": {
@@ -113,8 +113,8 @@
       "outer_strength": 0.125,
       "refresh": 4
     },
-    "checkpoint_every": 250,
-    "diagnostic_every": 250,
+    "checkpoint_every": 125,
+    "diagnostic_every": 125,
     "expected_model_parameters": 265585152,
     "hardware_adaptation": "A100 FA2; world size 8; microbatch 4, global batch unchanged"
   }

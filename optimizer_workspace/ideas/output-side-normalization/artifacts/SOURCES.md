@@ -33,9 +33,9 @@ The repository's Echo search also could not run: its CLI failed on a missing
 `requests` dependency, and no cached Marin credential directory was present.
 No repository environment was installed or changed to repair that service.
 
-This source review preceded implementation. Current implementation and
-execution status are recorded in `../EXPERIMENT_STATUS.md`; this review
-contains no new training results.
+This source review preceded implementation. Current implementation,
+executed settings, results, and plans are maintained in
+[ENDEAVOR.md](../ENDEAVOR.md). This review contains no new training results.
 
 ## Local Primary Sources
 
@@ -396,6 +396,9 @@ The repository formatter subsequently removed trailing whitespace from the
 working proposal; its checksum is now
 `f8204370858b828e90e87a06f5658a9013880dbd002939c334e47b08c927e4b7`.
 No scientific claims were revised in that formatting pass.
+The formatted proposal is preserved byte-for-byte as `original-proposal.txt`
+after removing superseded Markdown documents. Its manifest path was updated;
+the original capture checksum above remains historical provenance.
 
 The first empirical question remains whether a held-out, repeatable
 output-cotangent statistic improves useful update directions beyond input

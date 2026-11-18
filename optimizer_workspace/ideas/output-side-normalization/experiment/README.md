@@ -3,12 +3,36 @@
 This runner imports the preserved Toner revision
 `dab7f3777c75e740536df822f50ffa1d929a340c`. The experimental code and generated
 configurations are separate from that snapshot. See
-[`../MARIN_EXPERIMENT_PLAN.md`](../MARIN_EXPERIMENT_PLAN.md) for the scientific
-design and complete model, data, optimizer, and allocation settings.
+[ENDEAVOR.md](../ENDEAVOR.md) for the scientific design, executed results,
+and complete model, data, optimizer, and allocation settings.
 
-Implemented first-stage arms: Muon, input MuonT, outer-left down,
-inner+outer down, and down hybrid. Later controls, full Bi-MuonT, larger
-models, and bounded tuning are planned extensions.
+Implemented arms. Down-only: Muon, input MuonT, outer-left down,
+inner+outer down, down hybrid. All-block (`block_toner.py`), where an arm
+names an input side plus an output side per output width, and may withhold
+the left factors as a control, drop the inner left factor, or apply the
+left factors one update late:
+
+| Arm | Input | Output at 512 | Output at 2048 | Note |
+| --- | --- | --- | --- | --- |
+| `inner_outer_all` | full | full | full | Wave 1 |
+| `null_all` | full | full | full | Left factors withheld |
+| `left_all` | none | full | full | Wave 1 |
+| `inner_outer_all_diag` | diagonal | diagonal | diagonal | Wave 1 |
+| `inner_outer_hidden` | full | full | none | Wave 2 |
+| `inner_outer_mlpdiag` | full | full | diagonal | Wave 2; best selection loss |
+| `inner_outer_leftdiag` | full | diagonal | diagonal | Wave 2; best cost trade |
+| `outer_left_all` | full | full | full | Outer left factor only |
+| `null_mlpdiag` | full | full | diagonal | Control for `inner_outer_mlpdiag` |
+| `inner_outer_all_lag` | full | full | full | Left factors one update late |
+| `inner_outer_mlpdiag_lag` | full | full | diagonal | Both of the above |
+
+The launcher schedules the entries listed in `cluster.json` under
+`runs/WAVE_NAME`. Each entry names an arm, seed and batch, so one wave can mix a
+candidate, its matched control, and a second seed of the same arm; the run
+directory is `ARM` for 0.5M seed 0, `ARM_seedN` for other 0.5M seeds,
+`ARM_BATCH` for larger seed-0 batches, and `ARM_BATCH_seedN` otherwise.
+Launch and full-model validation use exactly that entry's configuration;
+larger-batch entries do not reuse a 0.5M smoke gate.
 
 Run commands from the parent of `experiment/`. Use the existing Torch environment:
 
@@ -248,7 +272,8 @@ uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
 
 The CPU numerical suite and synthetic A100/NCCL checks have passed.
 All four first-wave arms completed three-update full-model real-data smoke
-runs and checkpoint continuation. The current four-job wave is running on
-all 32 A100s; see `../EXPERIMENT_STATUS.md` for launch identities and evidence.
+runs and checkpoint continuation. All four full-budget wave-0 jobs completed
+on 2026-11-16; see [ENDEAVOR.md](../ENDEAVOR.md#execution-identity) for launch
+identities, results, and evidence.
 The launcher requires a passing receipt for all current source/configuration
 hashes. Short smoke losses do not establish optimizer quality.

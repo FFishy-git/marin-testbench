@@ -22,11 +22,12 @@ from reproduce.marin.train import schedule_factor
 from torch import nn
 from torch.nn import functional as F
 
+from .block_toner import BLOCK_ARMS, BlockToner
 from .bootstrap import verify_snapshot
-from .capture import OutputMoments, build_model
+from .capture import OutputMoments, build_model, captures_input
 from .data_access import require_receipt
 from .factors import OutputSettings
-from .optimizer import build
+from .optimizer import build, toner_engines
 from .records import atomic_json, checkpoint_identity, manifest, restore_checkpoint, save_checkpoint, utc_now
 
 
@@ -71,6 +72,7 @@ def main():
     accumulation = batch // (world * micro)
     if batch != accumulation * world * micro:
         raise ValueError("Global batch does not divide into full microbatches")
+    arm = config["experiment"]["arm"]
     capture = config["optimizer"]["name"] == "muont"
     positions, rows = None, 0
     if capture:
@@ -91,7 +93,7 @@ def main():
     if count != config["experiment"]["expected_model_parameters"]:
         raise ValueError(f"Unexpected parameter count {count}")
     output = None
-    if config["experiment"]["arm"] not in ("muon", "muont"):
+    if arm not in ("muon", "muont") and arm not in BLOCK_ARMS:
         output = OutputMoments(
             model,
             positions,
@@ -104,6 +106,9 @@ def main():
         model,
         config,
         output,
+        positions=positions,
+        rows_per_microbatch=rows,
+        capacity=accumulation * rows,
         rows_total=accumulation * rows * world,
         world=world,
         rank=rank,
@@ -231,8 +236,10 @@ def main():
             for index in range(accumulation):
                 if world > 1:
                     run.require_backward_grad_sync = index == accumulation - 1
-                if fast:
+                if fast and captures_input(arm):
                     model.body.stat_at.copy_(torch.arange(index * rows, (index + 1) * rows, device=device))
+                if isinstance(fast, BlockToner):
+                    fast.select_microbatch(index)
                 start = step * batch + (rank * accumulation + index) * micro
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     loss = run(*to_device(mixture.batch(start, micro)))
@@ -240,6 +247,8 @@ def main():
                     armed["value"] = True
                 (loss / accumulation).backward()
                 loss_sum += loss.detach() / accumulation
+            if isinstance(fast, BlockToner):
+                fast.finish_backward()
             output_start = time.perf_counter()
             if output:
                 output.update(accumulation * rows)
@@ -264,7 +273,9 @@ def main():
                 "peak_allocated_bytes": torch.cuda.max_memory_allocated(),
                 "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
             }
-            if fast:
+            if isinstance(fast, BlockToner):
+                metrics.update(fast.last_metrics)
+            elif fast:
                 metrics["input_fallbacks"] = fast.fallbacks
                 metrics["input_gpu_ms_previous"] = fast.gpu_ms
             if output:
@@ -314,9 +325,9 @@ def main():
             atomic_json(args.out / "run.json", record)
         raise
     finally:
-        if fast:
-            fast.side.synchronize()
-            fast.pool.shutdown(wait=True)
+        for engine in toner_engines(fast):
+            engine.side.synchronize()
+            engine.pool.shutdown(wait=True)
         if world > 1:
             dist.destroy_process_group()
 

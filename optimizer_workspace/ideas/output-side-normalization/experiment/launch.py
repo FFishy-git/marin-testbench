@@ -15,10 +15,27 @@ from .reference import TASK
 
 CLUSTER = json.loads((TASK / "experiment" / "cluster.json").read_text())
 NODES = tuple(CLUSTER["nodes"])
-WAVE = tuple(CLUSTER["wave"])
+# Wave entries name an arm and its seed, so one wave can mix a candidate with a
+# matched control and a second seed of the same arm.
+WAVE = tuple((entry["arm"], entry["seed"], entry["batch"]) for entry in CLUSTER["wave"])
+
+
+def run_name(arm, seed, batch="0p5m"):
+    batch_suffix = "" if batch == "0p5m" else f"_{batch}"
+    seed_suffix = "" if seed == 0 else f"_seed{seed}"
+    return f"{arm}{batch_suffix}{seed_suffix}"
+
+
+def config_path(arm, seed, batch="0p5m"):
+    return TASK / "experiment" / "configs" / f"{arm}_{batch}_seed{seed}.json"
+
+
+WAVE_NAME = CLUSTER["wave_name"]
 PYTHON = CLUSTER["python"]
 OUTPUT_ROOT = Path(CLUSTER["output_root"])
 ENVIRONMENT = CLUSTER["environment"]
+# Synthetic GPU gates for the all-block arms, in addition to the first-wave gates.
+BLOCK_CHECKS = ("gpu_output_rows", "gpu_block_updates", "block_distributed_statistics", "block_compiled_body")
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=10"]
 
 
@@ -112,7 +129,7 @@ def main():
     parser.add_argument("--data-receipt", type=Path)
     parser.add_argument("--validation-receipt", type=Path)
     parser.add_argument("--report", type=Path, default=OUTPUT_ROOT / "run-preparation" / "preflight.json")
-    parser.add_argument("--out", type=Path, default=OUTPUT_ROOT / "runs" / "wave0")
+    parser.add_argument("--out", type=Path, default=OUTPUT_ROOT / "runs" / WAVE_NAME)
     parser.add_argument("--launch", action="store_true")
     args = parser.parse_args()
     reports = []
@@ -131,7 +148,9 @@ def main():
         expected = {str(p.relative_to(TASK)): sha256(p) for p in sorted((TASK / "experiment").rglob("*.py"))}
         if receipt["source_sha256"] != expected:
             blockers.append("Validation receipt is stale for the current experiment code")
-        configurations = {arm: sha256(TASK / "experiment/configs" / f"{arm}_0p5m_seed0.json") for arm in WAVE}
+        configurations = {
+            run_name(arm, seed, batch): sha256(config_path(arm, seed, batch)) for arm, seed, batch in WAVE
+        }
         if receipt.get("config_sha256") != configurations:
             blockers.append("Full-model validation has not covered the current arm configurations")
         if not all(
@@ -146,6 +165,7 @@ def main():
                 "gpu_down_updates",
                 "cached_root_continuation",
                 "microbatch_partition",
+                *BLOCK_CHECKS,
             )
         ):
             blockers.append("Required numerical and real-data checks have not all passed")
@@ -166,9 +186,9 @@ def main():
         raise SystemExit("Launch refused: resolve recorded blockers first.")
     if args.out is None:
         parser.error("--launch requires --out")
-    for node, arm in zip(NODES, WAVE, strict=True):
-        config = TASK / "experiment" / "configs" / f"{arm}_0p5m_seed0.json"
-        out = args.out / arm
+    for node, (arm, seed, batch) in zip(NODES, WAVE, strict=True):
+        config = config_path(arm, seed, batch)
+        out = args.out / run_name(arm, seed, batch)
         # The remote launch uses a dedicated helper; it never stops other processes.
         result = remote(
             node,
@@ -181,9 +201,9 @@ def main():
                 f"Path({str(args.data_receipt)!r}),Path({str(out)!r}))",
             ],
         )
-        report["launches"].append({"node": node, "arm": arm, **json.loads(result)})
+        report["launches"].append({"node": node, "arm": arm, "seed": seed, "batch": batch, **json.loads(result)})
         atomic_json(args.report, report)
-        print(f"Launched {arm} on {node}: {result}", flush=True)
+        print(f"Launched {run_name(arm, seed, batch)} on {node}: {result}", flush=True)
 
 
 def start_local(config, data, receipt, out):

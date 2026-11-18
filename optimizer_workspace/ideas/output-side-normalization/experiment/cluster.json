@@ -14,9 +14,26 @@
     "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
   },
   "wave": [
-    "muon",
-    "muont",
-    "outer_left_down",
-    "down_hybrid"
-  ]
+    {
+      "arm": "inner_outer_mlpdiag_lag",
+      "seed": 0,
+      "batch": "0p5m"
+    },
+    {
+      "arm": "inner_outer_mlpdiag",
+      "seed": 0,
+      "batch": "1m"
+    },
+    {
+      "arm": "muont",
+      "seed": 0,
+      "batch": "1m"
+    },
+    {
+      "arm": "inner_outer_mlpdiag",
+      "seed": 2,
+      "batch": "0p5m"
+    }
+  ],
+  "wave_name": "wave4"
 }

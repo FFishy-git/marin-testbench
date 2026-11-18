@@ -1,16 +1,17 @@
 # Copyright The Marin Authors
 # SPDX-License-Identifier: Apache-2.0
 
-"""Keep Toner's fast input updates; specialize only the down-projection group."""
+"""Keep Toner's fast input updates; specialize the down group or every block matrix."""
 
-import concurrent.futures
 from types import SimpleNamespace
 
 import torch
 from reproduce.marin.optimizer import build_optimizers, fast_arguments
 from toner.fast import muon as MU
-from toner.fast import roots as PR
 from toner.fast.engine import FastTonerCore, gather_uneven
+
+from .block_toner import BLOCK_ARMS, BlockToner
+from .toner_state import engine_state, restore_engine
 
 
 def accurate_right(matrix, root):
@@ -139,15 +140,29 @@ class DownToner(FastTonerCore):
         self.finished_roots = None
 
 
-def build(model, config, output, *, rows_total, world, rank, device):
-    optimizers, fast, clipping = (
-        build_optimizers(model, config, rows_total=rows_total, world=world, rank=rank, device=device)
-        if output is None
-        else (None, None, None)
-    )
+def build(model, config, output, *, positions, rows_per_microbatch, capacity, rows_total, world, rank, device):
+    arm = config["experiment"]["arm"]
+    if arm in BLOCK_ARMS:
+        fast = BlockToner(
+            model,
+            config,
+            positions,
+            rows_per_microbatch=rows_per_microbatch,
+            capacity=capacity,
+            rows_total=rows_total,
+            world=world,
+            rank=rank,
+            device=device,
+        )
+        return _with_auxiliary(model, config, fast)
     if output is None:
-        return optimizers, fast, clipping
+        return build_optimizers(model, config, rows_total=rows_total, world=world, rank=rank, device=device)
     fast = DownToner(model, config, output, rows_total=rows_total, world=world, rank=rank, device=device)
+    return _with_auxiliary(model, config, fast)
+
+
+def _with_auxiliary(model, config, fast):
+    """AdamW for embeddings, head, and norms exactly as the pinned MuonT routing; clip only those."""
     matrix_ids = {id(p) for p in fast.params}
     rest = [p for p in model.parameters() if id(p) not in matrix_ids]
     settings = config["optimizer"]
@@ -167,73 +182,29 @@ def build(model, config, output, *, rows_total, world, rank, device):
     return [fast, auxiliary], fast, rest
 
 
+def toner_engines(fast):
+    """Every Toner fast engine owned by a matrix optimizer."""
+    if fast is None:
+        return []
+    if isinstance(fast, BlockToner):
+        return fast.engines
+    return [fast]
+
+
 def fast_runtime_state(fast):
     """Save numerical root state, including cached bases and pending refreshes."""
-    fast.side.synchronize()
-    for group in fast.groups.values():
-        for pending in group.pending:
-            if pending is not None:
-                pending[0].result()
-    groups = {}
-    for name, group in fast.groups.items():
-        groups[name] = {
-            "C": group.C,
-            "tol": group.tol,
-            "basis_step": group.basis_step,
-            "warm": group.warm,
-            "SB": None if group.basis is None else group.basis.SB,
-            "S2": None if group.basis is None else group.basis.S2,
-            "pending": [
-                (
-                    None
-                    if pending is None
-                    else {
-                        "step": pending[1],
-                        "basis": group.host_out[index].clone(),
-                        "tol": group.host_tol[index].clone(),
-                    }
-                )
-                for index, pending in enumerate(group.pending)
-            ],
-        }
-    state = {
-        "groups": groups,
-        "momentum": fast.state,
-        "weight": fast.weight,
-        "steps": fast.steps,
-        "t": fast.t,
-        "fallbacks": fast.fallbacks,
-        "extra": fast.extra,
-    }
+    if isinstance(fast, BlockToner):
+        return fast.runtime_state()
+    state = engine_state(fast)
     if isinstance(fast, DownToner):
         state["down_momentum"] = fast.down_momentum
     return state
 
 
 def restore_fast(fast, state):
-    for name, saved in state["groups"].items():
-        group = fast.groups[name]
-        group.C.copy_(saved["C"])
-        group.tol.copy_(saved["tol"])
-        group.basis_step = saved["basis_step"]
-        # CUDA graphs and process-local kernel compilation are not serializable.
-        # Rewarm against the restored numerical state before capturing fresh graphs.
-        group.warm = False
-        if saved["S2"] is not None:
-            group.basis = PR.Basis.of_splits(saved["S2"].to(fast.device))
-            group.basis.SB = saved["SB"].to(fast.device)
-        for index, pending in enumerate(saved["pending"]):
-            if pending is not None:
-                group.host_out[index].copy_(pending["basis"])
-                group.host_tol[index].copy_(pending["tol"])
-                future = concurrent.futures.Future()
-                future.set_result(None)
-                group.pending[index] = (future, pending["step"])
-    fast.state = {
-        shape: {name: tensor.to(fast.device) for name, tensor in values.items()}
-        for shape, values in state["momentum"].items()
-    }
-    fast.weight, fast.steps, fast.t = state["weight"], state["steps"], state["t"]
-    fast.fallbacks, fast.extra = state["fallbacks"], state["extra"]
+    if isinstance(fast, BlockToner):
+        fast.restore_runtime_state(state)
+        return
+    restore_engine(fast, state)
     if isinstance(fast, DownToner):
         fast.down_momentum.copy_(state["down_momentum"])

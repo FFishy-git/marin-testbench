@@ -22,7 +22,7 @@ def deploy():
     previous = json.loads(receipt_path.read_text())["files"] if receipt_path.exists() else {}
     files = sorted(p for p in (TASK / "experiment").rglob("*") if p.is_file() and "__pycache__" not in p.parts)
     files += sorted(p for p in UPSTREAM.rglob("*") if p.is_file() and "__pycache__" not in p.parts)
-    files += [TASK / "MARIN_EXPERIMENT_PLAN.md"]
+    files += [TASK / "ENDEAVOR.md"]
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
         for path in files:

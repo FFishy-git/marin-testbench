@@ -5,6 +5,7 @@
 
 import argparse
 import copy
+import gc
 import io
 import json
 import os
@@ -23,11 +24,22 @@ from torch import nn
 from torch.nn import functional as F
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
+from .block_toner import BLOCK_ARMS, BLOCK_KINDS, ROW_SCALE, BlockToner, MatrixFactors, RowObservedLinear, block_update
 from .bootstrap import verify_snapshot
 from .capture import OutputLinear, OutputMoments, build_model
 from .configure import configuration
 from .factors import OutputSettings, inverse_factors
-from .optimizer import DownToner, accurate_left, accurate_right, build, down_update, fast_runtime_state, restore_fast
+from .launch import WAVE
+from .optimizer import (
+    DownToner,
+    accurate_left,
+    accurate_right,
+    build,
+    down_update,
+    fast_runtime_state,
+    restore_fast,
+    toner_engines,
+)
 from .records import atomic_json, compare_tree, sha256, utc_now
 from .reference import TASK
 
@@ -250,6 +262,217 @@ def test_compiled_body(device):
     fast.pool.shutdown(wait=True)
 
 
+def test_output_rows(device):
+    torch.manual_seed(5)
+    positions = torch.tensor([0, 3, 9, 15], device=device)
+    rows = torch.zeros(16, 256, dtype=torch.bfloat16, device=device)
+    at = torch.zeros(8, dtype=torch.int64, device=device)
+    linear = nn.Linear(512, 256, bias=False).to(device)
+    plain = copy.deepcopy(linear)
+    observed = torch.compile(
+        RowObservedLinear(linear, rows, at, positions), fullgraph=True, mode="max-autotune-no-cudagraphs"
+    )
+    unobserved = torch.compile(plain, fullgraph=True, mode="max-autotune-no-cudagraphs")
+    expected = torch.zeros_like(rows)
+    for index in range(2):
+        at.copy_(torch.arange(index * 8, index * 8 + 8, device=device))
+        x = torch.randn(2, 16, 512, device=device)
+        target = torch.randn(2, 16, 256, device=device)
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            value = observed(x)
+            reference = unobserved(x)
+        torch.testing.assert_close(value, reference, rtol=1e-5, atol=1e-5)
+        (value.float() - target).square().sum().backward()
+        (reference.float() - target).square().sum().backward()
+        # The projection gradient is BF16 before the observer stores it; the power-of-two scale is exact.
+        cotangent = (2 * (reference.detach().float() - target)).to(torch.bfloat16)
+        expected[index * 8 : index * 8 + 8] = cotangent[:, positions].reshape(8, 256) * ROW_SCALE
+    torch.testing.assert_close(linear.weight.grad, plain.weight.grad, rtol=1e-5, atol=1e-5)
+    torch.testing.assert_close(rows, expected, rtol=0, atol=0)
+
+
+def test_block_matrix_updates(device):
+    torch.manual_seed(37)
+    args = fast_arguments(configuration("inner_outer_all", "0p5m", 0, 8))
+
+    def reference(weight, gradient, momentum, factors, mode):
+        momentum = 0.95 * momentum + gradient
+        source = gradient + 0.95 * momentum
+        dense = {
+            name: value if value is None or value.ndim == 2 else torch.diag(value)
+            for name, value in vars(factors).items()
+        }
+        if dense["right_inner"] is not None:
+            source = source @ dense["right_inner"]
+        if dense["left_inner"] is not None:
+            source = dense["left_inner"] @ source
+        direction = MU.newton_schulz(source, 10, 1e-5, mode)
+        decay = weight
+        if dense["right_outer"] is not None:
+            right = dense["right_outer"] * (weight.shape[1] ** 0.5 / dense["right_outer"].norm())
+            direction, decay = direction @ right, weight @ right @ right
+        if dense["left_outer"] is not None:
+            left = dense["left_outer"] * (weight.shape[0] ** 0.5 / dense["left_outer"].norm())
+            direction = left @ direction
+            if dense["right_outer"] is None:
+                decay = left @ left @ weight
+        scale = max(1.0, weight.shape[0] / weight.shape[1]) ** 0.5
+        return momentum, -0.02 * (scale * direction + 0.1 * decay)
+
+    for shape in ((256, 256), (1024, 256), (256, 1024)):
+        weight = torch.randn(shape, device=device) * 0.05
+        gradient, momentum = torch.randn_like(weight), torch.randn_like(weight)
+        left = torch.randn(shape[0], 64, device=device)
+        right = torch.randn(shape[1], 64, device=device)
+        li, lo = inverse_factors(left @ left.T, OutputSettings(damping=0.01))
+        ri, ro = inverse_factors(right @ right.T, OutputSettings(damping=0.01))
+        cases = {
+            "two_sided": MatrixFactors(li, lo, ri, ro),
+            "null": MatrixFactors(right_inner=ri, right_outer=ro),
+            "left_only": MatrixFactors(left_inner=li, left_outer=lo),
+            "diagonal": MatrixFactors(
+                *(torch.rand(n, device=device) + 0.2 for n in (shape[0], shape[0], shape[1], shape[1]))
+            ),
+        }
+        for mode in ("f32", args.muon_ns_mode):
+            args.muon_ns_mode = mode
+            for name, factors in cases.items():
+                actual_m, delta = block_update(weight, gradient, momentum, factors, args=args, lr=0.02, weight_decay=0.1)
+                expected_m, expected = reference(weight, gradient, momentum, factors, mode)
+                torch.testing.assert_close(actual_m, expected_m, rtol=0, atol=0)
+                torch.testing.assert_close(delta, expected, rtol=0.003, atol=5e-5, msg=f"{name}.{shape}.{mode}")
+
+
+def small_block_config(arm, layers):
+    config = configuration(arm, "0p5m", 0, 1)
+    config["model"].update(hidden=256, mlp=1024, heads=4, layers=layers, sequence_length=16, vocab_size=256)
+    return config
+
+
+def synthetic_rows(rank, layer, offset, shape, step=0):
+    grid = torch.arange(shape[0] * shape[1], dtype=torch.float32).reshape(shape)
+    return torch.sin(grid * 0.013 + rank * 0.7 + layer * 0.1 + offset * 0.01 + step * 0.0001).to(torch.bfloat16)
+
+
+def test_block_statistics(device, world, rank):
+    positions, capacity = [0, 2, 4, 6], 16
+    for arm in ("inner_outer_all", "inner_outer_all_diag", "inner_outer_mlpdiag"):
+        config = small_block_config(arm, world)
+        network = build_model(config, positions=positions, row_capacity=capacity, rows_per_microbatch=4, device=device)
+        initialize_model(network, 0)
+        fast = BlockToner(
+            network,
+            config,
+            positions,
+            rows_per_microbatch=4,
+            capacity=capacity,
+            rows_total=capacity * world,
+            world=world,
+            rank=rank,
+            device=device,
+        )
+        try:
+            for (layer, kind), buffer in fast.output_rows.items():
+                buffer.copy_(synthetic_rows(rank, layer, BLOCK_KINDS.index(kind), buffer.shape).to(device))
+            beta = config["statistics"]["momentum"]
+
+            def pooled(layer, offset, shape):
+                return [synthetic_rows(r, layer, offset, shape).float() for r in range(world)]
+
+            if fast.output is not None:
+                fast.finish_backward()
+                fast.output.side.synchronize()
+                for group in fast.output.groups.values():
+                    for index, (layer, kind) in enumerate(group.own):
+                        rows = pooled(layer, BLOCK_KINDS.index(kind), (capacity, group.n))
+                        expected = (1 - beta) * sum(r.T @ r for r in rows) / (capacity * world)
+                        torch.testing.assert_close(group.C[index].cpu(), expected, rtol=1e-5, atol=1e-7)
+            if fast.output_diagonal is not None:
+                fast.output_diagonal.update()
+                for width, keys in fast.output_diagonal.keys.items():
+                    for index, (layer, kind) in enumerate(keys):
+                        rows = pooled(layer, BLOCK_KINDS.index(kind), (capacity, width))
+                        expected = (1 - beta) * sum(r.square().sum(0) for r in rows) / (capacity * world)
+                        torch.testing.assert_close(
+                            fast.output_diagonal.moment[width][index].cpu(), expected, rtol=1e-5, atol=1e-7
+                        )
+        finally:
+            for engine in toner_engines(fast):
+                engine.side.synchronize()
+                engine.pool.shutdown(wait=True)
+
+
+def test_block_compiled_body(device):
+    config = small_block_config("inner_outer_all", 2)
+    config["model"]["sequence_length"] = 64
+    positions = sample_positions(64, 8, 8)
+    rows = len(positions)
+    candidate = build_model(config, positions=positions, row_capacity=rows, rows_per_microbatch=rows, device=device)
+    initialize_model(candidate, 0)
+    reference = Model(config["model"]).to(device)
+    reference.load_state_dict(candidate.state_dict())
+    eager = Model(config["model"]).to(device)
+    eager.load_state_dict(candidate.state_dict())
+    fast = BlockToner(
+        candidate,
+        config,
+        positions,
+        rows_per_microbatch=rows,
+        capacity=rows,
+        rows_total=rows,
+        world=1,
+        rank=0,
+        device=device,
+    )
+    try:
+        observed_gradients = {}
+        index = torch.tensor(positions, device=device)
+        for layer, block in enumerate(eager.body.blocks):
+            for kind in BLOCK_KINDS:
+
+                def keep(module, inputs, output, key=(layer, kind)):
+                    output.register_hook(
+                        lambda g: observed_gradients.__setitem__(key, g[:, index].reshape(-1, g.shape[-1]))
+                    )
+
+                getattr(block, kind).register_forward_hook(keep)
+        compiled = torch.compile(candidate.body, mode="max-autotune-no-cudagraphs", fullgraph=True)
+        pinned_body = torch.compile(reference.body, mode="max-autotune-no-cudagraphs", fullgraph=True)
+        tokens = np.arange(64, dtype=np.uint32).reshape(1, 64)
+        tok, _, cu, meta = pack(tokens, 34, EOS=128001)
+        tok, cu = tok.to(device), cu.to(device)
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            actual = compiled(tok, cu, meta)
+            expected = pinned_body(tok, cu, meta)
+            hooked = eager.body(tok, cu, meta)
+        torch.testing.assert_close(actual, expected, rtol=0.02, atol=0.02)
+        # A fixed random readout: mean(h^2) of an RMSNorm output is nearly constant, so its
+        # gradients are rounding noise that differs between compiled and eager kernels.
+        target = torch.randn(actual.shape, generator=torch.Generator(device).manual_seed(11), device=device)
+        for value in (actual, expected, hooked):
+            (value.float() * target).sum().backward()
+
+        def relative(value, reference_value):
+            return ((value.float() - reference_value.float()).norm() / reference_value.float().norm()).item()
+
+        for (name, parameter), (_, original) in zip(
+            candidate.named_parameters(), reference.named_parameters(), strict=True
+        ):
+            if parameter.grad is not None and relative(parameter.grad, original.grad) > 0.05:
+                raise AssertionError(f"Compiled observed gradient differs for {name}")
+        for layer, block in enumerate(candidate.body.blocks):
+            for kind in BLOCK_KINDS:
+                stored = getattr(block, kind).output_rows.float() / ROW_SCALE
+                # Compiled and eager BF16 backward accumulate differently; rows must agree in aggregate.
+                error = relative(stored, observed_gradients[layer, kind])
+                if not error <= 0.05:
+                    raise AssertionError(f"Compiled output rows differ for layer {layer} {kind}: {error}")
+    finally:
+        for engine in toner_engines(fast):
+            engine.side.synchronize()
+            engine.pool.shutdown(wait=True)
+
+
 def serialized_state(state):
     buffer = io.BytesIO()
     torch.save(state, buffer)
@@ -258,7 +481,15 @@ def serialized_state(state):
 
 
 def test_cached_root_continuation(device, world, rank):
-    for arm in ("muont", "outer_left_down", "down_hybrid"):
+    """Continuation parity for the arms this wave launches, plus the three references.
+
+    Every engine opens NCCL communicators that are never all released, and one is created
+    without a handle inside the pinned snapshot, so they cannot be destroyed here. Covering
+    every arm ever defined therefore exhausts communicators in this one process: at thirteen
+    arms it fails deterministically inside the statistics reduce-scatter. Arms from earlier
+    waves were gated by this same check when they ran.
+    """
+    for arm in dict.fromkeys(("muont", "outer_left_down", "down_hybrid", *(a for a, _, _ in WAVE))):
         config = configuration(arm, "0p5m", 0, 1)
         config["model"].update(hidden=256, mlp=1024, heads=4, layers=world, sequence_length=16, vocab_size=256)
         positions, rows = [0, 2, 4, 6], 16
@@ -274,11 +505,20 @@ def test_cached_root_continuation(device, world, rank):
             initialize_model(network, 0)
             output = (
                 None
-                if arm == "muont"
+                if arm == "muont" or arm in BLOCK_ARMS
                 else OutputMoments(network, positions, OutputSettings(), world=world, rank=rank, device=device)
             )
             optimizers, fast, _ = build(
-                network, config, output, rows_total=rows * world, world=world, rank=rank, device=device
+                network,
+                config,
+                output,
+                positions=positions,
+                rows_per_microbatch=len(positions),
+                capacity=rows,
+                rows_total=rows * world,
+                world=world,
+                rank=rank,
+                device=device,
             )
             fast.param_groups[0]["lr"] = config["optimizer"]["lr"]
             return network, output, fast, optimizers[-1]
@@ -299,19 +539,24 @@ def test_cached_root_continuation(device, world, rank):
                     (block.down(x).square().mean() / 16).backward()
                 output.update(len(positions))
             fast.begin()
+            if isinstance(fast, BlockToner):
+                for (layer, kind), buffer in fast.output_rows.items():
+                    buffer.copy_(synthetic_rows(rank, layer, BLOCK_KINDS.index(kind), buffer.shape, step).to(device))
+                fast.finish_backward()
             fast.step()
             # Control host completion in this numerical probe, not in production.
-            fast.side.synchronize()
-            for group in fast.groups.values():
-                for pending in group.pending:
-                    if pending is not None:
-                        pending[0].result()
+            for engine in toner_engines(fast):
+                engine.side.synchronize()
+                for group in engine.groups.values():
+                    for pending in group.pending:
+                        if pending is not None:
+                            pending[0].result()
 
         network, output, fast, auxiliary = construct(config, positions, rows, arm)
         try:
             for step in range(22):
                 update(network, output, fast, step, positions)
-            if not all(group.graph is not None for group in fast.groups.values() if group.per):
+            if not all(g.graph is not None for e in toner_engines(fast) for g in e.groups.values() if g.per):
                 raise AssertionError("Continuation probe did not reach cached-root CUDA graphs")
             saved = serialized_state(
                 {
@@ -330,8 +575,9 @@ def test_cached_root_continuation(device, world, rank):
                 }
             )
         finally:
-            fast.side.synchronize()
-            fast.pool.shutdown(wait=True)
+            for engine in toner_engines(fast):
+                engine.side.synchronize()
+                engine.pool.shutdown(wait=True)
         del network, output, fast, auxiliary
         restored, output, fast, _auxiliary = construct(config, positions, rows, arm)
         try:
@@ -350,8 +596,15 @@ def test_cached_root_continuation(device, world, rank):
             )
             compare_tree(actual, expected, f"cached_root_resume.{arm}", [])
         finally:
-            fast.side.synchronize()
-            fast.pool.shutdown(wait=True)
+            for engine in toner_engines(fast):
+                engine.side.synchronize()
+                engine.pool.shutdown(wait=True)
+        # Every arm builds its own engines, each holding a CUDA-graph private pool that is
+        # only released with the graph object. Release them between arms so a long arm list
+        # does not accumulate graph pools for the whole run.
+        del restored, output, fast, _auxiliary
+        gc.collect()
+        torch.cuda.empty_cache()
 
 
 def main():
@@ -376,6 +629,10 @@ def main():
             ("fa2", lambda: test_attention(device)),
             ("gpu_down_updates", lambda: test_down_matrix_updates(device)),
             ("synthetic_compiled_body", lambda: test_compiled_body(device)),
+            ("gpu_output_rows", lambda: test_output_rows(device)),
+            ("gpu_block_updates", lambda: test_block_matrix_updates(device)),
+            ("block_distributed_statistics", lambda: test_block_statistics(device, world, rank)),
+            ("block_compiled_body", lambda: test_block_compiled_body(device)),
             ("cached_root_continuation", lambda: test_cached_root_continuation(device, world, rank)),
         ):
             check()

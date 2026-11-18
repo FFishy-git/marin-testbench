@@ -15,7 +15,7 @@ from reproduce.marin.model import Model
 
 from .bootstrap import verify_snapshot
 from .data_access import require_receipt
-from .launch import ENVIRONMENT, OUTPUT_ROOT, WAVE
+from .launch import BLOCK_CHECKS, ENVIRONMENT, OUTPUT_ROOT, WAVE, config_path, run_name
 from .records import atomic_json, compare_continuation, sha256, utc_now
 from .reference import TASK, UPSTREAM
 
@@ -58,6 +58,7 @@ def main():
             "gpu_down_updates": False,
             "cached_root_continuation": False,
             "microbatch_partition": False,
+            **dict.fromkeys(BLOCK_CHECKS, False),
         },
         "evidence": {
             "cpu_test_command": result.args,
@@ -85,7 +86,9 @@ def main():
         raise RuntimeError("GPU validation refused while existing CUDA workloads occupy this node")
     args.work.mkdir(parents=True, exist_ok=False)
     receipt["data_receipt_sha256"] = sha256(args.data_receipt)
-    receipt["config_sha256"] = {arm: sha256(TASK / "experiment/configs" / f"{arm}_0p5m_seed0.json") for arm in WAVE}
+    receipt["config_sha256"] = {
+        run_name(arm, seed, batch): sha256(config_path(arm, seed, batch)) for arm, seed, batch in WAVE
+    }
     receipt["evidence"]["gpu_commands"] = []
 
     def execute(command, log):
@@ -113,14 +116,16 @@ def main():
         "gpu_down_updates",
         "cached_root_continuation",
         "microbatch_partition",
+        *BLOCK_CHECKS,
     ):
         receipt["checks"][name] = checked["checks"][name]
     receipt["evidence"]["gpu_receipt"] = str(gpu_receipt)
     smoke_records = {}
-    for arm in WAVE:
-        config = TASK / "experiment/configs" / f"{arm}_0p5m_seed0.json"
-        full = args.work / f"{arm}_continuous"
-        interrupted = args.work / f"{arm}_resumed"
+    for arm, seed, batch in WAVE:
+        config = config_path(arm, seed, batch)
+        name = run_name(arm, seed, batch)
+        full = args.work / f"{name}_continuous"
+        interrupted = args.work / f"{name}_resumed"
         common = [
             *launcher,
             "--nproc_per_node=8",
@@ -133,10 +138,10 @@ def main():
             "--data-receipt",
             str(args.data_receipt),
         ]
-        execute([*common, "--out", str(full), "--max-steps", "3"], args.work / f"{arm}_continuous.log")
+        execute([*common, "--out", str(full), "--max-steps", "3"], args.work / f"{name}_continuous.log")
         execute(
             [*common, "--out", str(interrupted), "--max-steps", "2"],
-            args.work / f"{arm}_interrupted.log",
+            args.work / f"{name}_interrupted.log",
         )
         execute(
             [
@@ -148,13 +153,13 @@ def main():
                 "--resume",
                 str(interrupted / "checkpoints/step_000002"),
             ],
-            args.work / f"{arm}_resumed.log",
+            args.work / f"{name}_resumed.log",
         )
         comparison = compare_continuation(full / "checkpoints/step_000003", interrupted / "checkpoints/step_000003", 8)
         status = json.loads((full / "run.json").read_text())
         if status["status"] != "execution_check_complete" or status["completed_steps"] != 3:
-            raise ValueError(f"Full-model smoke did not complete for {arm}")
-        smoke_records[arm] = {"out": str(full), "continuation": comparison}
+            raise ValueError(f"Full-model smoke did not complete for {name}")
+        smoke_records[name] = {"out": str(full), "continuation": comparison}
     receipt["evidence"]["real_data_smokes"] = smoke_records
     receipt["checks"].update(compiled_model=True, real_data_four_arm_smoke=True, checkpoint_continuation=True)
     receipt["time"] = utc_now()

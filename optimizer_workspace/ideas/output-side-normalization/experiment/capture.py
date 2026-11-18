@@ -162,8 +162,19 @@ class HybridModel(nn.Module):
             del block.input_rows_down
 
 
+# Arms whose matrix updates use no input statistic at all.
+NO_INPUT_CAPTURE = ("muon", "left_all")
+
+
+def captures_input(arm):
+    return arm not in NO_INPUT_CAPTURE
+
+
 def build_model(config, *, positions, row_capacity, rows_per_microbatch, device):
-    model_type = HybridModel if config["experiment"]["arm"] == "down_hybrid" else Model
+    arm = config["experiment"]["arm"]
+    if not captures_input(arm):
+        return Model(config["model"]).to(device)
+    model_type = HybridModel if arm == "down_hybrid" else Model
     model = model_type(
         config["model"],
         positions=positions,

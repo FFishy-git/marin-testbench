@@ -11,7 +11,25 @@ from pathlib import Path
 from .factors import OutputSettings
 from .reference import REVISION, TASK, UPSTREAM
 
-ARMS = ("muon", "muont", "outer_left_down", "inner_outer_down", "down_hybrid")
+ARMS = (
+    "muon",
+    "muont",
+    "outer_left_down",
+    "inner_outer_down",
+    "down_hybrid",
+    "inner_outer_all",
+    "null_all",
+    "left_all",
+    "inner_outer_all_diag",
+    "inner_outer_hidden",
+    "inner_outer_mlpdiag",
+    "inner_outer_leftdiag",
+    "outer_left_all",
+    "outer_left_all",
+    "inner_outer_all_lag",
+    "null_mlpdiag",
+    "inner_outer_mlpdiag_lag",
+)
 BATCHES = ("0p5m", "1m", "2m", "4m")
 
 
@@ -49,15 +67,16 @@ def main():
     parser.add_argument("--out", type=Path, default=TASK / "experiment" / "configs")
     parser.add_argument("--microbatch", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--arms", nargs="+", choices=ARMS, default=ARMS)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     for batch in BATCHES:
-        for arm in ARMS:
+        for arm in args.arms:
             path = args.out / f"{arm}_{batch}_seed{args.seed}.json"
             if path.exists():
                 raise FileExistsError(path)
             path.write_text(json.dumps(configuration(arm, batch, args.seed, args.microbatch), indent=2) + "\n")
-    print(f"Wrote {len(ARMS) * len(BATCHES)} explicit configurations to {args.out}")
+    print(f"Wrote {len(args.arms) * len(BATCHES)} explicit configurations to {args.out}")
 
 
 if __name__ == "__main__":
