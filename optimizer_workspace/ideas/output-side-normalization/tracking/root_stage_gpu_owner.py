@@ -14,6 +14,7 @@ from xml.etree import ElementTree as ET
 
 import owned_output_handoff as handoff
 import root_preparation_contract as previous
+import root_stage_failed_predecessor as failed_predecessor
 from fused_attribution_validation import require_keeper_shape
 from fused_attribution_validation_controller import (
     process_context,
@@ -50,6 +51,7 @@ NEW_HELPERS = (
     "root_stage_trace.py",
     "replay_saved_roots.py",
     "root_preparation_reconstruction.py",
+    "root_stage_failed_predecessor.py",
     *TESTS,
 )
 SAFE_MARKERS = (
@@ -254,6 +256,8 @@ def predecessor(root: Path) -> dict:
     """Require independently reconstructed terminal evidence before archive or allocation work."""
     binding_path, helpers, state_path, _, gpu_path = previous.locations(root)
     state = read(state_path)
+    if state.get("status") == "needs_attention":
+        return failed_predecessor.predecessor(root)
     intent_path = helpers.parent / "controller.json"
     intent = read(intent_path)
     # A live state must fail before any future terminal receipt or GPU inventory is read.

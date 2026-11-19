@@ -19,6 +19,8 @@ WORKER_MARKER = "OUTPUT_MARIN_TUNING_WORKER_ID"
 CHILD_MARKER = "OUTPUT_MARIN_DIAGNOSTIC_ID"
 CEILING = "campaigns/lr-fixed-age-ceiling-visible8-recovery-20261117"
 WORKLOAD_ARGS = ["--size", "8192", "--dtype", "fp16", "--pause", "0"]
+MARKER_SCAN_ATTEMPTS = 3
+EXIT_STATES = ("Z", "X", "x")
 
 
 def read(path: Path) -> dict:
@@ -73,18 +75,46 @@ def same_generation(before: dict, after: dict | None) -> bool:
 
 
 def marker_processes(name: str, value: str) -> dict[int, dict]:
+    """Rescan transient exits without accepting mixed generations or partial absence."""
     token = f"{name}={value}".encode()
-    result = {}
-    for pid, process in live_processes().items():
-        try:
-            tokens = (PROC_ROOT / str(pid) / "environ").read_bytes().split(b"\0")
-        except (FileNotFoundError, ProcessLookupError):
-            continue
-        if token in tokens:
-            if not same_generation(process, observed(pid)):
-                raise RuntimeError("Marked process generation changed during handoff")
+    identities, marked = {}, set()
+    for _ in range(MARKER_SCAN_ATTEMPTS):
+        result, unstable = {}, set()
+        for pid, process in live_processes().items():
+            if process["status"] in EXIT_STATES:
+                continue
+            if pid in identities and not same_generation(identities[pid], process):
+                raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
+            try:
+                tokens = (PROC_ROOT / str(pid) / "environ").read_bytes().split(b"\0")
+            except (FileNotFoundError, ProcessLookupError):
+                identities.setdefault(pid, process)
+                unstable.add(pid)
+                continue
+            if token not in tokens:
+                if pid in marked:
+                    raise RuntimeError(f"Marked process environment changed during handoff: pid={pid}")
+                continue
+            identities.setdefault(pid, process)
+            marked.add(pid)
             result[pid] = process
-    return result
+        for pid, process in result.items():
+            current = observed(pid)
+            if current is None:
+                unstable.add(pid)
+            elif current["status"] in EXIT_STATES:
+                # Exiting processes lose cmdline, but their owner fields must remain exact.
+                if any(current[key] != process[key] for key in ("pid", "start_ticks", "parent", "group", "session")):
+                    raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
+                unstable.add(pid)
+            elif not same_generation(process, current):
+                raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
+        if not unstable:
+            return result
+    raise RuntimeError(
+        f"Marked process scan remained unstable during handoff after {MARKER_SCAN_ATTEMPTS} attempts: "
+        f"pids={sorted(unstable)}"
+    )
 
 
 def require_absent(pid: int) -> None:

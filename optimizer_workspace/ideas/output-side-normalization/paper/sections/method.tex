@@ -1,0 +1,189 @@
+\section{Method}
+\label{sec:method}
+
+\subsection{Where the output statistics come from}
+
+The transformer we train has 32 layers and seven two-dimensional block matrices
+per layer --- separate $q,k,v,o$ attention projections and a SwiGLU
+$\text{gate},\text{up},\text{down}$ triple --- for 224 matrices under the matrix
+optimizer. Embeddings, the output head and RMSNorm weights stay under a fused
+AdamW group and are untouched by every arm.
+
+The two sides are not symmetric in how much sharing they permit, and this is
+the first design consequence of using the output moment at all.
+Table~\ref{tab:projections} shows why: $q,k,v$ consume the same activations and
+can therefore share one input moment, as can $\text{gate},\text{up}$, so the
+input side needs four statistics per layer. Every projection has its own output
+cotangent and can share nothing, so the output side needs seven. Two of those
+seven are at width 2048, against the input side's one.
+
+\begin{table}[t]
+\centering
+\caption{The seven block projections, their shapes, and the second moments each
+side requires. Input moments are shared where the consumed activations
+coincide; output moments cannot be shared, because each projection's cotangent
+is distinct. The two width-2048 output moments (``w.'') are where the cost of the
+output side concentrates; every cotangent is observed at the projection's
+output, at the point named in the last column.}
+\label{tab:projections}
+\footnotesize\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{@{}llcllc@{}}
+\toprule
+Proj. & Shape ($m\times n$) & $s$ & Input moment & Output moment & Cotangent at \\
+\midrule
+$q,k$ & $512\times512$ & 1 & $A_{\text{attn}}$, shared & $B_q,B_k$, w.\ 512 & pre-RoPE \\
+$v$ & $512\times512$ & 1 & $A_{\text{attn}}$, shared & $B_v$, w.\ 512 & pre-reshape \\
+$o$ & $512\times512$ & 1 & $A_o$, w.\ 512 & $B_o$, w.\ 512 & pre-residual \\
+gate, up & $2048\times512$ & 2 & $A_{\text{mlp}}$, shared & $B_{\text{gate}},B_{\text{up}}$, \textbf{w.\ 2048} & pre-SwiGLU \\
+down & $512\times2048$ & 1 & $A_{\text{down}}$, w.\ 2048 & $B_{\text{down}}$, w.\ 512 & pre-residual \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cotangents are sampled at the same 286 positions per sequence as the input
+statistics, giving $N_t=36{,}608$ samples per update pooled across all
+microbatches and all eight ranks, with EMA coefficient $\beta=0.938$ --- an
+effective averaging window of about 16 updates. Raw FP32 sums and counts pool
+\emph{before} the EMA, so the statistic is a globally pooled quantity and not a
+per-rank one. Because any positive constant scale cancels from the trace
+normalization in \eqref{eq:factors}, the capture applies a convenient power-of-two
+scale rather than the exact loss-averaging constant; this leaves every factor
+unchanged and is the reason diagnostics that report $B$ in summed-loss units
+must rescale.
+
+Output moments, their roots and the corresponding momentum are sharded by
+contiguous layer ownership, four layers per rank. Per-update, each rank
+accumulates replicated packed Gram partials, a \verb|reduce_scatter_tensor|
+delivers globally pooled sums to each layer's owner, the owner computes its
+roots and its four matrices' updates, and parameter deltas are all-gathered so
+every replica applies all 224 updates. The output statistics run in a second
+instance of the root engine with its own CUDA side stream, NCCL communicator
+and host refresh pool. All of this is work the baseline does not do, which is
+precisely why Section~\ref{sec:null} insists on a control that does it too.
+
+\subsection{The arms}
+
+Each arm is a choice of which factors in \eqref{eq:family} are applied, and at
+what richness. Table~\ref{tab:arms} defines the ones we ran. Three design axes
+matter and are varied independently.
+
+\textbf{Which side.} Arms either \emph{add} output factors to the input-side
+baseline (keeping $R,\hat R$), or \emph{replace} the input factors with output
+ones ($\leftall$, and $\texttt{down\_hybrid}$ on the down projections only).
+The replacement arms are the ones that test whether the output side can stand
+alone, and they also shrink the optimizer: replacing the down projection's
+width-2048 input moment with its width-512 output moment is 16$\times$ less
+moment storage and 64$\times$ less nominal dense root work for that layer.
+
+\textbf{Which richness.} A factor can be the dense spectral root of
+\eqref{eq:factors}, the same exponent applied elementwise to the moment's
+diagonal, or absent. The diagonal variant is not merely cheaper: because
+elementwise powers need no eigendecomposition, it is computed \emph{exactly from
+the current update's moment} every update, whereas a dense root is produced by a
+cached-eigenbasis backend with repair rounds, exact fallbacks, and asynchronous
+host refresh every four updates. Richness and freshness are therefore coupled
+in the arms as we ran them, which is a limitation we confront directly in
+Section~\ref{sec:freshness}.
+
+\textbf{Which breadth.} The first wave applied output factors to the down
+projections alone (32 of 224 matrices, 12.6\% of trainable parameters); later
+waves applied them to all seven projections. Because the narrow and broad
+versions also differ in their root backend, we do not read a difference between
+them as a pure breadth effect.
+
+\begin{table}[t]
+\centering
+\caption{Executed arms, as choices of factors in \eqref{eq:family}. ``dense''
+is the spectral root; ``diag'' the elementwise root of the moment's diagonal;
+``I'' absent. Factor age is $t$ unless the role column says otherwise, and an inner factor
+$L$ is absent wherever only $\hat L$ is listed. ``Withheld'' means the factor is
+computed and then discarded, which is what makes an arm a matched null:
+identical collection, communication, root work and scheduling, identity
+factors. Arms are named here as the figures name them; the implementation
+identifiers and full equations are in Appendix~\ref{app:arms}.}
+\label{tab:arms}
+\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llllp{0.20\textwidth}@{}}
+\toprule
+Arm & Left on $q,k,v,o,\text{down}$ & Left on $\text{gate},\text{up}$ & Right & Role \\
+\midrule
+Muon & I & I & I & reference \\
+MuonT & I & I & dense & \textbf{baseline} \\
+\addlinespace
+down only & $\hat L$ dense & I & dense & add, narrow \\
+down replace & $L,\hat L$ dense & I & down replaced & replace, narrow \\
+\addlinespace
+dense & $L,\hat L$ dense & $L,\hat L$ dense & dense & add, broad \\
+null (dense) & withheld & withheld & dense & \textbf{null for dense} \\
+output only & $L,\hat L$ dense & $L,\hat L$ dense & I & \textbf{replace, broad} \\
+both diag. & $L,\hat L$ diag & $L,\hat L$ diag & diag & both sides cheap \\
+\addlinespace
+no 2048 & $L,\hat L$ dense & none & dense & drop width 2048 \\
+mlpdiag & $L,\hat L$ dense & $L,\hat L$ diag & dense & \textbf{leading} \\
+null (mlpdiag) & withheld dense & withheld diag & dense & \textbf{null for mlpdiag} \\
+all diagonal & $L,\hat L$ diag & $L,\hat L$ diag & dense & \textbf{cheapest} \\
+outer only & $\hat L$ dense & $\hat L$ dense & dense & outer factor only \\
+\addlinespace
+dense, lagged & $L,\hat L$ dense & $L,\hat L$ dense & dense & latency, age $t-1$ \\
+mlpdiag, lagged & $L,\hat L$ dense & $L,\hat L$ diag & dense & latency, age $t-1$ \\
+\addlinespace
+outer diagonal & $\hat L$ diag & $\hat L$ diag & dense & fixed-age series \\
+fused outer & $\hat L$ diag & $\hat L$ diag & dense & fused kernels \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Two controls that the design forces}
+\label{sec:method-controls}
+
+\paragraph{The matched null.}
+Adding output factors to this implementation changes the numerical path for
+every block matrix: the baseline uses a batched update with fused
+direction/decay products and split-precision root products, while the
+output-side arms use a per-matrix path with direct FP32 products and separately
+formed direction and decay. Momentum is bitwise identical, but the applied
+delta differs by floating-point reassociation, and the host refresh schedule
+changes because there are now two root engines competing for the same two
+worker threads. A loss difference between an output-side arm and the baseline
+therefore confounds geometry with execution.
+
+The matched null resolves this. It runs the candidate's entire code path ---
+cotangent capture, pooled moments, communication, root computation, host
+refresh, scheduling, checkpoint state --- and then forces $L=\hat L=I$. Its
+target is the baseline's mathematics via the candidate's execution. Candidate
+minus null isolates geometry; null minus baseline measures the path.
+Section~\ref{sec:null} reports that the second quantity is not small.
+
+\paragraph{The latency variant.}
+Output rows exist only after the backward pass, so the implementation launches
+output statistics and roots after the last microbatch's backward and then waits
+for them inside the same update. That wait is on the critical path. The lagged
+arms apply factors computed from the \emph{previous} update's rows, moving
+collection to just before the next launch and giving the work a full update plus
+a forward and backward to complete. At $\beta=0.938$ a one-update lag is about
+one-sixteenth of the averaging window, far less staleness than Shampoo-family
+methods accept, but it is still a change to the update and not a pure
+efficiency control: candidate-minus-lagged measures what the staleness costs,
+and the pair together separate latency from geometry.
+
+\subsection{Where the cost is}
+\label{sec:method-cost}
+
+The output side's expense is concentrated and predictable. Of the 224 output
+statistics, 160 are at width 512 and 64 at width 2048. Dense root work scales as
+$d^3$ and Gram accumulation as $d^2$, so the two MLP-expansion projections carry
+96.2\% of the eigendecomposition work and 86.5\% of the Gram work while being
+29\% of the statistics. They hold 0.500 of the 0.579\,GiB of packed Gram
+partials and 1.000 of the 1.156\,GiB of cached eigenbases. Per rank, an arm with
+dense output factors on all blocks adds roughly 0.58\,GiB of replicated Gram
+partials, an equal \verb|reduce_scatter| payload per update, about 1.8\,GiB of
+BF16 sampled-row buffers, and 0.75\,GiB of owned output state.
+
+This is why the arm family includes three different ways to cheapen the output
+side rather than one, and why the width-2048 factors are the natural first
+target: \texttt{inner\_outer\_hidden} removes them, \mlpdiag{} diagonalizes
+them, and \alldiag{} diagonalizes everything, removing output
+eigendecomposition entirely. Newton--Schulz remains the dominant per-matrix
+cost in every arm, so no arm on this path can be faster than a Muon-form update
+on the same path; the savings available are savings against the dense output
+arms, not against the baseline.

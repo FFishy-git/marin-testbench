@@ -601,7 +601,9 @@ def terminal(root: Path, out: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
-    parser.add_argument("--phase", required=True, choices=("cpu", "freeze", "check", "start", "execute", "terminal"))
+    parser.add_argument(
+        "--phase", required=True, choices=("cpu", "seal-predecessor", "freeze", "check", "start", "execute", "terminal")
+    )
     parser.add_argument("--out", type=Path)
     parser.add_argument("--cpu-receipt", type=Path)
     args = parser.parse_args()
@@ -610,6 +612,8 @@ def main() -> None:
         if args.out is None:
             parser.error("CPU verification requires --out")
         result = cpu(root, args.out.resolve())
+    elif args.phase == "seal-predecessor":
+        result = owner.failed_predecessor.seal(root)
     elif args.phase == "freeze":
         if args.cpu_receipt is None:
             parser.error("Freeze requires --cpu-receipt")

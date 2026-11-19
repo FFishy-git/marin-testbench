@@ -1,0 +1,189 @@
+\section{What would settle this}
+\label{sec:program}
+
+The results above leave one question open in a way that blocks all the others:
+is the fixed-rate gain a geometry effect or a step-size effect? Until that is
+answered, additional arms add precision to a quantity nobody is asking about.
+This section lists the experiments we think are worth running, in priority
+order, with what each decides and what it costs. The list is deliberately
+short. Section~\ref{sec:nonprogram} says what we would \emph{not} run, which in
+a study with this many degrees of freedom is the more useful half.
+
+A full-budget run here is 2.68B tokens on eight A100s, about 1.7 hours of
+wall-clock and roughly 13 GPU-hours. We quote costs in runs.
+
+\begin{table}[t]
+\centering
+\caption{The proposed program. Items 1--4 are what we would run before making
+any claim; item 5 is gated on item 3 resolving favourably. Total through item 4
+is nine runs, about 120 GPU-hours. For comparison, the factorial this design
+invites --- every geometry crossed with every learning rate, operand precision
+and Newton--Schulz budget --- reserves 54 configurations and some 145B tokens,
+which we argue in Section~\ref{sec:nonprogram} should not be run.}
+\label{tab:program}
+\footnotesize
+\begin{tabular}{p{0.34\textwidth}p{0.42\textwidth}r}
+\toprule
+Experiment & What it decides & Runs \\
+\midrule
+\textbf{1. Norm-grafted candidate.} Apply the leading geometry's direction
+rescaled to the baseline direction's Frobenius norm, at the recipe rate. &
+Whether the gain is geometry or step size. If grafting preserves it, the
+output moment is changing the \emph{direction} usefully; if it vanishes, the
+whole effect is a step-size proxy and the tuned comparison is already decided. & 1 \\
+\addlinespace
+\textbf{2. Matched null at the selected rate}, same wave and same source as the
+one arm that survives tuning. & Whether the only tuned gain we have
+($-0.0029$ nats) exceeds its own execution-path artifact. At present it does
+not clearly exceed the artifact measured elsewhere. & 1 \\
+\addlinespace
+\textbf{3. Full-budget learning-rate neighborhood.} Baseline and one candidate,
+three rates each, symmetric about the screening optimum, at the full 5{,}120
+updates. Expand symmetrically if a boundary wins. & The effect size under fair
+tuning --- the paper's central open quantity. Section~\ref{sec:tuning} shows
+the short-schedule instrument does not transfer, so this cannot be shortcut. & 6 \\
+\addlinespace
+\textbf{4. Freshness ablation.} Diagonal output factors \emph{held} for four
+updates, against the existing arm that recomputes them every update. Geometry
+and richness identical; only staleness differs. & Whether
+Section~\ref{sec:freshness}'s conclusion is about freshness or about rank. It is
+currently an inference from arms that differ in both. & 1 \\
+\addlinespace
+\textbf{5. Fresh paired-seed confirmation} on seeds 3/4/5, reserved from
+exploration now, for whichever family survives item 3, with a launch-anchored
+time-to-target measurement riding along. & Replication and the efficiency
+question, together. & 6 \\
+\addlinespace
+\textbf{Mechanistic probes} (see below). & Why, if anything, the output moment
+helps. & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Item 1 deserves to be first}
+
+Of everything in Table~\ref{tab:program}, the norm-grafting control is the one
+we most regret not having run. The concern it addresses is specific: a left
+factor $\hat L$ with unit RMS does not fix the final direction's norm, because
+it is applied after a finite Newton--Schulz map whose output is not an exact
+polar factor, and the decay term is shaped separately. So an output-side arm may
+simply be taking larger effective steps than the baseline at the same nominal
+rate --- which Section~\ref{sec:tuning} shows is worth far more than any
+geometry we tested.
+
+Grafting separates the hypotheses in one run. Replace the candidate direction
+$D$ by $D\,\|D_{\text{input}}\|_F/\|D\|_F$, where $D_{\text{input}}$ is the
+baseline's direction for the same matrix at the same update, leaving everything
+else alone. If the gain survives, the output moment is reorienting the update
+and the geometry story stands. If it disappears, the effect is step size, and
+items 2--5 can be skipped in favour of simply tuning the baseline. A
+complementary cheap measurement, available from existing checkpoints with no
+new runs, is the effective step ratio $\|\Delta W\|_F/\|W\|_F$ per arm: if the
+candidates' ratios systematically exceed the baseline's, that is corroborating
+evidence before the grafted run even starts.
+
+\subsection{Mechanistic probes, at zero training cost}
+
+No mechanistic evidence exists for \emph{why} output-side normalization helps.
+That is the largest gap in this study, and closing most of it requires no new
+training: the runs saved 21 distributed checkpoints each, including optimizer
+moments and roots, so the following can be computed offline on reserved batches
+at the 0\%, 10\%, 50\% and 100\% points of training.
+
+\paragraph{Does the output moment carry anisotropy worth exploiting?}
+Measure the top-to-mean eigenvalue ratio and leading energy share of $B$ per
+projection and per depth, alongside the same quantities for $C$. If the
+width-2048 output moments are nearly isotropic, the diagonal result of
+Section~\ref{sec:freshness} needs no freshness explanation at all --- their
+rotation would carry little information to begin with --- and that single
+measurement would discriminate between our interpretation and the simpler one.
+We regard this as the most informative probe per unit effort in the paper.
+
+\paragraph{Does the Kronecker factorization hold here?}
+This is the direct test of the motivation in Section~\ref{sec:background}. On a
+reserved pool, form \emph{fresh} empirical moments
+$\widehat C=N^{-1}\sum_j x_jx_j^{\Tr}$ and
+$\widehat B=N^{-1}\sum_j \delta_j\delta_j^{\Tr}$ --- not training EMAs, and not
+stale roots --- and for fixed unit-Frobenius directions $D$ compare the true
+quadratic $N^{-1}\sum_j(\delta_j^{\Tr}Dx_j)^2$ against the factored
+$\tr(\widehat B D\widehat C D^{\Tr})$. Agreement would license calling
+$B\otimes C$ a curvature model here; disagreement would localize the failure to
+cross-token terms, which can be inspected directly. Two disciplines matter:
+rank the directions by both quantities and compare the rankings rather than the
+magnitudes, and treat a correlation interval containing zero as no support for
+the curvature account. Anisotropy alone does not establish it.
+
+\paragraph{Does the finite map behave like the idealized one?}
+Our measurements put the ten-step map at cosine $0.979$ to a partial polar
+factor with relative error $0.211$ (Appendix~\ref{app:numerics}), so arguments
+that assume $PP^{\Tr}=I$ do not transfer. Comparing exact SVD-polar against
+$\Nten$ on small matrices, with explicit rank-deficiency conventions, would
+quantify how far the arms' algebra departs from the derivation that motivated
+them.
+
+\subsection{What we would not run}
+\label{sec:nonprogram}
+
+Three large bodies of work are available and we think they should wait.
+
+\paragraph{The full-model Newton--Schulz budget sweep.}
+Fewer Newton--Schulz steps is a genuine efficiency lever: our numerical study
+finds seven steps matching ten on cosine to a partial polar factor
+($0.980$ against $0.979$) with 30\% fewer matrix products, and five steps still
+at $0.951$. But the natural experiment reserves 54 full configurations across
+three families, two operand precisions and three budgets. That is six times the
+program in Table~\ref{tab:program} to answer a question orthogonal to whether
+output-side normalization works. Newton--Schulz cost is shared by every arm
+including the baseline, so the right first test is a three-point step-budget
+comparison \emph{on the baseline alone}, where the result is cheaper to
+interpret and benefits every arm if it holds. We would also not describe such a
+change as an implementation speedup: five- and seven-step directions differ
+from ten-step ones by relative errors of $0.41$ and $0.38$, so this is a
+different optimizer, not a faster one.
+
+\paragraph{The remaining survivor controls and information controls.}
+A direction/decay factorial, a formula control in the style of published
+two-sided methods, a dimension-capped input control, and the information
+controls that re-apply observed eigenvalues in a randomized basis or shuffle
+eigenvalues within the observed basis are all defensible, and the
+randomized-basis control in particular is the clean way to ask whether the
+eigenbasis or merely the spectrum carries the benefit. None of them changes the
+decision currently in front of us, which is a cost decision. We would run the
+randomized-basis control immediately \emph{after} item 3, if and only if a
+tuned gain survives.
+
+\paragraph{Scaling.}
+Larger batches and larger models should wait for a tuned win at this scale.
+The one larger-batch pair we have (Section~\ref{sec:replication}) gives a
+smaller gain, and the pinned reference values for this recipe family show the
+baseline-to-preconditioned gap \emph{growing} with batch size, which means a
+larger batch changes what is being compared rather than simply amplifying it.
+Scaling an unpriced effect multiplies the cost of not having priced it.
+
+\subsection{Decision rules, set before the runs}
+
+We state these in advance because the temptation to read a 0.002-nat
+improvement as a win is exactly what the matched null and the tuning sweep
+exist to resist.
+
+\begin{itemize}
+\item \textbf{Attribution.} A geometry claim is reported as candidate minus
+  \emph{same-wave, same-rate} matched null, never as candidate minus baseline.
+\item \textbf{Quality.} A quality claim requires the tuned, full-budget margin
+  of item 3 to exceed the null artifact and to hold on the fresh seeds of item 5
+  on the fixed external metric.
+\item \textbf{Efficiency.} An efficiency claim requires a predeclared target
+  from baseline-only pilots, a clock that starts at process launch and includes
+  compilation, evaluation and checkpointing, and explicit censoring where a
+  target is unreached. Nominal product counts, kernel microbenchmarks and
+  retrospective crossings on completed histories do not substitute, and our own
+  retrospective crossings (Section~\ref{sec:cost}) are reported as exploratory
+  for this reason.
+\item \textbf{Margins.} We decline to fix a numerical decision margin until
+  item 5 provides a baseline seed-to-seed variability estimate for this recipe.
+  The paired design makes within-seed differences precise, but no number we
+  currently have bounds the marginal variance, so any threshold we named now
+  would be arbitrary --- and the candidate effects, at $0.002$ to $0.007$ nats,
+  are close enough to plausible noise floors that the order of operations
+  matters.
+\end{itemize}

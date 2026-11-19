@@ -12,7 +12,7 @@ trap 'printf "%s\n" "$(date -Is)" > "$directory/stopped_at"' EXIT
 
 while true; do
     if /opt/conda/envs/torch-base/bin/python "$task/tracking/update_endeavor.py" \
-        --root "$root" --document "$task/ENDEAVOR.md"; then
+        --root "$root" --document "$task/DETAILS.md"; then
         printf '%s ledger_refreshed\n' "$(date -Is)"
     else
         printf '%s ledger_refresh_refused_retry_next_cycle\n' "$(date -Is)"

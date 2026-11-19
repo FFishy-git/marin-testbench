@@ -1,0 +1,115 @@
+\section{Introduction}
+\label{sec:intro}
+
+Muon \citep{jordan2024muon} replaced the per-coordinate step of Adam-type
+optimizers with a matrix-aware one: take the momentum of a weight matrix,
+orthogonalize it with a few Newton--Schulz iterations, and step along the
+result. Its preconditioned descendants go further and whiten the momentum
+against the second moment of the layer's \emph{inputs} before orthogonalizing,
+which is the construction we take as our baseline and call input-side MuonT
+throughout. For a linear layer $y=Wx$, this uses the statistics of $x$.
+
+The gradient of that layer, however, is an outer product of two vectors:
+$G=\delta x^{\Tr}$, where $\delta$ is the cotangent arriving at the layer's
+output. Input-side whitening conditions the update against the second moment
+of $x$ and leaves the second moment of $\delta$ unused, even though $\delta$ is
+already materialized in the backward pass and is no harder to sample than $x$
+is. Kronecker-factored curvature approximations use both sides
+\citep{martens2015kfac,gupta2018shampoo}, which suggests the output side
+carries information the input side does not. This paper asks the narrow
+empirical question that follows: if you add the output-cotangent second moment
+to a Muon-type optimizer, what do you get, and what does it cost?
+
+We answer it on a pinned recipe --- a 265M-parameter Llama-style transformer
+trained on 2.68B tokens of a DCLM/StarCoder/Proof-Pile mixture, eight A100s per
+run --- by defining a family of output-side normalized updates and running every
+member of it to the full budget. The study comprises \nDistinctRuns{} distinct full-budget
+trajectories across arm geometries, matched null controls, three seeds, two
+batch sizes, and systems variants, plus 28 short-schedule learning-rate
+screening trials. All of them train the same tokens in the same order within a seed,
+which makes per-update paired differencing exact and is what lets us resolve
+effects of a few thousandths of a nat at all.
+
+\paragraph{What we find.}
+Three results are stable across the evidence we have.
+
+\begin{enumerate}
+\item \textbf{The output side is a complement, not a substitute.}
+  Added on top of input whitening, the best output geometry improves held-out
+  loss by \mlpdiagselmag{} nats and does so in every one of five training
+  windows and on all three seeds we ran. Used \emph{instead} of input whitening,
+  the identical output factors make the optimizer \leftallsel{} nats
+  \emph{worse} than the input-only baseline --- worse than either side alone.
+  Whatever the output moment contributes, it is conditional on the input moment
+  already being there (Section~\ref{sec:complement}).
+
+\item \textbf{A matched null control absorbs a fifth to a third of the
+  apparent gain.} Adding output-side machinery changes more than the update
+  equation: it changes the numerical path, the communication pattern, and the
+  host scheduling. We ran controls that execute all of that work and then apply
+  identity factors. They are not neutral --- they improve on the baseline by
+  \nullsharedense\% of the dense arm's selection-loss gain and \nullsharemlpcfour\%
+  of the leading arm's C4 gain. The first candidate this project ever favored
+  turned out, once its null was run, to be almost entirely execution path
+  (Section~\ref{sec:null}).
+
+\item \textbf{Freshness beats richness.} The widest output moments carry 96\% of
+  the eigendecomposition work, and the dense arms cannot refresh their
+  eigenbases faster than once every four updates, logging roughly 32{,}000
+  exact-decomposition fallbacks per run and sitting at a mean basis age near
+  three. Replacing those dense roots with elementwise diagonals --- exact, and
+  recomputed every update --- is both \emph{better} and 17 percentage points
+  cheaper per step. But deleting the same factors outright is worse than
+  diagonalizing them. The moment's scale is worth tracking; its rotation, at
+  the refresh rate we can actually afford, was not paying for itself
+  (Section~\ref{sec:freshness}).
+\end{enumerate}
+
+\paragraph{What governs those findings.}
+A fourth result is negative, and we think it is the most important thing in the
+paper. Every gain above is measured at the pinned recipe's learning rate, and
+that rate is not the baseline's optimum. In short-schedule screening, the
+baseline's own held-out loss improves by \lrHeadroom{} nats when its learning
+rate alone is tuned --- roughly \lrHeadroomRatio{} times the largest output-side
+gain we measured at the recipe rate.\footnote{The two numbers come from
+different schedules, 320 screening updates against the 5{,}120-update full
+budget, so the ratio is an order-of-magnitude statement and not a like-for-like
+one. Section~\ref{sec:tuning} gives both schedules separately.} Worse, the
+ranking does not transfer: when we carried screening-selected rates to the full
+budget, two of three geometries went from beating the baseline to losing to it
+by about \transferWorst{} nats. And on the same short schedule at the recipe
+rate, every candidate is worse than the baseline, inverting the full-budget
+ordering. No arm has reached any loss target in less wall-clock time than the
+baseline, at any of the thresholds we checked.
+
+So we are not reporting a better optimizer. We are reporting that output-side
+normalization produces a small, replicated, window-stable improvement in
+fixed-token loss whose size is comparable to its own control's artifacts and
+small relative to the baseline's tuning headroom, at a step-time cost of 8--22\%
+and about 1.9\,GiB of additional peak memory. That is a promising direction with
+an unpaid bill, not a result.
+
+\paragraph{Why publish it in this form.}
+Two reasons. First, the controls are the contribution that transfers. The
+matched null and the tuning confound are traps that any preconditioner added to
+a Muon-type optimizer will walk into, and both are cheap to avoid once named. In our
+own history each one overturned a conclusion we had already drawn: the matched
+null showed that the arm we first favored was mostly execution path, and the
+tuning transfer reversed the ranking our screening study had selected.
+Second, stating precisely which experiments remain is more useful than
+deferring publication until they are done. Section~\ref{sec:program} lists
+them, and the list is short: one null at the selected rate, a full-budget
+learning-rate neighborhood for two families, one freshness ablation, and
+mechanistic probes that need no new training runs at all. We deliberately do
+\emph{not} propose the large factorial sweeps that this design invites, and
+Section~\ref{sec:program} explains which of them we think are not worth
+running until the learning-rate question resolves.
+
+\paragraph{Scope.}
+Everything here is one model size, one token budget, one hardware
+configuration, and --- for the arm comparison --- a single data order per seed.
+We make no claim about scaling: the clean statement of our results is about an
+optimizer modification measured carefully at one point, not about a method.
+Section~\ref{sec:limitations} is explicit about which of our numbers are
+exploratory, which are replicated, and which are deterministic repeats of the
+same trajectory rather than independent observations.

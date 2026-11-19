@@ -1,0 +1,129 @@
+\section{Arm definitions}
+\label{app:arms}
+
+This appendix writes out each executed arm's update. Throughout, $W\in\mathbb
+R^{m\times n}$ is a block matrix, $G_t$ its globally averaged accumulated
+gradient, and
+\[
+M_t=\mu M_{t-1}+G_t,\qquad U_t=G_t+\mu M_t,\qquad \mu=0.95,\quad M_{-1}=0,
+\]
+the momentum and Nesterov source, with no $(1-\mu)$ factor and no bias
+correction. Given a gradient-driven direction $D_t$ and a decay direction
+$Q_t$,
+\begin{equation}
+\label{eq:update}
+W_{t+1}=W_t-\eta_t\left(s_{m,n}D_t+\lambda Q_t\right),
+\qquad s_{m,n}=\sqrt{\max(1,m/n)},\quad \lambda=0.1 .
+\end{equation}
+Both $D_t$ and $Q_t$ use pre-update weights and statistics. Factors are
+$R=\In_n(C_t)$, $\hat R=\Out_n(C_t)$ from the input moment and
+$L=\In_m(B_t)$, $\hat L=\Out_m(B_t)$ from the output moment, with $\In$ and
+$\Out$ as in \eqref{eq:factors}; a superscript ``diag'' denotes the same
+exponent applied elementwise to the moment's diagonal, normalized as
+\[
+a=\frac{d\,f}{\mathbf 1^{\Tr}f}+\epsilon\mathbf 1,
+\qquad f=\diag(F),
+\]
+\[
+\In^{\text{diag}}_d=\Diag\!\left(a^{-1/2}\right),\qquad
+\Out^{\text{diag}}_d=\frac{\sqrt d\,\Diag\!\left(a^{-1/8}\right)}{\|a^{-1/8}\|_2}.
+\]
+Zero-trace statistics return identity factors. Powers in $\In$ and $\Out$ are
+spectral; powers in the diagonal versions are elementwise.
+
+\paragraph{Input-side MuonT (\muont{}), the baseline.}
+For all seven projections,
+\[
+D_t=\Nten\!\left(U_tR\right)\hat R,\qquad Q_t=W_t\hat R^{\,2}.
+\]
+Both factors act on the right; decay is shaped by the squared outer input
+factor.
+
+\paragraph{Narrow arms, MLP down projections only.}
+The other six projections take the baseline's update unchanged.
+\begin{align*}
+\texttt{outer\_left\_down}:\quad & D_t=\hat L\,\Nten\!\left(U_tR\right)\hat R, & Q_t&=W_t\hat R^{\,2},\\
+\texttt{down\_hybrid}:\quad & D_t=\hat L\,\Nten\!\left(L\,U_t\right), & Q_t&=\hat L^{\,2}W_t,\\
+\texttt{inner\_outer\_down}\ (\text{unexecuted}):\quad & D_t=\hat L\,\Nten\!\left(L\,U_tR\right)\hat R, & Q_t&=W_t\hat R^{\,2}.
+\end{align*}
+\texttt{outer\_left\_down} \emph{adds} a left factor after Newton--Schulz and
+keeps every input factor; \texttt{down\_hybrid} \emph{replaces} the down
+projection's input statistics, capture and roots with output ones, and uses
+left-shaped decay. The 32 down matrices hold 33{,}554{,}432 weights, 12.6\% of
+trainable parameters.
+
+\paragraph{Broad arms, all 224 matrices.}
+Each projection $p$ has its own output moment $B_p$; input moments remain
+shared as in Table~\ref{tab:projections}.
+\begin{align*}
+\dense{}:\quad & D_{p,t}=\hat L_p\Nten\!\left(L_pU_{p,t}R_p\right)\hat R_p,\\
+\leftall{}:\quad & D_{p,t}=\hat L_p\Nten\!\left(L_pU_{p,t}\right),\\
+\texttt{outer\_left\_all}:\quad & D_{p,t}=\hat L_p\Nten\!\left(U_{p,t}R_p\right)\hat R_p,\\
+\mlpdiag{}:\quad & D_{p,t}=\hat L^{\star}_p\Nten\!\left(L^{\star}_pU_{p,t}R_p\right)\hat R_p,
+\end{align*}
+with input-shaped decay $Q_{p,t}=W_{p,t}\hat R_p^{\,2}$ in every case except
+\leftall{}, whose decay is left-shaped, $Q_{p,t}=\hat L_p^{\,2}W_{p,t}$.
+Here, in \mlpdiag{}, the starred factors are dense for
+$p\in\{q,k,v,o,\text{down}\}$ and diagonal for $p\in\{\text{gate},\text{up}\}$.
+\alldiag{} is the same with starred factors diagonal everywhere;
+\texttt{inner\_outer\_hidden} is the same with starred factors dense on the
+width-512 group and \emph{absent} on $\text{gate},\text{up}$, whose cotangents
+are then not observed at all. \texttt{inner\_outer\_all\_diag} replaces
+\emph{both} sides by diagonals:
+\[
+D_{p,t}=\Lambda^{\text{out}}_{\text{out},p}\,
+\Nten\!\left(\Lambda^{\text{out}}_{\text{in},p}\,U_{p,t}\,
+\Lambda^{\text{in}}_{\text{in},p}\right)\Lambda^{\text{in}}_{\text{out},p},
+\qquad
+Q_{p,t}=W_{p,t}\left(\Lambda^{\text{in}}_{\text{out},p}\right)^{2},
+\]
+with the superscript naming the statistic's side and the subscript the inner or
+outer root. This arm does not contain the baseline as a special case, which is
+why its large regression does not isolate the output-side diagonal; that
+isolation is what \alldiag{} provides.
+
+\paragraph{Matched nulls.}
+\nullall{} runs \dense{}'s path with $L_p=\hat L_p=I$ forced for all $p$;
+\nullmlp{} does the same for \mlpdiag{}, preserving which groups would have been
+dense and which diagonal. Both retain cotangent capture, pooled moments,
+communication, root computation, host refresh, scheduling and checkpoint state.
+Note that forcing identity left factors in \leftall{} would give
+$D=\Nten(U)$, $Q=W$ --- a plain Muon-form update at the baseline's learning rate
+rather than a baseline null --- which is why \leftall{}'s matched control is a
+different arm, and why we did not run it: \leftall{}'s regression is large
+enough ($+0.0087$) that no plausible path effect explains it.
+
+\paragraph{Lagged arms.}
+\texttt{inner\_outer\_all\_lag} and \texttt{inner\_outer\_mlpdiag\_lag} compute
+exactly their parent's factors and apply them one update late,
+\[
+D_t=\hat L^{(t-1)}\,\Nten\!\left(L^{(t-1)}U_tR^{(t)}\right)\hat R^{(t)} ,
+\]
+with the input side current. The first update has no earlier rows and applies
+input factors only. In the mixed arm both the dense and the diagonal left
+factors advance together, so the arm has one left-factor age rather than two.
+
+\paragraph{Fixed-age and fused arms.}
+\outerdiag{} applies only the outer diagonal output factor,
+$D_{p,t}=\hat L^{\text{diag}}_p\Nten(U_{p,t}R_p)\hat R_p$, and \fused{} is the
+same equation with the post-Newton--Schulz products fused into three right
+multiplications instead of four:
+$-(\eta\lambda W\hat R+\eta s\hat L X)\hat R$. That is the same real arithmetic
+in a different floating-point order; our CPU diagnostics bound the discrepancy
+at a relative Frobenius error of $1.4\times10^{-7}$, and the two arms' paired
+training-loss difference is $+0.000033$ with a standard error of $0.000049$ ---
+indistinguishable from zero, which is the expected result for a change of
+kernels rather than equations and a useful check on it. The fixed-age series
+additionally pins input host-basis installation to the next update boundary, so
+every logged installation has age exactly one and no refresh is discarded.
+
+\paragraph{Execution notes that the equations do not capture.}
+The baseline calls the upstream batched optimizer; every output-side arm uses a
+per-matrix path with direct FP32 root products and separately formed direction
+and decay. From the second wave onward the per-matrix path is replaced by a
+batched one, \texttt{block\_update\_stack}, which issues one update per shape
+group per rank instead of one per matrix, cutting kernel launches on the update
+path from roughly $10^4$ to a few hundred per step; momentum matches the
+per-matrix path bitwise and the applied delta differs only by FP32
+reassociation inside the batched products, bounded at a relative $10^{-4}$.
+Step times are therefore comparable within a wave and not across the first two.

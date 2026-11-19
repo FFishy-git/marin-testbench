@@ -1,0 +1,2847 @@
+{
+  "authority": "cpu_synthetic_evidence_only_no_acceptance_or_launch",
+  "cleanup": {
+    "reaped_during_cleanup": [],
+    "remaining_children": []
+  },
+  "configuration": {
+    "cleanup_timeout": 10.0,
+    "exit_maps": 8192,
+    "mapping_page_bytes": 4096,
+    "mapping_virtual_bytes": 33554432,
+    "max_exit_attempts": 4,
+    "pidfd_open": {
+      "architecture": "x86_64",
+      "flags": 0,
+      "syscall_number": 434
+    },
+    "timeout": 10.0
+  },
+  "controls": {
+    "exec_marker_removal": {
+      "finished": {
+        "local": "2026-11-19T15:26:56.375755+08:00",
+        "monotonic_ns": 9407371932163651,
+        "unix_ns": 1795073216375754897,
+        "utc": "2026-11-19T07:26:56.375755+00:00"
+      },
+      "started": {
+        "local": "2026-11-19T15:26:56.147643+08:00",
+        "monotonic_ns": 9407371704052927,
+        "unix_ns": 1795073216147643010,
+        "utc": "2026-11-19T07:26:56.147643+00:00"
+      },
+      "variants": [
+        {
+          "after": {
+            "command": {
+              "byte_count": 245,
+              "entry_count": 9,
+              "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+            },
+            "environment": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "marker_present": false
+            },
+            "executable": {
+              "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.253558+08:00",
+              "monotonic_ns": 9407371809966863,
+              "unix_ns": 1795073216253558319,
+              "utc": "2026-11-19T07:26:56.253558+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.253387+08:00",
+              "monotonic_ns": 9407371809795979,
+              "unix_ns": 1795073216253387235,
+              "utc": "2026-11-19T07:26:56.253387+00:00"
+            },
+            "stat_after": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959158,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959158,
+              "session": 2959158,
+              "start_ticks": "940737170",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.253546+08:00",
+                "monotonic_ns": 9407371809960270,
+                "unix_ns": 1795073216253546446,
+                "utc": "2026-11-19T07:26:56.253546+00:00"
+              },
+              "vsize": 256720896
+            },
+            "stat_before": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959158,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959158,
+              "session": 2959158,
+              "start_ticks": "940737170",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.253431+08:00",
+                "monotonic_ns": 9407371809843629,
+                "unix_ns": 1795073216253430767,
+                "utc": "2026-11-19T07:26:56.253431+00:00"
+              },
+              "vsize": 256720896
+            }
+          },
+          "before": {
+            "command": {
+              "byte_count": 239,
+              "entry_count": 9,
+              "sha256": "354f0371ab704213abe241ae0fba8abe5ae004cb8e34813cb372e64e634a949d"
+            },
+            "environment": {
+              "byte_count": 27,
+              "entry_count": 1,
+              "marker_present": true
+            },
+            "executable": {
+              "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.192697+08:00",
+              "monotonic_ns": 9407371749105949,
+              "unix_ns": 1795073216192697324,
+              "utc": "2026-11-19T07:26:56.192697+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.192518+08:00",
+              "monotonic_ns": 9407371748926328,
+              "unix_ns": 1795073216192517954,
+              "utc": "2026-11-19T07:26:56.192518+00:00"
+            },
+            "stat_after": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959158,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959158,
+              "session": 2959158,
+              "start_ticks": "940737170",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.192684+08:00",
+                "monotonic_ns": 9407371749099306,
+                "unix_ns": 1795073216192684320,
+                "utc": "2026-11-19T07:26:56.192684+00:00"
+              },
+              "vsize": 256720896
+            },
+            "stat_before": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959158,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959158,
+              "session": 2959158,
+              "start_ticks": "940737170",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.192566+08:00",
+                "monotonic_ns": 9407371748978657,
+                "unix_ns": 1795073216192565835,
+                "utc": "2026-11-19T07:26:56.192566+00:00"
+              },
+              "vsize": 256720896
+            }
+          },
+          "complete_rescans_after_exec": [
+            {
+              "finished": {
+                "local": "2026-11-19T15:26:56.246603+08:00",
+                "monotonic_ns": 9407371803021719,
+                "unix_ns": 1795073216246602825,
+                "utc": "2026-11-19T07:26:56.246603+00:00"
+              },
+              "group": 2959158,
+              "members_after": [
+                2959158
+              ],
+              "members_before": [
+                2959158
+              ],
+              "processes": [
+                {
+                  "pid": 2959158,
+                  "sample": {
+                    "command": {
+                      "byte_count": 245,
+                      "entry_count": 9,
+                      "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                    },
+                    "environment": {
+                      "byte_count": 0,
+                      "entry_count": 0,
+                      "marker_present": false
+                    },
+                    "executable": {
+                      "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                    },
+                    "finished": {
+                      "local": "2026-11-19T15:26:56.242188+08:00",
+                      "monotonic_ns": 9407371798597484,
+                      "unix_ns": 1795073216242187918,
+                      "utc": "2026-11-19T07:26:56.242188+00:00"
+                    },
+                    "started": {
+                      "local": "2026-11-19T15:26:56.241983+08:00",
+                      "monotonic_ns": 9407371798402143,
+                      "unix_ns": 1795073216241982648,
+                      "utc": "2026-11-19T07:26:56.241983+00:00"
+                    },
+                    "stat_after": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959158,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959158,
+                      "session": 2959158,
+                      "start_ticks": "940737170",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.242175+08:00",
+                        "monotonic_ns": 9407371798589719,
+                        "unix_ns": 1795073216242174632,
+                        "utc": "2026-11-19T07:26:56.242175+00:00"
+                      },
+                      "vsize": 256720896
+                    },
+                    "stat_before": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959158,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959158,
+                      "session": 2959158,
+                      "start_ticks": "940737170",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.242037+08:00",
+                        "monotonic_ns": 9407371798449684,
+                        "unix_ns": 1795073216242036731,
+                        "utc": "2026-11-19T07:26:56.242037+00:00"
+                      },
+                      "vsize": 256720896
+                    }
+                  },
+                  "threads": [
+                    {
+                      "sample": {
+                        "command": {
+                          "byte_count": 245,
+                          "entry_count": 9,
+                          "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                        },
+                        "environment": {
+                          "byte_count": 0,
+                          "entry_count": 0,
+                          "marker_present": false
+                        },
+                        "executable": {
+                          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                        },
+                        "finished": {
+                          "local": "2026-11-19T15:26:56.242436+08:00",
+                          "monotonic_ns": 9407371798844321,
+                          "unix_ns": 1795073216242435958,
+                          "utc": "2026-11-19T07:26:56.242436+00:00"
+                        },
+                        "started": {
+                          "local": "2026-11-19T15:26:56.242241+08:00",
+                          "monotonic_ns": 9407371798654412,
+                          "unix_ns": 1795073216242241399,
+                          "utc": "2026-11-19T07:26:56.242241+00:00"
+                        },
+                        "stat_after": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959158,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959158,
+                          "session": 2959158,
+                          "start_ticks": "940737170",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.242423+08:00",
+                            "monotonic_ns": 9407371798837960,
+                            "unix_ns": 1795073216242423073,
+                            "utc": "2026-11-19T07:26:56.242423+00:00"
+                          },
+                          "vsize": 256720896
+                        },
+                        "stat_before": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959158,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959158,
+                          "session": 2959158,
+                          "start_ticks": "940737170",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.242301+08:00",
+                            "monotonic_ns": 9407371798714145,
+                            "unix_ns": 1795073216242300541,
+                            "utc": "2026-11-19T07:26:56.242301+00:00"
+                          },
+                          "vsize": 256720896
+                        }
+                      },
+                      "tid": 2959158
+                    }
+                  ]
+                }
+              ],
+              "scope": "private_probe_group_and_session",
+              "started": {
+                "local": "2026-11-19T15:26:56.237116+08:00",
+                "monotonic_ns": 9407371793529027,
+                "unix_ns": 1795073216237116455,
+                "utc": "2026-11-19T07:26:56.237116+00:00"
+              }
+            },
+            {
+              "finished": {
+                "local": "2026-11-19T15:26:56.253370+08:00",
+                "monotonic_ns": 9407371809787793,
+                "unix_ns": 1795073216253370012,
+                "utc": "2026-11-19T07:26:56.253370+00:00"
+              },
+              "group": 2959158,
+              "members_after": [
+                2959158
+              ],
+              "members_before": [
+                2959158
+              ],
+              "processes": [
+                {
+                  "pid": 2959158,
+                  "sample": {
+                    "command": {
+                      "byte_count": 245,
+                      "entry_count": 9,
+                      "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                    },
+                    "environment": {
+                      "byte_count": 0,
+                      "entry_count": 0,
+                      "marker_present": false
+                    },
+                    "executable": {
+                      "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                    },
+                    "finished": {
+                      "local": "2026-11-19T15:26:56.250229+08:00",
+                      "monotonic_ns": 9407371806637362,
+                      "unix_ns": 1795073216250228578,
+                      "utc": "2026-11-19T07:26:56.250229+00:00"
+                    },
+                    "started": {
+                      "local": "2026-11-19T15:26:56.250037+08:00",
+                      "monotonic_ns": 9407371806454436,
+                      "unix_ns": 1795073216250037305,
+                      "utc": "2026-11-19T07:26:56.250037+00:00"
+                    },
+                    "stat_after": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959158,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959158,
+                      "session": 2959158,
+                      "start_ticks": "940737170",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.250215+08:00",
+                        "monotonic_ns": 9407371806630409,
+                        "unix_ns": 1795073216250215022,
+                        "utc": "2026-11-19T07:26:56.250215+00:00"
+                      },
+                      "vsize": 256720896
+                    },
+                    "stat_before": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959158,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959158,
+                      "session": 2959158,
+                      "start_ticks": "940737170",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.250089+08:00",
+                        "monotonic_ns": 9407371806502006,
+                        "unix_ns": 1795073216250088753,
+                        "utc": "2026-11-19T07:26:56.250089+00:00"
+                      },
+                      "vsize": 256720896
+                    }
+                  },
+                  "threads": [
+                    {
+                      "sample": {
+                        "command": {
+                          "byte_count": 245,
+                          "entry_count": 9,
+                          "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                        },
+                        "environment": {
+                          "byte_count": 0,
+                          "entry_count": 0,
+                          "marker_present": false
+                        },
+                        "executable": {
+                          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                        },
+                        "finished": {
+                          "local": "2026-11-19T15:26:56.250437+08:00",
+                          "monotonic_ns": 9407371806845046,
+                          "unix_ns": 1795073216250437063,
+                          "utc": "2026-11-19T07:26:56.250437+00:00"
+                        },
+                        "started": {
+                          "local": "2026-11-19T15:26:56.250269+08:00",
+                          "monotonic_ns": 9407371806680073,
+                          "unix_ns": 1795073216250268714,
+                          "utc": "2026-11-19T07:26:56.250269+00:00"
+                        },
+                        "stat_after": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959158,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959158,
+                          "session": 2959158,
+                          "start_ticks": "940737170",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.250426+08:00",
+                            "monotonic_ns": 9407371806839054,
+                            "unix_ns": 1795073216250425811,
+                            "utc": "2026-11-19T07:26:56.250426+00:00"
+                          },
+                          "vsize": 256720896
+                        },
+                        "stat_before": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959158,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959158,
+                          "session": 2959158,
+                          "start_ticks": "940737170",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.250315+08:00",
+                            "monotonic_ns": 9407371806727743,
+                            "unix_ns": 1795073216250315502,
+                            "utc": "2026-11-19T07:26:56.250315+00:00"
+                          },
+                          "vsize": 256720896
+                        }
+                      },
+                      "tid": 2959158
+                    }
+                  ]
+                }
+              ],
+              "scope": "private_probe_group_and_session",
+              "started": {
+                "local": "2026-11-19T15:26:56.246622+08:00",
+                "monotonic_ns": 9407371803030796,
+                "unix_ns": 1795073216246621641,
+                "utc": "2026-11-19T07:26:56.246622+00:00"
+              }
+            }
+          ],
+          "finished": {
+            "local": "2026-11-19T15:26:56.254920+08:00",
+            "monotonic_ns": 9407371811331028,
+            "unix_ns": 1795073216254919569,
+            "utc": "2026-11-19T07:26:56.254920+00:00"
+          },
+          "leader_exited_with_live_thread": null,
+          "old_environment_fd_after_exec_bytes": 0,
+          "old_environment_fd_initial_bytes": 27,
+          "pidfd": {
+            "initial_leader_live": {
+              "descriptor": 4,
+              "hangup": false,
+              "poll_event_mask": 0,
+              "readable": false,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.192509+08:00",
+                "monotonic_ns": 9407371748917672,
+                "unix_ns": 1795073216192508817,
+                "utc": "2026-11-19T07:26:56.192509+00:00"
+              }
+            },
+            "opened": {
+              "descriptor": 4,
+              "flags": 0,
+              "pid": 2959158,
+              "stat_at_open": {
+                "command": {
+                  "byte_count": 239,
+                  "entry_count": 9,
+                  "sha256": "354f0371ab704213abe241ae0fba8abe5ae004cb8e34813cb372e64e634a949d"
+                },
+                "environment": {
+                  "byte_count": 27,
+                  "entry_count": 1,
+                  "marker_present": true
+                },
+                "executable": {
+                  "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                },
+                "finished": {
+                  "local": "2026-11-19T15:26:56.192493+08:00",
+                  "monotonic_ns": 9407371748901872,
+                  "unix_ns": 1795073216192492727,
+                  "utc": "2026-11-19T07:26:56.192493+00:00"
+                },
+                "started": {
+                  "local": "2026-11-19T15:26:56.192243+08:00",
+                  "monotonic_ns": 9407371748651838,
+                  "unix_ns": 1795073216192243013,
+                  "utc": "2026-11-19T07:26:56.192243+00:00"
+                },
+                "stat_after": {
+                  "exit_code": 0,
+                  "flags": 4194304,
+                  "group": 2959158,
+                  "parent": 2958945,
+                  "pf_exiting": false,
+                  "pid": 2959158,
+                  "session": 2959158,
+                  "start_ticks": "940737170",
+                  "status": "S",
+                  "timestamp": {
+                    "local": "2026-11-19T15:26:56.192479+08:00",
+                    "monotonic_ns": 9407371748894618,
+                    "unix_ns": 1795073216192479181,
+                    "utc": "2026-11-19T07:26:56.192479+00:00"
+                  },
+                  "vsize": 256720896
+                },
+                "stat_before": {
+                  "exit_code": 0,
+                  "flags": 4194304,
+                  "group": 2959158,
+                  "parent": 2958945,
+                  "pf_exiting": false,
+                  "pid": 2959158,
+                  "session": 2959158,
+                  "start_ticks": "940737170",
+                  "status": "S",
+                  "timestamp": {
+                    "local": "2026-11-19T15:26:56.192332+08:00",
+                    "monotonic_ns": 9407371748746397,
+                    "unix_ns": 1795073216192332062,
+                    "utc": "2026-11-19T07:26:56.192332+00:00"
+                  },
+                  "vsize": 256720896
+                }
+              },
+              "syscall_number": 434,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.192230+08:00",
+                "monotonic_ns": 9407371748644354,
+                "unix_ns": 1795073216192229638,
+                "utc": "2026-11-19T07:26:56.192230+00:00"
+              }
+            },
+            "replacement_live": {
+              "descriptor": 4,
+              "hangup": false,
+              "poll_event_mask": 0,
+              "readable": false,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.253572+08:00",
+                "monotonic_ns": 9407371809980068,
+                "unix_ns": 1795073216253571664,
+                "utc": "2026-11-19T07:26:56.253572+00:00"
+              }
+            },
+            "zombie_leader_live_worker": null
+          },
+          "same_pid_start_parent_group_session": true,
+          "started": {
+            "local": "2026-11-19T15:26:56.147652+08:00",
+            "monotonic_ns": 9407371704060030,
+            "unix_ns": 1795073216147651716,
+            "utc": "2026-11-19T07:26:56.147652+00:00"
+          },
+          "terminal": {
+            "pid": 2959158,
+            "pidfd_before_reap": {
+              "descriptor": 4,
+              "hangup": false,
+              "poll_event_mask": 1,
+              "readable": true,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.254563+08:00",
+                "monotonic_ns": 9407371810976917,
+                "unix_ns": 1795073216254562823,
+                "utc": "2026-11-19T07:26:56.254563+00:00"
+              }
+            },
+            "proc_absent_after_reap": true,
+            "returncode": 0,
+            "terminal_sample": {
+              "command": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "environment": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "marker_present": false
+              },
+              "executable": {
+                "errno": 2,
+                "read_error": "FileNotFoundError"
+              },
+              "finished": {
+                "local": "2026-11-19T15:26:56.254762+08:00",
+                "monotonic_ns": 9407371811173340,
+                "unix_ns": 1795073216254761900,
+                "utc": "2026-11-19T07:26:56.254762+00:00"
+              },
+              "started": {
+                "local": "2026-11-19T15:26:56.254588+08:00",
+                "monotonic_ns": 9407371810997897,
+                "unix_ns": 1795073216254588151,
+                "utc": "2026-11-19T07:26:56.254588+00:00"
+              },
+              "stat_after": {
+                "exit_code": 0,
+                "flags": 4227076,
+                "group": 2959158,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2959158,
+                "session": 2959158,
+                "start_ticks": "940737170",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.254750+08:00",
+                  "monotonic_ns": 9407371811163922,
+                  "unix_ns": 1795073216254749707,
+                  "utc": "2026-11-19T07:26:56.254750+00:00"
+                },
+                "vsize": 0
+              },
+              "stat_before": {
+                "exit_code": 0,
+                "flags": 4227076,
+                "group": 2959158,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2959158,
+                "session": 2959158,
+                "start_ticks": "940737170",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.254642+08:00",
+                  "monotonic_ns": 9407371811053953,
+                  "unix_ns": 1795073216254641472,
+                  "utc": "2026-11-19T07:26:56.254642+00:00"
+                },
+                "vsize": 0
+              }
+            },
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.254825+08:00",
+              "monotonic_ns": 9407371811234666,
+              "unix_ns": 1795073216254824819,
+              "utc": "2026-11-19T07:26:56.254825+00:00"
+            },
+            "waitid": {
+              "si_code": 1,
+              "si_pid": 2959158,
+              "si_status": 0
+            },
+            "waitpid_status": 0
+          },
+          "variant": "exec"
+        },
+        {
+          "after": {
+            "command": {
+              "byte_count": 245,
+              "entry_count": 9,
+              "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+            },
+            "environment": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "marker_present": false
+            },
+            "executable": {
+              "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.374292+08:00",
+              "monotonic_ns": 9407371930700518,
+              "unix_ns": 1795073216374291814,
+              "utc": "2026-11-19T07:26:56.374292+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.374118+08:00",
+              "monotonic_ns": 9407371930526799,
+              "unix_ns": 1795073216374117684,
+              "utc": "2026-11-19T07:26:56.374118+00:00"
+            },
+            "stat_after": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959175,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959175,
+              "session": 2959175,
+              "start_ticks": "940737181",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.374279+08:00",
+                "monotonic_ns": 9407371930693475,
+                "unix_ns": 1795073216374279240,
+                "utc": "2026-11-19T07:26:56.374279+00:00"
+              },
+              "vsize": 256720896
+            },
+            "stat_before": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2959175,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2959175,
+              "session": 2959175,
+              "start_ticks": "940737181",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.374166+08:00",
+                "monotonic_ns": 9407371930577735,
+                "unix_ns": 1795073216374165444,
+                "utc": "2026-11-19T07:26:56.374166+00:00"
+              },
+              "vsize": 256720896
+            }
+          },
+          "before": {
+            "command": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "environment": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "marker_present": false
+            },
+            "executable": {
+              "errno": 2,
+              "read_error": "FileNotFoundError"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.303077+08:00",
+              "monotonic_ns": 9407371859485509,
+              "unix_ns": 1795073216303076995,
+              "utc": "2026-11-19T07:26:56.303077+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.302896+08:00",
+              "monotonic_ns": 9407371859313724,
+              "unix_ns": 1795073216302895862,
+              "utc": "2026-11-19T07:26:56.302896+00:00"
+            },
+            "stat_after": {
+              "exit_code": 0,
+              "flags": 4227076,
+              "group": 2959175,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2959175,
+              "session": 2959175,
+              "start_ticks": "940737181",
+              "status": "Z",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.303064+08:00",
+                "monotonic_ns": 9407371859478946,
+                "unix_ns": 1795073216303064411,
+                "utc": "2026-11-19T07:26:56.303064+00:00"
+              },
+              "vsize": 0
+            },
+            "stat_before": {
+              "exit_code": 0,
+              "flags": 4227076,
+              "group": 2959175,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2959175,
+              "session": 2959175,
+              "start_ticks": "940737181",
+              "status": "Z",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.302952+08:00",
+                "monotonic_ns": 9407371859363778,
+                "unix_ns": 1795073216302951507,
+                "utc": "2026-11-19T07:26:56.302952+00:00"
+              },
+              "vsize": 0
+            }
+          },
+          "complete_rescans_after_exec": [
+            {
+              "finished": {
+                "local": "2026-11-19T15:26:56.362969+08:00",
+                "monotonic_ns": 9407371919387846,
+                "unix_ns": 1795073216362969103,
+                "utc": "2026-11-19T07:26:56.362969+00:00"
+              },
+              "group": 2959175,
+              "members_after": [
+                2959175
+              ],
+              "members_before": [
+                2959175
+              ],
+              "processes": [
+                {
+                  "pid": 2959175,
+                  "sample": {
+                    "command": {
+                      "byte_count": 245,
+                      "entry_count": 9,
+                      "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                    },
+                    "environment": {
+                      "byte_count": 0,
+                      "entry_count": 0,
+                      "marker_present": false
+                    },
+                    "executable": {
+                      "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                    },
+                    "finished": {
+                      "local": "2026-11-19T15:26:56.357692+08:00",
+                      "monotonic_ns": 9407371914100735,
+                      "unix_ns": 1795073216357691720,
+                      "utc": "2026-11-19T07:26:56.357692+00:00"
+                    },
+                    "started": {
+                      "local": "2026-11-19T15:26:56.357490+08:00",
+                      "monotonic_ns": 9407371913908932,
+                      "unix_ns": 1795073216357490349,
+                      "utc": "2026-11-19T07:26:56.357490+00:00"
+                    },
+                    "stat_after": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959175,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959175,
+                      "session": 2959175,
+                      "start_ticks": "940737181",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.357679+08:00",
+                        "monotonic_ns": 9407371914093712,
+                        "unix_ns": 1795073216357679147,
+                        "utc": "2026-11-19T07:26:56.357679+00:00"
+                      },
+                      "vsize": 256720896
+                    },
+                    "stat_before": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959175,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959175,
+                      "session": 2959175,
+                      "start_ticks": "940737181",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.357546+08:00",
+                        "monotonic_ns": 9407371913959327,
+                        "unix_ns": 1795073216357546275,
+                        "utc": "2026-11-19T07:26:56.357546+00:00"
+                      },
+                      "vsize": 256720896
+                    }
+                  },
+                  "threads": [
+                    {
+                      "sample": {
+                        "command": {
+                          "byte_count": 245,
+                          "entry_count": 9,
+                          "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                        },
+                        "environment": {
+                          "byte_count": 0,
+                          "entry_count": 0,
+                          "marker_present": false
+                        },
+                        "executable": {
+                          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                        },
+                        "finished": {
+                          "local": "2026-11-19T15:26:56.357919+08:00",
+                          "monotonic_ns": 9407371914327756,
+                          "unix_ns": 1795073216357919402,
+                          "utc": "2026-11-19T07:26:56.357919+00:00"
+                        },
+                        "started": {
+                          "local": "2026-11-19T15:26:56.357736+08:00",
+                          "monotonic_ns": 9407371914147594,
+                          "unix_ns": 1795073216357736164,
+                          "utc": "2026-11-19T07:26:56.357736+00:00"
+                        },
+                        "stat_after": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959175,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959175,
+                          "session": 2959175,
+                          "start_ticks": "940737181",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.357907+08:00",
+                            "monotonic_ns": 9407371914321384,
+                            "unix_ns": 1795073216357906598,
+                            "utc": "2026-11-19T07:26:56.357907+00:00"
+                          },
+                          "vsize": 256720896
+                        },
+                        "stat_before": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959175,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959175,
+                          "session": 2959175,
+                          "start_ticks": "940737181",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.357788+08:00",
+                            "monotonic_ns": 9407371914200454,
+                            "unix_ns": 1795073216357787973,
+                            "utc": "2026-11-19T07:26:56.357788+00:00"
+                          },
+                          "vsize": 256720896
+                        }
+                      },
+                      "tid": 2959175
+                    }
+                  ]
+                }
+              ],
+              "scope": "private_probe_group_and_session",
+              "started": {
+                "local": "2026-11-19T15:26:56.351451+08:00",
+                "monotonic_ns": 9407371907866770,
+                "unix_ns": 1795073216351451392,
+                "utc": "2026-11-19T07:26:56.351451+00:00"
+              }
+            },
+            {
+              "finished": {
+                "local": "2026-11-19T15:26:56.374091+08:00",
+                "monotonic_ns": 9407371930518152,
+                "unix_ns": 1795073216374090943,
+                "utc": "2026-11-19T07:26:56.374091+00:00"
+              },
+              "group": 2959175,
+              "members_after": [
+                2959175
+              ],
+              "members_before": [
+                2959175
+              ],
+              "processes": [
+                {
+                  "pid": 2959175,
+                  "sample": {
+                    "command": {
+                      "byte_count": 245,
+                      "entry_count": 9,
+                      "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                    },
+                    "environment": {
+                      "byte_count": 0,
+                      "entry_count": 0,
+                      "marker_present": false
+                    },
+                    "executable": {
+                      "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                    },
+                    "finished": {
+                      "local": "2026-11-19T15:26:56.368408+08:00",
+                      "monotonic_ns": 9407371924820784,
+                      "unix_ns": 1795073216368407761,
+                      "utc": "2026-11-19T07:26:56.368408+00:00"
+                    },
+                    "started": {
+                      "local": "2026-11-19T15:26:56.368222+08:00",
+                      "monotonic_ns": 9407371924640242,
+                      "unix_ns": 1795073216368221759,
+                      "utc": "2026-11-19T07:26:56.368222+00:00"
+                    },
+                    "stat_after": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959175,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959175,
+                      "session": 2959175,
+                      "start_ticks": "940737181",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.368391+08:00",
+                        "monotonic_ns": 9407371924809392,
+                        "unix_ns": 1795073216368390789,
+                        "utc": "2026-11-19T07:26:56.368391+00:00"
+                      },
+                      "vsize": 256720896
+                    },
+                    "stat_before": {
+                      "exit_code": 0,
+                      "flags": 4194304,
+                      "group": 2959175,
+                      "parent": 2958945,
+                      "pf_exiting": false,
+                      "pid": 2959175,
+                      "session": 2959175,
+                      "start_ticks": "940737181",
+                      "status": "S",
+                      "timestamp": {
+                        "local": "2026-11-19T15:26:56.368274+08:00",
+                        "monotonic_ns": 9407371924686489,
+                        "unix_ns": 1795073216368273917,
+                        "utc": "2026-11-19T07:26:56.368274+00:00"
+                      },
+                      "vsize": 256720896
+                    }
+                  },
+                  "threads": [
+                    {
+                      "sample": {
+                        "command": {
+                          "byte_count": 245,
+                          "entry_count": 9,
+                          "sha256": "621582f40f344222ccfe90563f1cbc6136ee877116bb7c60ce1da7495b93c9af"
+                        },
+                        "environment": {
+                          "byte_count": 0,
+                          "entry_count": 0,
+                          "marker_present": false
+                        },
+                        "executable": {
+                          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                        },
+                        "finished": {
+                          "local": "2026-11-19T15:26:56.368632+08:00",
+                          "monotonic_ns": 9407371925040751,
+                          "unix_ns": 1795073216368632347,
+                          "utc": "2026-11-19T07:26:56.368632+00:00"
+                        },
+                        "started": {
+                          "local": "2026-11-19T15:26:56.368454+08:00",
+                          "monotonic_ns": 9407371924865699,
+                          "unix_ns": 1795073216368453488,
+                          "utc": "2026-11-19T07:26:56.368454+00:00"
+                        },
+                        "stat_after": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959175,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959175,
+                          "session": 2959175,
+                          "start_ticks": "940737181",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.368617+08:00",
+                            "monotonic_ns": 9407371925030782,
+                            "unix_ns": 1795073216368616827,
+                            "utc": "2026-11-19T07:26:56.368617+00:00"
+                          },
+                          "vsize": 256720896
+                        },
+                        "stat_before": {
+                          "exit_code": 0,
+                          "flags": 4194304,
+                          "group": 2959175,
+                          "parent": 2958945,
+                          "pf_exiting": false,
+                          "pid": 2959175,
+                          "session": 2959175,
+                          "start_ticks": "940737181",
+                          "status": "S",
+                          "timestamp": {
+                            "local": "2026-11-19T15:26:56.368505+08:00",
+                            "monotonic_ns": 9407371924917196,
+                            "unix_ns": 1795073216368504605,
+                            "utc": "2026-11-19T07:26:56.368505+00:00"
+                          },
+                          "vsize": 256720896
+                        }
+                      },
+                      "tid": 2959175
+                    }
+                  ]
+                }
+              ],
+              "scope": "private_probe_group_and_session",
+              "started": {
+                "local": "2026-11-19T15:26:56.362988+08:00",
+                "monotonic_ns": 9407371919397084,
+                "unix_ns": 1795073216362987849,
+                "utc": "2026-11-19T07:26:56.362988+00:00"
+              }
+            }
+          ],
+          "finished": {
+            "local": "2026-11-19T15:26:56.375742+08:00",
+            "monotonic_ns": 9407371932154494,
+            "unix_ns": 1795073216375742303,
+            "utc": "2026-11-19T07:26:56.375742+00:00"
+          },
+          "leader_exited_with_live_thread": {
+            "finished": {
+              "local": "2026-11-19T15:26:56.306590+08:00",
+              "monotonic_ns": 9407371863007184,
+              "unix_ns": 1795073216306590134,
+              "utc": "2026-11-19T07:26:56.306590+00:00"
+            },
+            "group": 2959175,
+            "members_after": [
+              2959175
+            ],
+            "members_before": [
+              2959175
+            ],
+            "processes": [
+              {
+                "pid": 2959175,
+                "sample": {
+                  "command": {
+                    "byte_count": 0,
+                    "entry_count": 0,
+                    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                  },
+                  "environment": {
+                    "byte_count": 0,
+                    "entry_count": 0,
+                    "marker_present": false
+                  },
+                  "executable": {
+                    "errno": 2,
+                    "read_error": "FileNotFoundError"
+                  },
+                  "finished": {
+                    "local": "2026-11-19T15:26:56.303077+08:00",
+                    "monotonic_ns": 9407371859485509,
+                    "unix_ns": 1795073216303076995,
+                    "utc": "2026-11-19T07:26:56.303077+00:00"
+                  },
+                  "started": {
+                    "local": "2026-11-19T15:26:56.302896+08:00",
+                    "monotonic_ns": 9407371859313724,
+                    "unix_ns": 1795073216302895862,
+                    "utc": "2026-11-19T07:26:56.302896+00:00"
+                  },
+                  "stat_after": {
+                    "exit_code": 0,
+                    "flags": 4227076,
+                    "group": 2959175,
+                    "parent": 2958945,
+                    "pf_exiting": true,
+                    "pid": 2959175,
+                    "session": 2959175,
+                    "start_ticks": "940737181",
+                    "status": "Z",
+                    "timestamp": {
+                      "local": "2026-11-19T15:26:56.303064+08:00",
+                      "monotonic_ns": 9407371859478946,
+                      "unix_ns": 1795073216303064411,
+                      "utc": "2026-11-19T07:26:56.303064+00:00"
+                    },
+                    "vsize": 0
+                  },
+                  "stat_before": {
+                    "exit_code": 0,
+                    "flags": 4227076,
+                    "group": 2959175,
+                    "parent": 2958945,
+                    "pf_exiting": true,
+                    "pid": 2959175,
+                    "session": 2959175,
+                    "start_ticks": "940737181",
+                    "status": "Z",
+                    "timestamp": {
+                      "local": "2026-11-19T15:26:56.302952+08:00",
+                      "monotonic_ns": 9407371859363778,
+                      "unix_ns": 1795073216302951507,
+                      "utc": "2026-11-19T07:26:56.302952+00:00"
+                    },
+                    "vsize": 0
+                  }
+                },
+                "threads": [
+                  {
+                    "sample": {
+                      "command": {
+                        "byte_count": 0,
+                        "entry_count": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      "environment": {
+                        "byte_count": 0,
+                        "entry_count": 0,
+                        "marker_present": false
+                      },
+                      "executable": {
+                        "errno": 2,
+                        "read_error": "FileNotFoundError"
+                      },
+                      "finished": {
+                        "local": "2026-11-19T15:26:56.303331+08:00",
+                        "monotonic_ns": 9407371859739951,
+                        "unix_ns": 1795073216303330616,
+                        "utc": "2026-11-19T07:26:56.303331+00:00"
+                      },
+                      "started": {
+                        "local": "2026-11-19T15:26:56.303143+08:00",
+                        "monotonic_ns": 9407371859555422,
+                        "unix_ns": 1795073216303143120,
+                        "utc": "2026-11-19T07:26:56.303143+00:00"
+                      },
+                      "stat_after": {
+                        "exit_code": 0,
+                        "flags": 4227076,
+                        "group": 2959175,
+                        "parent": 2958945,
+                        "pf_exiting": true,
+                        "pid": 2959175,
+                        "session": 2959175,
+                        "start_ticks": "940737181",
+                        "status": "Z",
+                        "timestamp": {
+                          "local": "2026-11-19T15:26:56.303314+08:00",
+                          "monotonic_ns": 9407371859729081,
+                          "unix_ns": 1795073216303314485,
+                          "utc": "2026-11-19T07:26:56.303314+00:00"
+                        },
+                        "vsize": 0
+                      },
+                      "stat_before": {
+                        "exit_code": 0,
+                        "flags": 4227076,
+                        "group": 2959175,
+                        "parent": 2958945,
+                        "pf_exiting": true,
+                        "pid": 2959175,
+                        "session": 2959175,
+                        "start_ticks": "940737181",
+                        "status": "Z",
+                        "timestamp": {
+                          "local": "2026-11-19T15:26:56.303197+08:00",
+                          "monotonic_ns": 9407371859609614,
+                          "unix_ns": 1795073216303197032,
+                          "utc": "2026-11-19T07:26:56.303197+00:00"
+                        },
+                        "vsize": 0
+                      }
+                    },
+                    "tid": 2959175
+                  },
+                  {
+                    "sample": {
+                      "command": {
+                        "byte_count": 249,
+                        "entry_count": 9,
+                        "sha256": "55cfa77bedd23384c3a33cca1986aba19e51f0fcfc3065a7e7400d8ba4933607"
+                      },
+                      "environment": {
+                        "byte_count": 27,
+                        "entry_count": 1,
+                        "marker_present": true
+                      },
+                      "executable": {
+                        "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                      },
+                      "finished": {
+                        "local": "2026-11-19T15:26:56.303534+08:00",
+                        "monotonic_ns": 9407371859941764,
+                        "unix_ns": 1795073216303533560,
+                        "utc": "2026-11-19T07:26:56.303534+00:00"
+                      },
+                      "started": {
+                        "local": "2026-11-19T15:26:56.303339+08:00",
+                        "monotonic_ns": 9407371859746864,
+                        "unix_ns": 1795073216303338921,
+                        "utc": "2026-11-19T07:26:56.303339+00:00"
+                      },
+                      "stat_after": {
+                        "exit_code": 0,
+                        "flags": 4194368,
+                        "group": 2959175,
+                        "parent": 2958945,
+                        "pf_exiting": false,
+                        "pid": 2959176,
+                        "session": 2959175,
+                        "start_ticks": "940737185",
+                        "status": "S",
+                        "timestamp": {
+                          "local": "2026-11-19T15:26:56.303521+08:00",
+                          "monotonic_ns": 9407371859935522,
+                          "unix_ns": 1795073216303520997,
+                          "utc": "2026-11-19T07:26:56.303521+00:00"
+                        },
+                        "vsize": 332238848
+                      },
+                      "stat_before": {
+                        "exit_code": 0,
+                        "flags": 4194368,
+                        "group": 2959175,
+                        "parent": 2958945,
+                        "pf_exiting": false,
+                        "pid": 2959176,
+                        "session": 2959175,
+                        "start_ticks": "940737185",
+                        "status": "S",
+                        "timestamp": {
+                          "local": "2026-11-19T15:26:56.303391+08:00",
+                          "monotonic_ns": 9407371859803372,
+                          "unix_ns": 1795073216303391351,
+                          "utc": "2026-11-19T07:26:56.303391+00:00"
+                        },
+                        "vsize": 332238848
+                      }
+                    },
+                    "tid": 2959176
+                  }
+                ]
+              }
+            ],
+            "scope": "private_probe_group_and_session",
+            "started": {
+              "local": "2026-11-19T15:26:56.298612+08:00",
+              "monotonic_ns": 9407371855020586,
+              "unix_ns": 1795073216298611682,
+              "utc": "2026-11-19T07:26:56.298612+00:00"
+            }
+          },
+          "old_environment_fd_after_exec_bytes": 0,
+          "old_environment_fd_initial_bytes": 0,
+          "pidfd": {
+            "initial_leader_live": {
+              "descriptor": 9,
+              "hangup": false,
+              "poll_event_mask": 0,
+              "readable": false,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.298589+08:00",
+                "monotonic_ns": 9407371854998104,
+                "unix_ns": 1795073216298589560,
+                "utc": "2026-11-19T07:26:56.298589+00:00"
+              }
+            },
+            "opened": {
+              "descriptor": 9,
+              "flags": 0,
+              "pid": 2959175,
+              "stat_at_open": {
+                "command": {
+                  "byte_count": 249,
+                  "entry_count": 9,
+                  "sha256": "55cfa77bedd23384c3a33cca1986aba19e51f0fcfc3065a7e7400d8ba4933607"
+                },
+                "environment": {
+                  "byte_count": 27,
+                  "entry_count": 1,
+                  "marker_present": true
+                },
+                "executable": {
+                  "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                },
+                "finished": {
+                  "local": "2026-11-19T15:26:56.298579+08:00",
+                  "monotonic_ns": 9407371854987694,
+                  "unix_ns": 1795073216298579360,
+                  "utc": "2026-11-19T07:26:56.298579+00:00"
+                },
+                "started": {
+                  "local": "2026-11-19T15:26:56.298329+08:00",
+                  "monotonic_ns": 9407371854737249,
+                  "unix_ns": 1795073216298328816,
+                  "utc": "2026-11-19T07:26:56.298329+00:00"
+                },
+                "stat_after": {
+                  "exit_code": 0,
+                  "flags": 4194304,
+                  "group": 2959175,
+                  "parent": 2958945,
+                  "pf_exiting": false,
+                  "pid": 2959175,
+                  "session": 2959175,
+                  "start_ticks": "940737181",
+                  "status": "S",
+                  "timestamp": {
+                    "local": "2026-11-19T15:26:56.298566+08:00",
+                    "monotonic_ns": 9407371854981081,
+                    "unix_ns": 1795073216298565654,
+                    "utc": "2026-11-19T07:26:56.298566+00:00"
+                  },
+                  "vsize": 332238848
+                },
+                "stat_before": {
+                  "exit_code": 0,
+                  "flags": 4194304,
+                  "group": 2959175,
+                  "parent": 2958945,
+                  "pf_exiting": false,
+                  "pid": 2959175,
+                  "session": 2959175,
+                  "start_ticks": "940737181",
+                  "status": "S",
+                  "timestamp": {
+                    "local": "2026-11-19T15:26:56.298417+08:00",
+                    "monotonic_ns": 9407371854831177,
+                    "unix_ns": 1795073216298417383,
+                    "utc": "2026-11-19T07:26:56.298417+00:00"
+                  },
+                  "vsize": 332238848
+                }
+              },
+              "syscall_number": 434,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.298315+08:00",
+                "monotonic_ns": 9407371854730226,
+                "unix_ns": 1795073216298315400,
+                "utc": "2026-11-19T07:26:56.298315+00:00"
+              }
+            },
+            "replacement_live": {
+              "descriptor": 9,
+              "hangup": false,
+              "poll_event_mask": 0,
+              "readable": false,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.374303+08:00",
+                "monotonic_ns": 9407371930714615,
+                "unix_ns": 1795073216374302624,
+                "utc": "2026-11-19T07:26:56.374303+00:00"
+              }
+            },
+            "zombie_leader_live_worker": {
+              "descriptor": 9,
+              "hangup": false,
+              "poll_event_mask": 0,
+              "readable": false,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.306614+08:00",
+                "monotonic_ns": 9407371863024196,
+                "unix_ns": 1795073216306614380,
+                "utc": "2026-11-19T07:26:56.306614+00:00"
+              }
+            }
+          },
+          "same_pid_start_parent_group_session": true,
+          "started": {
+            "local": "2026-11-19T15:26:56.254932+08:00",
+            "monotonic_ns": 9407371811339564,
+            "unix_ns": 1795073216254931662,
+            "utc": "2026-11-19T07:26:56.254932+00:00"
+          },
+          "terminal": {
+            "pid": 2959175,
+            "pidfd_before_reap": {
+              "descriptor": 9,
+              "hangup": false,
+              "poll_event_mask": 1,
+              "readable": true,
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.375421+08:00",
+                "monotonic_ns": 9407371931834558,
+                "unix_ns": 1795073216375420974,
+                "utc": "2026-11-19T07:26:56.375421+00:00"
+              }
+            },
+            "proc_absent_after_reap": true,
+            "returncode": 0,
+            "terminal_sample": {
+              "command": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "environment": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "marker_present": false
+              },
+              "executable": {
+                "errno": 2,
+                "read_error": "FileNotFoundError"
+              },
+              "finished": {
+                "local": "2026-11-19T15:26:56.375620+08:00",
+                "monotonic_ns": 9407371932028585,
+                "unix_ns": 1795073216375620101,
+                "utc": "2026-11-19T07:26:56.375620+00:00"
+              },
+              "started": {
+                "local": "2026-11-19T15:26:56.375446+08:00",
+                "monotonic_ns": 9407371931854616,
+                "unix_ns": 1795073216375445570,
+                "utc": "2026-11-19T07:26:56.375446+00:00"
+              },
+              "stat_after": {
+                "exit_code": 0,
+                "flags": 4227076,
+                "group": 2959175,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2959175,
+                "session": 2959175,
+                "start_ticks": "940737181",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.375608+08:00",
+                  "monotonic_ns": 9407371932022143,
+                  "unix_ns": 1795073216375608459,
+                  "utc": "2026-11-19T07:26:56.375608+00:00"
+                },
+                "vsize": 0
+              },
+              "stat_before": {
+                "exit_code": 0,
+                "flags": 4227076,
+                "group": 2959175,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2959175,
+                "session": 2959175,
+                "start_ticks": "940737181",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.375502+08:00",
+                  "monotonic_ns": 9407371931915150,
+                  "unix_ns": 1795073216375502028,
+                  "utc": "2026-11-19T07:26:56.375502+00:00"
+                },
+                "vsize": 0
+              }
+            },
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.375663+08:00",
+              "monotonic_ns": 9407371932071436,
+              "unix_ns": 1795073216375662682,
+              "utc": "2026-11-19T07:26:56.375663+00:00"
+            },
+            "waitid": {
+              "si_code": 1,
+              "si_pid": 2959175,
+              "si_status": 0
+            },
+            "waitpid_status": 0
+          },
+          "variant": "exec_nonleader"
+        }
+      ]
+    },
+    "exit_teardown": {
+      "attempts": [
+        {
+          "last_sample": {
+            "command": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "environment": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "marker_present": false
+            },
+            "executable": {
+              "errno": 2,
+              "read_error": "FileNotFoundError"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.139787+08:00",
+              "monotonic_ns": 9407371696196295,
+              "unix_ns": 1795073216139787060,
+              "utc": "2026-11-19T07:26:56.139787+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.139604+08:00",
+              "monotonic_ns": 9407371696012737,
+              "unix_ns": 1795073216139604043,
+              "utc": "2026-11-19T07:26:56.139604+00:00"
+            },
+            "stat_after": {
+              "exit_code": 9472,
+              "flags": 4194308,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "R",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.139774+08:00",
+                "monotonic_ns": 9407371696189142,
+                "unix_ns": 1795073216139774316,
+                "utc": "2026-11-19T07:26:56.139774+00:00"
+              },
+              "vsize": 0
+            },
+            "stat_before": {
+              "exit_code": 9472,
+              "flags": 4194308,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "R",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.139651+08:00",
+                "monotonic_ns": 9407371696067561,
+                "unix_ns": 1795073216139651252,
+                "utc": "2026-11-19T07:26:56.139651+00:00"
+              },
+              "vsize": 0
+            }
+          },
+          "live": {
+            "command": {
+              "byte_count": 239,
+              "entry_count": 9,
+              "sha256": "1cb619e706a049c380e25b91f6cf1d19ef4801153ce9776216d03a23f93f733e"
+            },
+            "environment": {
+              "byte_count": 27,
+              "entry_count": 1,
+              "marker_present": true
+            },
+            "executable": {
+              "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.139145+08:00",
+              "monotonic_ns": 9407371695554489,
+              "unix_ns": 1795073216139145394,
+              "utc": "2026-11-19T07:26:56.139145+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.138803+08:00",
+              "monotonic_ns": 9407371695218171,
+              "unix_ns": 1795073216138803496,
+              "utc": "2026-11-19T07:26:56.138803+00:00"
+            },
+            "stat_after": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.139131+08:00",
+                "monotonic_ns": 9407371695547095,
+                "unix_ns": 1795073216139130496,
+                "utc": "2026-11-19T07:26:56.139131+00:00"
+              },
+              "vsize": 291323904
+            },
+            "stat_before": {
+              "exit_code": 0,
+              "flags": 4194304,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": false,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "S",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.138939+08:00",
+                "monotonic_ns": 9407371695354119,
+                "unix_ns": 1795073216138938922,
+                "utc": "2026-11-19T07:26:56.138939+00:00"
+              },
+              "vsize": 291323904
+            }
+          },
+          "nonterminal_teardown": {
+            "command": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "environment": {
+              "byte_count": 0,
+              "entry_count": 0,
+              "marker_present": false
+            },
+            "executable": {
+              "errno": 2,
+              "read_error": "FileNotFoundError"
+            },
+            "finished": {
+              "local": "2026-11-19T15:26:56.139787+08:00",
+              "monotonic_ns": 9407371696196295,
+              "unix_ns": 1795073216139787060,
+              "utc": "2026-11-19T07:26:56.139787+00:00"
+            },
+            "started": {
+              "local": "2026-11-19T15:26:56.139604+08:00",
+              "monotonic_ns": 9407371696012737,
+              "unix_ns": 1795073216139604043,
+              "utc": "2026-11-19T07:26:56.139604+00:00"
+            },
+            "stat_after": {
+              "exit_code": 9472,
+              "flags": 4194308,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "R",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.139774+08:00",
+                "monotonic_ns": 9407371696189142,
+                "unix_ns": 1795073216139774316,
+                "utc": "2026-11-19T07:26:56.139774+00:00"
+              },
+              "vsize": 0
+            },
+            "stat_before": {
+              "exit_code": 9472,
+              "flags": 4194308,
+              "group": 2958954,
+              "parent": 2958945,
+              "pf_exiting": true,
+              "pid": 2958954,
+              "session": 2958954,
+              "start_ticks": "940737163",
+              "status": "R",
+              "timestamp": {
+                "local": "2026-11-19T15:26:56.139651+08:00",
+                "monotonic_ns": 9407371696067561,
+                "unix_ns": 1795073216139651252,
+                "utc": "2026-11-19T07:26:56.139651+00:00"
+              },
+              "vsize": 0
+            }
+          },
+          "old_environment_fd_after_exit_bytes": 0,
+          "old_environment_fd_initial_bytes": 27,
+          "sample_count": 3,
+          "terminal": {
+            "pid": 2958954,
+            "pidfd_before_reap": null,
+            "proc_absent_after_reap": true,
+            "returncode": 37,
+            "terminal_sample": {
+              "command": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "environment": {
+                "byte_count": 0,
+                "entry_count": 0,
+                "marker_present": false
+              },
+              "executable": {
+                "errno": 2,
+                "read_error": "FileNotFoundError"
+              },
+              "finished": {
+                "local": "2026-11-19T15:26:56.147432+08:00",
+                "monotonic_ns": 9407371703840955,
+                "unix_ns": 1795073216147432331,
+                "utc": "2026-11-19T07:26:56.147432+00:00"
+              },
+              "started": {
+                "local": "2026-11-19T15:26:56.147236+08:00",
+                "monotonic_ns": 9407371703650323,
+                "unix_ns": 1795073216147236239,
+                "utc": "2026-11-19T07:26:56.147236+00:00"
+              },
+              "stat_after": {
+                "exit_code": 9472,
+                "flags": 4227076,
+                "group": 2958954,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2958954,
+                "session": 2958954,
+                "start_ticks": "940737163",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.147420+08:00",
+                  "monotonic_ns": 9407371703834352,
+                  "unix_ns": 1795073216147420188,
+                  "utc": "2026-11-19T07:26:56.147420+00:00"
+                },
+                "vsize": 0
+              },
+              "stat_before": {
+                "exit_code": 9472,
+                "flags": 4227076,
+                "group": 2958954,
+                "parent": 2958945,
+                "pf_exiting": true,
+                "pid": 2958954,
+                "session": 2958954,
+                "start_ticks": "940737163",
+                "status": "Z",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.147298+08:00",
+                  "monotonic_ns": 9407371703710868,
+                  "unix_ns": 1795073216147298036,
+                  "utc": "2026-11-19T07:26:56.147298+00:00"
+                },
+                "vsize": 0
+              }
+            },
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.147486+08:00",
+              "monotonic_ns": 9407371703895568,
+              "unix_ns": 1795073216147485742,
+              "utc": "2026-11-19T07:26:56.147486+00:00"
+            },
+            "waitid": {
+              "si_code": 1,
+              "si_pid": 2958954,
+              "si_status": 37
+            },
+            "waitpid_status": 9472
+          }
+        }
+      ],
+      "finished": {
+        "local": "2026-11-19T15:26:56.147601+08:00",
+        "monotonic_ns": 9407371704014494,
+        "unix_ns": 1795073216147601050,
+        "utc": "2026-11-19T07:26:56.147601+00:00"
+      },
+      "mapping_count": 8192,
+      "pre_zombie_teardown_observed": true,
+      "started": {
+        "local": "2026-11-19T15:26:56.073415+08:00",
+        "monotonic_ns": 9407371629856567,
+        "unix_ns": 1795073216073414449,
+        "utc": "2026-11-19T07:26:56.073415+00:00"
+      }
+    },
+    "reparenting": {
+      "after": {
+        "command": {
+          "byte_count": 243,
+          "entry_count": 9,
+          "sha256": "843ec816b8b1b0a3846616e9aa3acc682258831b368604616f44ef432c8fb5fa"
+        },
+        "environment": {
+          "byte_count": 27,
+          "entry_count": 1,
+          "marker_present": true
+        },
+        "executable": {
+          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.441328+08:00",
+          "monotonic_ns": 9407371997736586,
+          "unix_ns": 1795073216441328012,
+          "utc": "2026-11-19T07:26:56.441328+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.441088+08:00",
+          "monotonic_ns": 9407371997497102,
+          "unix_ns": 1795073216441087887,
+          "utc": "2026-11-19T07:26:56.441088+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4194368,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": false,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "S",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.441316+08:00",
+            "monotonic_ns": 9407371997730074,
+            "unix_ns": 1795073216441315609,
+            "utc": "2026-11-19T07:26:56.441316+00:00"
+          },
+          "vsize": 256720896
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4194368,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": false,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "S",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.441161+08:00",
+            "monotonic_ns": 9407371997577334,
+            "unix_ns": 1795073216441160896,
+            "utc": "2026-11-19T07:26:56.441161+00:00"
+          },
+          "vsize": 256720896
+        }
+      },
+      "before": {
+        "command": {
+          "byte_count": 243,
+          "entry_count": 9,
+          "sha256": "843ec816b8b1b0a3846616e9aa3acc682258831b368604616f44ef432c8fb5fa"
+        },
+        "environment": {
+          "byte_count": 27,
+          "entry_count": 1,
+          "marker_present": true
+        },
+        "executable": {
+          "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.420079+08:00",
+          "monotonic_ns": 9407371976487241,
+          "unix_ns": 1795073216420079018,
+          "utc": "2026-11-19T07:26:56.420079+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.419810+08:00",
+          "monotonic_ns": 9407371976229172,
+          "unix_ns": 1795073216419810348,
+          "utc": "2026-11-19T07:26:56.419810+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4194368,
+          "group": 2959264,
+          "parent": 2959264,
+          "pf_exiting": false,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "S",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.420066+08:00",
+            "monotonic_ns": 9407371976480899,
+            "unix_ns": 1795073216420066073,
+            "utc": "2026-11-19T07:26:56.420066+00:00"
+          },
+          "vsize": 256720896
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4194368,
+          "group": 2959264,
+          "parent": 2959264,
+          "pf_exiting": false,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "S",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.419919+08:00",
+            "monotonic_ns": 9407371976334481,
+            "unix_ns": 1795073216419918683,
+            "utc": "2026-11-19T07:26:56.419919+00:00"
+          },
+          "vsize": 256720896
+        }
+      },
+      "child_terminal": {
+        "pid": 2959324,
+        "pidfd_before_reap": null,
+        "proc_absent_after_reap": true,
+        "returncode": 0,
+        "terminal_sample": {
+          "command": {
+            "byte_count": 0,
+            "entry_count": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "environment": {
+            "byte_count": 0,
+            "entry_count": 0,
+            "marker_present": false
+          },
+          "executable": {
+            "errno": 2,
+            "read_error": "FileNotFoundError"
+          },
+          "finished": {
+            "local": "2026-11-19T15:26:56.442626+08:00",
+            "monotonic_ns": 9407371999033795,
+            "unix_ns": 1795073216442625682,
+            "utc": "2026-11-19T07:26:56.442626+00:00"
+          },
+          "started": {
+            "local": "2026-11-19T15:26:56.442426+08:00",
+            "monotonic_ns": 9407371998841971,
+            "unix_ns": 1795073216442426194,
+            "utc": "2026-11-19T07:26:56.442426+00:00"
+          },
+          "stat_after": {
+            "exit_code": 0,
+            "flags": 4227140,
+            "group": 2959264,
+            "parent": 2958945,
+            "pf_exiting": true,
+            "pid": 2959324,
+            "session": 2959264,
+            "start_ticks": "940737197",
+            "status": "Z",
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.442614+08:00",
+              "monotonic_ns": 9407371999027663,
+              "unix_ns": 1795073216442613959,
+              "utc": "2026-11-19T07:26:56.442614+00:00"
+            },
+            "vsize": 0
+          },
+          "stat_before": {
+            "exit_code": 0,
+            "flags": 4227140,
+            "group": 2959264,
+            "parent": 2958945,
+            "pf_exiting": true,
+            "pid": 2959324,
+            "session": 2959264,
+            "start_ticks": "940737197",
+            "status": "Z",
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.442498+08:00",
+              "monotonic_ns": 9407371998911002,
+              "unix_ns": 1795073216442497890,
+              "utc": "2026-11-19T07:26:56.442498+00:00"
+            },
+            "vsize": 0
+          }
+        },
+        "timestamp": {
+          "local": "2026-11-19T15:26:56.442656+08:00",
+          "monotonic_ns": 9407371999065655,
+          "unix_ns": 1795073216442655709,
+          "utc": "2026-11-19T07:26:56.442656+00:00"
+        },
+        "waitid": {
+          "si_code": 1,
+          "si_pid": 2959324,
+          "si_status": 0
+        },
+        "waitpid_status": 0
+      },
+      "complete_rescan_after_reparent": {
+        "finished": {
+          "local": "2026-11-19T15:26:56.441071+08:00",
+          "monotonic_ns": 9407371997488336,
+          "unix_ns": 1795073216441070614,
+          "utc": "2026-11-19T07:26:56.441071+00:00"
+        },
+        "group": 2959264,
+        "members_after": [
+          2959324
+        ],
+        "members_before": [
+          2959324
+        ],
+        "processes": [
+          {
+            "pid": 2959324,
+            "sample": {
+              "command": {
+                "byte_count": 243,
+                "entry_count": 9,
+                "sha256": "843ec816b8b1b0a3846616e9aa3acc682258831b368604616f44ef432c8fb5fa"
+              },
+              "environment": {
+                "byte_count": 27,
+                "entry_count": 1,
+                "marker_present": true
+              },
+              "executable": {
+                "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+              },
+              "finished": {
+                "local": "2026-11-19T15:26:56.431549+08:00",
+                "monotonic_ns": 9407371987957532,
+                "unix_ns": 1795073216431548817,
+                "utc": "2026-11-19T07:26:56.431549+00:00"
+              },
+              "started": {
+                "local": "2026-11-19T15:26:56.431358+08:00",
+                "monotonic_ns": 9407371987776448,
+                "unix_ns": 1795073216431357564,
+                "utc": "2026-11-19T07:26:56.431358+00:00"
+              },
+              "stat_after": {
+                "exit_code": 0,
+                "flags": 4194368,
+                "group": 2959264,
+                "parent": 2958945,
+                "pf_exiting": false,
+                "pid": 2959324,
+                "session": 2959264,
+                "start_ticks": "940737197",
+                "status": "S",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.431536+08:00",
+                  "monotonic_ns": 9407371987950668,
+                  "unix_ns": 1795073216431536143,
+                  "utc": "2026-11-19T07:26:56.431536+00:00"
+                },
+                "vsize": 256720896
+              },
+              "stat_before": {
+                "exit_code": 0,
+                "flags": 4194368,
+                "group": 2959264,
+                "parent": 2958945,
+                "pf_exiting": false,
+                "pid": 2959324,
+                "session": 2959264,
+                "start_ticks": "940737197",
+                "status": "S",
+                "timestamp": {
+                  "local": "2026-11-19T15:26:56.431412+08:00",
+                  "monotonic_ns": 9407371987825862,
+                  "unix_ns": 1795073216431412509,
+                  "utc": "2026-11-19T07:26:56.431412+00:00"
+                },
+                "vsize": 256720896
+              }
+            },
+            "threads": [
+              {
+                "sample": {
+                  "command": {
+                    "byte_count": 243,
+                    "entry_count": 9,
+                    "sha256": "843ec816b8b1b0a3846616e9aa3acc682258831b368604616f44ef432c8fb5fa"
+                  },
+                  "environment": {
+                    "byte_count": 27,
+                    "entry_count": 1,
+                    "marker_present": true
+                  },
+                  "executable": {
+                    "path_sha256": "d33d6e3587716d48bdcafeb5f3320b7daa711739d6a5e595b7574ccb8430e59f"
+                  },
+                  "finished": {
+                    "local": "2026-11-19T15:26:56.431784+08:00",
+                    "monotonic_ns": 9407371988191986,
+                    "unix_ns": 1795073216431783582,
+                    "utc": "2026-11-19T07:26:56.431784+00:00"
+                  },
+                  "started": {
+                    "local": "2026-11-19T15:26:56.431592+08:00",
+                    "monotonic_ns": 9407371988002807,
+                    "unix_ns": 1795073216431591448,
+                    "utc": "2026-11-19T07:26:56.431592+00:00"
+                  },
+                  "stat_after": {
+                    "exit_code": 0,
+                    "flags": 4194368,
+                    "group": 2959264,
+                    "parent": 2958945,
+                    "pf_exiting": false,
+                    "pid": 2959324,
+                    "session": 2959264,
+                    "start_ticks": "940737197",
+                    "status": "S",
+                    "timestamp": {
+                      "local": "2026-11-19T15:26:56.431771+08:00",
+                      "monotonic_ns": 9407371988185594,
+                      "unix_ns": 1795073216431770517,
+                      "utc": "2026-11-19T07:26:56.431771+00:00"
+                    },
+                    "vsize": 256720896
+                  },
+                  "stat_before": {
+                    "exit_code": 0,
+                    "flags": 4194368,
+                    "group": 2959264,
+                    "parent": 2958945,
+                    "pf_exiting": false,
+                    "pid": 2959324,
+                    "session": 2959264,
+                    "start_ticks": "940737197",
+                    "status": "S",
+                    "timestamp": {
+                      "local": "2026-11-19T15:26:56.431643+08:00",
+                      "monotonic_ns": 9407371988055948,
+                      "unix_ns": 1795073216431642765,
+                      "utc": "2026-11-19T07:26:56.431643+00:00"
+                    },
+                    "vsize": 256720896
+                  }
+                },
+                "tid": 2959324
+              }
+            ]
+          }
+        ],
+        "scope": "private_probe_group_and_session",
+        "started": {
+          "local": "2026-11-19T15:26:56.421682+08:00",
+          "monotonic_ns": 9407371978094497,
+          "unix_ns": 1795073216421682386,
+          "utc": "2026-11-19T07:26:56.421682+00:00"
+        }
+      },
+      "finished": {
+        "local": "2026-11-19T15:26:56.442745+08:00",
+        "monotonic_ns": 9407371999157089,
+        "unix_ns": 1795073216442745369,
+        "utc": "2026-11-19T07:26:56.442745+00:00"
+      },
+      "parent_terminal": {
+        "pid": 2959264,
+        "pidfd_before_reap": null,
+        "proc_absent_after_reap": true,
+        "returncode": 0,
+        "terminal_sample": {
+          "command": {
+            "byte_count": 0,
+            "entry_count": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "environment": {
+            "byte_count": 0,
+            "entry_count": 0,
+            "marker_present": false
+          },
+          "executable": {
+            "errno": 2,
+            "read_error": "FileNotFoundError"
+          },
+          "finished": {
+            "local": "2026-11-19T15:26:56.421533+08:00",
+            "monotonic_ns": 9407371977940836,
+            "unix_ns": 1795073216421532602,
+            "utc": "2026-11-19T07:26:56.421533+00:00"
+          },
+          "started": {
+            "local": "2026-11-19T15:26:56.421330+08:00",
+            "monotonic_ns": 9407371977743702,
+            "unix_ns": 1795073216421330439,
+            "utc": "2026-11-19T07:26:56.421330+00:00"
+          },
+          "stat_after": {
+            "exit_code": 0,
+            "flags": 4227076,
+            "group": 2959264,
+            "parent": 2958945,
+            "pf_exiting": true,
+            "pid": 2959264,
+            "session": 2959264,
+            "start_ticks": "940737193",
+            "status": "Z",
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.421520+08:00",
+              "monotonic_ns": 9407371977934554,
+              "unix_ns": 1795073216421519969,
+              "utc": "2026-11-19T07:26:56.421520+00:00"
+            },
+            "vsize": 0
+          },
+          "stat_before": {
+            "exit_code": 0,
+            "flags": 4227076,
+            "group": 2959264,
+            "parent": 2958945,
+            "pf_exiting": true,
+            "pid": 2959264,
+            "session": 2959264,
+            "start_ticks": "940737193",
+            "status": "Z",
+            "timestamp": {
+              "local": "2026-11-19T15:26:56.421396+08:00",
+              "monotonic_ns": 9407371977809968,
+              "unix_ns": 1795073216421396003,
+              "utc": "2026-11-19T07:26:56.421396+00:00"
+            },
+            "vsize": 0
+          }
+        },
+        "timestamp": {
+          "local": "2026-11-19T15:26:56.421595+08:00",
+          "monotonic_ns": 9407371978003976,
+          "unix_ns": 1795073216421594760,
+          "utc": "2026-11-19T07:26:56.421595+00:00"
+        },
+        "waitid": {
+          "si_code": 1,
+          "si_pid": 2959264,
+          "si_status": 0
+        },
+        "waitpid_status": 0
+      },
+      "started": {
+        "local": "2026-11-19T15:26:56.375788+08:00",
+        "monotonic_ns": 9407371932197876,
+        "unix_ns": 1795073216375787979,
+        "utc": "2026-11-19T07:26:56.375788+00:00"
+      }
+    }
+  },
+  "finished": {
+    "local": "2026-11-19T15:26:56.442899+08:00",
+    "monotonic_ns": 9407371999314868,
+    "unix_ns": 1795073216442899531,
+    "utc": "2026-11-19T07:26:56.442899+00:00"
+  },
+  "kernel": {
+    "boot_id": "8981427f-860a-4980-bc36-8e580cc27ef6",
+    "clock_ticks_per_second": 100,
+    "machine": "x86_64",
+    "nodename": "TENCENT64.site",
+    "proc_version": "Linux version 5.4.241-1-tlinux4-0017.7 (mockbuild@VM-81-80-TS3) (gcc version 8.5.0 20210514 (TencentOS 8.5.0-18) (GCC)) #1 SMP Thu Jan 18 11:33:00 CST 2024",
+    "release": "5.4.241-1-tlinux4-0017.7",
+    "sysname": "Linux",
+    "version": "#1 SMP Thu Jan 18 11:33:00 CST 2024"
+  },
+  "kernel_references": {
+    "anchors": {
+      "fs/exec.c": [
+        1061,
+        1168,
+        1169,
+        1185,
+        1189
+      ],
+      "fs/proc/base.c": [
+        346,
+        348,
+        939,
+        948
+      ],
+      "kernel/exit.c": [
+        530,
+        707,
+        814,
+        845,
+        879
+      ]
+    },
+    "fetched_by_this_probe": false,
+    "limit": "Previously inspected upstream source; not the installed vendor kernel source.",
+    "repository": "gregkh/linux",
+    "tag": "v5.4.241"
+  },
+  "limitations": [
+    "Synthetic CPU controls establish possible mechanisms, not the recovery failure's cause.",
+    "8192 anonymous mappings widen exit teardown; no training frequency is measured.",
+    "A missed pre-zombie window is inconclusive and is retained as not observed.",
+    "PF_EXITING describes a task; nonleader exec can preserve the process PID and start time.",
+    "Pidfd readiness is measured only for owned synthetic processes through x86_64 syscall 434.",
+    "Separate /proc reads and complete group rescans are not atomic kernel snapshots.",
+    "Rescans cover only private probe process groups, not all production marked owners.",
+    "A changed cmdline or missing marker cannot alone distinguish exec, mutation, or teardown.",
+    "No GPU validation, successor acceptance, production result, or kernel-cause attribution is issued."
+  ],
+  "reaped_children": [
+    {
+      "pid": 2958954,
+      "pidfd_before_reap": null,
+      "proc_absent_after_reap": true,
+      "returncode": 37,
+      "terminal_sample": {
+        "command": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "environment": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "marker_present": false
+        },
+        "executable": {
+          "errno": 2,
+          "read_error": "FileNotFoundError"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.147432+08:00",
+          "monotonic_ns": 9407371703840955,
+          "unix_ns": 1795073216147432331,
+          "utc": "2026-11-19T07:26:56.147432+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.147236+08:00",
+          "monotonic_ns": 9407371703650323,
+          "unix_ns": 1795073216147236239,
+          "utc": "2026-11-19T07:26:56.147236+00:00"
+        },
+        "stat_after": {
+          "exit_code": 9472,
+          "flags": 4227076,
+          "group": 2958954,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2958954,
+          "session": 2958954,
+          "start_ticks": "940737163",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.147420+08:00",
+            "monotonic_ns": 9407371703834352,
+            "unix_ns": 1795073216147420188,
+            "utc": "2026-11-19T07:26:56.147420+00:00"
+          },
+          "vsize": 0
+        },
+        "stat_before": {
+          "exit_code": 9472,
+          "flags": 4227076,
+          "group": 2958954,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2958954,
+          "session": 2958954,
+          "start_ticks": "940737163",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.147298+08:00",
+            "monotonic_ns": 9407371703710868,
+            "unix_ns": 1795073216147298036,
+            "utc": "2026-11-19T07:26:56.147298+00:00"
+          },
+          "vsize": 0
+        }
+      },
+      "timestamp": {
+        "local": "2026-11-19T15:26:56.147486+08:00",
+        "monotonic_ns": 9407371703895568,
+        "unix_ns": 1795073216147485742,
+        "utc": "2026-11-19T07:26:56.147486+00:00"
+      },
+      "waitid": {
+        "si_code": 1,
+        "si_pid": 2958954,
+        "si_status": 37
+      },
+      "waitpid_status": 9472
+    },
+    {
+      "pid": 2959158,
+      "pidfd_before_reap": {
+        "descriptor": 4,
+        "hangup": false,
+        "poll_event_mask": 1,
+        "readable": true,
+        "timestamp": {
+          "local": "2026-11-19T15:26:56.254563+08:00",
+          "monotonic_ns": 9407371810976917,
+          "unix_ns": 1795073216254562823,
+          "utc": "2026-11-19T07:26:56.254563+00:00"
+        }
+      },
+      "proc_absent_after_reap": true,
+      "returncode": 0,
+      "terminal_sample": {
+        "command": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "environment": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "marker_present": false
+        },
+        "executable": {
+          "errno": 2,
+          "read_error": "FileNotFoundError"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.254762+08:00",
+          "monotonic_ns": 9407371811173340,
+          "unix_ns": 1795073216254761900,
+          "utc": "2026-11-19T07:26:56.254762+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.254588+08:00",
+          "monotonic_ns": 9407371810997897,
+          "unix_ns": 1795073216254588151,
+          "utc": "2026-11-19T07:26:56.254588+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959158,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959158,
+          "session": 2959158,
+          "start_ticks": "940737170",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.254750+08:00",
+            "monotonic_ns": 9407371811163922,
+            "unix_ns": 1795073216254749707,
+            "utc": "2026-11-19T07:26:56.254750+00:00"
+          },
+          "vsize": 0
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959158,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959158,
+          "session": 2959158,
+          "start_ticks": "940737170",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.254642+08:00",
+            "monotonic_ns": 9407371811053953,
+            "unix_ns": 1795073216254641472,
+            "utc": "2026-11-19T07:26:56.254642+00:00"
+          },
+          "vsize": 0
+        }
+      },
+      "timestamp": {
+        "local": "2026-11-19T15:26:56.254825+08:00",
+        "monotonic_ns": 9407371811234666,
+        "unix_ns": 1795073216254824819,
+        "utc": "2026-11-19T07:26:56.254825+00:00"
+      },
+      "waitid": {
+        "si_code": 1,
+        "si_pid": 2959158,
+        "si_status": 0
+      },
+      "waitpid_status": 0
+    },
+    {
+      "pid": 2959175,
+      "pidfd_before_reap": {
+        "descriptor": 9,
+        "hangup": false,
+        "poll_event_mask": 1,
+        "readable": true,
+        "timestamp": {
+          "local": "2026-11-19T15:26:56.375421+08:00",
+          "monotonic_ns": 9407371931834558,
+          "unix_ns": 1795073216375420974,
+          "utc": "2026-11-19T07:26:56.375421+00:00"
+        }
+      },
+      "proc_absent_after_reap": true,
+      "returncode": 0,
+      "terminal_sample": {
+        "command": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "environment": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "marker_present": false
+        },
+        "executable": {
+          "errno": 2,
+          "read_error": "FileNotFoundError"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.375620+08:00",
+          "monotonic_ns": 9407371932028585,
+          "unix_ns": 1795073216375620101,
+          "utc": "2026-11-19T07:26:56.375620+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.375446+08:00",
+          "monotonic_ns": 9407371931854616,
+          "unix_ns": 1795073216375445570,
+          "utc": "2026-11-19T07:26:56.375446+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959175,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959175,
+          "session": 2959175,
+          "start_ticks": "940737181",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.375608+08:00",
+            "monotonic_ns": 9407371932022143,
+            "unix_ns": 1795073216375608459,
+            "utc": "2026-11-19T07:26:56.375608+00:00"
+          },
+          "vsize": 0
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959175,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959175,
+          "session": 2959175,
+          "start_ticks": "940737181",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.375502+08:00",
+            "monotonic_ns": 9407371931915150,
+            "unix_ns": 1795073216375502028,
+            "utc": "2026-11-19T07:26:56.375502+00:00"
+          },
+          "vsize": 0
+        }
+      },
+      "timestamp": {
+        "local": "2026-11-19T15:26:56.375663+08:00",
+        "monotonic_ns": 9407371932071436,
+        "unix_ns": 1795073216375662682,
+        "utc": "2026-11-19T07:26:56.375663+00:00"
+      },
+      "waitid": {
+        "si_code": 1,
+        "si_pid": 2959175,
+        "si_status": 0
+      },
+      "waitpid_status": 0
+    },
+    {
+      "pid": 2959264,
+      "pidfd_before_reap": null,
+      "proc_absent_after_reap": true,
+      "returncode": 0,
+      "terminal_sample": {
+        "command": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "environment": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "marker_present": false
+        },
+        "executable": {
+          "errno": 2,
+          "read_error": "FileNotFoundError"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.421533+08:00",
+          "monotonic_ns": 9407371977940836,
+          "unix_ns": 1795073216421532602,
+          "utc": "2026-11-19T07:26:56.421533+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.421330+08:00",
+          "monotonic_ns": 9407371977743702,
+          "unix_ns": 1795073216421330439,
+          "utc": "2026-11-19T07:26:56.421330+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959264,
+          "session": 2959264,
+          "start_ticks": "940737193",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.421520+08:00",
+            "monotonic_ns": 9407371977934554,
+            "unix_ns": 1795073216421519969,
+            "utc": "2026-11-19T07:26:56.421520+00:00"
+          },
+          "vsize": 0
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4227076,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959264,
+          "session": 2959264,
+          "start_ticks": "940737193",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.421396+08:00",
+            "monotonic_ns": 9407371977809968,
+            "unix_ns": 1795073216421396003,
+            "utc": "2026-11-19T07:26:56.421396+00:00"
+          },
+          "vsize": 0
+        }
+      },
+      "timestamp": {
+        "local": "2026-11-19T15:26:56.421595+08:00",
+        "monotonic_ns": 9407371978003976,
+        "unix_ns": 1795073216421594760,
+        "utc": "2026-11-19T07:26:56.421595+00:00"
+      },
+      "waitid": {
+        "si_code": 1,
+        "si_pid": 2959264,
+        "si_status": 0
+      },
+      "waitpid_status": 0
+    },
+    {
+      "pid": 2959324,
+      "pidfd_before_reap": null,
+      "proc_absent_after_reap": true,
+      "returncode": 0,
+      "terminal_sample": {
+        "command": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "environment": {
+          "byte_count": 0,
+          "entry_count": 0,
+          "marker_present": false
+        },
+        "executable": {
+          "errno": 2,
+          "read_error": "FileNotFoundError"
+        },
+        "finished": {
+          "local": "2026-11-19T15:26:56.442626+08:00",
+          "monotonic_ns": 9407371999033795,
+          "unix_ns": 1795073216442625682,
+          "utc": "2026-11-19T07:26:56.442626+00:00"
+        },
+        "started": {
+          "local": "2026-11-19T15:26:56.442426+08:00",
+          "monotonic_ns": 9407371998841971,
+          "unix_ns": 1795073216442426194,
+          "utc": "2026-11-19T07:26:56.442426+00:00"
+        },
+        "stat_after": {
+          "exit_code": 0,
+          "flags": 4227140,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.442614+08:00",
+            "monotonic_ns": 9407371999027663,
+            "unix_ns": 1795073216442613959,
+            "utc": "2026-11-19T07:26:56.442614+00:00"
+          },
+          "vsize": 0
+        },
+        "stat_before": {
+          "exit_code": 0,
+          "flags": 4227140,
+          "group": 2959264,
+          "parent": 2958945,
+          "pf_exiting": true,
+          "pid": 2959324,
+          "session": 2959264,
+          "start_ticks": "940737197",
+          "status": "Z",
+          "timestamp": {
+            "local": "2026-11-19T15:26:56.442498+08:00",
+            "monotonic_ns": 9407371998911002,
+            "unix_ns": 1795073216442497890,
+            "utc": "2026-11-19T07:26:56.442498+00:00"
+          },
+          "vsize": 0
+        }
+      },
+      "timestamp": {
+        "local": "2026-11-19T15:26:56.442656+08:00",
+        "monotonic_ns": 9407371999065655,
+        "unix_ns": 1795073216442655709,
+        "utc": "2026-11-19T07:26:56.442656+00:00"
+      },
+      "waitid": {
+        "si_code": 1,
+        "si_pid": 2959324,
+        "si_status": 0
+      },
+      "waitpid_status": 0
+    }
+  ],
+  "redaction": "No raw child commands, comm, environment keys or environment values are retained.",
+  "schema": "owned_process_lifecycle_v1",
+  "started": {
+    "local": "2026-11-19T15:26:56.033431+08:00",
+    "monotonic_ns": 9407371589868725,
+    "unix_ns": 1795073216033430564,
+    "utc": "2026-11-19T07:26:56.033431+00:00"
+  },
+  "status": "completed"
+}

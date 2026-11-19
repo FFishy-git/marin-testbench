@@ -19,6 +19,7 @@ from xml.etree import ElementTree as ET
 
 import fused_attribution_validation_controller as acknowledgment
 import pytest
+import root_stage_failed_predecessor as failed_previous
 import root_stage_gpu_controller as controller
 import root_stage_gpu_owner as owner
 import root_stage_gpu_worker as worker
@@ -442,6 +443,276 @@ def isolated_owner_boundary(archived, monkeypatch, keeper, binding_hash, lock_pa
     failure = sys.modules["selected_lr_failure_handoff"]
     monkeypatch.setattr(failure, "MANAGER_LOCK", lock_path)
     monkeypatch.setattr(failure, "require_manager_source", lambda: None)
+
+
+@pytest.fixture
+def failed_terminal_fixture(terminal_fixture):
+    root, cpu_receipt, keeper, binding_hash = terminal_fixture
+    binding_path, helpers, state_path, _, gpu_path = owner.previous.locations(root)
+    gpu, state = (owner.read(path) for path in (gpu_path, state_path))
+    gpu.update(status="needs_attention", error=failed_previous.reconstruction.FAILURE)
+    gpu.pop("analysis")
+    gpu["cold_probe_evidence"] = {"within_tolerance": True}
+    for index, execution in enumerate(gpu["gpu_commands"]):
+        log = helpers.parent / f"command-{index}.log"
+        log.write_text(f"synthetic-command-{index}\n")
+        execution.update(log=str(log), log_sha256=sha256(log))
+    write(gpu_path, gpu)
+    state.update(status="needs_attention", exit_code=1, cleanup_exit_code=1)
+    state["error"] = "RuntimeError: Root diagnostic validator failed"
+    write(state_path, state)
+    original = {
+        path: sha256(path)
+        for path in (
+            binding_path,
+            state_path,
+            gpu_path,
+            helpers.parent / "controller.json",
+            helpers.parent / "controller.log",
+            Path(state["log"]),
+        )
+    }
+    write(cpu_receipt, owner.read(cpu_receipt))
+
+    def checkpoint_pairs(actual, expected, failing):
+        pairs = {}
+        for step in (22, 23, 24):
+            ranks = []
+            for rank in range(8):
+                files = {}
+                for directory in (actual, expected):
+                    path = directory / f"checkpoints/step_{step:06d}/rank_{rank}.pt"
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    if not path.exists():
+                        write(path, {"rank": rank, "step": step})
+                    files[str(path)] = sha256(path)
+                changed = (
+                    [{"name": f"rank_{rank}.model.weight", "within_tolerance": False}] if failing and step > 22 else []
+                )
+                ranks.append(
+                    {
+                        "rank": rank,
+                        "tensor_comparisons": 1,
+                        "failed_tensor_count": len(changed),
+                        "changed_tensors": changed,
+                        "scalar_or_structure_differences": [],
+                        "checkpoint_sha256": files,
+                    }
+                )
+            pairs[str(step)] = {"step": step, "ranks": ranks, "within_tolerance": not (failing and step > 22)}
+        return {"checkpoints": pairs, "loss": {"comparisons": 39, "failures": [], "within_tolerance": True}}
+
+    analysis = {
+        "continuation": {
+            regime: {
+                protocol: checkpoint_pairs(
+                    failed_previous.validation.directory(root, regime, protocol, "resumed"),
+                    failed_previous.validation.directory(root, regime, protocol, "continuous"),
+                    True,
+                )
+                for protocol in ("control", "trace")
+            }
+            for regime in ("unprepared", "prepared")
+        },
+        "transparency": {
+            regime: {
+                mode: checkpoint_pairs(
+                    failed_previous.validation.directory(root, regime, "trace", mode),
+                    failed_previous.validation.directory(root, regime, "control", mode),
+                    False,
+                )
+                for mode in ("continuous", "resumed")
+            }
+            for regime in ("unprepared", "prepared")
+        },
+        "continuous_controls": {
+            protocol: checkpoint_pairs(
+                failed_previous.validation.directory(root, "prepared", protocol, "continuous"),
+                failed_previous.validation.directory(root, "unprepared", protocol, "continuous"),
+                False,
+            )
+            for protocol in ("control", "trace")
+        },
+        "unprepared_original_reproduction": {
+            f"{protocol}_{mode}": checkpoint_pairs(
+                failed_previous.validation.directory(root, "unprepared", protocol, mode),
+                root / "validation/fused_continuation_20261118" / f"{protocol}_{mode}",
+                False,
+            )
+            for protocol in ("control", "trace")
+            for mode in ("continuous", "resumed")
+        },
+        "traces": {},
+        "trace_root_lifecycle": {},
+        "cold_root": gpu["cold_probe_evidence"],
+        "gates": {name: name != "prepared_all_rank_continuation" for name in failed_previous.GATES},
+        "diagnostic_intervention_accepted": False,
+    }
+    for regime in ("unprepared", "prepared"):
+        for mode in ("continuous", "resumed"):
+            key, hashes, lifecycle = f"{regime}_{mode}", {}, {}
+            directory = failed_previous.validation.directory(root, regime, "trace", mode)
+            for rank in range(8):
+                for step in (22, 23, 24):
+                    for suffix in (".pt", ".json"):
+                        path = directory / f"continuation-trace/rank_{rank}/update_{step:06d}{suffix}"
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        write(path, {"rank": rank, "step": step, "regime": regime, "mode": mode})
+                        hashes[str(path)] = sha256(path)
+                    flags = {
+                        "warm": not (regime == "unprepared" and mode == "resumed" and step == 23),
+                        "graph_active": (
+                            step != 22 and not (mode == "resumed" and (regime == "unprepared" or step == 23))
+                        ),
+                    }
+                    lifecycle[f"{rank}:{step}"] = {group: dict(flags) for group in ("d", "f")}
+            analysis["traces"][key] = {"files_sha256": hashes}
+            analysis["trace_root_lifecycle"][key] = lifecycle
+    runner = root / failed_previous.RUNNER
+    runner.parent.mkdir(parents=True, exist_ok=True)
+    runner.write_text("# synthetic read-only runner\n")
+    work = root / failed_previous.WORK
+    work.mkdir(parents=True)
+    command = [owner.PYTHON, "-P", str(runner), "--phase", "execute"]
+    intent = {
+        "status": "acknowledged",
+        "pid": 920901,
+        "start_ticks": "read-only-runner",
+        "command": command,
+        "marker": "read-only-runner-marker",
+        "runner_sha256": sha256(runner),
+        "binding_sha256": binding_hash,
+        "cpu_receipt_sha256": sha256(cpu_receipt),
+        "out": str(root / failed_previous.RESULT),
+    }
+    intent["generation"] = {
+        "pid": intent["pid"],
+        "start_ticks": intent["start_ticks"],
+        "parent": 1,
+        "group": intent["pid"],
+        "session": intent["pid"],
+        "command": command,
+        "status": "R",
+    }
+    write(work / "intent.json", intent)
+    result = {
+        "status": failed_previous.reconstruction.STATUS,
+        "original_status": state["status"],
+        "original_failure": gpu["error"],
+        "terminal_time": state["time"],
+        "evidence_sha256": {str(path.relative_to(root)): value for path, value in original.items()},
+        "binding_sha256": binding_hash,
+        "verifier_sha256": owner.read(cpu_receipt)["helpers_sha256"]["root_preparation_reconstruction.py"],
+        "controller_pid_absent": state["controller_pid"],
+        "validator_pid_absent": state["child_pid"],
+        "marked_descendants_absent": True,
+        "keeper": keeper,
+        "tolerance": {"rtol": 1e-5, "atol": 1e-6},
+        "gpu_commands": gpu["gpu_commands"],
+        "analysis": analysis,
+    }
+    write(root / failed_previous.RESULT, result)
+    read_only_state = {key: value for key, value in intent.items() if key not in ("generation", "time", "marker")}
+    read_only_state.update(
+        status="reconstructed",
+        result_status=result["status"],
+        result_sha256=sha256(root / failed_previous.RESULT),
+        exit_code=0,
+    )
+    write(work / "state.json", read_only_state)
+    (work / "runner.log").write_text("synthetic read-only terminal runner\n")
+    return root, cpu_receipt, keeper, binding_hash, original
+
+
+def isolated_failed_owner_boundary(archived, boundary, fixture, lock_path):
+    root, cpu_receipt, keeper, binding_hash, original = fixture
+    isolated_owner_boundary(archived, boundary, keeper, binding_hash, lock_path)
+    failed = archived.owner.failed_predecessor
+    previous_binding, _, previous_state, _, previous_gpu = archived.owner.previous.locations(root)
+    boundary.setattr(failed.reconstruction, "BINDING_SHA256", binding_hash)
+    boundary.setattr(failed.reconstruction, "FAILED_STATE_SHA256", original[previous_state])
+    boundary.setattr(failed.reconstruction, "FAILED_RECEIPT_SHA256", original[previous_gpu])
+    boundary.setattr(failed, "CPU", str(cpu_receipt.relative_to(root)))
+    boundary.setattr(failed, "CPU_SHA256", sha256(cpu_receipt))
+    boundary.setattr(failed, "RUNNER_SHA256", sha256(root / failed.RUNNER))
+    assert original[previous_binding] == binding_hash
+
+
+@pytest.mark.parametrize(
+    "fault",
+    (
+        "none",
+        "pending",
+        "live_runner",
+        "changed_output",
+        "missing_rank",
+        "false_gate",
+        "changed_keeper",
+        "postseal_checkpoint",
+        "false_seal",
+    ),
+)
+def test_archived_failed_predecessor_handoff_requires_reconstructed_result_and_exact_restoration(
+    failed_terminal_fixture, monkeypatch, tmp_path, fault
+):
+    fixture = failed_terminal_fixture
+    root, cpu_receipt, keeper, _, original = fixture
+    with archived_controller(cpu_receipt.parent / "tracking") as archived, monkeypatch.context() as boundary:
+        isolated_failed_owner_boundary(archived, boundary, fixture, tmp_path / "manager.lock")
+        failed = archived.owner.failed_predecessor
+        work = root / failed.WORK
+        state = archived.read(work / "state.json")
+        result_path = root / failed.RESULT
+        if fault == "pending":
+            state["status"] = "reconstructing"
+            write(work / "state.json", state)
+        elif fault == "live_runner":
+            boundary.setattr(
+                archived.owner.handoff, "observed", lambda pid: {"pid": pid} if pid == state["pid"] else None
+            )
+        elif fault == "changed_output":
+            result_path.write_text(result_path.read_text() + "\n")
+        elif fault in ("missing_rank", "false_gate"):
+            result = archived.read(result_path)
+            if fault == "missing_rank":
+                result["analysis"]["continuation"]["prepared"]["control"]["checkpoints"]["23"]["ranks"].pop()
+            else:
+                result["analysis"]["gates"]["prepared_all_rank_continuation"] = True
+            write(result_path, result)
+            state["result_sha256"] = sha256(result_path)
+            write(work / "state.json", state)
+        elif fault == "changed_keeper":
+            changed = copy.deepcopy(keeper)
+            changed["generation"][str(keeper["pid"])]["start_ticks"] = "changed-keeper"
+            boundary.setattr(archived.owner.handoff, "keeper_observation", lambda: changed)
+        if fault not in ("none", "postseal_checkpoint", "false_seal"):
+            with pytest.raises((RuntimeError, ValueError)):
+                archived.owner.failed_predecessor.seal(root)
+            assert not archived.owner.locations(root)[0].exists()
+        else:
+            boundary.setenv("CUDA_VISIBLE_DEVICES", "")
+            sealed = archived.owner.failed_predecessor.seal(root)
+            if fault in ("postseal_checkpoint", "false_seal"):
+                if fault == "postseal_checkpoint":
+                    path = Path(next(iter(sealed["retained_file_identity"])))
+                    path.write_text(path.read_text() + "\n")
+                else:
+                    sealed["predecessor"]["diagnostic_intervention_accepted"] = True
+                    write(root / failed.SEAL, sealed)
+                with pytest.raises(ValueError, match="terminal seal"):
+                    archived.freeze(root, cpu_receipt)
+                assert not archived.owner.locations(root)[0].exists()
+                assert original == {path: sha256(path) for path in original}
+                return
+            frozen = archived.freeze(root, cpu_receipt)
+            assert frozen["predecessor"]["diagnostic_intervention_accepted"] is False
+            assert frozen["predecessor"]["gates"]["prepared_all_rank_continuation"] is False
+    if fault == "none":
+        _, helpers, _, _ = owner.locations(root)
+        with archived_controller(helpers) as archived, monkeypatch.context() as boundary:
+            isolated_failed_owner_boundary(archived, boundary, fixture, tmp_path / "manager.lock")
+            assert archived.owner.require_frozen(root, sha256(owner.locations(root)[0])) == frozen
+    assert original == {path: sha256(path) for path in original}
 
 
 def test_archived_freeze_and_fresh_checker_bind_terminal_evidence_and_refuse_changed_source(

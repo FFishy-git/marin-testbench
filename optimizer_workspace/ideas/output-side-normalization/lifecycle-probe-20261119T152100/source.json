@@ -1,0 +1,41 @@
+{
+  "interpreter": {
+    "path": "/opt/conda/envs/torch-base/bin/python3.13",
+    "sha256": "6e7e1c463978fb740767b15372f5d7eea1d1d60fe3cc92a8e451560e2b515fff",
+    "version": "3.13.11 | packaged by Anaconda, Inc. | (main, Dec 10 2025, 21:28:48) [GCC 14.3.0]"
+  },
+  "invocation": [
+    "/opt/conda/envs/torch-base/bin/python3",
+    "-I",
+    "-S",
+    "-B",
+    "optimizer_workspace/ideas/output-side-normalization/tracking/probe_owned_process_lifecycle.py",
+    "--out",
+    "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100",
+    "--timeout",
+    "10",
+    "--exit-attempts",
+    "4"
+  ],
+  "replay_command": [
+    "/opt/conda/envs/torch-base/bin/python3",
+    "-I",
+    "-S",
+    "-B",
+    "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/tracking/probe_owned_process_lifecycle.py",
+    "--out",
+    "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100",
+    "--timeout",
+    "10.0",
+    "--exit-attempts",
+    "4"
+  ],
+  "retained_source": {
+    "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100/probe_owned_process_lifecycle.py",
+    "sha256": "ee3f2a044b24bfcc5bfc522a479994b3ae2311f373eb084971a55524f73cbdd8"
+  },
+  "source": {
+    "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/tracking/probe_owned_process_lifecycle.py",
+    "sha256": "ee3f2a044b24bfcc5bfc522a479994b3ae2311f373eb084971a55524f73cbdd8"
+  }
+}

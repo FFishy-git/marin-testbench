@@ -1,0 +1,134 @@
+\section{Limitations and the status of each number}
+\label{sec:limitations}
+
+We separate three kinds of evidence, because conflating them is the easiest way
+to overstate a study of this shape.
+
+\paragraph{Run directories are not independent observations.}
+This project produced \nRunDirs{} completed full-budget run directories, but
+only \nDistinctRuns{} distinct training trajectories:
+\nDuplicateGroups{} groups covering \nDuplicateDirs{} directories are bitwise
+identical to one another, because several waves re-ran the same scientific
+configuration to measure a systems change. Table~\ref{tab:evidence} lists them.
+We verified this by comparing full 5{,}120-point training-loss trajectories, not
+by trusting the wave labels, and every number in this paper counts each such
+group once. Reporting those repeats as replications would have turned one
+observation of the baseline into four.
+
+\begin{table}[t]
+\centering
+\caption{Bitwise-identical run groups. Each group is one trajectory recorded
+under several wave labels while systems changes were measured around it; the
+recorded losses agree at all 5{,}120 updates. Verified by
+\texttt{scripts/check\_duplicates.py}.}
+\label{tab:evidence}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\input{results/table_duplicates}
+\end{table}
+
+\paragraph{Which claims are replicated, and which are single-seed.}
+The complementarity result (Section~\ref{sec:complement}) and the freshness
+result (Section~\ref{sec:freshness}) rest on single-seed comparisons, albeit
+with paired data order and standard errors two orders of magnitude below the
+effects. The leading geometry's benefit is replicated on three seeds
+(Section~\ref{sec:replication}), with a factor-of-two spread and the largest
+value on the seed used for selection. The matched-null effect is observed in
+three separate nulls across three waves. Nothing here is replicated on a seed
+reserved from exploration: seeds 0, 1 and 2 have all been inspected, which is
+why Section~\ref{sec:program} reserves 3, 4 and 5.
+
+\paragraph{Known confounds we did not remove.}
+Four, in descending order of how much they matter.
+\emph{Learning rate}: every fixed-rate number is measured at a rate that is far
+from the baseline's optimum (Section~\ref{sec:tuning}), and we have no
+full-budget tuned comparison. \emph{Richness versus freshness}: the diagonal
+arms are simultaneously lower-rank and always-current, so
+Section~\ref{sec:freshness}'s conclusion is an inference, not an isolated
+measurement. \emph{Wave-crossing controls}: the leading arm's matched null ran
+in a different wave, spanning a change in host scheduling and source revision;
+the dense arm's null is same-wave and is the cleaner pair.
+\emph{Execution path}: the output-side arms use a per-matrix update path with
+different floating-point association from the baseline's batched path, which is
+what the nulls bound but do not eliminate.
+
+\paragraph{Reproduction fidelity.}
+Our baseline is a runtime adaptation, not an exact reproduction of the pinned
+reference: A100 with FlashAttention-2 rather than H100 with FA3, microbatch 4
+with 4-way accumulation rather than 8 with 2-way, deterministic algorithms
+enabled, and explicit compiler options rather than the reference mode argument.
+The data and budget are mathematically identical. Our baseline's final C4 sits
+$+0.0021$ nats from the pinned reference value while our plain-Muon run sits
+$-0.0003$ from its own, so our reproduction of the baseline-to-preconditioned
+gap is $0.0091$ against a reference $0.0115$. That residual, $0.0024$ nats, is
+\emph{larger than most of the effects in Table~\ref{tab:main}}. It does not
+invalidate within-study comparisons, which are paired and share every
+implementation detail, but it does bound how much weight any single arm's
+margin can carry on its own, and it is a reason to prefer the five-window and
+paired-training statistics over final evaluations.
+
+\paragraph{Generality.}
+One model size, one token budget, one hardware configuration, one data mixture.
+We have one larger-batch pair and no larger model. The arm geometries are tied
+to this architecture's projection structure --- in particular to the MLP
+expansion ratio of 4, which is what makes the width-2048 output moments both
+expensive and the natural thing to diagonalize. A different expansion ratio
+would change the cost balance that drives our best arm's design.
+
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Muon and matrix-aware steps.}
+Muon \citep{jordan2024muon} established that orthogonalizing momentum with a
+cheap fixed-degree iteration is competitive at scale, and the preconditioned
+variant we baseline against adds input-side whitening to it. Our arms are
+modifications of that baseline, not of Muon itself, and we report plain Muon
+only as a reference point. We are not aware of a published study that adds
+output-cotangent second moments to a Muon-type optimizer and measures the result
+against a matched null; the closest published forms apply two-sided factors with
+a common exponent, and where our arms approach such a form we label them formula
+controls rather than reproductions, because we could not obtain an author
+implementation to compare decay shaping and normalization conventions against.
+
+\paragraph{Kronecker-factored and full-matrix preconditioners.}
+K-FAC \citep{martens2015kfac} and the Shampoo family
+\citep{gupta2018shampoo,anil2020scalable} use both sides of the gradient, and
+our motivation is theirs. Two differences shape our results. First, those
+methods do not orthogonalize, so their preconditioner supplies conditioning
+that Newton--Schulz already supplies here --- which is a plausible reason the
+output side buys so little on top of the input side in our setting, and is
+consistent with our finding that the output moment's rotation is nearly
+worthless while its scale is not. Second, Shampoo-family implementations
+routinely accept preconditioner staleness of hundreds of steps, whereas we find
+a four-update staleness already costly enough that an exact diagonal beats a
+stale dense root. We read that as a statement about the Muon regime rather than
+a contradiction: when the base step is already well conditioned, what remains
+for a preconditioner to add is mostly current-scale information, which is
+exactly the part that staleness destroys. SOAP \citep{vyas2024soap} occupies
+the middle ground and would be a natural comparison under a tuned protocol.
+
+\paragraph{Empirical Fisher and what $B$ measures.}
+Our $B$ is an uncentered moment of observed cotangents, the quantity whose gap
+from the true Fisher is analyzed by \citet{kunstner2019limitations}. We take
+their caution seriously enough not to call our construction curvature-based:
+Section~\ref{sec:program} specifies the factorization check that would be
+needed to earn that description, and it has not been run.
+
+\paragraph{Optimizer evaluation methodology.}
+Our strongest methodological point is not new in kind --- that optimizer
+comparisons are dominated by tuning protocol has been argued forcefully
+\citep{schmidt2021crowded,choi2019empirical}, and \citet{kaddour2023nodata}
+make the related point that apparent training speedups often dissolve under
+matched budgets. Our contribution is a concrete instance with the mechanism
+exposed: the baseline's own learning-rate headroom exceeded the modification's
+fixed-rate gain by an order of magnitude, and a short-schedule tuning proxy
+inverted the ranking rather than merely blurring it. We add the matched-null
+control as a second, cheaper discipline that we have not seen reported for
+preconditioner modifications, and which in our case accounted for a fifth to a
+third of an apparent effect.
+
+\paragraph{Newton--Schulz as a finite map.}
+Our step-budget and operand-precision measurements (Appendix~\ref{app:numerics})
+treat the iteration as the finite, rounded object it is, and find a direction
+plateau at seven steps. Related work on compensated and mixed-precision matrix
+products \citep{henry2019leveraging} informs the arithmetic but we were unable
+to obtain the full text and cite it as related literature only.

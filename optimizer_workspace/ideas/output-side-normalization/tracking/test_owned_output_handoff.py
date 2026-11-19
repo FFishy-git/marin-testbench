@@ -4,6 +4,12 @@
 """Exercise exact keeper ownership and experiment absence against a fake process tree."""
 
 import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from uuid import uuid4
 
 import owned_output_handoff as handoff
 import pytest
@@ -214,3 +220,208 @@ def test_handoff_accepts_scheduler_transition_but_refuses_owner_changes(allocati
     else:
         with pytest.raises(RuntimeError, match="generation changed"):
             handoff.probe(root, "muont")
+
+
+@pytest.mark.parametrize("exit_state", ("removed", "zombie", "environ_removed"))
+def test_marker_scan_rescans_exiting_helpers_and_retains_new_live_children(allocation, monkeypatch, exit_state):
+    _, proc, _, _ = allocation
+    marker = f"{handoff.CHILD_MARKER}=compiler-helper"
+    process(proc, 900, 1, ["exiting-helper"], marker=marker)
+    process(proc, 901, 1, ["surviving-helper"], marker=marker)
+    read_bytes = Path.read_bytes
+    changed = False
+
+    def exiting(path):
+        nonlocal changed
+        if path != proc / "900/environ" or changed:
+            return read_bytes(path)
+        changed = True
+        tokens = read_bytes(path)
+        process(proc, 902, 1, ["new-helper"], marker=marker)
+        if exit_state == "zombie":
+            stat = proc / "900/stat"
+            prefix, fields = stat.read_text().rsplit(")", 1)
+            fields = fields.split()
+            fields[0] = "Z"
+            stat.write_text(prefix + ") " + " ".join(fields))
+            (proc / "900/cmdline").write_bytes(b"")
+        else:
+            shutil.rmtree(proc / "900")
+            if exit_state == "environ_removed":
+                raise FileNotFoundError(path)
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", exiting)
+    result = handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+    assert set(result) == {901, 902}
+    assert result[901]["command"] == ["surviving-helper"]
+    assert result[902]["command"] == ["new-helper"]
+
+
+def test_exiting_training_marker_can_complete_exact_keeper_handoff(allocation, monkeypatch):
+    root, proc, _, _ = allocation
+    process(proc, 900, 1, ["exiting-child"], marker=f"{handoff.CHILD_MARKER}=muont_lr0")
+    read_bytes = Path.read_bytes
+
+    def exiting(path):
+        tokens = read_bytes(path)
+        if path == proc / "900/environ":
+            shutil.rmtree(proc / "900")
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", exiting)
+    result = handoff.probe(root, "muont")
+    assert result["original_handles_absent"] and result["training_child_markers_absent"]
+    assert result["inherited_worker_marker_pids"] == list(range(500, 509))
+    assert len(result["keeper"]["occupied"]) == 8
+
+
+@pytest.mark.parametrize("change", ("start_ticks", "parent", "group", "session", "command"))
+def test_marker_scan_refuses_live_identity_changes(allocation, monkeypatch, change):
+    _, proc, _, _ = allocation
+    process(proc, 900, 1, ["marked-helper"], marker=f"{handoff.CHILD_MARKER}=compiler-helper")
+    read_bytes = Path.read_bytes
+    changed = False
+
+    def substituted(path):
+        nonlocal changed
+        tokens = read_bytes(path)
+        if path == proc / "900/environ" and not changed:
+            changed = True
+            if change == "command":
+                (proc / "900/cmdline").write_bytes(b"replacement-helper\0")
+            else:
+                stat = proc / "900/stat"
+                prefix, fields = stat.read_text().rsplit(")", 1)
+                fields = fields.split()
+                fields[{"start_ticks": 19, "parent": 1, "group": 2, "session": 3}[change]] = "999"
+                stat.write_text(prefix + ") " + " ".join(fields))
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", substituted)
+    with pytest.raises(RuntimeError):
+        handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+
+
+def test_marker_scan_refuses_reused_pid_after_transient_disappearance(allocation, monkeypatch):
+    _, proc, _, _ = allocation
+    marker = f"{handoff.CHILD_MARKER}=compiler-helper"
+    process(proc, 900, 1, ["original-helper"], marker=marker)
+    process(proc, 901, 1, ["surviving-helper"], marker=marker)
+    read_bytes = Path.read_bytes
+    vanished = False
+    replaced = False
+
+    def substituted(path):
+        nonlocal vanished, replaced
+        tokens = read_bytes(path)
+        if path == proc / "900/environ" and not vanished:
+            vanished = True
+            shutil.rmtree(proc / "900")
+        elif path == proc / "901/environ" and vanished and not replaced:
+            replaced = True
+            process(proc, 900, 1, ["replacement-helper"], marker=marker, ticks="999")
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", substituted)
+    with pytest.raises(RuntimeError):
+        handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+
+
+def test_marker_scan_never_returns_absence_on_persistent_unreadable_environment(allocation, monkeypatch):
+    _, proc, _, _ = allocation
+    process(proc, 900, 1, ["marked-helper"], marker=f"{handoff.CHILD_MARKER}=compiler-helper")
+    read_bytes = Path.read_bytes
+
+    def unreadable(path):
+        if path == proc / "900/environ":
+            raise FileNotFoundError(path)
+        return read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", unreadable)
+    with pytest.raises(RuntimeError):
+        handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+
+
+def test_marker_scan_refuses_continuous_descendant_exit_churn(allocation, monkeypatch):
+    _, proc, _, _ = allocation
+    marker = f"{handoff.CHILD_MARKER}=compiler-helper"
+    process(proc, 900, 1, ["exiting-helper"], marker=marker)
+    read_bytes = Path.read_bytes
+
+    def exiting(path):
+        tokens = read_bytes(path)
+        if path.name == "environ" and marker.encode() in tokens.split(b"\0"):
+            pid = int(path.parent.name)
+            process(proc, pid + 1, 1, ["replacement-helper"], marker=marker)
+            shutil.rmtree(path.parent)
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", exiting)
+    with pytest.raises(RuntimeError):
+        handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+    assert any(path.is_dir() and int(path.name) >= 900 for path in proc.iterdir())
+
+
+def test_marker_scan_refuses_live_marker_removal_during_rescan(allocation, monkeypatch):
+    _, proc, _, _ = allocation
+    marker = f"{handoff.CHILD_MARKER}=compiler-helper"
+    for pid in (900, 901):
+        process(proc, pid, 1, ["marked-helper"], marker=marker)
+    read_bytes = Path.read_bytes
+    changed = False
+
+    def changed_environment(path):
+        nonlocal changed
+        tokens = read_bytes(path)
+        if path == proc / "901/environ" and not changed:
+            changed = True
+            shutil.rmtree(proc / "900")
+            path.write_bytes(b"")
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", changed_environment)
+    with pytest.raises(RuntimeError):
+        handoff.marker_processes(handoff.CHILD_MARKER, "compiler-helper")
+
+
+def test_unrelated_worker_discovered_after_exit_never_authorizes_handoff(allocation, monkeypatch):
+    root, proc, _, _ = allocation
+    marker = f"{handoff.WORKER_MARKER}=family-marker"
+    process(proc, 900, 1, ["exiting-helper"], marker=marker)
+    read_bytes = Path.read_bytes
+
+    def exiting(path):
+        tokens = read_bytes(path)
+        if path == proc / "900/environ":
+            process(proc, 901, 1, ["unrelated-worker"], marker=marker)
+            shutil.rmtree(proc / "900")
+        return tokens
+
+    monkeypatch.setattr(Path, "read_bytes", exiting)
+    with pytest.raises(RuntimeError):
+        handoff.probe(root, "muont")
+
+
+def test_marker_scan_handles_real_linux_child_exit_after_environment_read(monkeypatch):
+    monkeypatch.setattr(handoff, "PROC_ROOT", Path("/proc"))
+    marker = uuid4().hex
+    read_bytes = Path.read_bytes
+    with subprocess.Popen(
+        [sys.executable, "-c", "import sys; sys.stdin.buffer.read()"],
+        env=os.environ | {handoff.CHILD_MARKER: marker},
+        stdin=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ) as child:
+
+        def exiting(path):
+            tokens = read_bytes(path)
+            if path == Path("/proc") / str(child.pid) / "environ":
+                child.stdin.close()
+                child.wait(timeout=10)
+            return tokens
+
+        monkeypatch.setattr(Path, "read_bytes", exiting)
+        assert handoff.marker_processes(handoff.CHILD_MARKER, marker) == {}
+        assert child.returncode == 0

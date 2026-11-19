@@ -1,0 +1,166 @@
+\section{The tuning confound}
+\label{sec:tuning}
+
+Everything in Section~\ref{sec:results} is measured at one learning rate: the
+pinned recipe's $0.0226$, applied unchanged to every arm. That is the right way
+to isolate a geometry change, and it is the wrong way to compare optimizers. An
+optimizer modification that merely lets the step size grow will look like a
+geometry win at any fixed rate, and the only way to tell the two apart is to
+tune each arm separately. This section reports what happened when we tried, and
+the answer reframes the rest of the paper.
+
+\subsection{The baseline was far from its own optimum}
+
+We screened seven matrix learning rates --- the recipe value scaled by
+$2^{-1/2}$ through $2^{5/2}$ --- for four families: the baseline and three
+output-side geometries. Each of the 28 trials is a self-contained
+320-update, 167{,}772{,}160-token run with its own complete 20\%-flat,
+80\%-linear-decay schedule, not an early stop of the full budget. Every family
+received an identical token allowance, and ranking used the reserved held-out
+selection loss only, with C4 held back as a reporting metric.
+
+Figure~\ref{fig:lr} (left) shows the result. The baseline's loss falls from
+$4.566$ at the lowest rate to $\lrMuontBest{}$ at $\lrMuontBestLR{}$ before
+rising again --- a gain of \lrHeadroom{} nats from changing one hyperparameter. Our first screening round, covering only the three rates
+closest to the recipe, selected the highest rate it tested for all four
+families; so did the second round, two rates higher. Only the seven-point round
+produced interior optima.
+
+\begin{finding}[The baseline has an order of magnitude more headroom in its
+learning rate than the modification provides at a fixed rate]
+Tuning the baseline's matrix learning rate alone improves held-out selection
+loss by \lrHeadroom{} nats. The largest output-side gain at the recipe rate is
+\mlpdiagselmag{} nats --- roughly \lrHeadroomRatio{} times smaller. The two
+figures come from different schedules and are not directly commensurable, but
+no reading of them makes a fixed-rate comparison a fair one.
+\end{finding}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={group size=2 by 1, horizontal sep=1.7cm},
+  width=0.46\textwidth, height=6.2cm,
+  grid=major, grid style={gray!18},
+  axis line style={gray!55}, tick align=outside,
+  label style={font=\small}, tick label style={font=\footnotesize},
+  every axis plot/.append style={line width=1pt, mark size=1.9pt},
+]
+\nextgroupplot[
+  xlabel={Matrix learning rate},
+  ylabel={Final held-out selection loss},
+  xmode=log, log basis x=2,
+  xmin=0.014, xmax=0.145, ymin=4.20, ymax=4.62,
+  xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784,0.128},
+  xticklabels={.016,.023,.032,.045,.064,.091,.128},
+  xticklabel style={font=\tiny, rotate=40, anchor=east},
+  legend style={at={(0.97,0.95)}, anchor=north east, font=\scriptsize,
+                draw=gray!40, fill=white, fill opacity=0.92, text opacity=1},
+  legend cell align=left,
+  title={320-update screening}, title style={font=\small},
+]
+\addplot[color=black, mark=triangle*] table[x=lr, y=muont] {figs/lr_sweep.dat};
+\addlegendentry{MuonT (baseline)}
+\addplot[color=laPurpleLine, mark=*] table[x=lr, y=inner_outer_leftdiag] {figs/lr_sweep.dat};
+\addlegendentry{all diagonal}
+\addplot[color=laBlueLine, mark=square*] table[x=lr, y=outer_leftdiag] {figs/lr_sweep.dat};
+\addlegendentry{outer diagonal}
+\addplot[color=laOrangeLine, mark=diamond*] table[x=lr, y=outer_leftdiag_fused] {figs/lr_sweep.dat};
+\addlegendentry{fused outer}
+\draw[gray!55, dotted, line width=0.8pt]
+  (axis cs:0.02262741696,4.21) -- (axis cs:0.02262741696,4.60);
+\node[font=\tiny, text=gray!60!black, rotate=90, anchor=south east]
+  at (axis cs:0.02262741696,4.595) {recipe rate};
+\nextgroupplot[
+  ybar, bar width=16pt,
+  symbolic x coords={all diagonal,outer diagonal,fused outer},
+  xtick=data, xticklabel style={font=\scriptsize, rotate=20, anchor=east},
+  ylabel={$\Delta$ selection vs baseline},
+  ymin=-0.016, ymax=0.068,
+  scaled y ticks=false,
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
+  nodes near coords={\pgfmathprintnumber[fixed, precision=3, print sign]{\pgfplotspointmeta}},
+  every node near coord/.append style={font=\tiny},
+  nodes near coords align={vertical},
+  title={5120-update transfer}, title style={font=\small},
+]
+\input{figs/transfer_bars}
+\draw[gray!60] (axis cs:all diagonal,0) -- (axis cs:fused outer,0);
+\end{groupplot}
+\end{tikzpicture}
+\caption{The tuning confound in two panels. \textbf{Left:} held-out selection
+loss against matrix learning rate on the 320-update screening schedule. All
+four families improve steeply well past the recipe rate (dotted line) before
+turning over; the baseline alone gains \lrHeadroom{} nats. Our first two
+screening rounds both selected the top of the grid they tested, which is how a
+tuning study tells you it has not found an optimum. \textbf{Right:} what
+happened when the interior screening optima were carried to the full
+5{,}120-update budget. Two of three geometries went from beating the baseline
+to losing by about $0.05$ nats --- an order of magnitude larger, and opposite in
+sign, to every effect in Section~\ref{sec:results}. Short-schedule learning-rate
+selection does not transfer.}
+\label{fig:lr}
+\end{figure}
+
+\subsection{At their own best rates, the geometries still led --- on that schedule}
+
+At the interior optima the output-side arms retained an advantage over the
+independently tuned baseline: $-0.019633$ for all-diagonal and $-0.014299$ for
+outer-diagonal, both at $\lrBestLROuterLeftdiag{}$, and $-0.009946$ for fused
+outer at $\lrBestLROuterLeftdiagFused{}$. Taken alone, this is the paper's most
+favourable evidence --- larger gains than anything in Table~\ref{tab:main}, and
+obtained after giving the baseline its own best rate.
+
+It does not survive contact with the full schedule, and it also disagrees with
+the full schedule at the recipe rate. On the 320-update schedule at the recipe
+rate, all three candidates are \emph{worse} than the baseline, by
+\shortBaseInnerOuterLeftdiag{}, \shortBaseOuterLeftdiag{} and
+\shortBaseOuterLeftdiagFused{} nats, exactly inverting their full-budget
+ordering. Whatever these geometries do, it interacts with schedule length,
+which means a short screening schedule is not a valid instrument for ranking
+them.
+
+\subsection{Transferring the selected rates inverts the result}
+
+We then ran the three selected rates at the full 5{,}120-update budget against a
+same-wave baseline at its own selected rate. Figure~\ref{fig:lr} (right) is the
+outcome. The all-diagonal and outer-diagonal arms are $+0.049294$ and
+$+0.050256$ nats \emph{worse} than the baseline on late selection loss, and
+worse in all five training windows. Only the fused outer arm retains a gain, at
+$-0.002909$ selection and $-0.001806$ C4, for $+9.0$\% main-function time.
+
+\begin{finding}[Short-schedule tuning does not transfer, and the surviving gain
+is one arm's]
+Carrying screening-selected learning rates to the full budget turned a
+$0.020$-nat advantage into a $0.049$-nat deficit for the two Torch geometries.
+The one arm that still improves on a tuned baseline does so by $0.0029$ nats at
+$+9$\% time --- about the size of a matched null's artifact
+(Section~\ref{sec:null}), and that arm has no matched null at its selected
+rate. The tuned comparison is therefore not merely unfinished; the single
+result it has produced so far is not attributable.
+\end{finding}
+
+\subsection{What this does and does not establish}
+
+It does not establish that output-side normalization fails under fair tuning.
+The screening schedule is 6\% of the full budget and has its own cooldown; the
+selected rates are optima for that schedule, not for the real one; and no
+family has been tuned at full budget at all. A rate that is right for 320
+updates being wrong for 5{,}120 is unsurprising in itself.
+
+What it does establish is narrower and sufficient to govern the paper's claims.
+The fixed-rate comparison in Section~\ref{sec:results} is not a comparison of
+optimizers, because the baseline is far from its own optimum at that rate. The
+cheap instrument for fixing this --- short-schedule screening --- demonstrably
+does not transfer here, so the honest conclusion is that \emph{the effect size
+under fair tuning is unknown}, and the available evidence does not rule out its
+being zero or negative for two of the three geometries we have taken furthest.
+It also warns against a specific shortcut: our screening reused the exploratory
+seed-0 holdout for selection, so even the favourable screening numbers are
+best-of-tested on previously inspected data rather than independent
+confirmation.
+
+This is why Section~\ref{sec:program} puts a full-budget learning-rate
+neighborhood at the top of the list, ahead of every additional geometry, and
+why we think running more arms at the recipe rate would add precision to a
+quantity that is not the one in question.

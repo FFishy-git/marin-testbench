@@ -5,12 +5,18 @@
 
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import tarfile
 from datetime import UTC, datetime
 from pathlib import Path
 
+import ns_training_path_exit_followup_reporting as exit_followup_report
+import ns_training_path_exit_reporting as exit_report
+import ns_training_path_recovery_reporting as recovery_report
+import ns_training_path_transition_followup_reporting as transition_followup_report
+import ns_training_path_transition_reporting as transition_report
 import prepare_fused_attribution_validation as attribution_validation_preparation
 import prepare_root_preparation_diagnostic as root_preparation
 import pytest
@@ -63,6 +69,9 @@ from update_endeavor import (
     ANCHOR,
     END,
     START,
+    SUMMARY_ANCHOR,
+    SUMMARY_END,
+    SUMMARY_START,
     boundary_queue_lines,
     fused_attribution_lines,
     fused_attribution_validation_lines,
@@ -70,6 +79,7 @@ from update_endeavor import (
     fused_continuation_lines,
     owned_output_handoff_cpu_lines,
     production_lines,
+    research_summary,
     root_preparation_cpu_lines,
     saved_ns_replay_cpu_lines,
     selected_lr_production_cpu_lines,
@@ -81,6 +91,7 @@ from update_endeavor import (
     update,
     upstream_full_model_validation_lines,
     upstream_gpu_lines,
+    without_digests,
 )
 from upstream_production import cpu_command
 from wave7_release import ARMS, candidate_inventory
@@ -2060,6 +2071,444 @@ def test_refresh_preserves_prose_and_distinguishes_interim_from_completed(tmp_pa
     assert completed.split(START)[0] + completed.split(END)[1].lstrip("\n") == prose
 
 
+@pytest.mark.parametrize("entrypoint", ("ENDEAVOR.md", "DETAILS.md"))
+def test_split_refresh_updates_research_and_details_without_changing_manual_decisions(tmp_path, entrypoint):
+    preparation = tmp_path / "run-preparation"
+    preparation.mkdir()
+    research, details = tmp_path / "ENDEAVOR.md", tmp_path / "DETAILS.md"
+    research_prose = (
+        "# Research\n\nExecution ledger: [`DETAILS.md`](DETAILS.md).\n\n"
+        "Rational continuation remains proposed and unlaunched.\n\n"
+        f"{SUMMARY_ANCHOR}\n\nReserved seeds and original tolerances stay unchanged.\n"
+    )
+    details_prose = f"# Preserved receipts\n\nEarlier failure remains evidence.\n\n{ANCHOR}\n"
+    research.write_text(research_prose)
+    details.write_text(details_prose)
+    for wave in (8, 9, 10):
+        record(preparation / f"wave{wave}.json", {"time": "2026-11-18T01:00:00+00:00", "launches": []})
+    now = datetime(2026, 11, 18, 12, 35, tzinfo=UTC)
+    update(tmp_path / entrypoint, tmp_path, now)
+    summary = research.read_text()
+    ledger = details.read_text()
+    assert summary.split(SUMMARY_START)[0] + summary.split(SUMMARY_END)[1].lstrip("\n") == research_prose
+    assert ledger.split(START)[0] + ledger.split(END)[1].lstrip("\n") == details_prose
+    assert START not in summary
+    assert SUMMARY_START not in ledger
+    assert "### wave8\n" in ledger and "### wave8\n" not in summary
+    assert "### wave9\n" in summary and "### wave10\n" in summary
+    assert "No complete-wave verified SwanLab receipt" in summary
+    record(
+        preparation / "wave12.json",
+        {"time": "2026-11-18T02:00:00+00:00", "launches": [{"out": str(tmp_path / "runs/wave12/candidate")}]},
+    )
+    record(
+        preparation / "swanlab-upload-wave12.json",
+        {
+            "status": "verified",
+            "verified_at": "2026-11-18T03:00:00+00:00",
+            "runs": {"candidate": {"status": "verified"}},
+        },
+    )
+    update(tmp_path / entrypoint, tmp_path, now)
+    summary = research.read_text()
+    assert summary.count(SUMMARY_START) == summary.count(SUMMARY_END) == 1
+    assert "### wave9\n" not in summary and "### wave12\n" in summary
+    assert "No complete-wave verified SwanLab receipt" in summary
+    assert "histories verified at 2026-11-18 11:00:00" not in summary
+    assert summary.split(SUMMARY_START)[0] + summary.split(SUMMARY_END)[1].lstrip("\n") == research_prose
+
+
+@pytest.mark.parametrize("fault", ("none", "changed_receipt"))
+def test_recovery_refresh_retains_distinct_launch_and_withholds_changed_acceptance(tmp_path, fault):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    cpu_path = live / recovery_report.preparation.CPU_PATH
+    record_value = json.loads(cpu_path.read_bytes())
+    target = tmp_path / recovery_report.preparation.CPU_PATH
+    target.parent.mkdir(parents=True)
+    shutil.copy2(cpu_path, target)
+    if fault == "changed_receipt":
+        record(target, record_value | {"status": "forged accepted recovery"})
+    if fault == "changed_receipt":
+        text = "\n".join(recovery_report.lines(tmp_path, lambda value: value))
+        assert "Recovery evidence withheld:" in text
+        assert "103 passing cases" not in text
+        return
+    assert hashlib.sha256(target.read_bytes()).hexdigest() == recovery_report.CPU_SHA256
+    text = "\n".join(recovery_report.lines(live, lambda value: value))
+    assert "Recovery evidence withheld:" not in text
+    assert "Recovery saved status:" in text
+    assert "44/54 commands, 14/18 decisions" in text
+    assert "does not establish current liveness" in text
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {recovery_report.TITLE}" in summary
+    assert "103 passing cases" in summary
+
+
+def test_exit_drain_report_retains_fresh_acceptance_and_withholds_changed_binding(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    text = "\n".join(exit_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    assert "125 passing cases" in text
+    assert "/54 completed commands" in text
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {exit_report.TITLE}" in summary
+    cpu = live / exit_report.CPU_PATH
+    target = tmp_path / exit_report.CPU_PATH
+    target.parent.mkdir(parents=True)
+    shutil.copy2(cpu, target)
+    record(target, json.loads(target.read_text()) | {"status": "substituted"})
+    refused = "\n".join(exit_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+
+
+def test_transition_report_preserves_accepted_launch_and_denies_changed_cpu_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    text = "\n".join(transition_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    assert "129 passing cases" in text
+    assert "Transition saved status:" in text
+    assert "exit-drain6/54commands2/18decisions" in text
+    assert "does not establish current liveness" in text
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {transition_report.TITLE}" in summary
+    target = tmp_path / transition_report.CPU_PATH
+    target.parent.mkdir(parents=True)
+    shutil.copy2(live / transition_report.CPU_PATH, target)
+    record(target, json.loads(target.read_text()) | {"status": "substituted"})
+    refused = "\n".join(transition_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "129 passing cases" not in refused
+
+
+@pytest.mark.parametrize("fault", ("none", "changed_command", "unacknowledged"))
+def test_transition_report_failed_command_retains_partial_coverage(tmp_path, fault):
+    command = ["python", "training.py"]
+    log = tmp_path / "validation/ns_training_path_transition_20261119/case_interrupted.log"
+    log.parent.mkdir(parents=True)
+    log.write_text("failed before training\n")
+    entry = {
+        "command": command,
+        "log": str(log),
+        "log_sha256": hashlib.sha256(log.read_bytes()).hexdigest(),
+        "spawn_status": "needs_attention" if fault == "unacknowledged" else "acknowledged",
+        "exit_code": 1,
+        "cleanup_exit_code": 1,
+        "marked_descendants_absent": True,
+    }
+    if fault != "unacknowledged":
+        entry["generation"] = {
+            "pid": 200,
+            "start_ticks": "201",
+            "command": command,
+            "parent": 100,
+            "group": 200,
+            "session": 200,
+        }
+    if fault == "changed_command":
+        entry["command"] = ["replacement"]
+    record(log.with_suffix(".execution.json"), entry)
+    frozen = {"commands": [["completed"], command], "plan": {"trials": [{"name": "case"}]}}
+    result = {"gpu_commands": [{"retained": True}]}
+    if fault == "changed_command":
+        with pytest.raises(ValueError):
+            transition_report.failed_command_evidence(tmp_path, frozen, {"child_pid": 100}, result, {})
+        return
+    details = transition_report.failed_command_evidence(tmp_path, frozen, {"child_pid": 100}, result, {})
+    assert len(result["gpu_commands"]) == 1
+    assert details["mode"] == "interrupted"
+    assert details["exit_code"] == 1
+    assert details["marked_descendants_absent"] is True
+    assert ("generation" in details) == (fault != "unacknowledged")
+
+
+def test_exit_waiter_saved_report_authenticates_owner_and_withholds_changed_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = exit_followup_report.evidence(live)
+    assert saved["pid"] == 3071163 and saved["start_ticks"] == "941088367"
+    assert saved["observations"] >= 1
+    text = "\n".join(exit_followup_report.lines(live, lambda value: value))
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {exit_followup_report.TITLE}" in summary
+    intent = tmp_path / exit_followup_report.preparation.WORK / "intent.json"
+    intent.parent.mkdir(parents=True)
+    shutil.copy2(live / exit_followup_report.preparation.WORK / "intent.json", intent)
+    cpu = tmp_path / exit_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / exit_followup_report.CPU, cpu)
+    record(cpu, json.loads(cpu.read_text()) | {"status": "substituted"})
+    refused = "\n".join(exit_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "Saved waiter status" not in refused
+
+
+def test_transition_waiter_report_preserves_observations_and_denies_changed_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = transition_followup_report.evidence(live)
+    assert saved["pid"] == 3127027 and saved["start_ticks"] == "941414079"
+    assert saved["observations"] >= 1
+    text = "\n".join(transition_followup_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    assert "175 helpers" in text
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {transition_followup_report.TITLE}" in summary
+    intent = tmp_path / transition_followup_report.preparation.WORK / "intent.json"
+    intent.parent.mkdir(parents=True)
+    shutil.copy2(live / transition_followup_report.preparation.WORK / "intent.json", intent)
+    cpu = tmp_path / transition_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / transition_followup_report.CPU, cpu)
+    record(cpu, json.loads(cpu.read_text()) | {"status": "substituted"})
+    refused = "\n".join(transition_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "Saved waiter status" not in refused
+
+
+def test_exit_drain_preparer_matching_tampered_copies_cannot_execute(tmp_path, monkeypatch):
+    cpu = tmp_path / "receipt.json"
+    helper = tmp_path / "tracking/prepare_ns_training_path_exit.py"
+    local = tmp_path / "local/prepare_ns_training_path_exit.py"
+    helper.parent.mkdir()
+    local.parent.mkdir()
+    accepted = b"VALUE = 7\n"
+    helper.write_bytes(accepted)
+    local.write_bytes(accepted)
+    record(cpu, {"helpers_sha256": {local.name: hashlib.sha256(accepted).hexdigest()}})
+    monkeypatch.setattr(exit_report, "CPU_SHA256", hashlib.sha256(cpu.read_bytes()).hexdigest())
+    side_effect = tmp_path / "unexpected-execution"
+    tampered = accepted + f"from pathlib import Path\nPath({str(side_effect)!r}).write_text('bad')\n".encode()
+    helper.write_bytes(tampered)
+    local.write_bytes(tampered)
+    with pytest.raises(ValueError):
+        exit_report.preparation_module(cpu, local)
+    assert not side_effect.exists()
+
+
+def test_exit_drain_preparer_executes_verified_buffer_after_source_replacement(tmp_path, monkeypatch):
+    cpu = tmp_path / "receipt.json"
+    helper = tmp_path / "tracking/prepare_ns_training_path_exit.py"
+    local = tmp_path / "local/prepare_ns_training_path_exit.py"
+    helper.parent.mkdir()
+    local.parent.mkdir()
+    accepted = b"VALUE = 7\n"
+    helper.write_bytes(accepted)
+    local.write_bytes(accepted)
+    record(cpu, {"helpers_sha256": {local.name: hashlib.sha256(accepted).hexdigest()}})
+    monkeypatch.setattr(exit_report, "CPU_SHA256", hashlib.sha256(cpu.read_bytes()).hexdigest())
+    side_effect = tmp_path / "unexpected-execution"
+    tampered = accepted + f"from pathlib import Path\nPath({str(side_effect)!r}).write_text('bad')\n".encode()
+    original_open = Path.open
+
+    def replaced_open(path, *args, **kwargs):
+        stream = original_open(path, *args, **kwargs)
+        if path == helper and args == ("rb",):
+            local.write_bytes(tampered)
+        return stream
+
+    monkeypatch.setattr(Path, "open", replaced_open)
+    implementation = exit_report.preparation_module(cpu, local)
+    assert implementation.VALUE == 7
+    assert local.read_bytes() == tampered
+    assert not side_effect.exists()
+
+
+@pytest.mark.parametrize(
+    "fault", ("none", "controller_start", "validator_start", "validator_parent", "validator_command")
+)
+def test_exit_drain_saved_generation_substitution_refuses_projection(fault):
+    command = ["python", "validator.py"]
+    intent = {"pid": 100, "start_ticks": "101"}
+    state = {
+        "spawn_status": "acknowledged",
+        "command": command,
+        "child_pid": 200,
+        "child_start_ticks": "201",
+        "child_generation": {
+            "pid": 200,
+            "start_ticks": "201",
+            "command": command,
+            "parent": 100,
+            "group": 200,
+            "session": 200,
+        },
+    }
+    result = {
+        "owner": {
+            "controller_pid": 100,
+            "controller_start_ticks": "101",
+            "validator_pid": 200,
+            "validator_start_ticks": "201",
+        }
+    }
+    if fault == "controller_start":
+        result["owner"]["controller_start_ticks"] = "substituted"
+    elif fault == "validator_start":
+        state["child_generation"]["start_ticks"] = "substituted"
+    elif fault == "validator_parent":
+        state["child_generation"]["parent"] = 99
+    elif fault == "validator_command":
+        state["child_generation"]["command"] = ["replacement"]
+    frozen = {"validator_command": command}
+    if fault == "none":
+        assert exit_report.checked_result(result, frozen, intent, state) == result
+    else:
+        with pytest.raises(ValueError):
+            exit_report.checked_result(result, frozen, intent, state)
+
+
+@pytest.mark.parametrize("fault", ("prelaunch", "reader_failure", "other_exit", "changed_command"))
+def test_exit_drain_failure_details_do_not_claim_successful_cleanup(tmp_path, fault):
+    log = tmp_path / "validation/ns_training_path_exit_drain_20261119/trial_interrupted.log"
+    log.parent.mkdir(parents=True)
+    command = ["python", "train.py"]
+    frozen = {"commands": [["completed"], command], "plan": {"trials": [{"name": "trial"}]}}
+    state = {"child_pid": 100}
+    result = {"gpu_commands": [{"retained": True}]}
+    if fault != "prelaunch":
+        log.write_text("retained failure log\n")
+        entry = {
+            "command": command,
+            "log": str(log),
+            "log_sha256": hashlib.sha256(log.read_bytes()).hexdigest(),
+            "spawn_status": "acknowledged",
+            "generation": {
+                "pid": 200,
+                "start_ticks": "201",
+                "command": command,
+                "parent": 100,
+                "group": 200,
+                "session": 200,
+            },
+            "time": "2026-11-19T08:00:00+00:00",
+            "exit_code": 0 if fault == "reader_failure" else 2,
+            "cleanup_exit_code": 0 if fault == "reader_failure" else 2,
+            "marked_descendants_absent": fault == "reader_failure",
+        }
+        if fault == "changed_command":
+            entry["command"] = ["replacement"]
+        record(log.with_suffix(".execution.json"), entry)
+    if fault == "changed_command":
+        with pytest.raises(ValueError):
+            exit_report.failed_command_evidence(tmp_path, frozen, state, result, {})
+        return
+    details = exit_report.failed_command_evidence(tmp_path, frozen, state, result, {})
+    assert len(result["gpu_commands"]) == 1
+    assert details["mode"] == "interrupted"
+    if fault == "prelaunch":
+        assert "exit_code" not in details and "marked_descendants_absent" not in details
+    elif fault == "other_exit":
+        assert details["exit_code"] == 2 and details["marked_descendants_absent"] is False
+    else:
+        assert details["exit_code"] == 0 and details["marked_descendants_absent"] is True
+
+
+@pytest.mark.parametrize("fault", ("none", "changed_decisions", "missing_commands"))
+def test_recovery_terminal_reporting_requires_complete_canonical_decisions(tmp_path, fault):
+    helpers = tmp_path / "helpers"
+    helpers.mkdir()
+    intent = {
+        "binding_sha256": recovery_report.BINDING_SHA256,
+        "pid": 910001,
+        "start_ticks": "910101",
+        "marker": "CPU-recovery-controller",
+    }
+    identity = {
+        "binding_sha256": intent["binding_sha256"],
+        "controller_pid": intent["pid"],
+        "controller_start_ticks": intent["start_ticks"],
+        "controller_marker": intent["marker"],
+    }
+    token = hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    path = tmp_path / "run-preparation" / f"{recovery_report.source.NAMESPACE}-terminal-{token}.json"
+    frozen = {
+        "helpers": str(helpers / "tracking"),
+        "helpers_sha256": {"ns_training_path_recovery_gpu_controller.py": "CPU-issued-controller"},
+        "predecessor_acceptance": {"fixture": "retained incomplete original"},
+    }
+    attempt = {
+        "status": "reconstruction_claimed",
+        "output": str(path),
+        **identity,
+        "verifier_sha256": "CPU-issued-controller",
+        "time": "2026-11-19T06:00:00+00:00",
+    }
+    record(helpers / "terminal-intent.json", attempt)
+    attempt_digest = hashlib.sha256((helpers / "terminal-intent.json").read_bytes()).hexdigest()
+    keeper = {
+        "pid": 100,
+        "world": 1,
+        "generation": {"100": {"pid": 100, "status": "R"}},
+        "devices": [["0", "CPU-UUID", "CPU"]],
+        "occupied": [["100", "CPU-UUID"]],
+    }
+    state = {
+        "status": "validation_complete",
+        "result_sha256": "CPU-retained-results",
+        "child_pid": 910002,
+        "exit_code": 0,
+        "cleanup_exit_code": 0,
+        "keeper_restore": 0,
+        "restored_keeper": keeper,
+    }
+    progress = {
+        "completed_commands": 54,
+        "decisions": list(range(18)),
+        "accepted_cases": ["CPU-MuonT"],
+        "rejected_cases": ["CPU-fused"],
+    }
+    terminal = {
+        "status": recovery_report.TERMINAL_STATUS,
+        "binding_sha256": intent["binding_sha256"],
+        "result_sha256": state["result_sha256"],
+        "reconstruction_intent_sha256": attempt_digest,
+        "controller_pid_absent": intent["pid"],
+        "controller_start_ticks": intent["start_ticks"],
+        "controller_marker": intent["marker"],
+        "validator_pid_absent": state["child_pid"],
+        "verifier_sha256": "CPU-issued-controller",
+        "predecessor_acceptance": frozen["predecessor_acceptance"],
+        "production_authorized": False,
+        "scope": recovery_report.source.SCOPE,
+        "keeper": keeper,
+        "accepted_cases": progress["accepted_cases"],
+        "rejected_cases": progress["rejected_cases"],
+        "all_cases_accepted": False,
+        "evidence_sha256": {},
+        "time": "2026-11-19T06:01:00+00:00",
+    }
+    if fault == "changed_decisions":
+        terminal["rejected_cases"] = []
+        terminal["all_cases_accepted"] = True
+    elif fault == "missing_commands":
+        progress["completed_commands"] = 44
+    record(path, terminal)
+    record(
+        helpers / "terminal-outcome.json",
+        {
+            "status": "complete",
+            "output": str(path),
+            "reconstruction_intent_sha256": attempt_digest,
+            "terminal_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        },
+    )
+    if fault == "none":
+        saved = recovery_report.terminal_evidence(tmp_path, frozen, intent, state, progress, {})
+        assert saved["rejected_cases"] == ["CPU-fused"] and saved["production_authorized"] is False
+    else:
+        with pytest.raises(ValueError):
+            recovery_report.terminal_evidence(tmp_path, frozen, intent, state, progress, {})
+
+
+def test_split_refresh_refuses_both_replacements_when_research_boundary_is_ambiguous(tmp_path):
+    (tmp_path / "run-preparation").mkdir()
+    research, details = tmp_path / "ENDEAVOR.md", tmp_path / "DETAILS.md"
+    research.write_text(f"[`DETAILS.md`](DETAILS.md)\n{SUMMARY_START}\n{SUMMARY_START}\n{SUMMARY_END}\n")
+    details.write_text(f"# Historical evidence\n\n{ANCHOR}\n")
+    before = {path: path.read_bytes() for path in (research, details)}
+    with pytest.raises(ValueError, match="Ambiguous automated ledger markers"):
+        update(details, tmp_path, datetime.now(UTC))
+    assert {path: path.read_bytes() for path in before} == before
+
+
 @pytest.mark.parametrize(
     "exit_code,evidence_error", [(0, None), (1, None), (124, "timeout sentinel"), (0, "archive drift")]
 )
@@ -2359,7 +2808,7 @@ def test_document_monitor_retries_failed_refresh_on_next_900_second_cycle(tmp_pa
     tracking.mkdir(parents=True)
     monitor = tracking / "monitor_endeavor.sh"
     monitor.write_text((Path(__file__).parent / monitor.name).read_text())
-    document = task / "ENDEAVOR.md"
+    document = task / "DETAILS.md"
     document.write_text("Manual prose\n")
     updater = tracking / "update_endeavor.py"
     updater.write_text(
@@ -3978,3 +4427,22 @@ def test_refresh_tracks_tuning_execution_partial_cloud_and_unknown_charges_witho
     update(document, tmp_path, now)
     assert "Execution binding identity differs" in document.read_text()
     assert document.read_text().split(START)[0] + document.read_text().split(END)[1].lstrip("\n") == prose
+
+
+def test_without_digests_keeps_readings_and_drops_receipt_citations() -> None:
+    digest = "a" * 64
+    kept = without_digests(
+        [
+            f"Saved validation-only binding: `run-preparation/x.json`; SHA256 `{digest}`.",
+            f"Saved controller log SHA256 `{digest}`.",
+            f"Resume diverged by update 24: 460 tensors exceed tolerance. Evidence SHA256 `{digest}`.",
+            f"| wave12 | fused | -0.0025 | `{digest}` |",
+            "Plain reading with no citation.",
+        ]
+    )
+    assert not any(re.search(r"[0-9a-f]{32,}", line) for line in kept)
+    assert "Saved validation-only binding: `run-preparation/x.json`." in kept
+    assert "Resume diverged by update 24: 460 tensors exceed tolerance." in kept
+    assert "Plain reading with no citation." in kept
+    assert "| wave12 | fused | -0.0025 |  |" in kept
+    assert not any("Saved controller log" in line for line in kept)

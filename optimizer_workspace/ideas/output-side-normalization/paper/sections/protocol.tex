@@ -1,0 +1,140 @@
+\section{Experimental protocol}
+\label{sec:protocol}
+
+\subsection{Recipe}
+
+Every run in this paper trains the same pinned configuration, summarized in
+Table~\ref{tab:recipe}. It is a 32-layer, 512-wide Llama-style transformer with
+pre-RMSNorm blocks, separate $q,k,v,o$ projections and a SwiGLU MLP at
+expansion 4, totalling 265.6M trainable parameters of which 134.3M are the
+block matrices the optimizer modifies. Training consumes 2{,}684{,}354{,}560
+tokens of a DCLM/StarCoder/Proof-Pile mixture in 5{,}120 updates at a global
+batch of 524{,}288 tokens, on eight A100-SXM4-40GB GPUs with DDP. The schedule
+holds the learning rate flat for 1{,}024 updates and then decays it linearly,
+with no warmup.
+
+Two aspects of the protocol do more work than usual and are worth stating
+plainly. First, data order is \emph{pinned by seed}: global sequence
+identifiers assign the same tokens to the same update index across all arms, so
+two runs at one seed are exactly paired update by update. Second, the first 64
+permuted windows of each training source are excluded from training and
+reserved for evaluation, which gives us a held-out metric drawn from the
+training distribution in addition to an external one.
+
+\begin{table}[t]
+\centering
+\caption{The pinned recipe. All 33 full-budget runs share every row; arms differ
+only in the optimizer's factor choices. The learning rate in the last row is the
+recipe's value, and Section~\ref{sec:tuning} shows it is not the baseline's
+optimum --- the single most consequential fact about every number in
+Section~\ref{sec:results}.}
+\label{tab:recipe}
+\scriptsize\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{llll}
+\toprule
+Model & & Training & \\
+\midrule
+Layers / width & 32 / 512 & Global batch & 524{,}288 tok. \\
+MLP width & 2048 (SwiGLU) & Updates & 5{,}120 \\
+Heads / head dim & 8 / 64 & Tokens per run & 2{,}684{,}354{,}560 \\
+Context & 4{,}096 & World size & 8 A100-40GB \\
+Vocabulary & 128{,}256 & Microbatch / accum. & 4 / 4 \\
+Block matrices & 224 (134.3M) & Schedule & 1024 flat, linear decay \\
+Total parameters & 265{,}585{,}152 & Precision & BF16, FP32 params \\
+\addlinespace
+Optimizer & & Statistics & \\
+\midrule
+Momentum / Nesterov & 0.95 / on & Moment EMA $\beta$ & 0.938 \\
+Newton--Schulz steps & 10 & Damping $\epsilon$ & $10^{-3}$ \\
+NS arithmetic & BF16 ops, FP32 out & Sampled positions & 286 per seq. \\
+Decay $\lambda$ & 0.1, shaped & Samples per update & 36{,}608 \\
+Inner / outer powers & $(1/2,\,1/8)$ & Dense refresh & 4 updates, async \\
+Matrix base LR & 0.02262741696 & Auxiliary AdamW LR & 0.0048 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Metrics, and which one decides}
+
+Each run records three quantities, and they are not interchangeable.
+
+\textbf{Selection loss} is the arm-choosing metric: a token-weighted average
+over the three reserved held-out sources using the mixture's own weights,
+$(3.8\,\text{DCLM}+0.25\,\text{StarCoder}+0.055\,\text{Proof-Pile})/4.105$.
+Each evaluation covers about 786{,}000 tokens the optimizer has never seen.
+
+\textbf{C4 loss} is the Paloma \texttt{c4\_en} validation loss over all 236
+windows, an external set held fixed across seeds. Because the reserved held-out
+windows are drawn using the training seed, selection losses are comparable only
+\emph{within} a seed, whereas C4 is comparable across them. The difference is
+large enough to mislead: our two baselines differ by $-0.048$ nats in windowed
+selection loss while differing by only $+0.001$ in windowed C4, with held-out
+components moving in opposite directions. That is the signature of a different
+evaluation sample, not a different model. Every delta we report is therefore
+taken against its \emph{own seed's} baseline, and cross-seed statements use C4.
+
+\textbf{Training loss} is recorded at every update --- 5{,}120 points per run
+against 22 evaluations --- and is by far the densest statistic available. We use
+it for resolution and consistency, never for choosing an arm. It scores data the
+optimizer has just consumed, and the ranking it produces does disagree with the
+held-out ranking: the dense lagged arm beats the leading arm on final-window
+training loss by $0.000664$ nats with a standard error of $0.000043$, fifteen
+times the error and not noise, yet it is worse on both held-out metrics. Dense
+left factors fit consumed tokens slightly better while generalizing slightly
+worse, which is exactly the pattern training loss cannot report.
+
+Evaluations run at updates $1,251,501,\dots,5001,5120$: 22 per run, of which the
+11 in the second half of the budget form our primary reporting window. We
+report that 11-point mean rather than a single final evaluation, because the
+final point alone proved too noisy to rank arms --- it was the first statistic
+this project recorded and the first one it had to stop trusting.
+
+\subsection{How small effects are resolved}
+\label{sec:protocol-stats}
+
+The effects here are a few thousandths of a nat, so the statistical question is
+not incidental. Exact pairing is what makes them measurable. Within a seed,
+every arm consumes identical tokens in identical order, so we difference
+training loss update by update and average the differences, rather than
+differencing averages. The resulting paired series has an effective standard
+error of \emph{0.000038 to 0.000064} nats for arms whose difference series is
+uncorrelated --- against candidate effects near 0.005, a margin of two orders
+of magnitude.
+
+Three arms are exceptions, and their exceptionality is informative rather than
+inconvenient. \texttt{muon} ($0.000160$), \leftall{} ($0.000115$) and
+\texttt{inner\_outer\_all\_diag} ($0.000306$) have strongly autocorrelated
+paired differences, with lag-1 coefficients $0.64$, $0.57$ and $0.82$, and they
+are also the only arms whose delta moves materially with the choice of window.
+Where an arm's trajectory is genuinely diverging from the baseline rather than
+sitting at a stable offset, no single window summarizes it, and the
+autocorrelation is the signal that this is happening. We inflate the standard
+error by the lag-1 factor throughout and report the five 536{,}870{,}912-token
+windows separately whenever an arm's delta is not flat.
+
+Two consequences for reading this paper. A difference of 0.0005 nats between
+two candidates in a paired training window is resolvable; the same difference
+between two 11-point held-out means is not, and we do not rank arms on it.
+And pairing does not survive across seeds: differencing a seed-2 run against a
+seed-0 run by update index gives a standard error of $0.001867$, forty times the
+within-seed figure, because the series is then dominated by batch composition
+rather than by the optimizer.
+
+\subsection{What we count as a result}
+
+The study ran in waves, and not all of them produced training. Three waves ---
+one arm-geometry wave, one numerical-path wave, and one production attempt ---
+stopped at correctness gates or died before their first optimizer update; their
+failures are recorded in Appendix~\ref{app:runs} and contribute no optimizer
+numbers. Separately, several completed waves re-ran configurations
+identical to earlier ones in order to measure systems changes, and their
+recorded losses are \emph{bitwise identical} to the originals across all
+5{,}120 updates. Comparing full training-loss trajectories rather than trusting
+wave labels, the \nRunDirs{} completed run directories hold \nDistinctRuns{}
+distinct trajectories, with \nDuplicateGroups{} identical groups covering
+\nDuplicateDirs{} directories; Table~\ref{tab:evidence} in
+Section~\ref{sec:limitations} lists them. Every count in this paper is of
+distinct trajectories. Reporting those repeats as
+replications would be the single easiest way to overstate this study, and we
+flag it here because the temptation is structural: deterministic repeats look
+like confirmations in any results table that does not label them.

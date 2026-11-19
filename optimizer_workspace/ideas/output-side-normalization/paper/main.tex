@@ -1,0 +1,166 @@
+% Output-side normalization in Muon-type optimizers. Build: latexmk -pdf main.tex (pdfLaTeX, as Overleaf and arXiv compile).
+% See README.md for the status of each section, how the figures are regenerated, and the evidence policy.
+\ifdefined\pdftexversion\pdfoutput=1\fi
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{placeins}
+\usepackage{mdframed}
+\usepackage{wrapfig}
+\usepackage{xurl}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage[round]{natbib}
+\PassOptionsToPackage{hyphens}{url}
+
+% The template's smile.sty and ims.bst are not redistributed with this
+% directory, so the preamble loads the standard packages they provide and the
+% bibliography uses plainnat. macro.tex and paperstyle.sty are the template's
+% own files and stay unchanged; settings of this paper go below.
+\providecommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+% macro.tex calls \captionsetup at its top and \crefname in its finding box,
+% both of which smile.sty would have provided, so caption and cleveref load
+% before it. cleveref must follow hyperref, which paperstyle.sty would
+% otherwise load later; loading it here with no options avoids an option clash
+% with paperstyle's own \RequirePackage{hyperref}.
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\input{macro.tex}
+% Page style: title panel, headings, captions, finding boxes, running header
+% (paperstyle.sty; palantir sets the title block whose tinted panel holds the
+% abstract alone).
+\usepackage[palantir]{paperstyle}
+
+\setlength{\headsep}{15pt}
+\urlstyle{tt}
+\interfootnotelinepenalty=10000
+% Table 1 compares every executed arm and needs more of a page than the 70%
+% that LaTeX allows a top float by default.
+\renewcommand{\topfraction}{0.85}
+\hypersetup{hypertexnames=false}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\graphicspath{{figs/}}
+% Every number the prose quotes from a run is written by scripts/analyze.py and
+% scripts/analyze_lr.py directly from the per-update histories, and read here
+% once, before the abstract. Editing these files by hand defeats the point.
+\input{results/run_numbers}
+\input{results/lr_numbers}
+\input{results/derived_numbers}
+\input{results/evidence_numbers}
+
+% Notation. The two sides of a linear layer's update: the input (activation)
+% second moment and the output (cotangent) second moment.
+\usepgfplotslibrary{groupplots}
+% Figure line colours: blue for arms that add output factors to the input-side
+% baseline, orange for the matched null controls whose factors are the
+% identity, purple for the cheap diagonal variants, red for arms that remove or
+% degrade the input side.
+\definecolor{laBlueLine}{HTML}{5C81AD}
+\definecolor{laOrangeLine}{HTML}{C18C54}
+\definecolor{laPurpleLine}{HTML}{9684B0}
+\newcommand{\Nten}{\mathcal{N}_{10}}
+\newcommand{\unitrms}{\operatorname{unitRMS}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Diag}{\operatorname{Diag}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\In}{\mathsf{In}}
+\newcommand{\Out}{\mathsf{Out}}
+\newcommand{\Tr}{{\mathsf T}}
+\definecolor{checkgreen}{HTML}{1B7F3B}
+\definecolor{crossred}{HTML}{C0392B}
+\newcommand{\yesmark}{\textcolor{checkgreen}{\ding{51}}}
+\newcommand{\nomark}{\textcolor{crossred}{\ding{55}}}
+% Arm names appear often enough in running text to deserve one spelling each.
+\newcommand{\muont}{\texttt{muont}}
+\newcommand{\dense}{\texttt{inner\_outer\_all}}
+\newcommand{\mlpdiag}{\texttt{inner\_outer\_mlpdiag}}
+\newcommand{\alldiag}{\texttt{inner\_outer\_leftdiag}}
+\newcommand{\outerdiag}{\texttt{outer\_leftdiag}}
+\newcommand{\fused}{\texttt{outer\_leftdiag\_fused}}
+\newcommand{\nullall}{\texttt{null\_all}}
+\newcommand{\nullmlp}{\texttt{null\_mlpdiag}}
+\newcommand{\leftall}{\texttt{left\_all}}
+
+\title{Whitening the Other Side: Output-Cotangent Moments in Muon-Type Optimizers}
+\papershorttitle{Output-Side Normalization}
+\author{\todo{authors}}
+\paperaffiliations{\todo{affiliations}}
+\papermeta{Date}{\today}
+\papermeta{Status}{Work in progress. Section~\ref{sec:program} lists what is unresolved.}
+
+\begin{document}
+
+\maketitle
+\pagestyle{paper}
+
+\begin{abstract}
+Muon-type optimizers orthogonalize the momentum of each weight matrix and, in
+their preconditioned variants, whiten it against the second moment of the
+layer's \emph{inputs}. The second moment of the layer's \emph{output cotangents}
+is equally available and is not used. We add it, defining a family of
+output-side normalized updates over a pinned 265M-parameter transformer recipe,
+and run \nDistinctRuns{} full-budget training trajectories (2.68B tokens each,
+eight A100s per run) to measure what it buys. Three results hold up. Output-side moments help
+\emph{on top of} input whitening and not instead of it: added, the best geometry
+improves held-out loss by \mlpdiagsel{} nats, while substituting output for
+input normalization is \emph{worse} than either at \leftallsel{} nats. A matched
+null control, which performs identical collection, communication and root work
+with identity factors, recovers a fifth to a third of the apparent gain, so
+reported improvements that omit such a control overstate geometry by that much.
+And freshness dominates richness: diagonal output factors recomputed exactly
+every update beat dense factors refreshed every four updates at half the step
+overhead, while deleting the widest output factor entirely is worse than
+diagonalizing it. The fourth result is cautionary and currently governs the
+others. The effect is small next to the baseline's own tuning headroom:
+tuning MuonT's learning rate alone improves the same metric by
+\lrMuontGainFromTuning{} nats, \lrHeadroomRatio{} times the largest output-side
+gain at the recipe rate, and learning rates selected on a short schedule do not
+transfer, turning two of three geometries from winners into
+\transferWorst{}-nat losers at full budget. No arm has shown a wall-clock win at
+any loss target. We therefore present output-side normalization as a measured,
+reproducible, and still-unpriced effect, and specify the small set of
+experiments --- a null at the selected rate, a full-budget learning-rate
+neighborhood, one freshness ablation, and checkpoint-only mechanistic probes ---
+that would settle whether it is worth its cost.
+\end{abstract}
+\suppressfloats[t]
+
+\input{sections/intro}
+\input{sections/background}
+\input{sections/method}
+\input{sections/protocol}
+\input{sections/results}
+\input{sections/tuning}
+\input{sections/program}
+\input{sections/limitations}
+
+\FloatBarrier
+\input{sections/conclusion}
+
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\newpage
+\appendix
+{\makeatletter\patchcmd{\l@section}{\addvspace{1.0em \@plus\p@}}{\addvspace{0.3em \@plus\p@}}{}{}\makeatother
+ \color{sectionblue}\tableofcontents}
+\input{sections/app_arms}
+\input{sections/app_runs}
+\input{sections/app_numerics}
+
+\end{document}

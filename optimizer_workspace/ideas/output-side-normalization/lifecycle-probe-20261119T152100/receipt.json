@@ -1,0 +1,63 @@
+{
+  "artifacts": {
+    "evidence.json": {
+      "bytes": 95007,
+      "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100/evidence.json",
+      "sha256": "8bc5af6d7593a6ccaccd978d5109549d9af6f1f48f47abb4598331ad1cbb08db"
+    },
+    "probe.log": {
+      "bytes": 4961,
+      "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100/probe.log",
+      "sha256": "8ab1604f9a43195cd37cb1da1dada1b304818eea6cdaf4db6f70d3165c6af6a1"
+    },
+    "probe_owned_process_lifecycle.py": {
+      "bytes": 29008,
+      "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100/probe_owned_process_lifecycle.py",
+      "sha256": "ee3f2a044b24bfcc5bfc522a479994b3ae2311f373eb084971a55524f73cbdd8"
+    },
+    "source.json": {
+      "bytes": 1645,
+      "path": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/lifecycle-probe-20261119T152100/source.json",
+      "sha256": "7d336c773782767bc6fa56bf083a1577703eb9606df4ed1d1ee776f7b4ae6b51"
+    }
+  },
+  "authority": "cpu_synthetic_evidence_only_no_acceptance_or_launch",
+  "cleanup": {
+    "reaped_during_cleanup": [],
+    "remaining_children": []
+  },
+  "finished": {
+    "local": "2026-11-19T15:20:16.776728+08:00",
+    "monotonic_ns": 9406972333142919,
+    "unix_ns": 1795072816776727833,
+    "utc": "2026-11-19T07:20:16.776728+00:00"
+  },
+  "kernel": {
+    "boot_id": "8981427f-860a-4980-bc36-8e580cc27ef6",
+    "clock_ticks_per_second": 100,
+    "machine": "x86_64",
+    "nodename": "TENCENT64.site",
+    "proc_version": "Linux version 5.4.241-1-tlinux4-0017.7 (mockbuild@VM-81-80-TS3) (gcc version 8.5.0 20210514 (TencentOS 8.5.0-18) (GCC)) #1 SMP Thu Jan 18 11:33:00 CST 2024",
+    "release": "5.4.241-1-tlinux4-0017.7",
+    "sysname": "Linux",
+    "version": "#1 SMP Thu Jan 18 11:33:00 CST 2024"
+  },
+  "limitations": [
+    "Synthetic CPU controls establish possible mechanisms, not the recovery failure's cause.",
+    "8192 anonymous mappings widen exit teardown; no training frequency is measured.",
+    "A missed pre-zombie window is inconclusive and is retained as not observed.",
+    "PF_EXITING describes a task; nonleader exec can preserve the process PID and start time.",
+    "Separate /proc reads and complete group rescans are not atomic kernel snapshots.",
+    "Rescans cover only private probe process groups, not all production marked owners.",
+    "A changed cmdline or missing marker cannot alone distinguish exec, mutation, or teardown.",
+    "No GPU validation, successor acceptance, production result, or kernel-cause attribution is issued."
+  ],
+  "schema": "owned_process_lifecycle_receipt_v1",
+  "started": {
+    "local": "2026-11-19T15:20:16.383232+08:00",
+    "monotonic_ns": 9406971939676224,
+    "unix_ns": 1795072816383232012,
+    "utc": "2026-11-19T07:20:16.383232+00:00"
+  },
+  "status": "completed"
+}

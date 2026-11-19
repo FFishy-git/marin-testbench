@@ -1,0 +1,104 @@
+\section{Background}
+\label{sec:background}
+
+\paragraph{Muon and its preconditioned variants.}
+For a weight matrix $W\in\mathbb R^{m\times n}$ with gradient $G_t$, Muon
+\citep{jordan2024muon} maintains momentum $M_t=\mu M_{t-1}+G_t$ with a Nesterov
+source $U_t=G_t+\mu M_t$, and steps along an approximately orthogonalized
+version of $U_t$. The orthogonalization is a fixed-degree polynomial iteration
+rather than an exact polar factor: with $X_0=U_t/(\|U_t\|_F+\varepsilon)$ and
+coefficients $(a,b,c)=(3.4445,-4.7750,2.0315)$,
+\begin{equation}
+\label{eq:ns}
+X_{k+1}=aX_k+\left(bA_k+cA_k^2\right)X_k,\qquad A_k=X_kX_k^{\Tr},
+\end{equation}
+run for a fixed number of steps, ten in the recipe we pin. We write $\Nten$ for
+this map and stress throughout that it is a finite, rounded iteration: our
+measurements in Appendix~\ref{app:numerics} show its ten-step output sits at
+cosine $0.979$ to a partial polar factor, so identities that hold for the exact
+polar decomposition cannot be substituted for it.
+
+Preconditioned variants whiten before orthogonalizing. Let
+$C_t$ be an exponential moving average of the layer's input second moment,
+$x x^{\Tr}$, sampled over token positions. For a PSD moment
+$F\in\mathbb R^{d\times d}$ with positive trace, define the trace-normalized,
+damped moment and its two roots
+\begin{equation}
+\label{eq:factors}
+A_d(F)=\frac{dF}{\tr F}+\epsilon I_d,\qquad
+\In_d(F)=A_d(F)^{-1/2},\qquad
+\Out_d(F)=\frac{\sqrt d\,A_d(F)^{-1/8}}{\|A_d(F)^{-1/8}\|_F},
+\end{equation}
+with $\epsilon=10^{-3}$ and spectral (not elementwise) powers. The inner root
+is unnormalized; the outer root is scaled to unit RMS. Writing
+$R=\In_n(C_t)$ and $\hat R=\Out_n(C_t)$, the input-side baseline's update
+is\footnote{\todo{citation for the pinned preconditioned-MuonT implementation
+these runs adapt.}}
+\begin{equation}
+\label{eq:muont}
+\Delta W_t=-\eta_t\Bigl[\,s\,\Nten\!\left(U_tR\right)\hat R
+\;+\;\lambda\,W_t\hat R^{2}\Bigr],
+\qquad s=\sqrt{\max(1,m/n)} .
+\end{equation}
+Both factors act on the \emph{right}, because both are built from input
+statistics, and the decay term is shaped by the outer factor. The split powers
+$(1/2,1/8)$ rather than $(1/4,1/4)$ are the pinned recipe's choice. This is the
+optimizer we call input-side MuonT and treat as the baseline to beat.
+
+\paragraph{The unused side.}
+Since $G=\delta x^{\Tr}$, the layer's gradient statistics have two natural
+second moments, and \eqref{eq:muont} uses one. Let $\delta$ be the cotangent at
+the layer's output and
+\begin{equation}
+\label{eq:bmoment}
+B_t=\beta B_{t-1}+(1-\beta)\frac{1}{N_t}\sum_{j=1}^{N_t}\delta_{t,j}\delta_{t,j}^{\Tr},
+\end{equation}
+sampled at the same token positions as $C_t$. Then $L=\In_m(B_t)$ and
+$\hat L=\Out_m(B_t)$ are output-side analogues of $R$ and $\hat R$, and they act
+on the \emph{left}. The whole family of updates we study is obtained by
+choosing which of the four factors to apply:
+\begin{equation}
+\label{eq:family}
+\Delta W_t=-\eta_t\Bigl[\,s\,\hat L\,\Nten\!\left(L\,U_t\,R\right)\hat R
+\;+\;\lambda\,W_t\hat R^{2}\Bigr],
+\end{equation}
+with absent factors read as the identity. Equation~\eqref{eq:muont} is the case
+$L=\hat L=I$; the arms of Section~\ref{sec:method} are the other cases.
+
+\paragraph{What $B$ is and is not.}
+It is worth being precise, because the motivation for \eqref{eq:family} is
+easy to overstate and our results do not test the strong version of it. $B_t$ as
+defined in \eqref{eq:bmoment} is an \emph{uncentered second moment of observed
+cotangents}. It is not an expectation under the model's own predictive
+distribution, so it is not automatically a Fisher or
+generalized Gauss--Newton factor; it is the empirical-Fisher-style quantity
+whose limitations are well documented \citep{kunstner2019limitations}. Treating
+$B\otimes C$ as a curvature model additionally assumes a Kronecker
+factorization, as K-FAC does \citep{martens2015kfac}, and that approximation
+discards cross-token terms which may matter at these sequence lengths. We have
+not measured whether it holds here --- Section~\ref{sec:program} lists the
+check --- so throughout this paper we treat $B$ as a \emph{normalizing
+statistic that happens to be available}, and our claims are about what
+applying it does to the loss, not about why.
+
+One further caveat shapes the arm design. An exact polar factor of a
+full-row-rank wide matrix $P$ satisfies $PP^{\Tr}=I$, which would make a left
+factor applied after orthogonalization look redundant. It is not redundant
+here, for two reasons: $\Nten$ is finite and rounded rather than exact, and the
+outer input factor $\hat R$ is applied after it, so the final direction's
+geometry is not the polar factor's. This is also why we do not assume the
+inner-left and outer-left factors play symmetric roles, and why arms that apply
+only $\hat L$ are measured separately from arms that apply both.
+
+\paragraph{Related constructions.}
+Full-matrix and Kronecker-factored preconditioners
+\citep{martens2015kfac,gupta2018shampoo,anil2020scalable} use both sides of the
+gradient but do not orthogonalize, and the Shampoo family routinely accepts
+preconditioner staleness of hundreds of steps; our freshness result
+(Section~\ref{sec:freshness}) is a measurement of how much a four-update
+staleness costs in the Muon setting, where the orthogonalization already
+supplies much of the conditioning. SOAP \citep{vyas2024soap} and other recent
+hybrids sit between these regimes. We discuss the relationship in
+Section~\ref{sec:related}; the short version is that our arms are not
+reproductions of any published method, and where a published form is close we
+label our version a formula control rather than a reproduction.

@@ -1,7 +1,7 @@
 # Copyright The Marin Authors
 # SPDX-License-Identifier: Apache-2.0
 
-"""Refresh a bounded ENDEAVOR ledger from saved monitoring and result receipts."""
+"""Refresh the detailed ledger and authoritative research summary from saved receipts."""
 
 import argparse
 import fcntl
@@ -48,6 +48,16 @@ from fused_continuation_controller import cpu_command as continuation_controller
 from fused_continuation_controller import fixture_names as continuation_controller_fixture_names
 from fused_continuation_controller import inventory as continuation_inventory
 from fused_continuation_validation import COMPLETE_STATUS as CONTINUATION_COMPLETE_STATUS
+from ns_budget_reporting import lines as ns_budget_lines
+from ns_full_model_queue_reporting import lines as ns_full_model_queue_lines
+from ns_lr_full_model_queue_reporting import lines as ns_lr_full_model_queue_lines
+from ns_training_path_exit_followup_reporting import lines as ns_training_path_exit_followup_lines
+from ns_training_path_exit_reporting import lines as ns_training_path_exit_lines
+from ns_training_path_lr_queue_reporting import lines as ns_training_path_lr_queue_lines
+from ns_training_path_recovery_reporting import lines as ns_training_path_recovery_lines
+from ns_training_path_reporting import lines as ns_training_path_lines
+from ns_training_path_transition_followup_reporting import lines as ns_training_path_transition_followup_lines
+from ns_training_path_transition_reporting import lines as ns_training_path_transition_lines
 from owned_output_production import require_archive as require_owned_production_archive
 from owned_output_run_history import CHANGES as OWNED_PRODUCTION_CHANGES
 from prepare_fixed_age_tuning import require_source as require_selected_lr_source
@@ -81,6 +91,8 @@ from prepare_selected_lr_full_budget import full_config as selected_lr_full_conf
 from prepare_selected_lr_production import CHANGES as SELECTED_LR_DENIED_CHANGES
 from prepare_selected_lr_validation import require_archive as require_selected_lr_archive
 from prepare_upstream_full_model import cpu_test_commands
+from rational_continuation_reporting import lines as rational_continuation_lines
+from rational_continuation_reporting import save_live_observation as save_rational_continuation_observation
 from root_preparation_contract import CPU_STATUS as ROOT_PREPARATION_CPU_STATUS
 from root_preparation_contract import PREPARATION as ROOT_PREPARATION
 from root_preparation_contract import PREPARED_STATUS as ROOT_PREPARATION_STATUS
@@ -111,6 +123,32 @@ from wave7_release import candidate_inventory
 START = "<!-- BEGIN AUTOMATED WAVE LEDGER -->"
 END = "<!-- END AUTOMATED WAVE LEDGER -->"
 ANCHOR = "## Verification and Remaining Work"
+SUMMARY_START = "<!-- BEGIN AUTOMATED RESEARCH STATUS -->"
+SUMMARY_END = "<!-- END AUTOMATED RESEARCH STATUS -->"
+SUMMARY_ANCHOR = "## Document Management"
+SPLIT_REFERENCE = "[`DETAILS.md`](DETAILS.md)"
+DIGEST = re.compile(r"`[0-9a-f]{32,}`")
+DIGEST_CLAUSE = re.compile(r"[;,]?\s*(?:and\s+)?(?:its\s+|the\s+)?[\w /-]*SHA-?256(?:\s+is|:)?\s*" + DIGEST.pattern)
+DIGEST_SENTENCE = re.compile(r"(?:^|(?<=[.;]\s))[^.;]*SHA-?256[^.;]*" + DIGEST.pattern + r"[^.;]*\.?")
+SUMMARY_SECTIONS = {
+    "Fused Matched-Null Full-Schedule Neighborhood",
+    "Fused Attribution Actual-Config Validation",
+    "Restored-Root GPU Diagnostic",
+    "Independent Failed-Root Reconstruction",
+    "Root-Stage Terminal And Precision Follow-Up",
+    "Separately Owned CUDA Start-Accuracy Trial",
+    "Rational-Start Full-Model Continuation Diagnostic",
+    "NS Budget Diagnostic And Queue",
+    "NS Full-Model Validation Queue",
+    "NS Actual-LR Validation Queue",
+    "NS Original-Training-Path Diagnostic",
+    "NS Marker-Exit Recovery Diagnostic",
+    "NS Whole-Process Exit-Drain Diagnostic",
+    "NS Mixed-Exit-Bracket Diagnostic",
+    "NS Transition Independent Terminal Waiter",
+    "NS Exit-Drain Independent Terminal Waiter",
+    "NS Actual-LR Training-Path Queue",
+}
 LOCAL_ZONE = ZoneInfo("Asia/Shanghai")
 OWNED_VALIDATORS = {
     "owned-output-full-model": ("Owned-Output Full-Model Validation", "run_owned_output_validation.py"),
@@ -3388,6 +3426,17 @@ def render(root: Path, now: datetime) -> str:
     lines.extend(saved_ns_replay_cpu_lines(root))
     lines.extend(root_preparation_cpu_lines(root))
     lines.extend(root_executor_lines(root, local_time))
+    lines.extend(rational_continuation_lines(root, local_time))
+    lines.extend(ns_budget_lines(root, local_time))
+    lines.extend(ns_full_model_queue_lines(root, local_time))
+    lines.extend(ns_lr_full_model_queue_lines(root, local_time))
+    lines.extend(ns_training_path_lines(root, local_time))
+    lines.extend(ns_training_path_recovery_lines(root, local_time))
+    lines.extend(ns_training_path_exit_lines(root, local_time))
+    lines.extend(ns_training_path_transition_lines(root, local_time))
+    lines.extend(ns_training_path_transition_followup_lines(root, local_time))
+    lines.extend(ns_training_path_exit_followup_lines(root, local_time))
+    lines.extend(ns_training_path_lr_queue_lines(root, local_time))
     lines.extend(selected_lr_production_cpu_lines(root))
     selected_lr_bound = {}
     for wave in ("wave11", "wave12"):
@@ -4030,34 +4079,122 @@ def render(root: Path, now: datetime) -> str:
     return "\n".join(lines)
 
 
+def without_digests(block: list[str]) -> list[str]:
+    """Drop digest citations from research-record lines; DETAILS.md keeps the full payload.
+
+    A line whose only content is a digest citation is removed outright. A line that
+    also carries a reading keeps that reading with the digest clause stripped, so the
+    research record states findings and the detailed ledger carries their receipts.
+    """
+    kept = []
+    for line in block:
+        if not DIGEST.search(line):
+            kept.append(line)
+            continue
+        if line.lstrip().startswith("|"):
+            kept.append(DIGEST.sub("", line))
+            continue
+        text = DIGEST_CLAUSE.sub("", line)
+        if DIGEST.search(text):
+            text = DIGEST_SENTENCE.sub("", text)
+        text = re.sub(r"\s{2,}", " ", re.sub(r"\.\s*\.", ".", text)).rstrip()
+        if DIGEST.search(text) or not re.search(r"[A-Za-z0-9]", text.strip(" .;,|-")):
+            continue
+        kept.append(text)
+    return kept
+
+
+def research_summary(payload: str, now: datetime) -> str:
+    """Keep recent verified wave reports and diagnostic limitations in the research record."""
+    sections = []
+    for line in payload.splitlines():
+        if line.startswith("### "):
+            sections.append((line.removeprefix("### "), []))
+        if sections and line != END:
+            sections[-1][1].append(line)
+    waves = {int(match.group(1)) for title, _ in sections if (match := re.fullmatch(r"wave(\d+)(?:-baseline)?", title))}
+    recent = set(sorted(waves)[-2:])
+    lines = [
+        SUMMARY_START,
+        "## Recurring Experiment Status",
+        "",
+        f"Refreshed {local_time(now.isoformat())}, Asia/Shanghai, from the same authenticated",
+        "receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).",
+        "Receipt times below are historical observations, not fresh process or GPU checks.",
+        "Only the two latest numbered wave reports and current diagnostic gates appear here.",
+        "Earlier results, large-window comparisons and manual experiment decisions remain above.",
+        "Candidate-minus-reference loss deltas are in nats; negative is better. Late means",
+        "use the final half of common observed tokens. Interim windows and correctness probes",
+        "do not establish full-budget quality, efficiency, production approval or cloud verification.",
+        "",
+    ]
+    for title, block in sections:
+        match = re.fullmatch(r"wave(\d+)(?:-baseline)?", title)
+        if title in SUMMARY_SECTIONS or (match and int(match.group(1)) in recent):
+            lines.extend(without_digests(block))
+    lines.append(SUMMARY_END)
+    return "\n".join(lines)
+
+
+def replace_block(original: str, payload: str, start: str, end: str, anchor: str) -> str:
+    """Replace one bounded block, refusing missing or ambiguous document boundaries."""
+    if start in original or end in original:
+        if original.count(start) != 1 or original.count(end) != 1:
+            raise ValueError("Ambiguous automated ledger markers")
+        begin, finish = original.index(start), original.index(end)
+        if finish < begin:
+            raise ValueError("Reversed automated ledger markers")
+        return original[:begin] + payload + original[finish + len(end) :]
+    if original.count(anchor) != 1:
+        raise ValueError("Cannot locate the existing endeavor's ledger insertion point")
+    return original.replace(anchor, payload + "\n\n" + anchor, 1)
+
+
+def publish_documents(originals: dict[Path, str], revisions: dict[Path, str]) -> None:
+    """Stage every replacement and check all originals before publishing either document."""
+    staged = {}
+    try:
+        for document, revised in revisions.items():
+            with tempfile.NamedTemporaryFile(mode="w", dir=document.parent, delete=False) as stream:
+                temporary = Path(stream.name)
+                staged[document] = temporary
+                stream.write(revised)
+                stream.flush()
+                os.fsync(stream.fileno())
+            temporary.chmod(document.stat().st_mode & 0o777)
+        if any(document.read_text() != original for document, original in originals.items()):
+            raise RuntimeError("ENDEAVOR changed during refresh; refusing to replace concurrent edits")
+        for document, temporary in staged.items():
+            temporary.replace(document)
+    finally:
+        for temporary in staged.values():
+            temporary.unlink(missing_ok=True)
+
+
 def update(document: Path, root: Path, now: datetime) -> None:
+    """Refresh either the original combined journal or both documents after its split."""
     with (root / ".endeavor-update.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        original = document.read_text()
+        research = document.with_name("ENDEAVOR.md")
+        details = document.with_name("DETAILS.md")
+        split = (
+            document.name in ("ENDEAVOR.md", "DETAILS.md")
+            and research.is_file()
+            and SPLIT_REFERENCE in research.read_text()
+        )
+        documents = (details, research) if split else (document,)
+        originals = {path: path.read_text() for path in documents}
         payload = render(root, now)
-        if START in original or END in original:
-            if original.count(START) != 1 or original.count(END) != 1:
-                raise ValueError("Ambiguous automated ledger markers")
-            begin, end = original.index(START), original.index(END)
-            if end < begin:
-                raise ValueError("Reversed automated ledger markers")
-            revised = original[:begin] + payload + original[end + len(END) :]
-        else:
-            if original.count(ANCHOR) != 1:
-                raise ValueError("Cannot locate the existing endeavor's ledger insertion point")
-            revised = original.replace(ANCHOR, payload + "\n\n" + ANCHOR, 1)
-        with tempfile.NamedTemporaryFile(mode="w", dir=document.parent, delete=False) as stream:
-            temporary = Path(stream.name)
-            stream.write(revised)
-            stream.flush()
-            os.fsync(stream.fileno())
-        try:
-            temporary.chmod(document.stat().st_mode & 0o777)
-            if document.read_text() != original:
-                raise RuntimeError("ENDEAVOR changed during refresh; refusing to replace concurrent edits")
-            temporary.replace(document)
-        finally:
-            temporary.unlink(missing_ok=True)
+        revisions = {documents[0]: replace_block(originals[documents[0]], payload, START, END, ANCHOR)}
+        if split:
+            revisions[research] = replace_block(
+                originals[research],
+                research_summary(payload, now),
+                SUMMARY_START,
+                SUMMARY_END,
+                SUMMARY_ANCHOR,
+            )
+        publish_documents(originals, revisions)
 
 
 def main() -> None:
@@ -4074,6 +4211,12 @@ def main() -> None:
             print(json.dumps(refresh_running_capture(args.root, datetime.now(UTC), wave=wave)))
         except (ValueError, KeyError, OSError, subprocess.SubprocessError) as error:
             print(json.dumps({"status": f"{wave}_capture_refused", "error": f"{type(error).__name__}: {error}"}))
+    try:
+        print(json.dumps(save_rational_continuation_observation(args.root, datetime.now(UTC))))
+    except (ValueError, KeyError, OSError, RuntimeError, subprocess.SubprocessError) as error:
+        print(
+            json.dumps({"status": "rational_continuation_capture_refused", "error": f"{type(error).__name__}: {error}"})
+        )
     update(args.document, args.root, datetime.now(UTC))
 
 

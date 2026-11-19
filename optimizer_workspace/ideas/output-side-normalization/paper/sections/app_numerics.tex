@@ -1,0 +1,110 @@
+\section{The finite Newton--Schulz map}
+\label{app:numerics}
+
+The arms' derivation treats $\Nten$ as if it produced a polar factor. It does
+not, and quantifying the gap turned out to matter for two separate reasons: it
+bounds how far the geometric motivation can be trusted, and it exposed an
+efficiency lever that is independent of the output side. Both measurements below
+are CPU studies on authenticated tensors saved from the runs; neither is a
+training result.
+
+\subsection{How far ten steps is from a polar factor}
+
+On 32 saved $512\times512$ matrices drawn from a mid-training update, we
+compared $\Nten$'s output against a partial polar reference computed by SVD in
+FP64, zeroing directions below a relative threshold. The map's output sits at a
+mean cosine of $0.979$ to that reference with a mean relative error of $0.211$.
+
+Two consequences. First, identities that hold for an exact polar factor ---
+notably $PP^{\Tr}=I$ for a full-row-rank wide matrix, which would make a
+post-orthogonalization left factor look redundant --- do not transfer, and the
+arms that apply only the outer left factor are therefore not trivially
+equivalent to the baseline. Second, the finite map is sensitive: all 32
+matrices are numerically rank 512 under this convention, but the batch-wide
+smallest singular values are around $2\times10^{-10}$, and that
+near-deficiency is what makes the iteration amplify tiny input differences.
+
+\subsection{A direction plateau at seven steps}
+
+Varying the step budget $q\in\{3,5,7,10\}$ at fixed coefficients and
+normalization gives the geometry and cost in Table~\ref{tab:nsbudget}.
+
+\begin{table}[t]
+\centering
+\caption{Newton--Schulz step budget against direction geometry and nominal
+cost, on saved mid-training tensors. ``Products'' counts matrix multiplications
+per step times steps. Cosine and relative error are means against the partial
+polar reference, under single-BF16-operand emulation matching the training
+arithmetic. Seven steps matches ten on both geometry measures at 30\% fewer
+products; three steps discards real direction information.}
+\label{tab:nsbudget}
+\footnotesize
+\begin{tabular}{rrrr}
+\toprule
+Steps $q$ & Nominal products & Mean cosine to polar & Mean relative error \\
+\midrule
+3 & 9 & $0.774263$ & $0.652564$ \\
+5 & 15 & $0.951345$ & $0.309694$ \\
+7 & 21 & $\mathbf{0.980342}$ & $\mathbf{0.211339}$ \\
+10 & 30 & $0.979295$ & $0.211032$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Seven steps is indistinguishable from ten on direction geometry --- marginally
+better on cosine, marginally worse on relative error --- while using 30\% fewer
+matrix products. Five steps is measurably worse but may still be a reasonable
+trade. This is a genuine efficiency lever, and because Newton--Schulz is the
+dominant per-matrix cost in \emph{every} arm including the baseline, it would
+benefit all of them.
+
+It must not be described as an implementation speedup. Five- and seven-step
+directions differ from ten-step directions by relative errors of $0.411688$ and
+$0.375523$, so changing the budget changes the optimizer, and any such arm needs
+its own quality comparison. Section~\ref{sec:nonprogram} argues the right first
+test is a three-point budget comparison on the baseline alone, not the
+54-configuration sweep that crossing this with every geometry would require.
+
+\subsection{What the checkpoint-continuation failure did and did not show}
+
+One wave failed a gate requiring that training continuously to update 24 match
+resuming from a checkpoint at update 22. The mismatch is real and large: at
+update 24, 460 of 2{,}191 rank-specific tensors exceed
+$\text{rtol}=10^{-5}$, $\text{atol}=10^{-6}$, across all eight ranks, while at
+update 22 all 2{,}127 compared tensors are exactly equal. We spent
+considerable effort localizing it, and the outcome is worth recording compactly
+because it is a cautionary tale about where such effort goes.
+
+The divergence localizes to the Newton--Schulz map's input sensitivity rather
+than to any incorrect kernel. Gradients are bitwise exact at the divergence
+point; root inputs are exact apart from process-local graph flags; a tiny
+difference in the map's input is amplified from a relative Frobenius error of
+$1.45\times10^{-6}$ to $0.0369$ in its output, reproducibly, on GPU and in CPU
+emulation. We then tested three candidate fixes, and all three failed:
+\begin{itemize}
+\item \textbf{Higher operand precision.} Compensated products that retain
+  low-order BF16 components reduce the output pair's relative error from
+  $0.0368$ (single product) through $6.79\times10^{-5}$ (three products) to
+  $3.68\times10^{-5}$ (six products), against FP32's $3.74\times10^{-5}$ and
+  FP64's $3.66\times10^{-5}$. Every one of them still fails the original
+  tolerance, including the FP64 reference, so operand precision alone is not the
+  cause.
+\item \textbf{Fewer steps.} Every step budget also fails, so the amplification
+  is not merely an artifact of iterating ten times.
+\item \textbf{A cancellation-free start.} Replacing a subtraction of nearby
+  inverse-quarter powers in the map's initialization with an equivalent
+  positive-pair rational form improves start accuracy by four orders of
+  magnitude --- worst-group errors fall from $6.1\times10^{-5}$ to
+  $8.0\times10^{-9}$, and all 32 matrices pass an FP64 gate that the original
+  form fails --- and does \emph{not} fix the continuation, because both forms
+  are already exact for the continuous-versus-resumed comparison.
+\end{itemize}
+
+The honest summary is that a finite, rounded, near-rank-deficient polynomial
+iteration is sensitive enough that bitwise checkpoint continuation is the wrong
+gate for it, and that chasing numerical reproducibility in this component
+consumed effort that the experiments in Section~\ref{sec:program} would have
+used better. We record it because the failure is instructive and because two
+of its by-products --- the step-budget plateau above and the improved start
+form --- are useful independently of the gate that motivated them. Neither has
+been validated at full model scale.
