@@ -1,0 +1,38 @@
+{
+  "time": "2026-11-15T09:13:18.260538+00:00",
+  "proxy": "http://star-proxy.oa.com:3128",
+  "hf_authorization_configured": false,
+  "datasets": {
+    "mlfoundations/dclm-baseline-1.0": {
+      "recorded_revision": "a3b142c",
+      "resolved_revision": "a3b142c183aebe5af344955ae20836eb34dcf69b",
+      "accessible_metadata": true,
+      "gated": false
+    },
+    "bigcode/starcoderdata": {
+      "recorded_revision": "9fc30b5",
+      "resolved_revision": "9fc30b578cedaec69e47302df72cf00feed7c8c4",
+      "accessible_metadata": true,
+      "gated": "auto"
+    },
+    "EleutherAI/proof-pile-2": {
+      "recorded_revision": "901a927",
+      "resolved_revision": "901a9273a770e9d4138c5ddd91802f9c5c6cdc4b",
+      "accessible_metadata": true,
+      "gated": false
+    },
+    "allenai/paloma": {
+      "recorded_revision": "65cd6fc",
+      "resolved_revision": "65cd6fc59dba021b21db414fa5e8d7765ffbe5e6",
+      "accessible_metadata": true,
+      "gated": "auto"
+    }
+  },
+  "tokenizer": {
+    "repo": "meta-llama/Meta-Llama-3.1-8B",
+    "revision": "d04e592bb4f6aa9cfee91e2e20afa771667e1d4b",
+    "accessible": false,
+    "http_status": 401
+  },
+  "limitation": "Dataset metadata access does not establish access to all source files."
+}

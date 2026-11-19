@@ -4,6 +4,7 @@
 """Check source-derived finite maps and trace-transparency refusal on CPU."""
 
 import copy
+from contextlib import contextmanager
 from pathlib import Path
 
 import ns_compiler_localization as localization
@@ -127,6 +128,51 @@ def test_localization_rejects_changed_pinned_source_before_building_maps(source_
     path.write_bytes(source_path.read_bytes().replace(b"3.4445", b"3.4446"))
     with pytest.raises(ValueError):
         localization.compiler_maps(path, uncompiled, mode="f32", steps=5, eps=1e-5)
+
+
+@pytest.mark.parametrize("timing", ("during_guard", "after_guard"))
+def test_localization_path_replacement_never_executes_unverified_definitions(source_path, tmp_path, monkeypatch, timing):
+    path, retained = tmp_path / "muon.py", tmp_path / "retained.py"
+    replacement, side_effect = tmp_path / "replacement.py", tmp_path / "unverified-write"
+    source = source_path.read_bytes()
+    path.write_bytes(source)
+    malicious = (
+        f"ABC = (__import__('pathlib').Path({str(side_effect)!r}).write_text('unverified'), (9.0, 9.0, 9.0))[1]"
+    ).encode()
+    replacement.write_bytes(source.replace(b"ABC = (3.4445, -4.7750, 2.0315)", malicious))
+    reference = source_definitions(source_path, ("ABC", "_bmm", "newton_schulz_batched"), {"torch": torch})
+    bound_file = localization.replay.analyzer._bound_file
+
+    @contextmanager
+    def replace_at_boundary(path, expected_sha256):
+        with bound_file(path, expected_sha256) as stream:
+            if timing == "during_guard":
+                path.rename(retained)
+                replacement.rename(path)
+            yield stream
+        if timing == "after_guard":
+            path.rename(retained)
+            replacement.rename(path)
+
+    monkeypatch.setattr(localization.replay.analyzer, "_bound_file", replace_at_boundary)
+    try:
+        if timing == "during_guard":
+            with pytest.raises(ValueError):
+                localization.source_namespace(path)
+        else:
+            namespace, *_ = localization.source_namespace(path)
+            batch = matrix_batch((2, 3, 5))
+            expected = reference["newton_schulz_batched"](batch, 5, 1e-5, mode="f32")
+            actual = namespace["newton_schulz_batched"](batch, 5, 1e-5, mode="f32")
+            torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+            assert namespace["ABC"] == reference["ABC"]
+            for name in ("_bmm", "newton_schulz_batched"):
+                assert namespace[name].__code__.co_filename == str(path)
+        assert not side_effect.exists()
+    finally:
+        if retained.exists():
+            path.unlink()
+            retained.rename(path)
 
 
 def protocol_fixture(source_path):

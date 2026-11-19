@@ -1,0 +1,72 @@
+{
+  "captured_on": "2026-11-15",
+  "timezone": "Asia/Shanghai",
+  "repository_revision": "6e09d9043eb71d7bd487b5e3d79e275b95c454fd",
+  "proposal": {
+    "path": "original-proposal.txt",
+    "sha256": "2ab5d88ea85e0531526b31a5e800d625d017227483564ccd4d671220adbeaad2",
+    "modified": false
+  },
+  "sources": [
+    {
+      "original": "lib/levanter/src/levanter/analysis/backward_flow.py",
+      "snapshot": "local-sources/backward_flow.py",
+      "bytes": 44192,
+      "sha256": "ab49de5db5dcf8f60bd6da87e7c39ea04096e05e60d87200300145f44ddc7279"
+    },
+    {
+      "original": "lib/levanter/config/gpt2_small_fast_muon.yaml",
+      "snapshot": "local-sources/gpt2_small_fast_muon.yaml",
+      "bytes": 507,
+      "sha256": "1cd9ffc3be82d76cea426534ab7576aa919791d57411653501553756035e557c"
+    },
+    {
+      "original": "lib/levanter/src/levanter/grad_accum.py",
+      "snapshot": "local-sources/grad_accum.py",
+      "bytes": 7788,
+      "sha256": "666beea8c96da17823c0bba37d43f73576308475578e4b9c7b6eb7b75c21bd3d"
+    },
+    {
+      "original": "experiments/grug/base/launch.py",
+      "snapshot": "local-sources/grug_base_launch.py",
+      "bytes": 9680,
+      "sha256": "4bbc44055d6182705b8ee30145c6c29b04792e02100f503a9503c7c40dae45fc"
+    },
+    {
+      "original": "experiments/grug/base/model.py",
+      "snapshot": "local-sources/grug_base_model.py",
+      "bytes": 10532,
+      "sha256": "46232faf75a958a7b31347c688039d649338f9404fc59f2d6fa6a2d559365e18"
+    },
+    {
+      "original": "experiments/grug/base/train.py",
+      "snapshot": "local-sources/grug_base_train.py",
+      "bytes": 25207,
+      "sha256": "fb586df938311433cb9dec2b3b40dccee8fef79aa21c57639f1136ad3952745e"
+    },
+    {
+      "original": "lib/levanter/src/levanter/optim/grugmuon.py",
+      "snapshot": "local-sources/grugmuon.py",
+      "bytes": 12741,
+      "sha256": "bffecb09572c8459b62ab9cfcef447e9c2e3c12ba5945ce7e7727805e25ea982"
+    },
+    {
+      "original": "lib/levanter/src/levanter/optim/muon.py",
+      "snapshot": "local-sources/muon.py",
+      "bytes": 7018,
+      "sha256": "823e9abbc6e9718930e78370ea675edfd367d7c98a228292ace3c8b21764133b"
+    },
+    {
+      "original": "lib/levanter/src/levanter/optim/util.py",
+      "snapshot": "local-sources/muon_util.py",
+      "bytes": 12305,
+      "sha256": "b6022dd77d8c35eaeaf349da4df1885deaba752e13ec07a2e2f070d607658f58"
+    },
+    {
+      "original": "lib/levanter/src/levanter/optim/soap.py",
+      "snapshot": "local-sources/soap.py",
+      "bytes": 31777,
+      "sha256": "78d8ea3b68c5b526067380bdd6907779b314f7ab9a94af1988e944416439bef4"
+    }
+  ]
+}

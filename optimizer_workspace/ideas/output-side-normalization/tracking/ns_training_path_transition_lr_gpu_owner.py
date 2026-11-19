@@ -14,6 +14,7 @@ SOURCE_SHA256 = "8424a3c1ecd55d081bda1f7c1f6147893accb0bde0c6f756b1a83e4f81f7bb3
 
 def runtime_source() -> bytes:
     tree = derivation.transform(Path(__file__).with_name("ns_training_path_lr_gpu_owner.py"), SOURCE_SHA256)
+    tree.body.insert(1, ast.parse("import ns_training_path_transition_lr_parent as bridge").body[0])
     replacements = {
         "PREDECESSOR_RECEIPT": repr(bridge.CPU),
         "PREDECESSOR_RECEIPT_SHA256": repr(bridge.CPU_SHA256),

@@ -1,0 +1,388 @@
+{
+  "retrieved_on": "2026-11-15",
+  "timezone": "Asia/Shanghai",
+  "proxy": "http://star-proxy.oa.com:3128",
+  "training_or_checkpoint_experiments_performed": false,
+  "original_proposal_sha256": "2ab5d88ea85e0531526b31a5e800d625d017227483564ccd4d671220adbeaad2",
+  "sources": [
+    {
+      "path": "external-sources/toner-blog-pinned.html",
+      "bytes": 3644748,
+      "sha256": "0bdeeae06da5b7f5f4da54ba043a09d1d4b623b737fc44f56ac74b4b9011a8a4",
+      "reference_id": "toner",
+      "source_urls": [
+        "https://mohamad-amin.github.io/blog/toner",
+        "https://github.com/mohamad-amin/Toner"
+      ],
+      "commit": "453badd98fe389f009884063ca88378db15bf582",
+      "git_blob_sha1": "1db4aae72ab2e0deb979ce5228f273f82a4bac74",
+      "validation": "complete_article_matches_pinned_git_blob"
+    },
+    {
+      "path": "external-sources/toner-dab7f377.tar.gz",
+      "bytes": 170809,
+      "sha256": "fcdbbbdbaf07b6af7acab6250bd206e97724e65706d77e3cab4cbba34974b9ba",
+      "reference_id": "toner",
+      "source_urls": [
+        "https://mohamad-amin.github.io/blog/toner",
+        "https://github.com/mohamad-amin/Toner"
+      ],
+      "commit": "dab7f3777c75e740536df822f50ffa1d929a340c",
+      "archive_members": 127,
+      "validation": "gzip_tar_parsed"
+    },
+    {
+      "path": "papers/go-muon-2608.09763.pdf",
+      "bytes": 286358,
+      "sha256": "dcc88c9592c99a76b1a31030ff6a1b294b30459d84dcefe66b1217f005593093",
+      "reference_id": "go_muon",
+      "source_urls": [
+        "https://arxiv.org/abs/2608.09763v1",
+        "https://arxiv.org/pdf/2608.09763v1"
+      ],
+      "arxiv_id": "2608.09763",
+      "version": "v1",
+      "title": "Second-Order Muon Done Right: A Principled Marriage of Spectral Geometry and Curvature",
+      "authors": [
+        "Che, Tong"
+      ],
+      "initial_date": "2026/08/10",
+      "revision_date": "2026/08/10",
+      "pages": 15,
+      "extracted_text_characters": 44260,
+      "metadata": {
+        "path": "retrieval/go-muon-abstract.html",
+        "bytes": 39005,
+        "sha256": "069c552a1d87aba68b05fcc2e7ee72baf55c17074a2b994bc37026f83d1c541a"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "retrieval/second-order-muon.html",
+      "bytes": 305855,
+      "sha256": "35e38a73bf2cce3a4ee7d338dc2bfbd46bad888a7bc4b87ffcd16af759cc8f9c",
+      "reference_id": "go_muon",
+      "source_urls": [
+        "https://arxiv.org/abs/2608.09763v1",
+        "https://arxiv.org/pdf/2608.09763v1"
+      ]
+    },
+    {
+      "path": "external-sources/muon-f98f1cac.py",
+      "bytes": 13205,
+      "sha256": "2479665a90124f62e4df557816665851ca317e42fcfda2af1da02c1f44ab5f3d",
+      "reference_id": "muon",
+      "source_urls": [
+        "https://github.com/KellerJordan/Muon"
+      ],
+      "commit": "f98f1cacc0263b04290753e32be8d498c1efc806"
+    },
+    {
+      "path": "papers/kfac-1503.05671.pdf",
+      "bytes": 1801721,
+      "sha256": "da06b21e402d147a2852a3ca7c63be8b0448d5083053b595d754e9bf6439e1fe",
+      "reference_id": "kfac",
+      "source_urls": [
+        "https://arxiv.org/abs/1503.05671",
+        "https://arxiv.org/pdf/1503.05671"
+      ],
+      "arxiv_id": "1503.05671",
+      "version": "v7",
+      "title": "Optimizing Neural Networks with Kronecker-factored Approximate Curvature",
+      "authors": [
+        "Martens, James",
+        "Grosse, Roger"
+      ],
+      "initial_date": "2015/03/19",
+      "revision_date": "2020/06/08",
+      "pages": 58,
+      "extracted_text_characters": 137189,
+      "metadata": {
+        "path": "retrieval/kfac-abstract.html",
+        "bytes": 44311,
+        "sha256": "2c5403bb93f7b49619c6ce6a0ca00a863e2aea36e8947270f237c4d2712a369c"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "papers/empirical-fisher-limitations-1905.12558.pdf",
+      "bytes": 1087819,
+      "sha256": "b127c49eff88b68519d18aacf6bf1c6d9d29dfabb88835f774e6776aa16ac29c",
+      "reference_id": "empirical_fisher_limitations",
+      "source_urls": [
+        "https://arxiv.org/abs/1905.12558",
+        "https://arxiv.org/pdf/1905.12558"
+      ],
+      "arxiv_id": "1905.12558",
+      "version": "v3",
+      "title": "Limitations of the Empirical Fisher Approximation for Natural Gradient Descent",
+      "authors": [
+        "Kunstner, Frederik",
+        "Balles, Lukas",
+        "Hennig, Philipp"
+      ],
+      "initial_date": "2019/05/29",
+      "revision_date": "2020/06/08",
+      "pages": 20,
+      "extracted_text_characters": 65767,
+      "metadata": {
+        "path": "retrieval/empirical-fisher-abstract.html",
+        "bytes": 41483,
+        "sha256": "6bb8135b46767afe1b7dbaf9ab9211b77a1a58ae97e7b4c5329312d68f581c8d"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "papers/shampoo-1802.09568.pdf",
+      "bytes": 330728,
+      "sha256": "dedd4fdb7f591342eb3bcee119d7d51f3b751d7070afc0b1ba59560ef2594d64",
+      "reference_id": "shampoo",
+      "source_urls": [
+        "https://arxiv.org/abs/1802.09568",
+        "https://arxiv.org/pdf/1802.09568"
+      ],
+      "arxiv_id": "1802.09568",
+      "version": "v2",
+      "title": "Shampoo: Preconditioned Stochastic Tensor Optimization",
+      "authors": [
+        "Gupta, Vineet",
+        "Koren, Tomer",
+        "Singer, Yoram"
+      ],
+      "initial_date": "2018/02/26",
+      "revision_date": "2018/03/02",
+      "pages": 21,
+      "extracted_text_characters": 50033,
+      "metadata": {
+        "path": "retrieval/shampoo-abstract.html",
+        "bytes": 42087,
+        "sha256": "0fe67362b16841264186986cc41720f4708282c05d94af9299b924f587bba4c9"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "papers/soap-2409.11321.pdf",
+      "bytes": 1300562,
+      "sha256": "d6f33bb71eab0f046d911b60800846fd3332f1dcf5f2f1434ab444ab89d0b22a",
+      "reference_id": "soap",
+      "source_urls": [
+        "https://arxiv.org/abs/2409.11321",
+        "https://arxiv.org/pdf/2409.11321"
+      ],
+      "arxiv_id": "2409.11321",
+      "version": "v2",
+      "title": "SOAP: Improving and Stabilizing Shampoo using Adam",
+      "authors": [
+        "Vyas, Nikhil",
+        "Morwani, Depen",
+        "Zhao, Rosie",
+        "Kwun, Mujin",
+        "Shapira, Itai",
+        "Brandfonbrener, David",
+        "Janson, Lucas",
+        "Kakade, Sham"
+      ],
+      "initial_date": "2024/09/17",
+      "revision_date": "2025/01/31",
+      "pages": 20,
+      "extracted_text_characters": 66665,
+      "metadata": {
+        "path": "retrieval/soap-abstract.html",
+        "bytes": 45149,
+        "sha256": "8aff0025bcf9172dc5889370527c1c442b102ec47570c150297088e804896148"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "local-sources/soap.py",
+      "bytes": 31777,
+      "sha256": "78d8ea3b68c5b526067380bdd6907779b314f7ab9a94af1988e944416439bef4",
+      "reference_id": "soap",
+      "source_urls": [
+        "https://arxiv.org/abs/2409.11321",
+        "https://arxiv.org/pdf/2409.11321"
+      ]
+    },
+    {
+      "path": "papers/spectrally-targeted-muon-2610.10965.pdf",
+      "bytes": 629309,
+      "sha256": "107bd736761d05d2d5ba89fa6992542554638f48787ae42fa63f104966b0ea60",
+      "reference_id": "spectrally_targeted_muon",
+      "source_urls": [
+        "https://arxiv.org/abs/2610.10965v1",
+        "https://arxiv.org/pdf/2610.10965v1"
+      ],
+      "arxiv_id": "2610.10965",
+      "version": "v1",
+      "title": "Spectrally Targeted Muon",
+      "authors": [
+        "Goyal, Vishrut",
+        "Ramkumar, Rohan"
+      ],
+      "initial_date": "2026/10/07",
+      "revision_date": "2026/10/07",
+      "pages": 9,
+      "extracted_text_characters": 38083,
+      "metadata": {
+        "path": "retrieval/spectrally-targeted-muon-abstract.html",
+        "bytes": 43480,
+        "sha256": "c4fc19b2fb12e6df4f8b74fc4e83360b7e1aa2b75c0065d738a28be86e3eca7f"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "papers/freon-2605.11181.pdf",
+      "bytes": 9348508,
+      "sha256": "14f94a97dc74b9e0e9f8e5b05687c0be131c46e3c2997b713fe3dbeb08e7e5e4",
+      "reference_id": "freon",
+      "source_urls": [
+        "https://arxiv.org/abs/2605.11181v1",
+        "https://arxiv.org/pdf/2605.11181v1"
+      ],
+      "arxiv_id": "2605.11181",
+      "version": "v1",
+      "title": "Muon is Not That Special: Random or Inverted Spectra Work Just as Well",
+      "authors": [
+        "Shumaylov, Zakhar",
+        "Da Costa, Natha\u00ebl",
+        "Zaika, Peter",
+        "Mucs\u00e1nyi, B\u00e1lint",
+        "Massucco, Alex",
+        "Gelberg, Yoav",
+        "Sch\u00f6nlieb, Carola-Bibiane",
+        "Gal, Yarin",
+        "Hennig, Philipp"
+      ],
+      "initial_date": "2026/05/11",
+      "revision_date": "2026/05/11",
+      "pages": 45,
+      "extracted_text_characters": 125187,
+      "metadata": {
+        "path": "retrieval/freon-abstract.html",
+        "bytes": 44711,
+        "sha256": "4f95be5e54a500e77159cbb8992b4803b35a133e8d2ec3366c965cbf99fc93c1"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "retrieval/freon-fulltext.html",
+      "bytes": 1023844,
+      "sha256": "708c2247509c99ad8511f5e3698d033fee719016e098bbb106b2a0edba1d082e",
+      "reference_id": "freon",
+      "source_urls": [
+        "https://arxiv.org/abs/2605.11181v1",
+        "https://arxiv.org/pdf/2605.11181v1"
+      ]
+    },
+    {
+      "path": "papers/mousse-2603.09697.pdf",
+      "bytes": 1617724,
+      "sha256": "5593aefd8f4fb25bcccd14c2ad40d4aa0b27ce0d5122bd93a0d5637238048467",
+      "reference_id": "mousse",
+      "source_urls": [
+        "https://arxiv.org/abs/2603.09697v2",
+        "https://arxiv.org/pdf/2603.09697v2",
+        "https://github.com/Anti-Entrophic/Mousse"
+      ],
+      "arxiv_id": "2603.09697",
+      "version": "v2",
+      "title": "Mousse: Rectifying the Geometry of Muon with Curvature-Aware Preconditioning",
+      "authors": [
+        "Zhang, Yechen",
+        "Xing, Shuhao",
+        "Huang, Junhao",
+        "Lv, Kai",
+        "Zhou, Yunhua",
+        "Qiu, Xipeng",
+        "Guo, Qipeng",
+        "Chen, Kai"
+      ],
+      "initial_date": "2026/03/10",
+      "revision_date": "2026/04/01",
+      "pages": 17,
+      "extracted_text_characters": 50955,
+      "metadata": {
+        "path": "retrieval/mousse-abstract.html",
+        "bytes": 44385,
+        "sha256": "0d483bff9a08965b0fbc9cb30cbcb273f839d80815d99ec31dfac33f019cb5af"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "external-sources/mousse-d00c1bf1.tar.gz",
+      "bytes": 226455,
+      "sha256": "4b5ce091a8636bfdf8f1fb5cfbb67cf62845f3981587a62db36b4c21af21f8ee",
+      "reference_id": "mousse",
+      "source_urls": [
+        "https://arxiv.org/abs/2603.09697v2",
+        "https://arxiv.org/pdf/2603.09697v2",
+        "https://github.com/Anti-Entrophic/Mousse"
+      ],
+      "commit": "d00c1bf17790fbe56424ee5567cce80d8e75f4b2",
+      "archive_members": 43,
+      "validation": "gzip_tar_parsed"
+    },
+    {
+      "path": "papers/newton-muon-2604.01472.pdf",
+      "bytes": 2139779,
+      "sha256": "b0b0e647e0038912068c0bed67e90bec97734d9ba6e030dfeb41210ab104bcf5",
+      "reference_id": "newton_muon",
+      "source_urls": [
+        "https://arxiv.org/abs/2604.01472v1",
+        "https://arxiv.org/pdf/2604.01472v1"
+      ],
+      "arxiv_id": "2604.01472",
+      "version": "v1",
+      "title": "The Newton-Muon Optimizer",
+      "authors": [
+        "Du, Zhehang",
+        "Su, Weijie"
+      ],
+      "initial_date": "2026/04/01",
+      "revision_date": "2026/04/01",
+      "pages": 38,
+      "extracted_text_characters": 96382,
+      "metadata": {
+        "path": "retrieval/newton-muon-abstract.html",
+        "bytes": 42047,
+        "sha256": "331a319dc41ce131b3bbde4a2f2fdb76b4c09f0fd83b2503a55496e44306fd73"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    },
+    {
+      "path": "papers/batch-size-optimizer-2610.08975.pdf",
+      "bytes": 1407831,
+      "sha256": "5cc431e0dccbc1f5d492cc1494b7a43180e3e1cf6ae1dafa66adc7d5d817233c",
+      "reference_id": "batch_size_optimizer",
+      "source_urls": [
+        "https://arxiv.org/abs/2610.08975v2",
+        "https://arxiv.org/pdf/2610.08975v2"
+      ],
+      "arxiv_id": "2610.08975",
+      "version": "v2",
+      "title": "The Best Optimizer Depends on Batch Size",
+      "authors": [
+        "Dang, Xingyu",
+        "Wen, Kaiyue",
+        "Malladi, Sadhika"
+      ],
+      "initial_date": "2026/10/06",
+      "revision_date": "2026/10/12",
+      "pages": 101,
+      "extracted_text_characters": 329247,
+      "metadata": {
+        "path": "retrieval/batch-size-optimizer-abstract.html",
+        "bytes": 42383,
+        "sha256": "402326abc7621d3c6fb7771fb1f91a199f6c83a62c0bbebc38a7ca28c72ea67a"
+      },
+      "validation": "all_pages_parsed_and_embedded_arxiv_version_matched"
+    }
+  ],
+  "pdf_count": 10,
+  "limitations": [
+    "No GO-MUON author implementation was identified.",
+    "The Freon README is third-party discovery evidence and not an author implementation.",
+    "Paper results were inspected but not independently replicated.",
+    "Search responses and alternate text captures do not replace the primary sources."
+  ]
+}

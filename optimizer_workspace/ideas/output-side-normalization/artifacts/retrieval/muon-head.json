@@ -1,0 +1,106 @@
+{
+  "sha": "f98f1cacc0263b04290753e32be8d498c1efc806",
+  "node_id": "C_kwDONMoENdoAKGY5OGYxY2FjYzAyNjNiMDQyOTA3NTNlMzJiZThkNDk4YzFlZmM4MDY",
+  "commit": {
+    "author": {
+      "name": "Keller Jordan",
+      "email": "kellerjordan1998@gmail.com",
+      "date": "2026-05-24T18:39:02Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-05-24T18:39:02Z"
+    },
+    "message": "Merge pull request #67 from ShizukaKuze/master\n\nUpdate modded-nanogpt link in README.md",
+    "tree": {
+      "sha": "4ea5cd8ab6ebd56a18536f06453619efcd636da0",
+      "url": "https://api.github.com/repos/KellerJordan/Muon/git/trees/4ea5cd8ab6ebd56a18536f06453619efcd636da0"
+    },
+    "url": "https://api.github.com/repos/KellerJordan/Muon/git/commits/f98f1cacc0263b04290753e32be8d498c1efc806",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqE0XGCRC1aQ7uu5UhlAAA84IQAKxlmyO85nkh7qsdbPU7qUYI\nrw9WVSZUwiUv6SFnEuVNt+yjB5u6g63mmMG/kKUXzcgvdirmzfj/ur2FXFo2P5if\nDLpINHNx8MCOtQsP5EGZBiqf2S1G8c9AQYK2qs+/7K0rzJIWsbAp3rfGUmcuz4xo\nIyFM06mwCpJr8Ig4tTsrW8uR6+/3SIKTfst3OLoUzhxjKRQ2oexODuTHNcSnbJd5\nM5j+O88qmZexGIyjYj6KYDdJYGGc3T+4YSLiefaELVU2rzuRPLOWnTOrKw3aGs/y\nZ5Y9m4xxdwL12WEbQCWVycSuyPtlESDXGSLZpL8x0HXePegThTnZH4rddMRTAdI3\nkAuctbu+3fjELKXoQOy3OvE8KcjlIZKNXyAxk5TfP6NJdehvtEE3VTC12LxZZfqT\npEBUkxn5uA/wKdCVvcJInq/4jYAbj+MZ6UZb1NOnZXUgFawUS5GauI1Mz+7TFOA7\ntUur5w1rCLT/oPXE8ubdaaIghwd9PdHkpuObCX5y8Xa4g0L6jOLG7ExcY6JOGipE\nSbfCK/Jf8BydFQw6yDex92nUL8JvYEEYR6tmAGveYCckPdW+aEWy8/1mPHNbE1LR\nj4d0qd367+M2vbB0ihzo4A1d2BNkIjq1e1O3WrrJCAJ76oVXudpebIiSCg2InFp1\noWmXBn5/4KlPIjKEj11c\n=6ErJ\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 4ea5cd8ab6ebd56a18536f06453619efcd636da0\nparent 6399c658d3c4a3356ba823fa6664b10e23871068\nparent 056a3c5869cfe7609df01cbd5cc86bffe3f6a325\nauthor Keller Jordan <kellerjordan1998@gmail.com> 1779647942 -0700\ncommitter GitHub <noreply@github.com> 1779647942 -0700\n\nMerge pull request #67 from ShizukaKuze/master\n\nUpdate modded-nanogpt link in README.md",
+      "verified_at": "2026-05-24T18:39:03Z"
+    }
+  },
+  "url": "https://api.github.com/repos/KellerJordan/Muon/commits/f98f1cacc0263b04290753e32be8d498c1efc806",
+  "html_url": "https://github.com/KellerJordan/Muon/commit/f98f1cacc0263b04290753e32be8d498c1efc806",
+  "comments_url": "https://api.github.com/repos/KellerJordan/Muon/commits/f98f1cacc0263b04290753e32be8d498c1efc806/comments",
+  "author": {
+    "login": "KellerJordan",
+    "id": 18433116,
+    "node_id": "MDQ6VXNlcjE4NDMzMTE2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/18433116?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/KellerJordan",
+    "html_url": "https://github.com/KellerJordan",
+    "followers_url": "https://api.github.com/users/KellerJordan/followers",
+    "following_url": "https://api.github.com/users/KellerJordan/following{/other_user}",
+    "gists_url": "https://api.github.com/users/KellerJordan/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/KellerJordan/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/KellerJordan/subscriptions",
+    "organizations_url": "https://api.github.com/users/KellerJordan/orgs",
+    "repos_url": "https://api.github.com/users/KellerJordan/repos",
+    "events_url": "https://api.github.com/users/KellerJordan/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/KellerJordan/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "6399c658d3c4a3356ba823fa6664b10e23871068",
+      "url": "https://api.github.com/repos/KellerJordan/Muon/commits/6399c658d3c4a3356ba823fa6664b10e23871068",
+      "html_url": "https://github.com/KellerJordan/Muon/commit/6399c658d3c4a3356ba823fa6664b10e23871068"
+    },
+    {
+      "sha": "056a3c5869cfe7609df01cbd5cc86bffe3f6a325",
+      "url": "https://api.github.com/repos/KellerJordan/Muon/commits/056a3c5869cfe7609df01cbd5cc86bffe3f6a325",
+      "html_url": "https://github.com/KellerJordan/Muon/commit/056a3c5869cfe7609df01cbd5cc86bffe3f6a325"
+    }
+  ],
+  "stats": {
+    "total": 2,
+    "additions": 1,
+    "deletions": 1
+  },
+  "files": [
+    {
+      "sha": "d376db3788f381bcd7831182a2c21ff660e02d13",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/KellerJordan/Muon/blob/f98f1cacc0263b04290753e32be8d498c1efc806/README.md",
+      "raw_url": "https://github.com/KellerJordan/Muon/raw/f98f1cacc0263b04290753e32be8d498c1efc806/README.md",
+      "contents_url": "https://api.github.com/repos/KellerJordan/Muon/contents/README.md?ref=f98f1cacc0263b04290753e32be8d498c1efc806",
+      "patch": "@@ -37,7 +37,7 @@ E.g., for a ConvNet, you should use Muon to optimize all the convolutional filte\n \n ## Example usage\n \n-[Example use in the NanoGPT speedrun](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/052525_MuonWithAuxAdamExample/b01550f9-03d8-4a9c-86fe-4ab434f1c5e0.txt#L470)\n+[Example use in the NanoGPT speedrun](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/track_1_short/2025-05-25_MuonWithAuxAdamExample/b01550f9-03d8-4a9c-86fe-4ab434f1c5e0.txt#L470)\n \n [Example use in the CIFAR-10 speedrun](https://github.com/KellerJordan/cifar10-airbench/blob/28bff5f5b31e95aa45b5b20e1f48baf1ed98d5f6/airbench94_muon.py#L362)\n "
+    }
+  ]
+}

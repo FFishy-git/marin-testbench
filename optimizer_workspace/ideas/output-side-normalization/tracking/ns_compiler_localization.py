@@ -13,7 +13,6 @@ from pathlib import Path
 import replay_saved_ns as replay
 import root_stage_trace as tracing
 import torch
-from benchmark_diagonal import source_definitions
 from ns_budget_execution import source_snapshots
 from root_preparation_probe import finite_tree
 
@@ -164,12 +163,27 @@ def _recurrence_trace(loop: ast.For) -> ast.For:
 def source_namespace(path: Path) -> tuple[dict, ast.FunctionDef, list[ast.stmt], ast.For, ast.Return, ast.FunctionDef]:
     """Load the authenticated pinned routine without importing a trainer or optimizer."""
     with replay.analyzer._bound_file(path, replay.MUON_SHA256) as stream:
-        bound = Path(f"/proc/self/fd/{stream.fileno()}")
-        parsed = ast.parse(bound.read_text(), filename=str(path))
-        namespace = {"torch": torch}
-        source_definitions(path, ("ABC", "_bmm", "newton_schulz_batched"), namespace)
+        parsed = ast.parse(stream.read(), filename=str(path))
+    # Execute only retained definitions after the descriptor and pathname checks complete.
+    definitions = []
+    counts = {"ABC": 0, "_bmm": 0, "newton_schulz_batched": 0}
+    for node in parsed.body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "ABC" for target in node.targets
+        ):
+            name = "ABC"
+        elif isinstance(node, ast.FunctionDef) and node.name in ("_bmm", "newton_schulz_batched"):
+            name = node.name
+        else:
+            continue
+        definitions.append(node)
+        counts[name] += 1
+    if any(count != 1 for count in counts.values()):
+        raise ValueError("Pinned NS constant/function coverage differs")
+    namespace = {"torch": torch}
+    exec(compile(ast.Module(body=definitions, type_ignores=[]), str(path), "exec"), namespace)
     original = next(
-        node for node in parsed.body if isinstance(node, ast.FunctionDef) and node.name == "newton_schulz_batched"
+        node for node in definitions if isinstance(node, ast.FunctionDef) and node.name == "newton_schulz_batched"
     )
     loops = [(index, node) for index, node in enumerate(original.body) if isinstance(node, ast.For)]
     if len(loops) != 1 or len(original.body) != loops[0][0] + 2 or not isinstance(original.body[-1], ast.Return):
@@ -177,7 +191,7 @@ def source_namespace(path: Path) -> tuple[dict, ast.FunctionDef, list[ast.stmt],
     index, loop = loops[0]
     if not isinstance(loop.target, ast.Name):
         raise ValueError("Pinned NS iteration coordinate differs")
-    product = next(node for node in parsed.body if isinstance(node, ast.FunctionDef) and node.name == "_bmm")
+    product = next(node for node in definitions if isinstance(node, ast.FunctionDef) and node.name == "_bmm")
     return namespace, original, original.body[:index], loop, original.body[-1], product
 
 

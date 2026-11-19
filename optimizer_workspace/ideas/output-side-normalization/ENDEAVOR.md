@@ -25,11 +25,94 @@ live in [`DETAILS.md`](DETAILS.md), preserved verbatim and in original order.
 
 ## Current Experiment State
 
-Evidence checkpoint, November 19, 2026 17:48 Asia/Shanghai.
+Evidence checkpoint, November 19, 2026 19:30 Asia/Shanghai.
 Receipt and explicit live-observation times are shown below. Saved
 receipts alone do not establish current GPU occupancy.
 `PVC` denotes
 `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
+
+At 19:26:10 the transition aggregate retains 18/54 completed commands
+and 6/18 accepted decisions. MuonT BF16 and FP32 with five, seven and
+ten Newton-Schulz iterations each pass all five continuation gates
+and 39/39 scalar-loss comparisons at matrix LR 0.04525483392.
+Fused-normalization and matched-null decisions remain pending. Fresh
+19:27 process inspection finds both original owners, the original
+terminal waiter, reviewed actual-LR queue waiter and sole Bash monitor
+live. The queue's 19:20:04 observation remains
+`waiting_for_transition_owners`, with zero of six handoff phases.
+The monitor publishes both journals at 19:15:29 and keeps its
+900-second sleep between refreshes. No complete transition terminal,
+actual-LR GPU launch or production result follows from partial coverage.
+
+A new CPU-only precision-placement screen is implemented: eighteen
+explicit five/seven/ten-step schedules compare matched one/two/three
+FP32 prefix versus suffix iterations against homogeneous controls.
+Thirteen focused tests pass at the unchanged tolerance, preserving
+two per-matrix reduction differences as negative evidence. Separate
+archive acceptance is running; no mixed saved-pair measurement is yet
+claimed. A source audit also finds a second-read race in the unlaunched
+compiler-localization loader. Its distinct correction builds controls
+and traces from one authenticated buffer; 24 component and 23 execution
+CPU tests pass. Accepted archives and running GPU sources are unchanged.
+See [NS Precision-Placement Screen](#ns-precision-placement-screen).
+Wave 12 remains the latest full-budget, large-window analyzed and
+privately SwanLab-verified production wave. Better quality and
+efficiency than independently tuned MuonT remain unestablished.
+
+The following 19:11 and earlier checkpoints are retained observations.
+At 19:08:46 the transition aggregate retains 16/54 completed commands
+and 5/18 accepted decisions: MuonT BF16 with five, seven and ten
+Newton-Schulz iterations and MuonT FP32 with five and seven iterations.
+Each passes all five continuation gates and 39/39 scalar-loss
+comparisons. FP32/ten-iteration continuous24 completes with
+execution/cleanup exits 0/0; its interrupted/resumed trajectories and
+case comparison remain pending. Read-only process checks at
+19:11 verify the controller, direct validator, independent terminal
+waiter, actual-LR queue waiter and sole Bash journal monitor live.
+The monitor publishes both
+journals at 18:56:46 and continues its 900-second interval.
+
+The distinct actual-LR execution archive remains accepted with
+53 passing cases and 191 helpers. A 198-helper queue archive passes
+42 cases at 18:47:34 and independent archived checking by 18:50,
+but independent review withholds its waiter launch because terminal
+admission omits controller-marked descendants and observer timeout
+cleanup omits nested readers. Queue-only corrections pass all
+47 local cases in 36.33 seconds. Their separate complete CPU archive
+is accepted at 18:58:03 with 47 cases in 36.51 seconds, 198 helpers
+and 572 inventory entries. Independent archived-entry checking and
+source/archive re-review pass. Its hidden-CPU waiter acknowledges
+at 19:04:03 as `3263097/942039903`. Its first saved observation
+at 19:04:54 finds the original controller, validator and terminal
+waiter exact/live, records `waiting_for_transition_owners`, and
+retains zero of six handoff phases. The accepted
+archives and failed attempts are preserved. The transition terminal,
+actual-LR freeze, keeper transfer and successor GPU launch remain
+unissued. Wave 12 remains the latest full-budget,
+large-window analyzed and privately SwanLab-verified production wave.
+See [Transition Queue Review Milestone](#transition-queue-review-milestone).
+
+The following 18:20 and earlier checkpoints are retained observations.
+The transition aggregate at18:18:59 has9/54 complete commands and
+3/18 accepted decisions: MuonT BF16 with five/seven/ten NS iterations
+passes all five required gates and39/39 scalar-loss comparisons per
+case. Checkpoints22/24 pass; checkpoint23 remains diagnostic only.
+Fresh18:15 process checks verify the original controller, validator,
+independent waiter and sole journal monitor live. No complete terminal
+or production acceptance follows from these partial diagnostic results.
+
+The distinct transition actual-LR adapter passes complete archived
+acceptance at18:15:56:15 passing cases,179 helpers and553 inventory
+entries; independent archived-entry checking passes. It retains all
+54 configurations/162 bounded commands and changes only the candidate
+owner adapter plus the separately reviewed execution handoff helper,
+whose original bytes are retained. The external terminal archive is
+not merged. The separately implemented191-helper execution-owner
+draft passes45 lifecycle cases and required source lint; its complete
+source/ownership suite remains running, so no owner acceptance,
+freeze, keeper transfer or GPU launch is claimed. Wave12 remains the
+latest analyzed and privately SwanLab-verified production wave. See
+[Transition Actual-LR Adapter Acceptance](#transition-actual-lr-adapter-acceptance).
 
 The transition aggregate at 17:46:13 records 6/54 completed commands
 and 1/18 case decisions. MuonT BF16/five-iteration passes all five
@@ -846,6 +929,8 @@ The new milestones are recorded in
 | Training-path actual-LR original terminal handoff | Distinct predecessor CPU/source accepted at09:53:20; original attempt and follow-ups have failed, no seal issued | Receipt `PVC/run-preparation/ns-training-path-actual-lr-predecessor-cpu/20261119T0953/receipt.json` retains twelve passing archived tests,169 helpers and538 inventory entries. All114 integrated tests pass. Canonical independent terminal, complete54-command/18-case evidence, retained rejections, original owner/waiter/descendant absence and exact restoration remain required before the one-shot seal. Original-owner absence does not supply missing completion evidence; the actual-LR queue stops13:36:09 before all six phases. No GPU execution or production authority. |
 | Training-path actual-LR owner-only adapter preparation | Distinct source candidate and CPU archive accepted; 43 integrated CPU tests pass; execution owner/controller unissued | Candidate `PVC/candidates/ns-training-path-actual-lr-adapter-20261119T1018` changes only `experiment/fused_attribution_owner.py` at 10:19:09. Receipt `PVC/run-preparation/ns-training-path-actual-lr-adapter-cpu/20261119T1020/receipt.json` accepts fourteen archived tests, 171 helpers and 542 inventory entries at 10:21:54; fresh archived checking passes. All 43 integrated numerical/adapter CPU tests pass in 168.93 seconds. All 169 parent helpers, six training files, five numerical readers and 54 actual-LR configurations are preserved. Real unowned trainer/validator invocations refuse before outputs. No predecessor seal, execution owner/controller, GPU binding or launch is issued. |
 | Training-path actual-LR separate execution owner | Distinct CPU/source archive accepted at10:55:01; fresh archived check passes; GPU unissued | Receipt `PVC/run-preparation/ns-training-path-actual-lr-execution-owner-cpu/20261119T1051/receipt.json` accepts53 archived tests in188.76seconds,177 helpers and548 inventory entries. All53 local tests pass in186.89seconds. The accepted adapter candidate and all171 parent helper bytes remain unchanged. Freeze requires an explicit original-terminal seal hash; visible ranks use accepted live hidden-parent proof and identity inventory, without hidden-only checks. No seal, binding, GPU transfer, diagnostic launch or production result. |
+| Mixed-exit-bracket transition diagnostic | Running; 12/54 commands and 3/18 accepted MuonT decisions at November 19 18:30:58 | BF16 five/seven/ten-iteration cases pass all five required gates and 39/39 scalar-loss comparisons each. FP32/five continuous24/interrupted22/resumed24 have execution/cleanup exits 0/0; its case comparison is pending. Exact controller/validator/waiter generations are live at 18:26:22. Complete coverage, independent canonical terminal and exact restoration remain required. |
+| Transition actual-LR successor | Adapter and execution CPU/source archives accepted; independent archived-entry check passes by November 19 18:30; GPU unissued | The distinct candidate retains 54 configurations/162 commands and unchanged numerical gates. Execution receipt `PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json` accepts 53 unique tests in 255.05 seconds, 191 helpers and 565 inventory entries at 18:27:09. All 179 accepted adapter helpers and candidate bytes remain unchanged. Freeze and GPU launch additionally require the complete transition terminal and caller-bound predecessor seal. |
 | Start-accuracy predecessor evidence seal | One-shot seal completed at 19:53:29; exact original restoration verified | Archived sealer hashes 17 canonical evidence files, including both full retained root-stage output files, and verifies original owners/descendants absent and exact healthy keeper `1547502/933501005`, ranks `1547638` through `1547645`, on all eight original A100s. Receipt: `PVC/run-preparation/root-start-predecessor-seal-20261118.json`. Subsequent checks authenticate canonical file identities and small receipt hashes; the seal grants no historical attribution or production acceptance. |
 | Proposed Waves 13-15, full-budget attribution LR study | GPU-denied after continuation failure; no production candidate, release or launch | Three LR waves each compare MuonT, fused normalization and identity-outer matched null, with balanced assignments across `.9`/`.80`/`.144` and `.139` untouched. Controller/preparer/Bash-monitor implementation remains mutable and unissued. Saved-state CPU diagnosis, a distinct corrected candidate and complete unchanged-tolerance GPU validation are required before production acceptance. Each successor also waits for preceding complete histories, large-window analysis, cloud verification and exact restoration; settings and gates are in "Full-Budget Attribution Wave Plan" below. |
 
@@ -5769,6 +5854,70 @@ required. No SwanLab optimizer history or efficiency claim follows.
 Henry, Tang and Heinecke, arXiv:1904.06376v1 (2019), is recorded as related
 literature metadata only; full text was unavailable for inspection.
 
+### NS Precision-Placement Screen
+
+Proposed and implemented November 19 19:30, Asia/Shanghai. Question:
+can higher-precision iterations concentrated at the beginning or end
+of the pinned finite map reduce the historical input-pair difference
+without requiring FP32 throughout? This tests endpoint placement,
+not interior placement or general alternation. It changes numerical
+arithmetic and requires separate future CUDA and training acceptance.
+
+For five and seven steps, compare one, two and three FP32 iterations
+at the prefix or suffix, plus homogeneous BF16-operand and FP32 controls.
+Add homogeneous ten-step controls, giving eighteen schedules.
+Each iteration's three products use one explicit immutable mode.
+The recurrence state, normalization and accumulation remain FP32;
+BF16 denotes CPU operand rounding followed by FP32 products.
+Normalization is performed once. Orientation, expression ordering,
+coefficients `(3.4445, -4.7750, 2.0315)`, `eps=1e-5` and
+`rtol=1e-5`, `atol=1e-6` remain unchanged.
+
+Before execution, fix the comparison rule: compare prefix and suffix
+at the same step count and FP32-product count, reporting C/R relative
+Frobenius error and worst-matrix error alongside each output's own
+FP64 finite-polynomial accuracy. All full-batch `C,R,C,R` outputs,
+same-input repeats and geometric metrics must be retained and
+independently reconstructed. The earlier authenticated SVD-polynomial
+references are reused; their arithmetic is not rerun. Exact reproduction
+of all six homogeneous saved controls is required before interpreting
+placements. Partial-polar geometry remains descriptive, with no output
+grafting or training-quality claim. Counts of `3k` FP32 and `3(q-k)`
+BF16-operand products are an arithmetic inventory, not measured speed.
+
+The first focused test run retains nine passes and two failures:
+per-matrix prefix references differ from the pinned batched map in
+10/30 and 15/30 elements at the original tolerance, with maximum
+absolute differences `1.97887e-5` and `1.56164e-5`.
+The corrected tests compare an independently expressed batched
+recurrence at exact tolerance and retain the per-matrix failures as
+negative reduction evidence. All thirteen tests pass in 1.58 seconds,
+including exact homogeneous-map parity, mixed-schedule repeat/input
+preservation and changed-retained-output detection.
+
+The separate source/test archive inherits the accepted localization
+execution inventory. It changes only the numerical source loader and
+its tests, then adds the precision runner, tests and preparer.
+The earlier loader authenticated an open descriptor but reread the
+pathname for executable controls; those bytes could differ from the
+traced AST. The correction executes the three selected definitions
+from the same verified buffer after the existing file checks finish.
+Two deterministic pathname-replacement regressions verify rejection
+during verification and unchanged numerical/canonical-filename behavior
+after verification, without executing an unverified side effect.
+The component's 24 and execution's 23 CPU cases pass separately.
+Accepted parent archives remain preserved; owner implementation still
+needs a fresh binding to the reviewed transition actual-LR queue.
+
+At this checkpoint, separate complete CPU/source acceptance is running,
+and no mixed saved-pair result, CUDA execution, continuation correction,
+optimizer loss, elapsed-training efficiency or SwanLab import is claimed.
+The CPU screen stops after retained numerical comparisons and controls
+are independently verified. A useful placement must still justify its
+own GPU protocol and actual-configuration continuation checks before
+fair full-budget LR tuning, five large shared-token windows, verified
+private histories and fresh paired seeds.
+
 ### NS Step-Budget Quality-Cost Study
 
 CPU/source-archive acceptance November 18 23:00:03; measurement completes
@@ -8654,6 +8803,291 @@ token-window comparisons and verified private full-resolution SwanLab
 histories. No optimizer is yet established as both better-performing
 and more efficient than independently tuned MuonT.
 
+#### Transition Actual-LR Adapter Acceptance
+
+November19 18:20, Asia/Shanghai. The distinct actual-LR successor now
+has a separately accepted candidate adapter. It preserves all54
+family/operand/iteration/LR configurations and162 bounded eight-rank
+continuous24/interrupted22/resumed24 commands, the original5120-update
+schedule, training sources, byte-pinned numerical readers, unchanged
+tolerances, compilation and cached-root CUDA graphs. This is an
+execution-boundary preparation, not a new mathematical optimizer or
+full-budget training result.
+
+The accepted numerical adapter archive is authenticated directly
+without executing its old ownership gate. The new terminal-reader
+archive remains external and is authenticated in an isolated hidden-CUDA
+subprocess. The reviewed execution closure explicitly changes only
+`tracking/owned_output_handoff.py` from
+`b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`
+to the measured transition implementation
+`ec894019aa1af6ceadd81da2a4045a868a0fa34dff7c5c6da08a6230868defcb`.
+All other inherited numerical helper bytes are unchanged. The original
+helper remains in the new inventory as
+`fixtures/transition-lr-original-owned_output_handoff.py`; the accepted
+original numerical/execution archives are not modified or silently
+merged. The candidate itself changes only
+`experiment/fused_attribution_owner.py`, whose parent bytes are retained.
+Preparation metadata binds the explicit helper transformation, both
+CPU parent receipts and the external required terminal seal.
+
+An earlier prepared candidate
+`PVC/candidates/ns-training-path-transition-actual-lr-adapter-20261119T1805`
+is preserved and unaccepted after the derived validator's owner-check
+name was corrected. The original source and consumed queue are unchanged.
+Four initial archive tests exposed a test-fixture subprocess mock
+intercepting the independent terminal reader; that mock now handles only
+the expensive CPU-run boundary and the terminal reader executes for real.
+The corrected unissued-owner regression passes, as do all15 archived
+cases; passing refusal tests create no training output or GPU binding.
+
+Corrected candidate:
+`PVC/candidates/ns-training-path-transition-actual-lr-adapter-corrected-20261119T1807`.
+Accepted receipt at18:15:56.273180:
+`PVC/run-preparation/ns-training-path-transition-actual-lr-adapter-cpu/corrected-20261119T1807/receipt.json`.
+The archived suite passes15 unique cases in320.09seconds with zero
+failures/errors/skips;179 helpers and553 inventory entries are
+authenticated. Hidden CUDA, offline uv/pytest-timeout,60-second
+per-test/600-second session limits and all seven repository safety-marker
+exclusions are retained. Required source lint and independent archived
+`--phase check` pass.
+Receipt digest:
+`8c9ea7cf47c3fcb437bc591cc90a82341651767ea19305082963363ebb05b9f7`.
+Source archive digest:
+`1073c50980bc39b946dcfdf083fb1e50dcb5b316ba8f461b9fabf5258f2ceed4`.
+Tests XML digest:
+`79bf04cba3d9c6fd157e62bc22931a6fad1b73563eb68fcc2fab74f5e707efee`.
+
+The distinct execution-owner draft binds that exact adapter receipt
+and resolves to191 helpers, including retained byte-pinned parent
+sources. All179 accepted adapter helpers/candidate bytes remain
+unchanged. It retains original physical UUID checks, real node/manager
+locks, exact controller/validator/launcher/rank ancestry, visible
+parent proof, one-shot terminal, cleanup and keeper restoration. The
+changed predecessor boundary authenticates the separate accepted
+terminal archive by subprocess and retains failed-checkpoint file
+identities without fresh tensor reads. All45 lifecycle cases pass in
+2.71seconds after the explicit bridge import correction; required
+source lint passes. Its additional complete source/archive/ownership
+suite is still running at this checkpoint. No accepted execution-owner
+receipt, GPU binding, keeper transfer or launch is issued.
+
+The live transition aggregate advances at18:18:59.438260:
+`PVC/run-preparation/validation-ns-training-path-exit-transition-20261119-gpu.json`.
+It retains9/54 complete commands and3/18 accepted decisions. MuonT
+BF16/five-, seven- and ten-iteration cases each pass all five gates and
+39/39 scalar-loss comparisons at the unchanged lower matrix LR.
+All required checkpoint22/24 comparisons pass; checkpoint23 remains
+diagnostic only. The seven-iteration decision is dated17:56:22.860152
+and the ten-iteration decision18:18:59.438260. Fresh18:15 process
+checks verify controller`3118453/941361276`, direct validator
+`3118822/941365079`, waiter`3127027/941414079` and sole Bash journal
+monitor`1588227/933927668` live. The waiter's fourth observation is
+dated18:04:51; checks remain every900seconds. The original scheduled
+monitor completes its next refresh18:19:32 without restart.
+
+The next required action is full execution-owner CPU/source acceptance,
+then complete transition54-command18-decision coverage and its existing
+independent canonical terminal, exact absence/restoration and the
+one-shot predecessor seal before any distinct actual-LR freeze or GPU
+launch. Rejected controls and all failures remain retained. No new
+production wave or SwanLab upload is recorded; Wave12 remains latest
+complete, large-window analyzed and privately cloud-verified. The
+search for an optimizer better-performing and more efficient than
+independently tuned MuonT remains open.
+
+#### Transition Execution Archive Milestone
+
+November 19 18:33, Asia/Shanghai. All 53 local execution-source and
+lifecycle cases pass. The complete archived execution suite started
+at 18:22:49 and passes all 53 unique cases in 255.05 seconds with zero
+failures/errors/skips. Receipt publication at 18:27:09 accepts the
+distinct execution source:
+`PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json`.
+Independent archived-entry checking passes by 18:30 using the exact
+fixed hidden-CUDA environment. The archive retains the accepted
+actual-LR adapter candidate, all 179 adapter helpers and 12 separately
+named execution/retained-parent helpers, for 191 helpers and 565
+inventory entries. Numerical settings remain 54 configurations and
+162 bounded commands: three
+optimizer families (MuonT, fused normalization and identity-outer matched
+null), two NS operand modes (BF16/FP32), three NS iteration budgets
+(five/seven/ten) and three LRs per case. The currently running transition
+diagnostic covers the 18 family/operand/budget cases at lower LR only,
+with three trajectories per case and 54 commands. Both programs retain
+the full 5,120-update learning-rate schedule, compilation, cached-root
+CUDA graphs and original tolerances. Detailed CPU commands and receipt
+identities are in `DETAILS.md`. CPU/source acceptance does not authorize freeze
+or GPU launch and does not establish training quality.
+
+The authenticated transition reporter reads aggregate 18:26:44 and
+controller receipt 18:26:53. It accepts eleven completed command records
+and three case decisions. The three MuonT BF16 cases each retain zero
+failed tensors or scalar/structure differences at the two required
+checkpoints:
+
+| NS Iterations | Checkpoint 22 Tensor Comparisons | Checkpoint 24 Tensor Comparisons | Scalar-Loss Comparisons | Required Gates |
+| --- | ---: | ---: | ---: | --- |
+| 5 | 2,135 | 2,147 | 39/39 pass | All five pass |
+| 7 | 2,123 | 2,163 | 39/39 pass | All five pass |
+| 10 | 2,145 | 2,179 | 39/39 pass | All five pass |
+
+Each case has sixteen first-resumed checkpoint-23 graph-state flag
+differences and zero failed tensors. Checkpoint 23 remains diagnostic
+only under the unchanged protocol. The five required gates are complete
+actual-config trajectories, boundary all-rank continuation, all-rank
+continuation after the cached-root update, scalar-loss continuation
+and captured-row/update/work. Continuation compares uninterrupted and interrupted/resumed
+trajectories at the same update, using `rtol=1e-5`, `atol=1e-6`.
+The table's zero scalar/structure differences denotes no differences
+reported by that reader; it does not claim exact bitwise tensor equality.
+The fourth case, MuonT FP32 with five iterations, retains continuous24
+with 12,582,912 tokens and
+execution/cleanup exits 0/0 at 18:21:17. Its interrupted22 command is
+also complete with execution/cleanup exits 0/0 at 18:25:54. The resumed
+command completes with execution/cleanup exits 0/0 and no marked
+descendants at 18:28:31. The later 18:30:58 aggregate therefore retains
+12/54 commands and the same 3/18 decisions. Its independent case
+comparison remains pending. No FP32 case decision or fused/matched-null
+acceptance is recorded by this
+checkpoint.
+
+Fresh read-only checks at 18:26:22 verify controller
+`3118453/941361276`, its direct validator `3118822/941365079`, waiter
+`3127027/941414079` and document monitor `1588227/933927668` live.
+The waiter's saved 18:19:52 observation remains
+`waiting_for_original_owners`. The existing Bash monitor last published
+both journal blocks at 18:19:32 and sleeps 900 seconds before its next
+refresh; its descriptor 9 retains the original monitor lock.
+Five focused split-document/concurrent-edit/monitor-retry tests pass
+in 2.05 seconds with CUDA hidden. No monitor is restarted or duplicated.
+
+The next experiment remains the separately prepared actual-LR
+continuation study. Execution archive acceptance and archived-origin
+checking now pass. Before freeze or launch, require complete transition
+54-command/18-decision coverage, the existing independent canonical
+terminal, original owner/waiter/descendant absence, exact keeper
+restoration and a caller-bound one-shot predecessor seal. Compiler
+localization and production Waves 13-15 retain their separate gates.
+The canonical terminal must record complete successful execution,
+cleanup and restoration and agree with all 18 accepted/rejected case
+decisions. Rejected numerical cases remain rejected; complete diagnostic
+coverage does not grant numerical acceptance. Keeper checking requires
+the terminal-recorded process generations on the same eight original
+A100 GPU UUIDs, with the exact current keeper live. The separate seal
+is `PVC/run-preparation/ns-training-path-transition-actual-lr-predecessor-20261119-seal.json`;
+its accepted reader binds the original terminal and evidence identities
+to the digest supplied by the successor caller.
+For every completed production wave, record five complete shared
+536,870,912-token windows, exact shared evaluations and full-resolution
+private SwanLab verification before choosing and launching its successor.
+No new production loss window or cloud import is added here; Wave 12
+remains the latest analyzed and verified production wave.
+
+#### Transition Queue Review Milestone
+
+November 19 18:58, Asia/Shanghai. The current diagnostic compares
+uninterrupted training through update 24 with training interrupted at
+update 22 and resumed through 24, on eight ranks at matrix LR
+0.04525483392. It retains the original 5,120-update schedule,
+compilation, cached-root CUDA graphs and `rtol=1e-5`, `atol=1e-6`.
+The 18:53:21 aggregate records 15/54 completed commands and four
+accepted cases out of the required 18 family/operand/iteration cases:
+MuonT BF16 with five/seven/ten Newton-Schulz iterations, plus MuonT
+FP32 with five iterations. Complete coverage requires decisions for
+all 18 cases; rejected cases remain rejected.
+
+The new FP32/five-iteration result passes all five gates and 39/39
+scalar-loss comparisons. Across all eight ranks, update 22 has
+2,121 tensor comparisons and update 24 has 2,173; both have zero
+failed tensors and zero scalar/structure differences. Update 23 has
+2,173 tensor comparisons, zero failed tensors and sixteen graph-state
+flag differences. This first-resumed checkpoint remains diagnostic
+only. FP32/seven-iteration continuous24/interrupted22/resumed24
+commands now complete; their independent case comparison remains
+pending. The source-bound aggregate is
+`PVC/run-preparation/validation-ns-training-path-exit-transition-20261119-gpu.json`.
+
+The successor actual-LR queue preserves the accepted 191-helper
+execution archive and candidate byte-for-byte. It adds seven
+separately named queue/retained-parent helpers, giving 198 helpers.
+Its first corrected archive passes 42 unique CPU cases in 35.18
+seconds, is accepted at 18:47:34 and passes independent archived-entry
+checking by 18:50:
+`PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/receipt.json`.
+The preceding 41-pass/one-failure archive is retained separately.
+
+Independent review withholds launch of this accepted queue archive.
+Its terminal-admission check can consume the one-shot reconstruction
+attempt while a non-keeper controller-marked descendant is live.
+The terminal checker subsequently rejects acceptance, but the
+premature attempt cannot be retried. The observer also bounds only
+its immediate child, leaving nested readers outside timeout cleanup.
+No waiter is launched from those bytes.
+Queue-only corrections now wait for controller-marked descendants,
+exempt only exact recorded restored-keeper generations, and clean
+up independently marked nested observers on success or timeout.
+Five new regression cases and all 42 inherited cases pass locally:
+47/47 in 36.33 seconds. The separate complete archive passes 47
+unique cases in 36.51 seconds and publishes acceptance at 18:58:03:
+`PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/receipt.json`.
+It retains 198 helpers and 572 inventory entries. Required source lint,
+independent archived-entry checking and source/archive re-review pass.
+The reviewer verifies unchanged inherited 191-helper bytes and
+inventory, matching generated runtime, all archive bindings and the
+separate external-source symlink. A hidden-CPU waiter start is
+issued from these archived bytes and acknowledges at 19:04:03 as
+`3263097/942039903`. Its first immutable observation at 19:04:54
+finds the original controller, validator and independent terminal
+waiter exact/live and records `waiting_for_transition_owners`.
+It retains zero of six handoff phases; no seal, freeze, keeper
+transfer or successor GPU work is issued.
+
+Once accepted and reviewed, the hidden-CPU waiter may observe the
+original transition every 900 seconds. GPU validation still requires
+complete 54-command/18-decision coverage, the original independent
+waiter's canonical terminal, exact controller/validator/waiter and
+descendant absence, restoration of the recorded keeper generations
+on the same eight A100 GPU UUIDs, and a caller-bound predecessor seal.
+Only then may the distinct queue run
+`seal/check-seal/freeze/check/start/terminal` for 54 actual-LR
+configurations and 162 bounded commands. These cover three optimizer
+families, two operand modes, three iteration budgets and three LRs.
+The numerical archive and external terminal archive remain separate.
+
+The full journal/reporting suite passes 243 cases in 71.38 seconds
+before the review corrections and 243 cases in 70.42 seconds after
+them. Nineteen pinned reporting/split/monitor cases pass in 16.66
+seconds. The existing Bash monitor publishes
+both documents at 18:56:46 without restart. No production wave
+completes and no new SwanLab import is due from these partial
+continuation diagnostics. Wave 12 retains all four full-resolution
+verified histories, five complete shared 536,870,912-token training
+windows and exact shared evaluations. A later production wave must
+finish its large-window analysis and cloud verification before its
+successor is selected. Better quality and efficiency than independently
+tuned MuonT remain unestablished.
+
+At 19:03:42 the aggregate also accepts MuonT FP32 with seven
+Newton-Schulz iterations, raising coverage to 5/18 case decisions
+with the same 15/54 complete commands. All five gates and 39/39
+scalar-loss comparisons pass. Updates 22/24 retain 2,121/2,167
+tensor comparisons with zero failed tensors or scalar/structure
+differences. Update 23 has 2,185 tensor comparisons, zero failed
+tensors and sixteen graph-state flag differences; it remains
+diagnostic only. This extends continuation evidence for MuonT;
+it supplies no full-budget loss or efficiency comparison.
+
+The 19:08:46 aggregate retains 16/54 completed commands and the
+same five accepted decisions. MuonT FP32/ten-iteration continuous24
+completes with 12,582,912 tokens, execution/cleanup exits 0/0 and
+marked descendants absent; its interrupted/resumed trajectories
+and numerical decision remain pending. At 19:10 the receipt-backed
+refresh publishes both journal blocks with the reviewed queue's
+acknowledgment and waiting state. Ten acknowledgment-bound reporting
+cases pass in 1.74 seconds. The same sole Bash monitor and both
+independent waiters remain live; no duplicate monitor is created.
+
 #### Training-Path Actual-LR Queue Preparation
 
 November 19 11:16, Asia/Shanghai: a distinct actual-LR successor
@@ -9851,7 +10285,7 @@ is established from the current end-to-end times alone.
 <!-- BEGIN AUTOMATED RESEARCH STATUS -->
 ## Recurring Experiment Status
 
-Refreshed 2026-11-19 17:57:23, Asia/Shanghai, from the same authenticated
+Refreshed 2026-11-19 19:30:32, Asia/Shanghai, from the same authenticated
 receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).
 Receipt times below are historical observations, not fresh process or GPU checks.
 Only the two latest numbered wave reports and current diagnostic gates appear here.
@@ -10092,21 +10526,37 @@ Independent complete terminal and successor validation remain separately gated. 
 
 CPU/source acceptance at 2026-11-19 17:02:50: 129 passing cases, 173 helpers and 542 inventory entries.
 Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions and exit-drain6/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 17:05:15.
-Transition saved status: `validating`; 6/54 completed commands and 2/18 case decisions.
+Transition saved status: `validating`; 19/54 completed commands and 6/18 case decisions.
 Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 17:56:31: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Controller receipt at 2026-11-19 19:31:28: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
 - `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q10_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q7_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q10_full_lr_lower`: accepted; failed gates: none.
 Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
 
 ### NS Transition Independent Terminal Waiter
 
 Saved waiter status `waiting_for_original_owners`; original-owner checks every900seconds.
 CPU/source archive:24 passing cases,175 helpers; `run-preparation/ns-training-path-exit-transition-followup-cpu/20261119T1718/receipt.json`.
-Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 17:49:51.
+Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 19:19:55.
 Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
 Independent terminal completion is required; saved observations do not prove current liveness.
 No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Transition Actual-LR Queue
+
+Saved queue CPU/source-archive acceptance at 2026-11-19 18:58:03; 47 passing cases and 198 authenticated helpers.
+Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json`.
+54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
+The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
+Saved queue intent `acknowledged` at 2026-11-19 19:04:03; original-owner checks every 900 seconds.
+Saved queue `waiting_for_transition_owners` at 2026-11-19 19:20:04; 0/6 completed phases.
+Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`.
+Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
+Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
 
 ### NS Exit-Drain Independent Terminal Waiter
 

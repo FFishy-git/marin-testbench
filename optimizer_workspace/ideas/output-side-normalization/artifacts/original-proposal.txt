@@ -1,0 +1,187 @@
+# Output-Side ($\delta$) Normalization in Toner: Theoretical Gap and Experimental Plan
+
+## 1. Core Critique: The Unaddressed Output-Gradient ($\delta$) Side
+
+For a linear layer $y = Wx$ with input $x \in \mathbb{R}^n$, output $y \in \mathbb{R}^m$, weight matrix $W \in \mathbb{R}^{m \times n}$, and backpropagated output gradient $\delta = \nabla_y \mathcal{L} \in \mathbb{R}^m$, the per-sample weight gradient is the outer product $G = \delta x^\top$.
+
+Toner (`MuonT`) derives its update by decomposing the input second-moment matrix $C = \mathbb{E}[xx^\top] = \sum_{i=1}^n \lambda_i v_i v_i^\top$ and equalizing the expected squared Euclidean change in forward features along input eigenvectors $v_i$:
+
+$$
+\mathbb{E}\big[\Vert{}\Delta W v_i (x^\top v_i)\Vert{}_2^2\big] = \lambda_i \Vert{}\Delta W v_i\Vert{}_2^2
+$$
+
+By applying right-preconditioning $D_{\text{MuonT}} = \text{polar}(M R_a) R_b$ with $R_q \propto C^{-q}$, Toner counteracts strong input activation anisotropy ($\lambda_{\max}(C)$ reaching $85\text{--}156\times$ the mean eigenvalue in Marin 130M and up to $1{,}850\times$ in nanoGPT).
+
+### The Theoretical Gap
+
+1. **Euclidean Feature Norm vs. Loss Curvature:** Measuring feature changes via the unweighted Euclidean norm $\Vert{}\Delta y\Vert{}_2$ implicitly treats every direction in output space $\mathbb{R}^m$ as equally sensitive to the loss $\mathcal{L}$. In reality, second-order loss sensitivity in output space is governed by the output-gradient second moment (empirical Fisher / Gauss–Newton factor) $B = \mathbb{E}[\delta \delta^\top] \in \mathbb{R}^{m \times m}$.
+
+2. **What `polar` Normalizes vs. What It Leaves Skewed:** In $D_{\text{MuonT}} = \text{polar}(M R_a) R_b$, the polar factor $\text{polar}(U\Sigma V^\top) = UV^\top$ snaps all singular values to $1$, which prevents large $\delta$ magnitudes from causing step-size explosion. However, `polar` preserves the left singular subspace $U$, so update columns remain aligned with dominant directions of $\delta$ rather than being whitened across output directions via $B^{-q}$.
+
+3. **Unverified Assumption in Toner:** Toner compares against two-sided optimizers (K-FAC and GO-MUON) conceptually in Section 3.4, but never measures the anisotropy of $B = \mathbb{E}[\delta \delta^\top]$ or tests whether normalizing the $\delta$ side improves convergence when paired with Toner's decoupled inner/outer strengths and shaped weight decay.
+
+## 2. Proposed Formulations
+
+To test output-side normalization cleanly within Toner's geometric framework, we preserve two mechanisms that Toner proved essential: **(i) decoupled inner and outer exponents** $(a, b)$ and **(ii) outer-factor-shaped weight decay**.
+
+Define the damped, Frobenius-normalized inverse-power operators for input covariance $C \in \mathbb{R}^{n \times n}$ and output-gradient covariance $B \in \mathbb{R}^{m \times m}$:
+
+$$
+A_x = \frac{n C}{\text{tr}(C)} + \epsilon I_n, \qquad R_q = \frac{\sqrt{n}\, A_x^{-q}}{\Vert{}A_x^{-q}\Vert{}_F}
+$$
+
+$$
+A_\delta = \frac{m B}{\text{tr}(B)} + \epsilon I_m, \qquad L_q = \frac{\sqrt{m}\, A_\delta^{-q}}{\Vert{}A_\delta^{-q}\Vert{}_F}
+$$
+
+### Variant A: Full Two-Sided Toner (`Bi-MuonT`)
+
+Applies decoupled preconditioning on both sides of the momentum matrix $M \in \mathbb{R}^{m \times n}$, with symmetric two-sided shaped weight decay:
+
+$$
+D_{\text{Bi-MuonT}} = L_{b_{\text{out}}}\, \text{polar}\!\left(L_{a_{\text{out}}}\, M\, R_{a_{\text{in}}}\right) R_{b_{\text{in}}}
+$$
+
+$$
+\Delta W = -\eta \left( s\, D_{\text{Bi-MuonT}} + \lambda\, L_{b_{\text{out}}}^2 W R_{b_{\text{in}}}^2 \right)
+$$
+
+where $s = \sqrt{\max(1, m/n)}$. Unlike GO-MUON (which ties inner and outer exponents and uses isotropic weight decay), `Bi-MuonT` isolates whether left-preconditioning on $\delta$ adds genuine value once decoupled strengths and shaped decay are accounted for.
+
+### Variant B: Geometry-Aware Fan-Out / Fan-In Hybrid (`Hybrid-MuonT`)
+
+In standard `MuonT`, down-projection matrices $W_{\text{down}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}$ require tracking and eigendecomposing a large $d_{\text{ff}} \times d_{\text{ff}}$ input covariance matrix. `Hybrid-MuonT` assigns single-sided preconditioning to the $d_{\text{model}}$-dimensional side of every projection:
+
+* **Fan-out projections (**$W_Q, W_K, W_V, W_{\text{gate}}, W_{\text{up}} \in \mathbb{R}^{d_{\text{out}} \times d_{\text{model}}}$**):** Use **input covariance** $C_x \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ on the right:
+
+
+  $$
+  \Delta W = -\eta \left( s\, \text{polar}(M R_a) R_b + \lambda W R_b^2 \right)
+  $$
+
+* **Fan-in projections (**$W_O, W_{\text{down}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{in}}}$**):** Use **output-gradient covariance** $B_\delta \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ on the left:
+
+
+  $$
+  \Delta W = -\eta \left( s\, L_b\, \text{polar}(L_a M) + \lambda L_b^2 W \right)
+  $$
+
+This caps every preconditioner across the network at $d_{\text{model}} \times d_{\text{model}}$, eliminates $O(d_{\text{ff}}^3)$ eigendecompositions, and allows $B_\delta$ to be shared across projections writing into the same residual stream.
+
+## 3. Direct Experimental Protocol
+
+### Step 1: Diagnostic Spectrum & Curvature Probe (Zero Training Runs Required)
+
+Before running full pretraining sweeps, replicate Toner Sections 2.1 and 5.2 on a trained Muon checkpoint (e.g., Marin 130M or nanoGPT 162M):
+
+1. **Measure** $\delta$**-Anisotropy:** Compute the eigenvalue spectrum of $B = \mathbb{E}[\delta \delta^\top]$ across attention ($W_Q, W_K, W_V, W_O$) and MLP ($W_{\text{gate}}, W_{\text{up}}, W_{\text{down}}$) layers, recording $\lambda_{\max}(B) / \text{mean}(\lambda(B))$ and the fraction of energy in the top eigenvector.
+
+2. **Output-Direction Curvature Probe:** Measure directional Hessian curvature $\langle \Delta W, H \Delta W \rangle$ along rank-1 perturbations $\Delta W = u_j v_i^\top$ by varying the output eigenvector $u_j$ of $B$ at fixed input direction $v_i$. This directly tests whether loss curvature scales with $\lambda_j(B)$, justifying left-rescaling by $L_q$.
+
+### Step 2: 5-Arm Controlled Pretraining Comparison
+
+Run controlled training comparisons at fixed token budgets (e.g., modded-nanoGPT 162M on FineWeb and Marin 130M on C4) across **three batch sizes** ($0.5\text{M}$, $1\text{M}$, and $2\text{M}$ tokens/step):
+
+| Arm | Preconditioning Rule | Weight Decay Rule | Purpose |
+| ----- | ----- | ----- | ----- |
+| **1. Baseline Muon** | $\text{polar}(M)$ | $-\eta \lambda W$ | Tuned baseline |
+| **2. Input-Only `MuonT`** | $\text{polar}(M R_{1/2}) R_{1/8}$ | $-\eta \lambda W R_{1/8}^2$ | Reference Toner recipe |
+| **3. Output-Only `MuonT-Out`** | $L_{1/8}\, \text{polar}(L_{1/2} M)$ | $-\eta \lambda L_{1/8}^2 W$ | Isolates pure effect of $\delta$ normalization |
+| **4. Two-Sided `Bi-MuonT`** | $L_{b_{\text{out}}}\, \text{polar}(L_{a_{\text{out}}} M R_{a_{\text{in}}}) R_{b_{\text{in}}}$ | $-\eta \lambda L_{b_{\text{out}}}^2 W R_{b_{\text{in}}}^2$ | Tests additive gain of normalizing both $x$ and $\delta$ |
+| **5. `Hybrid-MuonT`** | $C_x$ on fan-out; $B_\delta$ on fan-in | Right-shaped on fan-out; left-shaped on fan-in | Tests $d_{\text{model}}$-capped compute–loss Pareto frontier |
+
+### Step 3: Critical Ablations & Systems Metrics
+
+* **Exponent Tempering on `Bi-MuonT`:** Compare $(a, b) = (\tfrac{1}{2}, \tfrac{1}{8})$ on both sides against milder two-sided powers such as $(\tfrac{1}{4}, \tfrac{1}{16})$ to avoid over-amplifying gradient noise in small eigenvalues of $B_\delta$.
+
+* **Batch-Size Scaling Sensitivity:** Because mini-batch output gradients $\delta$ carry higher estimation variance than forward activations $x$ (and Toner Section 5.2 shows low-energy gradient noise strongly impacts preconditioning), track whether `MuonT-Out` and `Bi-MuonT` require larger batch sizes ($2\text{M}+$) or higher EMA momentum $\beta_B$ to outperform input-only `MuonT`.
+
+* **Shaped Weight Decay Verification:** Ablate left-shaped weight decay ($-\eta \lambda L_b^2 W$) against isotropic weight decay ($-\eta \lambda W$) on `MuonT-Out` to confirm whether output-side preconditioning exhibits the same decay interaction observed on the input side in Toner Figure 7.
+
+* **Wall-Clock & Memory Accounting:** Measure peak optimizer state memory and step latency (`ms/step`) comparing backward-hook collection of $B_\delta$ against `FastMuonT`'s forward-only pipeline, specifically checking whether `Hybrid-MuonT` beats `MuonT` in **validation loss per wall-clock second** when $d_{\text{ff}} = 4 d_{\text{model}}$.
+
+## 4. Mechanistic & Rank-Behavior Metrics to Track
+
+To understand *why* each variant succeeds or fails—and to detect whether left-preconditioning on $\delta$ prevents rank collapse or over-amplifies gradient noise—log the following diagnostics across checkpoints, drawing from Toner and related spectral optimization studies (*Spectrally Targeted Muon*, *Freon*, *Mousse*, *Go-MUON*).
+
+### 4.1 Input & Output Anisotropy and Feature-Energy Shares
+
+* **Normalized Covariance Spectra (**$C$ **vs.** $B$**):**
+  Track the eigenvalue distributions of both $C = \mathbb{E}[xx^\top]$ (eigenvalues $\lambda_i$) and $B = \mathbb{E}[\delta\delta^\top]$ (eigenvalues $\mu_j$) divided by their respective layer means, summarizing each via its **top-to-mean ratio** ($\lambda_{\max}/\text{mean}(\lambda)$ and $\mu_{\max}/\text{mean}(\mu)$) and the **fraction of directions below mean energy**. Compare fan-out layers ($W_{Q,K,V}, W_{\text{gate, up}}$) against fan-in layers ($W_O, W_{\text{down}}$).
+
+* **Euclidean vs. Pullback (Gauss–Newton) Feature-Change Energy Share:**
+  Alongside Toner's Euclidean directional energy share along input eigenvectors $v_i$:
+
+
+  $$
+  \text{Share}_i = \frac{\lambda_i \Vert{}\Delta W v_i\Vert{}_2^2}{\sum_k \lambda_k \Vert{}\Delta W v_k\Vert{}_2^2}
+  $$
+
+
+  compute the $\delta$**-weighted (Gauss–Newton) energy share** across joint eigenpairs $(u_j, \mu_j)$ of $B$ and $(v_i, \lambda_i)$ of $C$:
+
+
+  $$
+  \text{GN-Share}_{j,i} = \frac{\mu_j \lambda_i (u_j^\top \Delta W v_i)^2}{\sum_{p,q} \mu_p \lambda_q (u_p^\top \Delta W v_q)^2}
+  $$
+
+
+  This directly measures whether `Bi-MuonT` and `Hybrid-MuonT` flatten loss-weighted feature perturbations rather than unweighted Euclidean feature norms alone.
+
+* **Normalized Directional Response Length & Rotation (**$D v_i$ **and** $u_j^\top D$**):**
+  Following Toner Section 5.1, measure normalized directional gains $\frac{\Vert{}D_t v_i\Vert{}_2}{\Vert{}D_t\Vert{}_F / \sqrt{n}}$ and $\frac{\Vert{}D_t^\top u_j\Vert{}_2}{\Vert{}D_t\Vert{}_F / \sqrt{m}}$, as well as the cosine angle between the update vectors of `MuonT` and `Bi-MuonT` / `Hybrid-MuonT` to separate **length rescaling** from **subspace rotation**.
+
+### 4.2 Effective Rank, Stable Rank, and Subspace Rotation
+
+* **Entropy-Based Effective Rank (**$\text{erank}$**):**
+  For a matrix $A$ with singular values $\{\sigma_1, \dots, \sigma_r\}$ and normalized singular distribution $p_i = \sigma_i / \sum_{k=1}^r \sigma_k$, compute:
+
+
+  $$
+  \text{erank}(A) = \exp\!\left(-\sum_{i=1}^r p_i \log p_i\right) \in [1, r]
+  $$
+
+
+  Log $\text{erank}$ separately across **four objects** at regular intervals:
+
+  1. **Raw Gradient & Momentum (**$\text{erank}(G_t), \text{erank}(M_t)$**):** Quantifies gradient dimensionality prior to spectral whitening.
+
+  2. **Optimizer Update (**$\text{erank}(\Delta W_t)$**):** Measures how many orthogonal directions the optimizer actively explores per step.
+
+  3. **Parameter Matrices (**$\text{erank}(W_t)$**) by Projection Type (**$W_V, W_O, W_{\text{up}}, W_{\text{down}}$**):** Directly detects parameter rank collapse—specifically testing whether left-preconditioning $W_O$ and $W_{\text{down}}$ raises $\text{erank}(W_O)$ and $\text{erank}(W_{\text{down}})$.
+
+  4. **Hidden Activations (**$\text{erank}(X_t)$**):** Tracks representation diversity across sequence tokens.
+
+* **Stable Rank (**$\text{srank}$**):**
+  Compute $\text{srank}(A) = \Vert{}A\Vert{}_F^2 / \Vert{}A\Vert{}_{\text{op}}^2 = (\sum_{i=1}^r \sigma_i^2)/\sigma_1^2$ at high frequency (using power iteration for $\sigma_1$) to monitor whether rank-1 spikes emerge in $W_t$, $G_t$, or $\Delta W_t$.
+
+* **Isospectral Tangent Alignment (Subspace Rotation vs. Singular Stretching):**
+  Project the update into the current weight matrix's singular basis $W_t = U_W \Sigma_W V_W^\top$ via $\widetilde{\Delta W}_t = U_W^\top \Delta W_t V_W$, decomposing total update energy $\Vert{}\Delta W_t\Vert{}_F^2$ into:
+
+  * **Diagonal energy** $\sum_i (\widetilde{\Delta W}_t)_{ii}^2$: directly stretches or shrinks the singular values $\Sigma_W$ (altering $\text{erank}(W_t)$).
+
+  * **Off-diagonal energy** $\sum_{i \neq j} (\widetilde{\Delta W}_t)_{ij}^2$: rotates the singular subspaces $(U_W, V_W)$ without changing the spectrum.
+
+* **Effective Learning Rate (**$\text{ELR}$**):**
+  Track both Frobenius and spectral step ratios $\text{ELR}_F = \eta \Vert{}\Delta W_t\Vert{}_F / \Vert{}W_t\Vert{}_F$ and $\text{ELR}_{\text{op}} = \eta \Vert{}\Delta W_t\Vert{}_{\text{op}} / \Vert{}W_t\Vert{}_{\text{op}}$ so hyperparameter sweeps across exponents $(a, b)$ are not confounded by global step-size drift.
+
+### 4.3 Curvature Alignment, Noise Sensitivity, and Preconditioner Stability
+
+* **Directional Hessian Curvature (**$\langle D, H D \rangle$**):**
+  Use Hessian–vector products along rank-1 perturbations $u_j v_i^\top$ to test whether loss curvature scales jointly with $\mu_j \lambda_i$, verifying the second-order justification for two-sided rescaling.
+
+* **Subspace Noise Injection Sensitivity:**
+  Inject isotropic Gaussian noise selectively into high- versus low-eigenvalue subspaces of $B$ and $C$ (extending Toner Section 5.2) to identify whether amplifying small eigenvalues of $B$ degrades large-batch vs. small-batch generalization.
+
+* **Preconditioner Estimation SNR & Temporal Drift:**
+  Because backpropagated gradients $\delta$ fluctuate more rapidly than forward activations $x$, log the step-to-step relative Frobenius drift $\Vert{}B_t - B_{t-k}\Vert{}_F / \Vert{}B_t\Vert{}_F$ alongside $\Vert{}C_t - C_{t-k}\Vert{}_F / \Vert{}C_t\Vert{}_F$ across batch sizes ($0.5\text{M}\text{--}2\text{M}$) to calibrate damping $\epsilon_\delta$ and EMA decay $\beta_B$.
+
+### 4.4 Instrumentation Summary Checklist
+
+| Diagnostic Group | Metric | Target Tensors | Logging Cadence | Primary Question Answered |
+| ----- | ----- | ----- | ----- | ----- |
+| **Anisotropy & Energy** | $\lambda_{\max}/\text{mean}(\lambda)$, $\text{Share}_i$, $\text{GN-Share}_{j,i}$ | $C_x, B_\delta, \Delta W_t$ | Every $500\text{--}1{,}000$ steps | Does $\delta$-rescaling equalize loss-weighted feature updates? |
+| **Effective & Stable Rank** | $\text{erank}(A)$, $\text{srank}(A)$ | $G_t, M_t, \Delta W_t, W_t, X_t$ | $\text{srank}$ every $50$ steps; $\text{erank}$ every $500$ steps | Does output preconditioning prevent rank collapse in $W_O, W_{\text{down}}$? |
+| **Update Geometry** | Diagonal vs. off-diagonal energy of $U_W^\top \Delta W_t V_W$ | $W_t, \Delta W_t$ | Every $500$ steps | Does the update rotate singular subspaces or stretch singular values? |
+| **Step Calibration** | $\text{ELR}_F$, $\text{ELR}_{\text{op}}$ | $W_t, \Delta W_t$ | Every $50$ steps | Are effective step sizes matched across $(a, b)$ configurations? |
+| **Preconditioner SNR** | $\Vert{}B_t - B_{t-k}\Vert{}_F / \Vert{}B_t\Vert{}_F$ vs. $C_t$ drift | $B_t, C_t$ | Every $100$ steps | How noisy is $B_t$ across batch sizes, and how much damping $\epsilon_\delta$ is needed? |

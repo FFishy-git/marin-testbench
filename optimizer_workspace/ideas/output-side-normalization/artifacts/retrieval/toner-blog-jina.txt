@@ -1,0 +1,1380 @@
+Title: Toner: Improving Muon and AdamW with Input Geometry
+
+URL Source: https://muon-sfd-half-eighth-amin-1105.leamin.chatgpt.site/
+
+Markdown Content:
+☾
+Contents
+Toner: Improving Muon and AdamW with Input Geometry
+Mohamad Amin Mohamadi
+TTIC
+Kaiyue Wen
+Stanford
+Tianhao Wang
+UCSD
+Zhiyuan Li
+TTIC
+
+TL;DR
+
+We introduce Toner1, a general preconditioning rule that uses each layer’s input statistics. Applied to Muon and AdamW as MuonT and AdamT, it lowers validation loss in language-model pretraining, especially at larger batches.
+We find that the inputs to transformer layers are strongly anisotropic: activations have much larger components along some directions than others. This observation motivated the development of Toner.
+Our experiments show improvements over Muon across 130M–1.2B models, multiple batch sizes, and 1×–8× Chinchilla training budgets for the 130M model. On 1.2B models, Toner achieves estimated token savings of up to 22% at the same loss while adding only about 1.5% to total training time. Our results also suggest that MuonT can roughly double Muon’s critical batch size in some of the settings we study.
+Scaling across model sizes
+Figure 1. Final C4 validation loss and estimated token savings for the Marin 130M, 300M, 520M and 1.2B models. We introduce Toner and its variants, MuonT and AdamT, in Section 3. Algorithm 1 (MuonT) and Algorithm 2 (AdamT) give the updates. MuonT’s loss-versus-batch curves suggest roughly twice Muon’s critical batch size in some settings; Section 4.4 explains this interpretation. Each panel has its own vertical scale. See Figure 12 for learning curves and Appendix A3 for comparison settings.
+
+In this post
+
+Section 1 introduces Muon and its effect on a layer’s features, Section 2 examines how the inputs affect those changes, Section 3 develops Toner from these observations, Section 4 evaluates its training performance, and Section 5 investigates what contributes to the gains.
+
+Code & reproduction configs on GitHub
+
+1Background: Muon
+
+Muon has helped set NanoGPT and CIFAR-10 speedrun records [1], ranked among the fastest optimizers in Marin's benchmark [2], and been shown to scale to trillion-parameter mixture-of-experts models [3, 4].
+
+Muon constructs an update for each hidden weight matrix by orthogonalizing its momentum matrix 
+𝑀
+M. Writing the thin singular value decomposition as 
+𝑀
+=
+𝑈
+Σ
+𝑉
+⊤
+M=UΣV
+⊤
+, the ideal direction is 
+𝐷
+=
+polar
+⁡
+(
+𝑀
+)
+=
+𝑈
+𝑉
+⊤
+D=polar(M)=UV
+⊤
+, the polar factor of 
+𝑀
+M. Muon approximates it with a short Newton–Schulz iteration.
+
+To understand what this normalization means for a layer's features, or output, consider a linear layer 
+𝑦
+=
+𝑊
+𝑥
+y=Wx. For a fixed input 
+𝑥
+x, a weight update 
+Δ
+𝑊
+ΔW changes the layer's output by 
+Δ
+𝑦
+=
+Δ
+𝑊
+𝑥
+Δy=ΔWx. The effect of the update therefore depends not only on the update matrix itself, but also on the inputs to which it is applied. When the momentum matrix 
+𝑀
+M has full column rank, Muon's exact polar direction preserves the length of every input vector. In particular, every unit input direction produces an output response of the same magnitude.2
+
+Training inputs need not have equally large components in every direction, so equal responses to unit inputs can still produce uneven feature changes. This raises a natural question: can we improve Muon by accounting for the distribution of inputs when constructing its updates? To investigate, we measure how layer inputs vary across directions in transformer language models and calculate the feature changes implied by Muon's ideal update. These observations motivate Toner.
+
+2Input Anisotropy and Feature Changes
+2.1Measuring Input Energy
+
+We examined the inputs to the 32 attention layers of a Muon-trained Marin 130M model. For an input activation vector 
+𝑥
+x and a fixed unit direction 
+𝑣
+v, we define input energy as 
+𝐸
+[
+(
+𝑣
+⊤
+𝑥
+)
+2
+]
+E[(v
+⊤
+x)
+2
+]. This lets us compare directions and quantify how concentrated the input energy is.
+
+To find the directions with the most energy, we use the input second-moment matrix 
+𝐶
+=
+𝐸
+[
+𝑥
+𝑥
+⊤
+]
+C=E[xx
+⊤
+]. Its unit eigenvectors 
+𝑣
+𝑖
+v
+i
+	​
+
+ are orthogonal input directions, and each eigenvalue is the energy along one of them: 
+𝜆
+𝑖
+=
+𝐸
+[
+(
+𝑣
+𝑖
+⊤
+𝑥
+)
+2
+]
+λ
+i
+	​
+
+=E[(v
+i
+⊤
+	​
+
+x)
+2
+]. These eigenvalues form the spectrum of 
+𝐶
+C.
+
+Across these layers, the largest eigenvalue is 85–156 times the mean eigenvalue in its layer, while about 80% of directions have below-mean energy (Figure 2). We observe a similar pattern in our nanoGPT setup.3
+
+Input energy across directions
+Marin 130M
+Figure 2. Input-energy spectra for the 32 attention layers of the Marin 130M model trained with Muon. Values are ordered by size and divided by that layer's mean eigenvalue, so 1 corresponds to average energy across directions. Thin lines show individual layers and the bold line their median.
+2.2From Inputs to Feature Changes
+
+To connect these spectra to feature changes, we combine input energy with the update's response along each input direction. For a weight update 
+Δ
+𝑊
+ΔW, excluding weight decay, the input projection 
+(
+𝑣
+𝑖
+⊤
+𝑥
+)
+𝑣
+𝑖
+(v
+i
+⊤
+	​
+
+x)v
+i
+	​
+
+ produces the output change 
+(
+𝑣
+𝑖
+⊤
+𝑥
+)
+Δ
+𝑊
+𝑣
+𝑖
+(v
+i
+⊤
+	​
+
+x)ΔWv
+i
+	​
+
+. Its root mean square (RMS) length is
+
+𝜆
+𝑖
+ 
+∥
+Δ
+𝑊
+𝑣
+𝑖
+∥
+.
+λ
+i
+	​
+
+	​
+
+∥ΔWv
+i
+	​
+
+∥.
+
+The first factor is the RMS input size in that direction; the second is the response to a unit input. Because the 
+𝑣
+𝑖
+v
+i
+	​
+
+ diagonalize 
+𝐶
+C, cross terms vanish after averaging, and the squared lengths sum to the total mean squared feature change:
+
+𝐸
+∥
+Δ
+𝑊
+𝑥
+∥
+2
+=
+∑
+𝑖
+𝜆
+𝑖
+∥
+Δ
+𝑊
+𝑣
+𝑖
+∥
+2
+.
+E∥ΔWx∥
+2
+=
+i
+∑
+	​
+
+λ
+i
+	​
+
+∥ΔWv
+i
+	​
+
+∥
+2
+.
+
+For the ideal Muon update with full-column-rank momentum, the response lengths are equal, so each direction's share of the mean squared feature change equals its share of input energy, 
+𝜆
+𝑖
+/
+tr
+⁡
+𝐶
+λ
+i
+	​
+
+/trC. Combining this ideal update with the measured Marin spectra gives a median 21% from the dominant direction alone.
+
+This concentration need not be harmful, but it motivated us to try updates that respond less strongly to high-energy input directions relative to low-energy ones.
+
+3Toner: Preconditioning with Input Statistics
+3.1Constructing the Update
+
+To incorporate the input distribution, we construct the optimizer’s update in coordinates where input energy is more evenly distributed, then map the step back. This idea applies to different base optimizers; we first work through Muon.
+
+To do so, we use a transformation 
+𝑅
+∝
+𝐶
+−
+𝛼
+R∝C
+−α
+, with strength 
+𝛼
+>
+0
+α>0, which reduces high-energy input components relative to low-energy ones. Writing
+
+𝑥
+~
+=
+𝑅
+𝑥
+,
+𝑊
+=
+𝑊
+~
+𝑅
+x
+~
+=Rx,W=
+W
+~
+R
+
+expresses the same linear layer as
+
+𝑦
+=
+𝑊
+𝑥
+=
+𝑊
+~
+𝑥
+~
+.
+y=Wx=
+W
+~
+x
+~
+.
+
+To apply Muon in these coordinates, we first transform the momentum. With 
+𝑅
+R held fixed, a weight gradient 
+𝐺
+G becomes 
+𝐺
+𝑅
+GR, and the corresponding momentum becomes 
+𝑀
+𝑅
+MR. Muon's polar operation then gives the update direction 
+polar
+⁡
+(
+𝑀
+𝑅
+)
+polar(MR) for 
+𝑊
+~
+W
+~
+. Since 
+𝑊
+=
+𝑊
+~
+𝑅
+W=
+W
+~
+R, we multiply this direction by 
+𝑅
+R to obtain the update in the original weight coordinates:
+
+𝐷
+=
+polar
+⁡
+(
+𝑀
+𝑅
+)
+𝑅
+.
+D=polar(MR)R.
+
+We call the factor inside the polar operation the inner factor, and the one afterward the outer factor.
+
+We take inspiration from K-FAC’s use of the input second moment [6]. We can interpret the matched-factor update as steepest feature descent, where the step-size constraint accounts for the layer’s inputs. Section 5.1 explains this interpretation, and Appendix A1 gives the derivation.4
+
+The inner factor reweights the momentum before Muon’s polar operation. The outer factor maps the resulting update back to the original weights.
+
+3.2Decoupling the Inner and Outer Strengths
+
+The coordinate construction uses the same transformation for both factors, but they affect the update differently. In the ideal full-column-rank case, the inner factor changes the orientations of the update’s responses to input directions, while the outer factor sets their lengths. We suspected that gradient noise could affect their useful strengths differently: orientation changes might remain helpful at smaller batches even when strong rescaling gives too much weight to noisy directions. We therefore tested separate inner and outer strengths, denoted by 
+𝑎
+a and 
+𝑏
+b.5
+
+We compare inner and outer strengths across batch sizes and learning rates in nanoGPT (Figure 3). The results support (½, ⅛) as a robust choice across the tested settings. At the reference learning rate, (¾, ⅛) achieves slightly lower loss at 1M- and 2M-token batches. We use (½, ⅛) as a fixed configuration across our main experiments and recommend it as a robust default for practical use.6
+
+Inner and outer strengths
+nanoGPT · FineWeb
+Figure 3.Final validation loss across inner and outer strengths at four batch sizes. “Gap to best” uses the lowest observed loss at the selected batch and learning rate; “Compared with Muon” uses each batch’s 1× Muon control. Boxes mark (½, ⅛) and stars mark the lowest observed losses. Unmeasured cells and diverged runs are shown separately.
+3.3Toner in Practice
+
+During training, we estimate 
+𝐶
+C from sampled layer inputs and refresh the factors as the input distribution changes. We write the inner and outer strengths as 
+𝑎
+a and 
+𝑏
+b. Before taking inverse powers, we damp the statistic to limit amplification of very low-energy directions. We then normalize each factor to keep its overall scale fixed. With 
+𝑛
+n input coordinates and 
+𝜆
+ˉ
+=
+tr
+⁡
+𝐶
+/
+𝑛
+λ
+ˉ
+=trC/n, the update is
+
+𝐴
+	
+=
+𝐶
+/
+𝜆
+ˉ
++
+𝜖
+𝐼
+,
+
+
+𝑅
+𝑞
+	
+=
+𝑛
+ 
+𝐴
+−
+𝑞
+∥
+𝐴
+−
+𝑞
+∥
+𝐹
+,
+
+
+𝐷
+M
+u
+o
+n
+T
+	
+=
+polar
+⁡
+(
+𝑀
+𝑅
+𝑎
+)
+𝑅
+𝑏
+,
+
+
+Δ
+𝑊
+	
+=
+−
+𝜂
+(
+𝑠
+𝐷
+M
+u
+o
+n
+T
++
+𝜆
+𝑊
+𝑅
+𝑏
+2
+)
+.
+A
+R
+q
+	​
+
+D
+MuonT
+	​
+
+ΔW
+	​
+
+=C/
+λ
+ˉ
++ϵI,
+=
+∥A
+−q
+∥
+F
+	​
+
+n
+	​
+
+A
+−q
+	​
+
+,
+=polar(MR
+a
+	​
+
+)R
+b
+	​
+
+,
+=−η(sD
+MuonT
+	​
+
++λWR
+b
+2
+	​
+
+).
+	​
+
+(1)
+
+Here 
+𝜂
+η is the learning rate, 
+𝜆
+λ is the decay coefficient, and 
+𝑠
+s is Muon's matrix-shape scaling. Our recipe uses 
+(
+𝑎
+,
+𝑏
+)
+=
+(
+1
+2
+,
+1
+8
+)
+(a,b)=(
+2
+1
+	​
+
+,
+8
+1
+	​
+
+). An inner strength of ½ approximately standardizes input directions before the polar operation, while an outer strength of ⅛ makes a milder adjustment afterward. From here on, MuonT refers to this configuration unless otherwise specified.
+
+Toner changes the relative sizes of updates along input directions, so we also examined how these updates interact with weight decay. Plain decay shrinks weights by the same fraction in every direction. After observing that it could erase Toner’s gain, we tested decay shaped by the same input statistics.7 We use 
+𝑊
+𝑅
+𝑏
+2
+WR
+b
+2
+	​
+
+, giving relatively weaker shrinkage along high-energy directions and stronger shrinkage along low-energy ones.8
+
+With the MuonT update fixed, shaped decay gives lower validation loss than plain decay at all four tested batch sizes, using the same scalar decay coefficient (Figure 7).
+
+Toner acts on the hidden weight matrices; embeddings, the output head and normalization parameters keep their baseline updates. Earlier learning-rate comparisons led us to multiply the base Muon configuration's hidden-matrix learning rate by 
+2
+2
+	​
+
+. In the main Marin comparisons, we keep this multiplier and the strengths fixed, inheriting the base configuration's decay coefficient and remaining settings.9
+
+Algorithm 1 shows one update. Appendix A5 gives the numerical settings and implementation.
+
+Algorithm 1 · MuonT, one update of 
+𝑊
+∈
+𝑅
+𝑚
+×
+𝑛
+W∈R
+m×n
+𝐶
+←
+𝛽
+𝐶
++
+(
+1
+−
+𝛽
+)
+ 
+1
+𝑁
+𝑋
+⊤
+𝑋
+C←βC+(1−β)
+N
+1
+	​
+
+X
+⊤
+X — 
+𝑁
+N sampled input rows
+Form 
+𝑅
+𝑎
+,
+𝑅
+𝑏
+R
+a
+	​
+
+,R
+b
+	​
+
+ from (1), with 
+(
+𝑎
+,
+𝑏
+)
+=
+(
+1
+2
+,
+1
+8
+)
+(a,b)=(
+2
+1
+	​
+
+,
+8
+1
+	​
+
+)
+𝑀
+←
+M← Nesterov momentum of the gradient 
+𝐺
+G
+𝑊
+←
+𝑊
+−
+𝜂
+𝜆
+ 
+𝑊
+𝑅
+𝑏
+2
+W←W−ηλWR
+b
+2
+	​
+
+ — shaped weight decay
+𝑊
+←
+𝑊
+−
+𝜂
+ 
+𝑠
+ 
+polar
+⁡
+(
+𝑀
+𝑅
+𝑎
+)
+𝑅
+𝑏
+W←W−ηspolar(MR
+a
+	​
+
+)R
+b
+	​
+
+ — polar factor, approximated by Newton–Schulz in training; 
+𝑠
+=
+max
+⁡
+(
+1
+,
+𝑚
+/
+𝑛
+)
+s=
+max(1,m/n)
+	​
+
+Applying Toner to AdamW
+
+We note that the same idea can be applied to any optimizer. We present AdamT, an adaptation of AdamW, as an example. It uses AdamW-based adaptation in the transformed coordinates and maps the update back to the weights; we evaluate it with the original (¼, ¼) factors.10
+
+3.4Relation to Other Optimizers
+
+Toner uses input statistics to precondition an optimizer’s update. Several existing methods use similar statistics, so it is useful to distinguish how they enter the update. K-FAC, for example, approximates layerwise curvature using two factors: the input second moment 
+𝐶
+C and an output-gradient factor 
+𝐵
+=
+𝐸
+[
+𝛿
+𝛿
+⊤
+]
+B=E[δδ
+⊤
+], where 
+𝛿
+δ is the loss gradient with respect to the layer’s output [6]. MuonT uses only the input statistic 
+𝐶
+C.
+
+The following update formulas show how K-FAC, Newton–Muon and MuonT use these factors differently, omitting momentum, damping, decay and overall scaling:
+
+Method	Schematic update
+K-FAC	
+−
+𝜂
+𝐵
+−
+1
+𝐺
+𝐶
+−
+1
+−ηB
+−1
+GC
+−1
+
+Newton–Muon	
+−
+𝜂
+ 
+polar
+⁡
+(
+𝐺
+𝐶
+−
+1
+)
+−ηpolar(GC
+−1
+)
+MuonT	
+−
+𝜂
+ 
+polar
+⁡
+(
+𝐺
+𝑅
+𝑎
+)
+𝑅
+𝑏
+−ηpolar(GR
+a
+	​
+
+)R
+b
+	​
+
+
+Like MuonT, Newton–Muon combines input preconditioning with Muon’s polar operation [5]. It applies 
+𝐶
+−
+1
+C
+−1
+ before the polar operation, but has no outer factor. It also preconditions gradients before accumulating momentum, whereas MuonT applies the current inner factor to the accumulated momentum. This ordering matters when the input statistics change during training.
+
+GO-MUON [7] applies preconditioning both before and after the polar operation, using input and output statistics. If we keep only its input factors, we recover 
+polar
+⁡
+(
+𝑀
+𝑅
+)
+𝑅
+polar(MR)R, the matched-factor update we started with in Section 3.1. MuonT separates the strengths of these two factors and uses the outer factor to shape weight decay through 
+𝑊
+𝑅
+𝑏
+2
+WR
+b
+2
+	​
+
+.
+
+Beyond these update formulas, the methods differ in how they estimate input statistics, refresh the factors and approximate the polar operation. Our adapted Newton–Muon comparisons show that these choices affect training loss; Appendix A6 describes the comparisons and implementation differences.
+
+Earlier activation-aware Muon experiments with Ali Jadbabaie. Ali Jadbabaie previously proposed an activation-aware Muon update, 
+polar
+⁡
+(
+𝑀
+𝐶
+−
+1
+/
+2
+)
+𝐶
+−
+1
+/
+2
+polar(MC
+−1/2
+)C
+−1/2
+, which Kaiyue Wen implemented and tested in Marin. Up to scalar normalization, this update is the special case of Toner’s preconditioning rule with inner and outer strengths (½, ½). Toner allows these strengths to differ and introduces shaped weight decay, whereas the earlier implementation used ordinary weight decay. Our ablations show that these choices are important for the gains we observe.
+
+4Results
+4.1Setup and Evaluation
+
+We evaluate MuonT on Marin's open Llama-style models [9, 2]: the 130M, 300M, 520M and 1.2B models. Our main metric is final cross-entropy loss on held-out C4 text from the Paloma suite [10]. At each model size, the batch-size comparisons use the same architecture, training data and token budget—about 20 tokens per non-embedding parameter [11].11
+
+The GitHub repository includes the hyperparameters and reproduction instructions for our main Marin and nanoGPT experiments.
+
+We start from Marin's tuned Muon settings. For the 130M–520M models, we use Dang et al.'s transfer rules [12] to choose initial settings at larger batches, then refine the baseline by varying one hyperparameter at a time. The 1.2B model comparison uses transferred settings with a smaller baseline search.12
+
+For the scaling and longer-training comparisons, we emphasize that MuonT applies a fixed rule to the base Muon configurations, using the same strengths and learning-rate multiplier from Section 3.3 across these comparisons. We do not run a separate MuonT hyperparameter search at each setting, so additional tuning could yield further gains.
+
+To express a loss difference in training tokens, we estimate how much training the baseline would need to reach Toner's final loss. At the same batch size, if Toner uses 
+𝑆
+T
+o
+n
+e
+r
+S
+Toner
+	​
+
+ updates to reach 
+𝐿
+T
+o
+n
+e
+r
+L
+Toner
+	​
+
+, its estimated saving is
+
+saving
+=
+1
+−
+𝑆
+T
+o
+n
+e
+r
+ 
+/
+ 
+𝑆
+b
+a
+s
+e
+(
+𝐿
+T
+o
+n
+e
+r
+)
+,
+saving=1−S
+Toner
+	​
+
+/S
+base
+	​
+
+(L
+Toner
+	​
+
+),
+(2)
+
+We estimate 
+𝑆
+b
+a
+s
+e
+(
+𝐿
+)
+S
+base
+	​
+
+(L) with power-law fits to final losses at different training budgets, each with a completed learning-rate schedule. At a fixed batch size, saving a fraction of the updates saves the same fraction of tokens. Appendix A2 describes the fitting assumptions and sensitivity checks.
+
+4.2Scaling Across Models and Batches
+
+MuonT lowers validation loss across 130M–1.2B models, with larger gains at larger batch sizes (Figure 1). This batch-size trend is consistent with Zhang et al.'s analysis [13]: the benefits of preconditioning can become more pronounced as larger batches reduce gradient noise.
+
+At the smallest tested batches, the two methods reach similar losses. At a 4M-token batch, the estimated token savings range from 13–24% across the four model sizes. For the 1.2B model, the estimate is about 22% at 8M. These savings measure the improvement over Muon at the same batch size.
+
+The larger gains at large batches suggest that Toner mitigates some of the optimization cost of large-batch training. The savings at a fixed batch size should therefore not be read as a model-size trend. Figure 10 explores how batch size and training length affect the gains in our earlier (¼, ¼) experiments on the 130M model.13
+
+AdamT, using the (¼, ¼) factors introduced in Section 3.3, also lowers validation loss relative to tuned AdamW in the Marin comparisons (Figure 1, AdamW view). At a 2M-token batch, the estimated token savings are about 24% for the 130M model and 15% for the 300M model.14
+
+We also use the modded-nanoGPT setup of Dang et al. [12], training a 162M model on FineWeb and comparing against their published baselines, tuned separately at each batch size.15 MuonT’s advantage over Muon again grows with batch size (Figure 11 in Appendix A4). We keep MuonT’s strengths fixed and select a learning rate at each batch from the grids in Section 3.2.
+
+4.3Training Longer
+
+MuonT retains a loss advantage when we train the Marin 130M model for up to eight times its base budget of 2.7B tokens, reaching 21.5B tokens. Prior work observes that critical batch size grows approximately with the square root of the number of training tokens [15, 16]. We follow this scaling when increasing the training budget, using a 1M-token batch at the 1× budget and increasing it to about 2.8M tokens at 8×.16 We re-tune Muon at each budget and keep MuonT’s strengths and learning-rate transfer rule fixed.
+
+Under power-law loss scaling, a similar percentage saving in tokens corresponds to a smaller absolute loss gap at longer training budgets. Here, the loss gap narrows from about 0.024 to 0.012 nats while estimated token savings remain around 10–13% (Figure 4).
+
+Training longer
+Marin 130M
+Figure 4.Marin 130M trained from 2.7B to 21.5B tokens, with batch size growing as the square root of training length. The loss panel compares Muon with the (¼, ¼) and (½, ⅛) MuonT configurations. The bars estimate the tokens each Toner configuration saves at the same loss and batch size. Both retain an advantage through the longest run.
+4.4Larger Batches and Fewer Updates
+
+The fixed-token loss-versus-batch curves in Figure 1 suggest that MuonT can roughly double Muon’s critical batch size in some of the settings we study. For example, the 1.2B model reaches a final C4 loss of 2.8936 with MuonT at a 4M-token batch, compared with 2.8986 for Muon at a 2M-token batch, using the same training budget.
+
+With enough parallel hardware, a larger batch can process the same tokens in fewer sequential updates and shorten training, provided it does not require more tokens to reach the target loss [17]. We thus test whether MuonT can use a larger batch while keeping the token budget and final loss comparable.
+
+For this comparison, we train the Marin 130M model with both optimizers on the same 2.7B tokens, using a 0.5M-token batch for Muon and a 0.75M-token batch for MuonT. The larger batch uses one third fewer updates—3,413 instead of 5,120—while reaching a slightly lower final C4 loss: 3.4571 versus 3.4621.
+
+Critical batch size can grow rapidly early in training [18], motivating a smaller initial batch followed by an increase. We therefore repeat the comparison with batch sizes that gradually increase during this phase. MuonT again uses two-thirds as many updates, with final loss about 0.0016 nats lower (Figure 5).17
+
+Same tokens, fewer updates
+Marin 130M · 2.7B tokens
+Figure 5. Validation loss above and batch size below. Switch between fixed batches and an early batch increase using the tabs. For the increasing-batch runs, Muon uses 0.25 → 0.5 → 0.75M tokens per update, with increases at roughly 35% and 65% of training updates. MuonT uses batches 1.5× as large.
+5Analysis
+5.1Orientation and Rescaling
+
+Our original motivation was to make feature changes more even. Applying the ideal update formulas to the same measured Marin attention-input spectra, the dominant direction’s median share of the mean squared feature change is 21% under Muon, 7.9% under MuonT with 
+(
+𝑎
+,
+𝑏
+)
+=
+(
+1
+2
+,
+1
+8
+)
+(a,b)=(
+2
+1
+	​
+
+,
+8
+1
+	​
+
+), and 2.5% with matched 
+(
+1
+4
+,
+1
+4
+)
+(
+4
+1
+	​
+
+,
+4
+1
+	​
+
+) factors. Yet MuonT with 
+(
+1
+2
+,
+1
+8
+)
+(
+2
+1
+	​
+
+,
+8
+1
+	​
+
+) factors trains better in several comparisons. This measure of evenness therefore does not, by itself, predict which recipe trains best.
+
+Changing Orientations and Lengths Separately
+
+The feature-energy shares do not capture output orientations. To test their effect, we continue from a shared nanoGPT checkpoint. For a unit input 
+𝑣
+𝑖
+v
+i
+	​
+
+, the update’s response is the output change 
+𝐷
+𝑣
+𝑖
+Dv
+i
+	​
+
+. We replace selected Muon responses with those from the inner-only 
+(
+1
+4
+,
+0
+)
+(
+4
+1
+	​
+
+,0) update, keeping their lengths approximately unchanged. Changing only responses to high-energy inputs improves final loss by 0.0037 nats, close to the 0.0042 improvement from changing all square/tall directions. Changing only low-energy responses gives a 0.0006 improvement (Figure 6, left).18
+
+Shuffling the directional weights or using a random input basis removes most of the gain. The measured input directions matter here, although these controls also change how much the responses rotate.
+
+In separate runs trained from scratch, we test what outer scaling adds while keeping the inner strength at ½, learning rate and shaped decay fixed. Moving from 
+(
+1
+2
+,
+0
+)
+(
+2
+1
+	​
+
+,0) to 
+(
+1
+2
+,
+1
+4
+)
+(
+2
+1
+	​
+
+,
+4
+1
+	​
+
+) lowers final loss by 0.0100 nats (Figure 6, right). Outer scaling therefore helps even when the decay rule stays unchanged.
+
+Separating the inner and outer factors
+nanoGPT · 2M tokens per step
+Figure 6. Final-loss improvements in two component studies. Left: shared-checkpoint continuations replace selected Muon response vectors using an inner-only (¼, 0) update. Right: full-training runs fix an inner factor with strength ½, then add decay with root strength ¼ and outer scaling with strength ¼. The last comparison isolates outer scaling at the same decay rule. Appendix A8 gives the designs.
+Geometry and the steepest-descent interpretation
+5.2Input Energy, Curvature, and Noise
+
+Changing output orientations and rescaling response lengths both improve training in the preceding experiments. To relate these changes to the loss, our earlier (¼, ¼) studies measured curvature along input directions. At the examined checkpoints, directional curvature grows roughly in proportion to input energy (Figure 13). In these probes, high-energy inputs correspond to greater loss sensitivity, supporting smaller responses along those directions.
+
+Since Toner’s advantage grows with batch size, we also study whether it depends on which input directions carry gradient noise. In our earlier (¼, ¼) study at a 2M-token batch, adding noise to gradient components associated with low-energy inputs reduces Toner’s loss advantage over Muon by about 79%. Adding noise in high-energy directions increases its relative advantage. Both optimizers reach higher absolute losses under every added-noise condition (Figure 13, noise view). Where the noise is added matters, but these earlier studies do not yet explain MuonT’s batch-size dependence.
+
+5.3Weight Decay and Learning Rate
+Separating Outer Scaling from Weight Decay
+
+Our recipe uses the outer factor to shape both the update and weight decay. Changing its strength therefore changes two things at once, leaving unclear how much each contributes to the gain. We vary outer scaling and decay separately, with the inner strength fixed at ½, to distinguish their effects (Figure 7).
+
+With the MuonT adaptive update fixed, shaped decay gives lower loss than plain decay at all four tested batches. With the decay root fixed at ⅛, retaining outer scaling improves loss at three of the four batches; omitting it is slightly better at 512K. Changing decay alone therefore does not account for all the benefit of the outer factor.
+
+Outer scaling and shaped weight decay
+nanoGPT · inner strength ½
+Figure 7. We vary outer and decay strengths with inner strength fixed at ½ and the remaining hyperparameters fixed within each batch. Each cell shows final validation loss and its difference from the outlined (⅛, ⅛) reference. Blue means lower loss; red means higher loss. Empty cells were not measured. Decay labels refer to the root before squaring.
+Comparing Strengths Across Learning Rates
+
+A learning rate suited to one pair of strengths may put another at a disadvantage. After the scaling comparisons, we run a learning-rate sweep on the Marin 130M model to compare each strength pair at its best tested rate. MuonT still gives lower final loss than the 
+(
+1
+4
+,
+1
+4
+)
+(
+4
+1
+	​
+
+,
+4
+1
+	​
+
+) and 
+(
+1
+2
+,
+1
+2
+)
+(
+2
+1
+	​
+
+,
+2
+1
+	​
+
+) configurations at every tested batch (Figure 8). Some batches favor a rate different from the 
+2
+2
+	​
+
+ transfer rule used in Section 4.
+
+Learning rate and strengths
+Marin 130M
+Figure 8. Final C4 loss relative to the best tested Muon run at each batch on the Marin 130M model. Each curve varies the learning rate for a fixed choice of strengths; rings mark its lowest loss. The learning-rate–decay product and auxiliary AdamW rate stay fixed. At batch 4M, the training budget is doubled.
+Takeaway
+
+Using layer inputs to construct updates improves language-model training, especially at larger batches. Our experiments suggest that making feature changes more even is only part of the story: changing update orientations also helps, and the inner and outer factors benefit from different strengths. We recommend MuonT with (½, ⅛) strengths and shaped weight decay as a robust practical default across the settings we tested. Our nanoGPT comparisons also suggest that (¾, ⅛) may give better results at larger batches. Why MuonT’s advantage grows with batch size remains an open question.
+
+Acknowledgments
+
+Amin thanks Nikos Tsilivis, Marko Medvedev, Nicholas Roberts, and Sobhan Mohammadpour for informal discussions and feedback on the writing. Kaiyue Wen thanks Ali Jadbabaie for helpful discussions. Tianhao Wang acknowledges support from Google.
+
+6Appendix: Derivations and Supporting Evidence
+Citation
+@misc{mohamadi2026toner,
+  author = {Mohamad Amin Mohamadi and Kaiyue Wen and
+            Tianhao Wang and Zhiyuan Li},
+  title  = {{Toner}: Improving {Muon} and {AdamW} with Input Geometry},
+  year   = {2026},
+  url    = {https://mohamad-amin.github.io/blog/toner}
+}
+References
+K. Jordan et al. Muon: An optimizer for hidden layers in neural networks, 2024.
+K. Wen et al. Fantastic pretraining optimizers and where to find them, 2025.
+J. Liu et al. Muon is scalable for LLM training, 2025.
+Kimi Team. Kimi K3: Open frontier intelligence, 2026.
+Z. Du and W. Su. The Newton–Muon optimizer, 2026.
+J. Martens and R. Grosse. Optimizing neural networks with Kronecker-factored approximate curvature, 2015.
+T. Che. Second-order Muon done right: A principled marriage of spectral geometry and curvature (GO-MUON), 2026.
+G. Zhang, C. Wang, B. Xu, and R. Grosse. Three mechanisms of weight decay regularization. ICLR, 2019.
+The Marin community. Marin: an open lab for building foundation models.
+I. Magnusson et al. Paloma: A benchmark for evaluating language model fit, 2023.
+J. Hoffmann et al. Training compute-optimal large language models, 2022.
+X. Dang et al. The best optimizer depends on batch size, 2026.
+G. Zhang et al. Which algorithmic choices matter at which batch sizes? Insights from a noisy quadratic model. NeurIPS, 2019.
+W. Held and D. Hall. Marin 32B retrospective: Shuffling—linear vs. Feistel, 2025.
+H. Zhang et al. How does critical batch size scale in pre-training?, 2024.
+S. Bergsma et al. Power lines: Scaling laws for weight decay and batch size in LLM pre-training, 2025.
+S. McCandlish et al. An empirical model of large-batch training, 2018.
+W. Merrill et al. Critical batch size revisited: A simple empirical approach to large-batch language model training. NeurIPS, 2025.
+A. Meterez et al. Seesaw: Accelerating training by balancing learning rate and batch size scheduling, 2025.
+J. Bernstein and L. Newhouse. Old optimizer, new norm: An anthology, 2024.
+T. Heskes. On "natural" learning and pruning in multilayered perceptrons. Neural Computation 12(4), 2000.
+D. Povey et al. Parallel training of DNNs with natural gradient and parameter averaging, 2014.
+G. Yang et al. A spectral condition for feature learning, 2023.
+J. Bernstein. Deriving Muon, 2025.
+V. Gupta et al. Shampoo: Preconditioned stochastic tensor optimization, 2018.
+N. Vyas et al. SOAP: Improving and stabilizing Shampoo using Adam, 2024.
+W. Lin et al. Understanding and improving Shampoo and SOAP via Kullback–Leibler minimization, 2025.
+Y. Zhang et al. Mousse: Rectifying the geometry of Muon with curvature-aware preconditioning, 2026.
+Z. Qiu et al. Gated attention for large language models: Non-linearity, sparsity, and attention-sink-free, 2025.
+Z. Qiu et al. A unified view of attention and residual sinks: Outlier-driven rescaling is essential for transformer training, 2026.
+Y. LeCun et al. Efficient BackProp. In Neural Networks: Tricks of the Trade, 1998.
+J. M. Cohen et al. Gradient descent on neural networks typically occurs at the edge of stability, 2021.
+J. M. Cohen et al. Adaptive gradient methods at the edge of stability, 2022.
+R. Islamov et al. Non-Euclidean gradient descent operates at the edge of stability, 2026.
+Notes
+Named after skincare toners: a lightweight conditioning for uneven features. ↩
+These statements concern the exact polar direction before learning-rate scaling and weight decay. Wide matrices introduce a projection factor, and finite Newton–Schulz updates need not have equal directional lengths. Appendix A1 gives the algebraic conditions. ↩
+We average over sampled token positions without centering the inputs. The Marin measurement uses the final checkpoint after 2.7B training tokens at a 1M-token batch. On the nanoGPT model, the top eigenvalue is a median 129 times the mean across hidden-matrix inputs, with a range of about 20–1,850. Du and Su also report strongly anisotropic input second moments in their Newton–Muon experiments [5]. ↩
+GO-MUON [7] and Newton–Muon [5] have similar update forms. Section 3.4 compares their updates with Toner’s. ↩
+Figure 13 reports curvature and directional-noise probes from the earlier (¼, ¼) study. These do not isolate the noise sensitivity of the two factors. ↩
+Appendix A3 describes the training setups and tuning procedure. ↩
+Direction-dependent shrinkage also arises from preconditioned 
+𝐿
+2
+L
+2
+	​
+
+ regularization; see Equation 6 in Zhang et al. [8]. ↩
+For fixed 
+𝑅
+R, a separate gradient step on the original-weight penalty 
+𝜆
+∥
+𝑊
+∥
+𝐹
+2
+/
+2
+λ∥W∥
+F
+2
+	​
+
+/2, expressed in coordinates 
+𝑊
+=
+𝑊
+~
+𝑅
+W=
+W
+~
+R and mapped back, gives 
+−
+𝜂
+𝜆
+𝑊
+𝑅
+2
+−ηλWR
+2
+. We retain this form with 
+𝑅
+=
+𝑅
+𝑏
+R=R
+b
+	​
+
+ when separating the update strengths. Appendix A1 gives the derivation. ↩
+Figure 12 lists the recorded hyperparameters under “Run settings.” Section 5.3 reports the follow-up learning-rate sweep. ↩
+Algorithm 2 and Appendix A5 specify the moment conventions and norm matching. AdamT retains (¼, ¼) factors. ↩
+The model-size labels exclude token embeddings and the output head. Batch size means tokens per optimizer update; 1M in batch labels denotes 
+2
+20
+2
+20
+ tokens. Appendix A3 gives the setups. ↩
+For the 1.2B model, batch 1M uses Marin's tuned reference; 2M and 8M use transferred settings without a search; 4M uses the lower-loss of two learning rates. Appendix A3 gives the comparison settings. ↩
+Appendix A2 explains the critical-batch estimates used in the figure. ↩
+We tune AdamW using the same batch-transfer and coordinate-search procedure. ↩
+We find that this nanoGPT setup is sensitive to data shuffling, consistent with observations in Marin’s retrospective [14]. In separate tests, switching to shuffled training rows lowers final validation loss by roughly 0.01–0.02 nats across the optimizers tested. For consistency, all nanoGPT experiments reported in this post retain the original unshuffled loader. ↩
+In the earlier (¼, ¼) study, holding batch size fixed instead reduces the estimated advantage with longer training. Appendix A2 compares the two schedules. ↩
+Seesaw [19] also studies increasing batch size during training, jointly with learning-rate scheduling. The caption of Figure 5 gives our batch schedules; Appendix A7 discusses computational overhead. ↩
+The replacements approximately preserve each input eigenvector's response length. Combining them need not preserve mutual orthogonality or lengths for arbitrary inputs. Wide matrices keep Muon's update; Appendix A8 describes the intervention. ↩
+We fixed 0.938 during earlier explorations and retained it in these experiments. As a practical heuristic, we recommend matching the input-statistic momentum to Muon’s momentum coefficient. ↩
+The directional curvature is 
+⟨
+𝐷
+,
+𝐻
+𝐷
+⟩
+⟨D,HD⟩, where 
+𝐻
+H is the loss Hessian. ↩
+We compare only steps with the same input basis, exclude decay from 
+𝐷
+𝑡
+D
+t
+	​
+
+, and normalize response lengths by 
+∥
+𝐷
+𝑡
+∥
+𝐹
+/
+768
+∥D
+t
+	​
+
+∥
+F
+	​
+
+/
+768
+	​
+
+. The measurements use one nanoGPT run per optimizer at batch 2M; the Toner run uses (¼, ¼) with Frobenius rescaling. ↩
+Related oscillations occur at the edge of stability in full-batch gradient descent [32]. Applying this interpretation to Muon requires accounting for momentum and evolving optimizer state [33, 34]. Our fixed-statistic probes depend on momentum and do not establish an edge-of-stability explanation for these trajectories. ↩

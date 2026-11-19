@@ -1,0 +1,51 @@
+{
+  "time": "2026-11-15T09:14:44.453751+00:00",
+  "source_sha256": {
+    "experiment/__init__.py": "0b8b3dcd0de9b149267692b35c140355dff388fd3126a08ac8236db8ceaed083",
+    "experiment/access.py": "52f2600be4220b1063e2d1d19845de5d2aabedab1616f259518340aebae9236a",
+    "experiment/bootstrap.py": "658aa14a0c7a454a90d4e26e3343bfc4946a2c134d5549e2aa29380940b35939",
+    "experiment/capture.py": "770cf441dbbb9deb847b2be41df38b170ab31d9f32b6caa392ea1a0d73eac8e2",
+    "experiment/configure.py": "be3ff1f7210960bf39097ae6157d1067f21dc5da0cc9c516f79bfff8a7d52b1f",
+    "experiment/data_access.py": "8fd029d6b1d0de090ccb076feaf6f01ea5decb8d0c234392389779aaf01892fb",
+    "experiment/deploy.py": "63f4312bac770b86f045f00f830d172b967c111f47e5a588194150645f58fb38",
+    "experiment/factors.py": "a1a5408531d3a4055e20d63dfa9d449299952a50ea5be12a01426176f711cf7f",
+    "experiment/gpu_checks.py": "88a62227f51659fbb7d0ef0656c461da305ffb1c94727ce009dec0ded2a7ab50",
+    "experiment/launch.py": "5dc43af9cf530fbc92c3aebc0bad8ff0e374d147916506540bd2da85a431c154",
+    "experiment/optimizer.py": "06daef7501d0c5ab55a42164d8abcb684cf1931c0e33f13720fbad6d2cde538b",
+    "experiment/records.py": "d6ea6b514f8fc6789e10d6d1753393fae667fe77664c486d4c0d7352a669dc58",
+    "experiment/reference.py": "9b00ba490aa6538dabe5f637ce322ed09be4b700c8ed446d87db4db7db4d7bd7",
+    "experiment/tests/conftest.py": "84643f4ff5513dd98ce30b58b51738e083354db599dae61e19f7bf18c9f7c045",
+    "experiment/tests/test_numerics.py": "487f18c2301479f1271aff779de116456e76ad3d01fa6989a4ff4dedcde3406b",
+    "experiment/train.py": "183eaa890cdd6f376406c86d6b5b91e6cf837e6f0d7f9344c4e7444c8f6a75a4",
+    "experiment/validate.py": "5ab9eed1c5f0b794a8ae40ede15fe13884b6d7c94cba3bf6a34ca395c42e74ec"
+  },
+  "checks": {
+    "cpu_numerics": true,
+    "cpu_distributed_statistics": true,
+    "model_parameter_count": true,
+    "gpu_collector": false,
+    "distributed_statistics": false,
+    "fa2": false,
+    "compiled_model": false,
+    "real_data_four_arm_smoke": false,
+    "checkpoint_continuation": false,
+    "gpu_down_updates": false,
+    "cached_root_continuation": false
+  },
+  "evidence": {
+    "cpu_test_command": [
+      "/opt/conda/envs/torch-base/bin/python",
+      "-m",
+      "pytest",
+      "-c",
+      "/dev/null",
+      "experiment/tests",
+      "-q"
+    ],
+    "cpu_test_exit_code": 0,
+    "cpu_test_stdout": "..................                                                       [100%]\n=============================== warnings summary ===============================\n../../../../../../../../opt/conda/envs/torch-base/lib/python3.13/site-packages/torch/cuda/__init__.py:65\n  /opt/conda/envs/torch-base/lib/python3.13/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.\n    import pynvml  # type: ignore[import]\n\n../../../../../../../../opt/conda/envs/torch-base/lib/python3.13/site-packages/torch/jit/_script.py:362: 14 warnings\n  /opt/conda/envs/torch-base/lib/python3.13/site-packages/torch/jit/_script.py:362: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n18 passed, 15 warnings in 8.25s\n",
+    "cpu_test_stderr": "",
+    "model_parameter_count": 265585152
+  },
+  "limitation": "CPU checks do not validate A100 kernels, NCCL, full-model compilation or real-data training."
+}

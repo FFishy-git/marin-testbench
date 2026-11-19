@@ -11,7 +11,7 @@ import ns_training_path_transition_lr_source as adapter_source
 
 SOURCE_SHA256 = "9e51b4366091a650b3665a292679039bde03a06354280e49fb36e07f159019bf"
 ADAPTER_CPU = "run-preparation/ns-training-path-transition-actual-lr-adapter-cpu/corrected-20261119T1807/receipt.json"
-ADAPTER_CPU_SHA256: str | None = None
+ADAPTER_CPU_SHA256: str | None = "8c9ea7cf47c3fcb437bc591cc90a82341651767ea19305082963363ebb05b9f7"
 PARENT_FILES = {
     "ns_training_path_lr_gpu_source.py": "9e51b4366091a650b3665a292679039bde03a06354280e49fb36e07f159019bf",
     "ns_training_path_lr_gpu_owner.py": "8424a3c1ecd55d081bda1f7c1f6147893accb0bde0c6f756b1a83e4f81f7bb32",

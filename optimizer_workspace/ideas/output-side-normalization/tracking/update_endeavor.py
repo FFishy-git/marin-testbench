@@ -57,6 +57,7 @@ from ns_training_path_lr_queue_reporting import lines as ns_training_path_lr_que
 from ns_training_path_recovery_reporting import lines as ns_training_path_recovery_lines
 from ns_training_path_reporting import lines as ns_training_path_lines
 from ns_training_path_transition_followup_reporting import lines as ns_training_path_transition_followup_lines
+from ns_training_path_transition_lr_queue_reporting import lines as ns_training_path_transition_lr_queue_lines
 from ns_training_path_transition_reporting import lines as ns_training_path_transition_lines
 from owned_output_production import require_archive as require_owned_production_archive
 from owned_output_run_history import CHANGES as OWNED_PRODUCTION_CHANGES
@@ -148,6 +149,7 @@ SUMMARY_SECTIONS = {
     "NS Transition Independent Terminal Waiter",
     "NS Exit-Drain Independent Terminal Waiter",
     "NS Actual-LR Training-Path Queue",
+    "NS Transition Actual-LR Queue",
 }
 LOCAL_ZONE = ZoneInfo("Asia/Shanghai")
 OWNED_VALIDATORS = {
@@ -3435,6 +3437,7 @@ def render(root: Path, now: datetime) -> str:
     lines.extend(ns_training_path_exit_lines(root, local_time))
     lines.extend(ns_training_path_transition_lines(root, local_time))
     lines.extend(ns_training_path_transition_followup_lines(root, local_time))
+    lines.extend(ns_training_path_transition_lr_queue_lines(root, local_time))
     lines.extend(ns_training_path_exit_followup_lines(root, local_time))
     lines.extend(ns_training_path_lr_queue_lines(root, local_time))
     lines.extend(selected_lr_production_cpu_lines(root))

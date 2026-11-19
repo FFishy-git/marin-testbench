@@ -7316,7 +7316,7 @@ No original keeper, controller, validator or monitor was restarted.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-19 17:57:23, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-19 19:30:32, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -8002,21 +8002,37 @@ Independent complete terminal and successor validation remain separately gated. 
 
 CPU/source acceptance at 2026-11-19 17:02:50: 129 passing cases, 173 helpers and 542 inventory entries.
 Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions and exit-drain6/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 17:05:15.
-Transition saved status: `validating`; 6/54 completed commands and 2/18 case decisions.
+Transition saved status: `validating`; 19/54 completed commands and 6/18 case decisions.
 Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 17:56:31: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Controller receipt at 2026-11-19 19:31:28: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
 - `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q10_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q7_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_f32_q10_full_lr_lower`: accepted; failed gates: none.
 Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
 
 ### NS Transition Independent Terminal Waiter
 
 Saved waiter status `waiting_for_original_owners`; original-owner checks every900seconds.
 CPU/source archive:24 passing cases,175 helpers; `run-preparation/ns-training-path-exit-transition-followup-cpu/20261119T1718/receipt.json`.
-Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 17:49:51.
+Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 19:19:55.
 Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
 Independent terminal completion is required; saved observations do not prove current liveness.
 No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Transition Actual-LR Queue
+
+Saved queue CPU/source-archive acceptance at 2026-11-19 18:58:03; 47 passing cases and 198 authenticated helpers.
+Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json`.
+54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
+The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
+Saved queue intent `acknowledged` at 2026-11-19 19:04:03; original-owner checks every 900 seconds.
+Saved queue `waiting_for_transition_owners` at 2026-11-19 19:20:04; 0/6 completed phases.
+Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`.
+Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
+Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
 
 ### NS Exit-Drain Independent Terminal Waiter
 
@@ -23148,3 +23164,362 @@ PYTHONFAULTHANDLER1, archivehelperPYTHONPATH and `--phase start`.
 No acknowledgment yet in this entry. Old failed waiter/queues remain
 consumed. Current diagnostic aggregate16:22:30.222904 has6commands/
 1decision; no terminal or new production result.
+
+### November 19 18:30 Transition Execution Archive Acceptance
+
+The distinct execution source/lifecycle local suite passes all 53 cases.
+The complete archived suite starts at 18:22:49 and passes 53 unique
+cases in 255.05 seconds, with zero failures/errors/skips. Receipt time
+is 18:27:09.596316 Asia/Shanghai:
+`PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json`.
+Status is
+`ns_training_path_transition_actual_lr_execution_owner_cpu_archive_verified_gpu_unissued`.
+Execution exit is integer zero; no error is retained. It authenticates
+191 helpers and 565 inventory entries. All 179 accepted adapter helper
+bytes remain unchanged, as does candidate
+`PVC/candidates/ns-training-path-transition-actual-lr-adapter-corrected-20261119T1807`.
+All 54 configurations/162 bounded commands, full 5,120-update schedule,
+numerical readers/tolerances, compilation and cached-root graphs remain
+unchanged. The external terminal archive remains separate.
+
+| Artifact | SHA256 |
+| --- | --- |
+| Execution CPU receipt | `5ec5d6155d7ab97642917f7b65432572b9d7c4de7d838cd089a0ce2072cdda27` |
+| Execution source archive | `5d0f6dfda290122087b694e87e4c9c6547378de2ba5e68349a7972b732d2f549` |
+| Archived tests XML | `0cca5f71f15f57f0e4e01f2994a74e67c166002034687014bc9c1af5b2b0f74b` |
+| Archived CPU log | `a73884cb45c087fa895253422459974b14961800a7a055243169ae0b0dbe3e2c` |
+| Accepted adapter parent receipt | `8c9ea7cf47c3fcb437bc591cc90a82341651767ea19305082963363ebb05b9f7` |
+| New execution-source entry | `0ef66343a365678213f69ab608f3d300edca70ba742b4e69b74f68af20d90651` |
+| New execution-owner entry | `4399c9ff5aeff03c15033d34668bba46566d6b628d36d0f5130d5be786682679` |
+
+The receipt retains the exact offline uv/pytest command, archived cwd,
+fixed environment, tests and log identities. The suite uses
+`--timeout=60 --session-timeout=600 --import-mode=prepend` and all seven
+repository safety-marker exclusions. Its JUnit duration is 254.960
+seconds; the pytest terminal reports 255.05 seconds. All CPU archive
+processes have exited by the read-only 18:28 check.
+
+Independent archived-origin `--phase check` passes by 18:30:
+
+```bash
+env CUDA_VISIBLE_DEVICES= CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+    NCCL_INSPECTOR_ENABLE=0 PYTHONDONTWRITEBYTECODE=1 PYTHONFAULTHANDLER=1 \
+    PYTHONPATH=/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/tracking:/opt/conda/envs/torch-base/lib/python3.13/site-packages \
+    /opt/conda/envs/torch-base/bin/python -P \
+    /apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/tracking/ns_training_path_transition_lr_gpu_source.py \
+    --root /apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization \
+    --phase check \
+    --cpu-receipt /apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json
+```
+
+An initial check invocation omitted the fixed CUBLAS/NCCL/faulthandler
+environment and refused before checking. The complete-environment
+invocation above passes; neither invocation edits the accepted archive.
+CPU acceptance grants no freeze, keeper transfer, numerical waiver,
+production authority or SwanLab result.
+
+Authenticated transition reporting at 18:29 reads aggregate
+18:26:44.464603 and controller state 18:26:53. It retains 11/54 completed
+commands and 3/18 accepted decisions: MuonT BF16 five/seven/ten iterations
+pass all five gates and 39/39 scalar-loss comparisons each. The fourth
+case's continuous24 and interrupted22 execution/cleanup exits are 0/0,
+dated 18:21:17.393381 and 18:25:54.785322. Its resumed trajectory and
+comparison remain pending. Fresh process checks at 18:26:22.154944
+verify exact controller `3118453/941361276`, direct validator
+`3118822/941365079`, waiter `3127027/941414079` and sole monitor
+`1588227/933927668` live. The waiter retains its 18:19:52 observation;
+the monitor last publishes both journals 18:19:32 and sleeps 900 seconds.
+Descriptor 9 still points at its original monitor lock.
+
+Five focused split-document/concurrent-edit/900-second-monitor-retry
+tests pass in 2.05 seconds with hidden CUDA:
+`PVC/run-preparation/test-endeavor-wave-documentation-20261119T1827.xml`,
+SHA256 `44908dae7a5c1fd2333fd6360d0ea40a5552eaf31ac61b5fe3caa8fde56810e5`.
+They use the previously recorded full safe CPU command with
+`-k 'split_refresh or refuses_ambiguous_ledger or document_monitor_retries'`
+and that XML path. Required `./infra/pre-commit.py` document checks pass
+except the existing 500KiB size policy for both journals. Content-only
+checks with `--skip large_files`, Bash monitor syntax and
+`git diff --check` pass. Manual edits hold the shared
+`.endeavor-update.lock` and preserve all automated-block boundaries.
+
+The next freeze requires complete transition 54-command/18-decision
+coverage, the existing independent canonical terminal, exact original
+owner/waiter/descendant absence and keeper restoration, then a
+caller-bound one-shot predecessor seal. No GPU launch or production
+wave is issued during this documentation update. Wave 12 remains the
+latest complete, large-window analyzed and privately SwanLab-verified
+production wave. The original monitor continues without restart.
+
+18:33 continuation of this milestone: the authenticated reporter now
+reads aggregate 18:30:58.025668 with 12/54 complete commands and the
+same 3/18 accepted MuonT BF16 decisions. FP32/five-iteration resumed24
+execution/cleanup exits are 0/0 at 18:28:31.600986, with marked
+descendants absent. Its independent case comparison remains pending.
+The latest current-state summary and the numerical checkpoint table
+are recorded in `ENDEAVOR.md` under "Transition Execution Archive
+Milestone". The next scheduled original-monitor wake follows its
+18:19:32 publication and 900-second sleep; no replacement is started.
+
+### November 19 Transition Actual-LR Queue Review and FP32 Result
+
+At 18:53:21 the source-bound transition aggregate retains 15/54
+completed commands and 4/18 accepted case decisions. Newly accepted
+`muont_ns_f32_q5_full_lr_lower` passes all five gates and 39/39
+scalar-loss comparisons. Its checkpoint-22/24 tensor counts are
+2,121/2,173, with zero failed tensors and scalar/structure differences.
+Checkpoint 23 has 2,173 comparisons, zero failed tensors and sixteen
+graph-state flag differences; it remains diagnostic only. The
+FP32/seven-iteration command triple is complete, comparison pending.
+These statements read the existing
+`run-preparation/validation-ns-training-path-exit-transition-20261119-gpu.json`;
+no tensor replay or numerical waiver is performed.
+
+The 198-helper successor queue preserves every helper and candidate
+byte of the accepted 191-helper execution archive. Corrected CPU
+archive `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847`
+passes 42 unique cases in 35.18 seconds and publishes acceptance at
+18:47:34.136764. The original failed queue archive
+`run-preparation/ns-training-path-transition-actual-lr-queue-cpu/20261119T1846`
+retains 41 passing/one failing case and exit 1; it is never reused.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/receipt.json` | `00664cfa90856d81ca4bf48ff1f29c3fa78d3712af01c5277d978043db47261d` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/source.tar` | `512a08f6d6fd9f08a677d0fcb45adb67268cbd7dfe12e4d5c74af07ab35feadb` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/tests.xml` | `46aa8cc9b98e0be8ef2fcd8ec76a4aec58c228b711ef078d91f3791b35bbce61` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/cpu.log` | `54bba8e384d6eb449a8740b2618053f45668bd465d0399e53b682412778102cd` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/20261119T1846/receipt.json` | `ccae13fd8d4ba55a788bdb7e2e3396500270fd3db1cdcb913f8b4c2a32bb793b` |
+| `run-preparation/test-transition-lr-queue-journal-20261119T1851.xml` | `76772f4d106ba0bac33853f369a2d2ae72409ee15529185a48c33815155ac311` |
+
+The accepted archived entry passes independent `--phase check` by
+18:50. The exact command uses the archived tracking cwd and fixed
+hidden-CUDA environment:
+
+```bash
+env CUDA_VISIBLE_DEVICES= CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+  NCCL_INSPECTOR_ENABLE=0 PYTHONDONTWRITEBYTECODE=1 PYTHONFAULTHANDLER=1 \
+  UV_OFFLINE=1 \
+  PYTHONPATH="$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/tracking" \
+  /opt/conda/envs/torch-base/bin/python -P \
+  "$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/tracking/ns_training_path_transition_lr_queue.py" \
+  --root "$PVC" --phase check \
+  --cpu-receipt "$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/corrected-20261119T1847/receipt.json"
+```
+
+Independent reviewer Ramanujan verifies all 198 helper hashes and
+preservation of the inherited 191-helper closure but withholds launch.
+P1: `issued_readiness` omits issued controller-marker descendants;
+the terminal publishes its one-shot intent before its later marker
+check, so a premature terminal attempt can be consumed permanently.
+P2: immediate observer subprocess timeout does not clean nested
+readers. No waiter is started from the 42-case archive.
+
+Queue-only corrections add controller-marker admission with exact
+restored-keeper generation exceptions and a distinct acknowledged
+observer marker inherited through nested readers. A stdin caller
+acknowledgment precedes observer work; all exits use the accepted
+bounded pidfd cleanup helper. Three real controller-marker cases
+cover live descendant, exact restored keeper and substituted keeper
+generation. Two real detached-nested-reader cases cover timeout and
+successful immediate observer exit, preserving an unrelated live
+process. Eleven focused review/authentication cases pass in 4.47
+seconds; the complete local suite passes 47 cases in 36.33 seconds.
+Required source lint passes after mechanical formatting. Independent
+changed-source re-review clears both fixes. The new complete CPU
+archive is running under
+`run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855`.
+Original execution archives, numerical tolerances and production
+gates remain unchanged.
+
+The pre-correction journal/reporting run passes 243 cases in 71.38
+seconds. Its first invocation misses the archived pytest-guard import
+path and exits before collection; adding the existing accepted archive
+to `PYTHONPATH` passes without weakening timeout or marker exclusions.
+The successful invocation uses offline uv, `python -P -m pytest`,
+`-c /dev/null -p no:cacheprovider -p root_diagnostic_pytest_guard`,
+`--timeout=60 --session-timeout=600 --import-mode=prepend`, all seven
+repository safety-marker exclusions, `test_update_endeavor.py` and
+`test_ns_training_path_transition_lr_queue_reporting.py`, with the
+XML path in the table.
+
+Read-only 18:56 checks find controller `3118453/941361276`, direct
+validator `3118822/941365079`, independent waiter
+`3127027/941414079` and sole Bash monitor `1588227/933927668` live.
+The monitor publishes both journals at 18:56:46 and resumes its
+900-second sleep. Manual milestone edits hold
+`PVC/.endeavor-update.lock` after that scheduled refresh.
+No transition terminal, actual-LR seal/freeze/keeper transfer/GPU
+launch, new production wave or SwanLab import is issued. Wave 12
+remains the latest full-budget, large-window analyzed and privately
+cloud-verified production wave; the research goal stays active.
+
+### November 19 Reviewed Queue Archive Acceptance
+
+The reviewed queue archive publishes acceptance at 18:58:03.565660,
+with 47 unique passing cases in 36.51 seconds, 198 helpers and
+572 inventory entries. Candidate and all inherited 191 helper bytes
+and inventory entries remain unchanged. The receipt is
+`run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/receipt.json`.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/receipt.json` | `ed283127735f2c23648fb14b8342aad46ffb112aabc29dd059e221562c37dac5` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/source.tar` | `c35fd4681536b076d51787a7c53c459de612258f251189ea0243fa3cdb105267` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/tests.xml` | `aaefbc95719f8c8f533cae58536c73ddd395ef172190e803525ed672ad0a99dd` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/cpu.log` | `0448eb2fb70b0501ff3b20f7cc1bb21c096443760413a753c41bb102348ab430` |
+| `run-preparation/test-transition-lr-queue-review-fixes-20261119T1854.xml` | `f43cbe75d64f70bc471c7c1dbac6a42ce522d4ef6e1b934416ea13a1d95d2858` |
+| `run-preparation/test-transition-lr-queue-reviewed-full-20261119T1855.xml` | `ca9222869962b605d082279ae5b34600f649f4a5d1d2f0c1b8c9ca9ca0c28909` |
+| `run-preparation/test-transition-lr-queue-journal-reviewed-20261119T1859.xml` | `f2f8e5e4cd0bfe156d42815f073102861095f7ae6c39530304fabefce84cbcee` |
+| `run-preparation/test-transition-lr-queue-pinned-reporting-20261119T1901.xml` | `5cd629bbc9a0f91aa391a5c4ee7f1cb4c4bf198bbbe6cb9001af9d4d1ad4349e` |
+
+Independent archived-origin `--phase check` passes by 19:01 using
+the recorded fixed environment and archived tracking cwd. Reviewer
+Ramanujan confirms all four queue files and generated runtime match
+the reviewed sources, every inherited helper/inventory identity is
+preserved, all 198 helpers/572 entries and artifact bindings match,
+and external predecessor readers remain unmerged. No remaining
+source/archive review blocker is recorded for this exact receipt.
+
+Post-correction full journal/reporting tests pass 243 cases in 70.42
+seconds; pinned reporting/split/monitor tests pass 19 in 16.66 seconds.
+Required source/content lint, Bash syntax and `git diff --check` pass.
+The separate full size check retains the existing 500KiB policy
+failure: ENDEAVOR 669.7KB and DETAILS 1476.8KB before this entry.
+Historical research evidence is preserved.
+
+The archived start command is issued at 19:03 and is still
+authenticating at 19:04; no acknowledgment or work directory exists
+at the 19:03:38 check. It uses the same complete fixed hidden-CUDA
+environment as the archived check and the reviewed archive only:
+
+```bash
+env CUDA_VISIBLE_DEVICES= CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+  NCCL_INSPECTOR_ENABLE=0 PYTHONDONTWRITEBYTECODE=1 PYTHONFAULTHANDLER=1 \
+  UV_OFFLINE=1 \
+  PYTHONPATH="$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/tracking" \
+  /opt/conda/envs/torch-base/bin/python -P \
+  "$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/tracking/ns_training_path_transition_lr_queue.py" \
+  --root "$PVC" --phase start \
+  --cpu-receipt "$PVC/run-preparation/ns-training-path-transition-actual-lr-queue-cpu/reviewed-20261119T1855/receipt.json"
+```
+
+No GPU transfer or terminal action is issued by this start observation.
+Live 19:02:54 checks verify the original controller, validator, terminal
+waiter and sole Bash monitor generations. The last monitor publication
+remains 18:56:46, followed by `sleep 900`. Both manual journal entries
+hold the shared update lock; no monitor restart occurs.
+
+### November 19 Reviewed Queue Waiter Acknowledgment
+
+The archived hidden-CUDA queue start acknowledges at
+19:04:03.483682 as `3263097/942039903`, bound to reviewed CPU
+receipt `ed283127735f2c23648fb14b8342aad46ffb112aabc29dd059e221562c37dac5`
+and runner `7a0cc4b23eb0a52f959552033779b99714def017a0538fc156052186116a7f37`.
+Work is
+`run-preparation/ns-training-path-transition-actual-lr-queue-20261119`.
+Its first immutable observation at 19:04:54.425556 records
+`waiting_for_transition_owners`, `ready=False`, original controller,
+validator and terminal waiter exact/live, with marked descendants
+present. State at 19:04:54.441225 retains zero of six handoff phases.
+It observes every 900 seconds and invokes no original terminal.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-20261119/intent.json` | `95a67ee0e8cf787344215cfe50413379aac84565573a12de86ee067a3575bd38` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-20261119/original-observation-000000.json` | `339a232ec97f77f903d15e7d5ba4f657c1a97b5a856b7c05b98a02bb1aca50f9` |
+
+The mutable reporter binds both reviewed CPU and acknowledgment
+digests so the existing 900-second monitor reports this exact queue
+in both journals. No accepted archive is edited. The original
+transition terminal, actual-LR predecessor seal and issued GPU binding
+remain unissued.
+
+Aggregate at 19:03:42.942847 records the new fifth accepted case,
+`muont_ns_f32_q7_full_lr_lower`, with all five gates and 39/39
+scalar-loss comparisons passing. Update-22/24 tensor comparisons
+are 2,121/2,167 with zero failures or scalar/structure differences.
+Update23 has 2,185 comparisons, zero failed tensors and sixteen
+graph-state flag differences; diagnostic only. Coverage remains
+15/54 complete commands and 5/18 accepted decisions. No fused or
+matched-null decision, full-budget quality claim or new cloud upload
+follows from this partial diagnostic.
+
+At 19:10:53 the one-off authenticated saved-status refresh finishes
+and publishes both automated blocks. It reports the reviewed queue's
+19:04:03 acknowledgment and 19:04:54 waiting state, and transition
+16/54-command/5/18-decision progress from aggregate 19:08:46.680113
+and controller receipt 19:08:55. This refresh executes only the saved
+reporting path, under the existing shared journal lock. No second
+Bash monitor is launched. The original monitor still holds descriptor9
+at `run-preparation/monitor-endeavor/monitor.lock` and sleeps900seconds
+after its18:56:46 scheduled publication.
+
+The16th command is `muont_ns_f32_q10_full_lr_lower/continuous`,
+dated19:06:11.725883, with execution/cleanup exits0/0, no marked
+descendants and24updates/12,582,912tokens. Its interrupted/resumed
+commands and case comparison remain pending.
+Ten acknowledgment-bound reporting tests pass1.74seconds:
+`run-preparation/test-transition-lr-queue-ack-reporting-20261119T1906.xml`,
+SHA256 `0520e8516c01c88eb783fa75f15a928ec012d6cb000295bb4cdebbd626be072e`.
+Exact archived queue process checking verifies
+`3263097/942039903` live,0/6phases, predecessor seal absent and
+issued GPU binding absent. Fresh19:11 process checking verifies
+both original owners, original terminal waiter, queue waiter and
+sole Bash monitor live. Content/source lint and `git diff --check`
+pass; the existing document-size policy failure remains recorded.
+
+### November 19 19:30 Precision Placement Preparation
+
+Scientific protocol and interpretation are in ENDEAVOR, "NS
+Precision-Placement Screen". The transition aggregate at
+`2026-11-19T11:26:10.383290+00:00` has18/54 complete commands and
+six accepted MuonT BF16/FP32 five/seven/ten cases. FP32/ten passes
+all five gates and39/39 scalar-loss comparisons. No fused or null
+decision or canonical complete terminal is inferred.
+Fresh19:27 process inspection finds original controller3118453,
+validator3118822, terminal waiter3127027, reviewed queue3263097
+and sole journal monitor1588227 live. Queue state
+`2026-11-19T11:20:04.554567+00:00` remains waiting with0/6phases.
+Scheduled monitor publication completes19:15:29.
+
+The initial precision test XML retains9passes/2failures:
+`run-preparation/test-ns-precision-placement-20261119T1921.xml`.
+The correction preserves those per-matrix reduction failures as
+two passing negative-evidence cases rather than relaxing tolerance.
+Final focused13tests pass1.58seconds:
+`run-preparation/test-ns-precision-placement-corrected-20261119T1926.xml`.
+Two earlier test invocations fail before collection because the
+accepted archived pytest guard was omitted from PYTHONPATH; the
+successful invocation includes that unchanged parent tracking path.
+
+Reviewer Russell corrects only mutable
+`ns_compiler_localization.py` and its tests. Component24cases pass
+10.40seconds; execution23cases pass129.17seconds with CUDA hidden.
+Loader SHA256:
+`0fddc453fbda4e27ca4d6b32116f0ace126a1391e110b5efbef8b2a059073c0e`;
+test SHA256:
+`d33973f97c53d156ec216817900fbf9dae8a5bad5b4b676c3cee87cd90af30ef`.
+Both accepted parent-file hashes remain unchanged.
+
+Distinct complete60-case staging is running in
+`run-preparation/ns-precision-placement-cpu/20261119T1929`.
+It preserves every accepted155-helper execution-parent file except
+the declared loader/test correction and adds three CPU-study helpers.
+No archive acceptance or measurement result is claimed yet.
+Exact command, using the fixed hidden-CUDA environment:
+
+```bash
+env CUDA_VISIBLE_DEVICES= CUBLAS_WORKSPACE_CONFIG=:4096:8 \
+  NCCL_INSPECTOR_ENABLE=0 PYTHONDONTWRITEBYTECODE=1 PYTHONFAULTHANDLER=1 \
+  UV_OFFLINE=1 \
+  PYTHONPATH="$TASK/tracking:$PVC/run-preparation/ns-compiler-localization-execution-cpu/20261119T1225/tracking:/opt/conda/envs/torch-base/lib/python3.13/site-packages" \
+  /opt/conda/envs/torch-base/bin/python -P \
+  "$TASK/tracking/prepare_ns_precision_placement.py" \
+  --root "$PVC" --out "$PVC/run-preparation/ns-precision-placement-cpu/20261119T1929" \
+  --phase cpu
+```
+
+Scoped Ruff/Black checks pass after formatting and binding loop-mode
+defaults in independent references. Manual journals hold the existing
+`.endeavor-update.lock`; no second monitor or GPU task is issued.

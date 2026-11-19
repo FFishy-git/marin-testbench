@@ -1,0 +1,314 @@
+{
+  "time": "2026-11-15T09:14:58.921425+00:00",
+  "nodes": [
+    {
+      "node": "28.216.17.9",
+      "gpus": [
+        {
+          "index": 0,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 2,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 3,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 4,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 5,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 6,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 7,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        }
+      ],
+      "compute_processes": "983968, /opt/conda/envs/torch-base/bin/python3.13, 1048\n1712129, /opt/conda/envs/torch-base/bin/python, 416\n983969, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983970, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983971, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983972, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983973, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983974, /opt/conda/envs/torch-base/bin/python3.13, 1048\n983975, /opt/conda/envs/torch-base/bin/python3.13, 1048",
+      "blockers": [
+        "GPU 0 is occupied",
+        "GPU 1 is occupied",
+        "GPU 2 is occupied",
+        "GPU 3 is occupied",
+        "GPU 4 is occupied",
+        "GPU 5 is occupied",
+        "GPU 6 is occupied",
+        "GPU 7 is occupied",
+        "Existing CUDA compute processes must be released by their owner",
+        "Prepared data and full-plan SHA256 receipt have not been supplied"
+      ]
+    },
+    {
+      "node": "28.216.17.80",
+      "gpus": [
+        {
+          "index": 0,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 2,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 3,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 4,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 5,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 6,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 7,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        }
+      ],
+      "compute_processes": "98929, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98930, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98931, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98932, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98933, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98934, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98935, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98936, /opt/conda/envs/torch-base/bin/python3.13, 1048",
+      "blockers": [
+        "GPU 0 is occupied",
+        "GPU 1 is occupied",
+        "GPU 2 is occupied",
+        "GPU 3 is occupied",
+        "GPU 4 is occupied",
+        "GPU 5 is occupied",
+        "GPU 6 is occupied",
+        "GPU 7 is occupied",
+        "Existing CUDA compute processes must be released by their owner",
+        "Prepared data and full-plan SHA256 receipt have not been supplied"
+      ]
+    },
+    {
+      "node": "28.216.17.144",
+      "gpus": [
+        {
+          "index": 0,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 2,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 3,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 4,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 5,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 6,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 7,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        }
+      ],
+      "compute_processes": "99766, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99767, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99768, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99769, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99770, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99771, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99772, /opt/conda/envs/torch-base/bin/python3.13, 1048\n99773, /opt/conda/envs/torch-base/bin/python3.13, 1048",
+      "blockers": [
+        "GPU 0 is occupied",
+        "GPU 1 is occupied",
+        "GPU 2 is occupied",
+        "GPU 3 is occupied",
+        "GPU 4 is occupied",
+        "GPU 5 is occupied",
+        "GPU 6 is occupied",
+        "GPU 7 is occupied",
+        "Existing CUDA compute processes must be released by their owner",
+        "Prepared data and full-plan SHA256 receipt have not been supplied"
+      ]
+    },
+    {
+      "node": "28.216.17.139",
+      "gpus": [
+        {
+          "index": 0,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 2,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 3,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 4,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 5,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 6,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        },
+        {
+          "index": 7,
+          "name": "NVIDIA A100-SXM4-40GB",
+          "utilization": 100,
+          "memory_mib": 1058
+        }
+      ],
+      "compute_processes": "98205, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98206, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98207, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98208, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98209, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98210, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98211, /opt/conda/envs/torch-base/bin/python3.13, 1048\n98212, /opt/conda/envs/torch-base/bin/python3.13, 1048",
+      "blockers": [
+        "GPU 0 is occupied",
+        "GPU 1 is occupied",
+        "GPU 2 is occupied",
+        "GPU 3 is occupied",
+        "GPU 4 is occupied",
+        "GPU 5 is occupied",
+        "GPU 6 is occupied",
+        "GPU 7 is occupied",
+        "Existing CUDA compute processes must be released by their owner",
+        "Prepared data and full-plan SHA256 receipt have not been supplied"
+      ]
+    }
+  ],
+  "blockers": [
+    "28.216.17.9: GPU 0 is occupied",
+    "28.216.17.9: GPU 1 is occupied",
+    "28.216.17.9: GPU 2 is occupied",
+    "28.216.17.9: GPU 3 is occupied",
+    "28.216.17.9: GPU 4 is occupied",
+    "28.216.17.9: GPU 5 is occupied",
+    "28.216.17.9: GPU 6 is occupied",
+    "28.216.17.9: GPU 7 is occupied",
+    "28.216.17.9: Existing CUDA compute processes must be released by their owner",
+    "28.216.17.9: Prepared data and full-plan SHA256 receipt have not been supplied",
+    "28.216.17.80: GPU 0 is occupied",
+    "28.216.17.80: GPU 1 is occupied",
+    "28.216.17.80: GPU 2 is occupied",
+    "28.216.17.80: GPU 3 is occupied",
+    "28.216.17.80: GPU 4 is occupied",
+    "28.216.17.80: GPU 5 is occupied",
+    "28.216.17.80: GPU 6 is occupied",
+    "28.216.17.80: GPU 7 is occupied",
+    "28.216.17.80: Existing CUDA compute processes must be released by their owner",
+    "28.216.17.80: Prepared data and full-plan SHA256 receipt have not been supplied",
+    "28.216.17.144: GPU 0 is occupied",
+    "28.216.17.144: GPU 1 is occupied",
+    "28.216.17.144: GPU 2 is occupied",
+    "28.216.17.144: GPU 3 is occupied",
+    "28.216.17.144: GPU 4 is occupied",
+    "28.216.17.144: GPU 5 is occupied",
+    "28.216.17.144: GPU 6 is occupied",
+    "28.216.17.144: GPU 7 is occupied",
+    "28.216.17.144: Existing CUDA compute processes must be released by their owner",
+    "28.216.17.144: Prepared data and full-plan SHA256 receipt have not been supplied",
+    "28.216.17.139: GPU 0 is occupied",
+    "28.216.17.139: GPU 1 is occupied",
+    "28.216.17.139: GPU 2 is occupied",
+    "28.216.17.139: GPU 3 is occupied",
+    "28.216.17.139: GPU 4 is occupied",
+    "28.216.17.139: GPU 5 is occupied",
+    "28.216.17.139: GPU 6 is occupied",
+    "28.216.17.139: GPU 7 is occupied",
+    "28.216.17.139: Existing CUDA compute processes must be released by their owner",
+    "28.216.17.139: Prepared data and full-plan SHA256 receipt have not been supplied",
+    "Full-model validation has not covered the current arm configurations",
+    "Required numerical and real-data checks have not all passed"
+  ],
+  "launches": []
+}

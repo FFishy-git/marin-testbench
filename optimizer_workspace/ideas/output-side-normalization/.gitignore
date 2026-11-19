@@ -1,8 +1,7 @@
-# Large source archives, papers, preparation evidence, and run data stay on PVC.
-artifacts/
+# Keep research sources, papers, and preparation evidence in Git.
 !artifacts/
-artifacts/*
-!artifacts/SOURCES.md
+
+# Checkpoints and transient run data stay on PVC.
 *.pt
 *.bin
 *.tmp

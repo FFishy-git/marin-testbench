@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- new favicon config and versions by realfavicongenerator.net -->
+<link rel="apple-touch-icon" sizes="180x180" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/favicon-16x16.png">
+<link rel="manifest" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/site.webmanifest">
+<link rel="mask-icon" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/safari-pinned-tab.svg" color="#b31b1b">
+<link rel="shortcut icon" href="https://static.arxiv.org/static/base/1.0.0a5/images/icons/favicon.ico">
+<meta name="msapplication-TileColor" content="#b31b1b">
+<meta name="msapplication-config" content="images/icons/browserconfig.xml">
+<meta name="theme-color" content="#b31b1b">
+<!-- end favicon config -->
+<title>Search | arXiv e-print repository</title>
+<script defer src="https://static.arxiv.org/static/base/1.0.0a5/fontawesome-free-5.11.2-web/js/all.js"></script>
+<link rel="stylesheet" href="https://static.arxiv.org/static/base/1.0.0a5/css/arxivstyle.css" />
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle: "none",
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true,
+      ignoreClass: '.*',
+      processClass: 'mathjax.*'
+    },
+    TeX: {
+        extensions: ["AMSmath.js", "AMSsymbols.js", "noErrors.js"],
+        noErrors: {
+          inlineDelimiters: ["$","$"],
+          multiLine: false,
+          style: {
+            "font-size": "normal",
+            "border": ""
+          }
+        }
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+<script src='//static.arxiv.org/MathJax-2.7.3/MathJax.js'></script>
+<script src="https://static.arxiv.org/static/base/1.0.0a5/js/notification.js"></script>
+
+    
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="https://static.arxiv.org/static/design-system/latest/design-system-components.css">
+<link rel="stylesheet" href="https://static.arxiv.org/static/design-system/latest/fonts.css">
+  <link rel="stylesheet" href="https://static.arxiv.org/static/search/0.5.6/css/bulma-tooltip.min.css" />
+  <link rel="stylesheet" href="https://static.arxiv.org/static/search/0.5.6/css/search.css" />
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+    crossorigin="anonymous"></script>
+
+  <script src="https://static.arxiv.org/static/search/0.5.6/js/fieldset.js"></script>
+  <style>
+  radio#cf-customfield_11400 {
+    display: none;
+  }
+  /* Render the spinout .ds-site-footer standalone / full-bleed. search extends the
+     legacy base, whose bare wrapping <footer> (in base/base.html, outside any
+     overridable block — so it can't be removed from here) is styled by
+     arxivstyle.css with a grey background (hsl(0,0%,95%)) + 1em 2em padding,
+     boxing our warm-wash footer inside a second grey band. display:contents drops
+     the wrapper's box entirely (cleaner than zeroing individual properties) so
+     .ds-site-footer renders in its place; it inherits flex-shrink:0 from the same
+     legacy `footer` rule, so the sticky footer still works. Search-specific
+     legacy-base integration; the shared chrome CSS stays byte-identical to the SSOT. */
+  body > footer {
+    display: contents;
+  }
+  </style>
+
+  </head>
+  <body>
+  
+  
+  <header><a href="#main-container" class="is-sr-only">Skip to main content</a>
+    
+
+<div id="ds-announcement"></div>
+
+<script src="https://static.arxiv.org/static/design-system/latest/chrome/banner.js" defer></script>
+<script src="https://static.arxiv.org/static/design-system/latest/chrome/header.js" defer></script>
+<header class="ds-site-header ">
+  <a aria-hidden="true" tabindex="-1" href="https://arxiv.org/IgnoreMe" class="is-sr-only"></a>
+  <a href="https://arxiv.org/" class="ds-site-header-logo" aria-label="archive home">
+    <img src="https://static.arxiv.org/static/design-system/latest/logos/arxiv-logo.svg" alt="archive">
+  </a>
+  
+  <a id="ds-search-toggle" class="ds-site-header-search-link" href="https://arxiv.org/search" aria-controls="ds-search-overlay" aria-expanded="false">
+    <svg class="ds-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <span>Search</span>
+  </a>
+  
+  <button type="button" id="ds-nav-toggle" class="ds-site-header-nav-toggle"
+    aria-label="Open menu" aria-controls="ds-site-header-nav" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  
+  <nav class="ds-site-header-nav" id="ds-site-header-nav" aria-label="Main navigation">
+    <a href="https://arxiv.org/submit">Submit</a>
+    <a href="https://info.arxiv.org/about/donate.html">Donate</a>
+    <span class="ds-site-header-divider" aria-hidden="true"></span>
+    
+    <a href="https://arxiv.org/login" class="ds-site-header-login">Log in</a>
+  </nav>
+  
+  
+</header>
+
+<div class="ds-search-overlay" id="ds-search-overlay" hidden>
+  <div class="ds-search-overlay-panel" role="search">
+    <form method="GET" action="https://arxiv.org/search">
+      <label for="ds-search-input" class="is-sr-only">Search arXiv</label>
+      <input type="text" name="query" id="ds-search-input" class="ds-input" autocomplete="off"
+        placeholder="Search papers by title, author, abstract, or ID...">
+      <input type="hidden" name="searchtype" value="all">
+      <input type="hidden" name="source" value="header">
+    </form>
+    <p class="ds-hint">
+      Press Enter to search &middot; <a href="https://arxiv.org/search/advanced">Advanced search</a>
+    </p>
+  </div>
+</div>
+
+
+  </header>
+  <main class="container" id="main-container">
+    
+
+
+    
+  <div class="level is-marginless">
+    <div class="level-left">
+      <h1 class="title is-clearfix">
+    
+        Showing 1&ndash;11 of 11 results for all: <span class="mathjax">Mousse</span>
+    
+</h1>
+    </div>
+    <div class="level-right is-hidden-mobile">
+      <!-- feedback for mobile is moved to footer -->
+      <span class="help" style="display: inline-block;"><a href="https://github.com/arXiv/arxiv-search/releases">Search v0.5.6 released 2020-02-24</a>&nbsp;&nbsp;</span>
+    </div>
+  </div>
+    <div class="content">
+      
+  <form method="GET" action="/search/"  aria-role="search">
+    
+
+    
+    <div class="field has-addons-tablet">
+      <div class="control is-expanded">
+        <label for="query" class="hidden-label">Search term or terms</label>
+        
+          <input class="input is-medium" id="query" name="query" placeholder="Search term..." type="text" value="Mousse">
+        
+        
+      </div>
+      <div class="select control is-medium">
+        <label class="is-hidden" for="searchtype">Field</label>
+        <select class="is-medium" id="searchtype" name="searchtype"><option selected value="all">All fields</option><option value="title">Title</option><option value="author">Author(s)</option><option value="abstract">Abstract</option><option value="comments">Comments</option><option value="journal_ref">Journal reference</option><option value="acm_class">ACM classification</option><option value="msc_class">MSC classification</option><option value="report_num">Report number</option><option value="paper_id">arXiv identifier</option><option value="doi">DOI</option><option value="orcid">ORCID</option><option value="license">License (URI)</option><option value="author_id">arXiv author ID</option><option value="help">Help pages</option><option value="full_text">Full text</option></select>
+      </div>
+      <div class="control">
+          <button class="button is-link is-medium">Search</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control is-size-7">
+        
+        <label class="radio">
+          <input checked id="abstracts-0" name="abstracts" type="radio" value="show"> Show abstracts
+        </label>
+        
+        <label class="radio">
+          <input id="abstracts-1" name="abstracts" type="radio" value="hide"> Hide abstracts
+        </label>
+        
+      </div>
+    </div>
+    <div class="is-clearfix" style="height: 2.5em"> 
+      <div class="is-pulled-right">
+        
+        <a href="/search/advanced?terms-0-term=Mousse&amp;terms-0-field=all&amp;size=50&amp;order=-announced_date_first">Advanced Search</a>
+        
+      </div>
+    </div>
+    <input type="hidden" name="order" value="-announced_date_first">
+    <input type="hidden" name="size" value="50">
+  </form>
+
+  
+
+  
+      
+<div class="level breathe-horizontal">
+  <div class="level-left">
+    <form method="GET" action="/search/">
+      <div style="display: none;">
+        
+          
+            <select id="searchtype" name="searchtype"><option selected value="all">All fields</option><option value="title">Title</option><option value="author">Author(s)</option><option value="abstract">Abstract</option><option value="comments">Comments</option><option value="journal_ref">Journal reference</option><option value="acm_class">ACM classification</option><option value="msc_class">MSC classification</option><option value="report_num">Report number</option><option value="paper_id">arXiv identifier</option><option value="doi">DOI</option><option value="orcid">ORCID</option><option value="license">License (URI)</option><option value="author_id">arXiv author ID</option><option value="help">Help pages</option><option value="full_text">Full text</option></select>
+          
+        
+          
+            <input id="query" name="query" type="text" value="Mousse">
+          
+        
+          
+        
+          
+        
+          
+            <ul id="abstracts"><li><input checked id="abstracts-0" name="abstracts" type="radio" value="show"> <label for="abstracts-0">Show abstracts</label></li><li><input id="abstracts-1" name="abstracts" type="radio" value="hide"> <label for="abstracts-1">Hide abstracts</label></li></ul>
+          
+        
+      </div>
+      <div class="box field is-grouped is-grouped-multiline level-item">
+        <div class="control">
+          <span class="select is-small">
+            <select id="size" name="size"><option value="25">25</option><option selected value="50">50</option><option value="100">100</option><option value="200">200</option></select>
+          </span>
+          <label for="size">results per page</label>.
+        </div>
+        <div class="control">
+          <label for="order">Sort results by</label>
+          <span class="select is-small">
+            <select id="order" name="order"><option selected value="-announced_date_first">Announcement date (newest first)</option><option value="announced_date_first">Announcement date (oldest first)</option><option value="-submitted_date">Submission date (newest first)</option><option value="submitted_date">Submission date (oldest first)</option><option value="">Relevance</option></select>
+          </span>
+        </div>
+        <div class="control">
+          <button class="button is-small is-link">Go</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+      
+
+
+
+
+<ol class="breathe-horizontal" start="1"> 
+
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2610.18695">arXiv:2610.18695</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2610.18695">pdf</a>, <a href="https://arxiv.org/ps/2610.18695">ps</a>, <a href="https://arxiv.org/format/2610.18695">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Machine Learning">cs.LG</span>
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        A Refresh Interval Does Not Fully Specify a Refresh Schedule: Learning-Rate-Dependent Placement in Kronecker-Preconditioned Language Model Training
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Wang%2C+X">Xinyu Wang</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Zhai%2C+Z">Zhiwei Zhai</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Gu%2C+Y">Yu Gu</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Yu%2C+Z">Zijun Yu</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Lyu%2C+S">Sicheng Lyu</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Tian%2C+J">Jingrui Tian</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Ding%2C+L">Lei Ding</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Song%2C+Z">Ziyang Song</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Chang%2C+X">Xiao-Wen Chang</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="search-hit">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2610.18695v1-abstract-short" style="display: inline;">
+        &hellip;that frequency leaves part of a schedule free: at a fixed number of refreshes, when they occur changes held-out loss at the same compute. Training GPT-style models with the <span class="search-hit mathjax">Mousse</span> optimizer across model sizes, we move the middle refreshes of a four-refresh schedule while fixing the first and last. On FineWeb the two placements exchanged rank as the learning&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2610.18695v1-abstract-full').style.display = 'inline'; document.getElementById('2610.18695v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2610.18695v1-abstract-full" style="display: none;">
+        Kronecker-preconditioned optimizers recompute a cached curvature eigendecomposition only periodically, and implementations and adaptive methods control this through the refresh frequency. We show that frequency leaves part of a schedule free: at a fixed number of refreshes, when they occur changes held-out loss at the same compute. Training GPT-style models with the <span class="search-hit mathjax">Mousse</span> optimizer across model sizes, we move the middle refreshes of a four-refresh schedule while fixing the first and last. On FineWeb the two placements exchanged rank as the learning rate rose (later placement was better at low rates, earlier placement at high ones), so a single-learning-rate comparison can report either ranking. The reversal held under controls including the published optimizer internals, and placement still mattered at the published refresh density. The learning rate at which the preference flips fell with model size, consistent with a held-out smaller model, and shifted with training length. A spectral-width staleness score predicted the same ranking at every learning rate and missed the reversal. Refresh schedules should be reported in full and compared across the learning rates at which they will be used.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2610.18695v1-abstract-full').style.display = 'none'; document.getElementById('2610.18695v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 13 October, 2026; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> October 2026.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">18 pages, including references and appendices</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2609.07597">arXiv:2609.07597</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2609.07597">pdf</a>, <a href="https://arxiv.org/ps/2609.07597">ps</a>, <a href="https://arxiv.org/format/2609.07597">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Machine Learning">cs.LG</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Artificial Intelligence">cs.AI</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Beyond the Matrix Sign: Quadratic Spectral Descent
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Zhang%2C+Q">Qiaozhe Zhang</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Sun%2C+J">Jun Sun</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Liu%2C+Y">Yingzhuang Liu</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="search-hit">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2609.07597v2-abstract-short" style="display: inline;">
+        &hellip;In contrast, many existing curvature-aware methods either exploit the second-order information in an \textit{implicit} way by changing the weight update geometry (such as <span class="search-hit mathjax">Mousse</span>, FISMO) or rely on strong assumptions (such as the weight displacement isotropy assumption in Newton-Muon). QSD&#39;s potential advantage over these methods is best illustrated in t&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2609.07597v2-abstract-full').style.display = 'inline'; document.getElementById('2609.07597v2-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2609.07597v2-abstract-full" style="display: none;">
+        Muon emerges as a strong competitor of the AdamW for LLM pretraining, because the matrix-wise update it employs can potentially incur smaller second-order penalty than the once dominating AdamW, which performs coordinate-wise update. However, the spectral flattening procedure in Muon is quite debatable since it discards the spectral amplitude information totally. To seek for better spectral allocation (and the associated spectral subspace), we propose to solve the quadratic model of loss function under the spectral norm constraint \textit{directly} (i.e., in a genuinely Newtonian way) and thus obtaining the Quadratic Spectral Descent (QSD) algorithm. In contrast, many existing curvature-aware methods either exploit the second-order information in an \textit{implicit} way by changing the weight update geometry (such as <span class="search-hit mathjax">Mousse</span>, FISMO) or rely on strong assumptions (such as the weight displacement isotropy assumption in Newton-Muon). QSD&#39;s potential advantage over these methods is best illustrated in the isotropic curvature scenario, where <span class="search-hit mathjax">Mousse</span>, FISMO and Newton-Muon all reduce to Muon while the spectral allocation in QSD is still \textit{non-flat} (since the spectral allocation in QSD depends on the \textit{gradient to curvature ratio}). Meanwhile, to control the complexity of QSD, we employ inversion-free K-FAC and \textit{online} Frank-Wolfe update which is essentially a matrix sign operator. Overall, the complexity increase can be rather mild. Experiments on GPT pre-training show that QSD consistently improves validation loss over Muon and recent Muon variants, while achieving up to an $8.49\%$ wall-clock speedup at matched validation loss.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2609.07597v2-abstract-full').style.display = 'none'; document.getElementById('2609.07597v2-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 26 September, 2026; <span class="has-text-black-bis has-text-weight-semibold">v1</span> submitted 7 September, 2026;
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> September 2026.
+      
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2603.09697">arXiv:2603.09697</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2603.09697">pdf</a>, <a href="https://arxiv.org/ps/2603.09697">ps</a>, <a href="https://arxiv.org/format/2603.09697">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Machine Learning">cs.LG</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Artificial Intelligence">cs.AI</span>
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Computation and Language">cs.CL</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        <span class="search-hit mathjax">Mousse</span>: Rectifying the Geometry of Muon with Curvature-Aware Preconditioning
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Zhang%2C+Y">Yechen Zhang</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Xing%2C+S">Shuhao Xing</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Huang%2C+J">Junhao Huang</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Lv%2C+K">Kai Lv</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Zhou%2C+Y">Yunhua Zhou</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Qiu%2C+X">Xipeng Qiu</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Guo%2C+Q">Qipeng Guo</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Chen%2C+K">Kai Chen</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="search-hit">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2603.09697v2-abstract-short" style="display: inline;">
+        &hellip;In such landscapes, Muon risks amplifying instabilities in high-curvature directions while limiting necessary progress in flat directions. In this work, we propose \textbf{<span class="search-hit mathjax">Mousse</span>} (\textbf{M}uon \textbf{O}ptimization \textbf{U}tilizing \textbf{S}hampoo&#39;s \textbf{S}tructural \textbf{E}stimation), a novel optimizer that reconciles the structural stability&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2603.09697v2-abstract-full').style.display = 'inline'; document.getElementById('2603.09697v2-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2603.09697v2-abstract-full" style="display: none;">
+        Recent advances in spectral optimization, notably Muon, have demonstrated that constraining update steps to the Stiefel manifold can significantly accelerate training and improve generalization. However, Muon implicitly assumes an isotropic optimization landscape, enforcing a uniform spectral update norm across all eigen-directions. We argue that this &#34;egalitarian&#34; constraint is suboptimal for Deep Neural Networks, where the curvature spectrum is known to be highly heavy-tailed and ill-conditioned. In such landscapes, Muon risks amplifying instabilities in high-curvature directions while limiting necessary progress in flat directions. In this work, we propose \textbf{<span class="search-hit mathjax">Mousse</span>} (\textbf{M}uon \textbf{O}ptimization \textbf{U}tilizing \textbf{S}hampoo&#39;s \textbf{S}tructural \textbf{E}stimation), a novel optimizer that reconciles the structural stability of spectral methods with the geometric adaptivity of second-order preconditioning. Instead of applying Newton-Schulz orthogonalization directly to the momentum matrix, <span class="search-hit mathjax">Mousse</span> operates in a whitened coordinate system induced by Kronecker-factored statistics (derived from Shampoo). Mathematically, we formulate <span class="search-hit mathjax">Mousse</span> as the solution to a spectral steepest descent problem constrained by an anisotropic trust region, where the optimal update is derived via the polar decomposition of the whitened gradient. Empirical results across language models ranging from 160M to 800M parameters demonstrate that <span class="search-hit mathjax">Mousse</span> consistently outperforms Muon, achieving around $\sim$12\% reduction in training steps with negligible computational overhead.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2603.09697v2-abstract-full').style.display = 'none'; document.getElementById('2603.09697v2-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 1 April, 2026; <span class="has-text-black-bis has-text-weight-semibold">v1</span> submitted 10 March, 2026;
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> March 2026.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">17 pages, 10 figures</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2509.10574">arXiv:2509.10574</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2509.10574">pdf</a>, <a href="https://arxiv.org/ps/2509.10574">ps</a>, <a href="https://arxiv.org/format/2509.10574">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Differential Geometry">math.DG</span>
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        C&#39;est un petit val qui <span class="search-hit mathjax">mousse</span> de fonctions
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Marin%2C+A">Alexis Marin</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2509.10574v3-abstract-short" style="display: inline;">
+        Easy lowering local minima, after introducing valley functions on smooth manifolds gives, without gluing technicities, &#34;M. Morse&#39;s lemma&#39;s&#34; canonical form, moving critical values and eliminating pair of critical points theorems, reducing the last to its one dimensional case.
+        
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2509.10574v3-abstract-full" style="display: none;">
+        Easy lowering local minima, after introducing valley functions on smooth manifolds gives, without gluing technicities, &#34;M. Morse&#39;s lemma&#39;s&#34; canonical form, moving critical values and eliminating pair of critical points theorems, reducing the last to its one dimensional case.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2509.10574v3-abstract-full').style.display = 'none'; document.getElementById('2509.10574v3-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 13 October, 2026; <span class="has-text-black-bis has-text-weight-semibold">v1</span> submitted 11 September, 2025;
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> September 2025.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">in French language, contrary to the previous versions arxiv&#39;latex don&#39;t succeed convert ps to pdf, only to compile by pdflatex but the figures are lost, look at it on the previous version</span>
+    </p>
+    
+
+    
+      <p class="comments is-size-7">
+        
+
+        
+          <span class="has-text-black-bis has-text-weight-semibold">MSC Class:</span>
+          57R35 (primary) 57R80; 57-03 (secondary)
+        
+
+        
+      </p>
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2401.15055">arXiv:2401.15055</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2401.15055">pdf</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Computer Vision and Pattern Recognition">cs.CV</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Computation and Language">cs.CL</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Deep learning-based approach for tomato classification in complex scenes
+      
+    </p>
+    <p class="authors">
+      <span class="search-hit">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Mousse%2C+M+A">Mikael A. Mousse</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Atohoun%2C+B+C+A+R+K">Bethel C. A. R. K. Atohoun</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Motamed%2C+C">Cina Motamed</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2401.15055v1-abstract-short" style="display: inline;">
+        Tracking ripening tomatoes is time consuming and labor intensive. Artificial intelligence technologies combined with those of computer vision can help users optimize the process of monitoring the ripening status of plants. To this end, we have proposed a tomato ripening monitoring approach based on deep learning in complex scenes. The objective is to detect mature tomatoes and harvest them in a ti&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2401.15055v1-abstract-full').style.display = 'inline'; document.getElementById('2401.15055v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2401.15055v1-abstract-full" style="display: none;">
+        Tracking ripening tomatoes is time consuming and labor intensive. Artificial intelligence technologies combined with those of computer vision can help users optimize the process of monitoring the ripening status of plants. To this end, we have proposed a tomato ripening monitoring approach based on deep learning in complex scenes. The objective is to detect mature tomatoes and harvest them in a timely manner. The proposed approach is declined in two parts. Firstly, the images of the scene are transmitted to the pre-processing layer. This process allows the detection of areas of interest (area of the image containing tomatoes). Then, these images are used as input to the maturity detection layer. This layer, based on a deep neural network learning algorithm, classifies the tomato thumbnails provided to it in one of the following five categories: green, brittle, pink, pale red, mature red. The experiments are based on images collected from the internet gathered through searches using tomato state across diverse languages including English, German, French, and Spanish. The experimental results of the maturity detection layer on a dataset composed of images of tomatoes taken under the extreme conditions, gave a good classification rate.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2401.15055v1-abstract-full').style.display = 'none'; document.getElementById('2401.15055v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 26 January, 2024; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> January 2024.
+      
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2401.09880">arXiv:2401.09880</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2401.09880">pdf</a>, <a href="https://arxiv.org/ps/2401.09880">ps</a>, <a href="https://arxiv.org/format/2401.09880">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Sound">cs.SD</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Artificial Intelligence">cs.AI</span>
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Computation and Language">cs.CL</span>
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Machine Learning">cs.LG</span>
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Audio and Speech Processing">eess.AS</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Attention-Based Recurrent Neural Network For Automatic Behavior Laying Hen Recognition
+      
+    </p>
+    <p class="authors">
+      <span class="search-hit">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Laleye%2C+F+A+A">Fréjus A. A. Laleye</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Mousse%2C+M+A">Mikaël A. Mousse</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2401.09880v1-abstract-short" style="display: inline;">
+        One of the interests of modern poultry farming is the vocalization of laying hens which contain very useful information on health behavior. This information is used as health and well-being indicators that help breeders better monitor laying hens, which involves early detection of problems for rapid and more effective intervention. In this work, we focus on the sound analysis for the recognition o&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2401.09880v1-abstract-full').style.display = 'inline'; document.getElementById('2401.09880v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2401.09880v1-abstract-full" style="display: none;">
+        One of the interests of modern poultry farming is the vocalization of laying hens which contain very useful information on health behavior. This information is used as health and well-being indicators that help breeders better monitor laying hens, which involves early detection of problems for rapid and more effective intervention. In this work, we focus on the sound analysis for the recognition of the types of calls of the laying hens in order to propose a robust system of characterization of their behavior for a better monitoring. To do this, we first collected and annotated laying hen call signals, then designed an optimal acoustic characterization based on the combination of time and frequency domain features. We then used these features to build the multi-label classification models based on recurrent neural network to assign a semantic class to the vocalization that characterize the laying hen behavior. The results show an overall performance with our model based on the combination of time and frequency domain features that obtained the highest F1-score (F1=92.75) with a gain of 17% on the models using the frequency domain features and of 8% on the compared approaches from the litterature.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2401.09880v1-abstract-full').style.display = 'none'; document.getElementById('2401.09880v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 18 January, 2024; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> January 2024.
+      
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2012.03181">arXiv:2012.03181</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2012.03181">pdf</a>, <a href="https://arxiv.org/format/2012.03181">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Information Theory">cs.IT</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Networking and Internet Architecture">cs.NI</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Beam Management in 5G: A Stochastic Geometry Analysis
+      
+    </p>
+    <p class="authors">
+      <span class="search-hit">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Kalamkar%2C+S+S">Sanket S. Kalamkar</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Baccelli%2C+F">François Baccelli</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Abinader%2C+F+M">Fuad M. Abinader Jr.</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Fani%2C+A+S+M">Andrea S. Marcano Fani</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Garcia%2C+L+G+U">Luis G. Uzeda Garcia</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2012.03181v1-abstract-short" style="display: inline;">
+        Beam management is central in the operation of beamformed wireless cellular systems such as 5G New Radio (NR) networks. Focusing the energy radiated to mobile terminals (MTs) by increasing the number of beams per cell increases signal power and decreases interference, and has hence the potential to bring major improvements on area spectral efficiency (ASE). This paper proposes a first system-level&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2012.03181v1-abstract-full').style.display = 'inline'; document.getElementById('2012.03181v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2012.03181v1-abstract-full" style="display: none;">
+        Beam management is central in the operation of beamformed wireless cellular systems such as 5G New Radio (NR) networks. Focusing the energy radiated to mobile terminals (MTs) by increasing the number of beams per cell increases signal power and decreases interference, and has hence the potential to bring major improvements on area spectral efficiency (ASE). This paper proposes a first system-level stochastic geometry model encompassing major aspects of the beam management problem: frequencies, antenna configurations, and propagation; physical layer, wireless links, and coding; network geometry, interference, and resource sharing; sensing, signaling, and mobility management. This model leads to a simple analytical expression for the effective rate that the typical user gets in this context. This in turn allows one to find the number of beams per cell and per MT that maximizes the effective ASE by offering the best tradeoff between beamforming gains and beam management operational overheads and costs, for a wide variety of 5G network scenarios including millimeter wave (mmWave) and sub-6 GHz. As part of the system-level analysis, we define and analyze several underlying new and fundamental performance metrics that are of independent interest. The numerical results discuss the effects of different systemic tradeoffs and performance optimizations of mmWave and sub-6 GHz 5G deployments.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2012.03181v1-abstract-full').style.display = 'none'; document.getElementById('2012.03181v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 5 December, 2020; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> December 2020.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">This is an extended version of the paper that was accepted at IEEE GLOBECOM 2020. Comments are welcome. arXiv admin note: text overlap with arXiv:2006.05027</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/2006.05027">arXiv:2006.05027</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/2006.05027">pdf</a>, <a href="https://arxiv.org/ps/2006.05027">ps</a>, <a href="https://arxiv.org/format/2006.05027">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Information Theory">cs.IT</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="Networking and Internet Architecture">cs.NI</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Stochastic Geometry-Based Modeling and Analysis of Beam Management in 5G
+      
+    </p>
+    <p class="authors">
+      <span class="search-hit">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Kalamkar%2C+S+S">Sanket S. Kalamkar</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Abinader%2C+F+M">Fuad M. Abinader Jr.</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Baccelli%2C+F">François Baccelli</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Fani%2C+A+S+M">Andrea S. Marcano Fani</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Garcia%2C+a+L+G+U">and Luis G. Uzeda Garcia</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="2006.05027v2-abstract-short" style="display: inline;">
+        Beam management is central in the operation of dense 5G cellular networks. Focusing the energy radiated to mobile terminals (MTs) by increasing the number of beams per cell increases signal power and decreases interference, and has hence the potential to bring major improvements on area spectral efficiency (ASE). This benefit, however, comes with unavoidable overheads that increase with the number&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2006.05027v2-abstract-full').style.display = 'inline'; document.getElementById('2006.05027v2-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="2006.05027v2-abstract-full" style="display: none;">
+        Beam management is central in the operation of dense 5G cellular networks. Focusing the energy radiated to mobile terminals (MTs) by increasing the number of beams per cell increases signal power and decreases interference, and has hence the potential to bring major improvements on area spectral efficiency (ASE). This benefit, however, comes with unavoidable overheads that increase with the number of beams and the MT speed. This paper proposes a first system-level stochastic geometry model encompassing major aspects of the beam management problem: frequencies, antennas, and propagation; physical layer, wireless links, and coding; network geometry, interference, and resource sharing; sensing, signaling, and mobility management. This model leads to a simple analytical expression for the effective ASE that the typical user gets in this context. This in turn allows one to find, for a wide variety of 5G network scenarios including millimeter wave (mmWave) and sub-6 GHz, the number of beams per cell that offers the best global trade-off between these benefits and costs. We finally provide numerical results that discuss the effects of different systemic trade-offs and performances of mmWave and sub-6 GHz 5G deployments.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('2006.05027v2-abstract-full').style.display = 'none'; document.getElementById('2006.05027v2-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 14 September, 2020; <span class="has-text-black-bis has-text-weight-semibold">v1</span> submitted 8 June, 2020;
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> June 2020.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">This is a work in progress. Your comments are welcome. 9 pages, 6 figures</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/1410.6472">arXiv:1410.6472</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/1410.6472">pdf</a>, <a href="https://arxiv.org/format/1410.6472">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="Computer Vision and Pattern Recognition">cs.CV</span>
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Foreground-Background Segmentation Based on Codebook and Edge Detector
+      
+    </p>
+    <p class="authors">
+      <span class="search-hit">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Mousse%2C+M+A">Mikaël A. Mousse</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Ezin%2C+E+C">Eugène C. Ezin</a>, 
+      
+      <a href="/search/?searchtype=author&amp;query=Motamed%2C+C">Cina Motamed</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="1410.6472v1-abstract-short" style="display: inline;">
+        Background modeling techniques are used for moving object detection in video. Many algorithms exist in the field of object detection with different purposes. In this paper, we propose an improvement of moving object detection based on codebook segmentation. We associate the original codebook algorithm with an edge detection algorithm. Our goal is to prove the efficiency of using an edge detection&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('1410.6472v1-abstract-full').style.display = 'inline'; document.getElementById('1410.6472v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="1410.6472v1-abstract-full" style="display: none;">
+        Background modeling techniques are used for moving object detection in video. Many algorithms exist in the field of object detection with different purposes. In this paper, we propose an improvement of moving object detection based on codebook segmentation. We associate the original codebook algorithm with an edge detection algorithm. Our goal is to prove the efficiency of using an edge detection algorithm with a background modeling algorithm. Throughout our study, we compared the quality of the moving object detection when codebook segmentation algorithm is associated with some standard edge detectors. In each case, we use frame-based metrics for the evaluation of the detection. The different results are presented and analyzed.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('1410.6472v1-abstract-full').style.display = 'none'; document.getElementById('1410.6472v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 23 October, 2014; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> October 2014.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">to appear in the 10th International Conference on Signal Image Technology &amp; Internet Based Systems, 2014</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/1009.5100">arXiv:1009.5100</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/1009.5100">pdf</a>, <a href="https://arxiv.org/ps/1009.5100">ps</a>, <a href="https://arxiv.org/format/1009.5100">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="General Relativity and Quantum Cosmology">gr-qc</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="High Energy Physics - Theory">hep-th</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Géométrie quantique dans les <span class="search-hit mathjax">mousses</span> de spins : de la théorie topologique BF vers la relativité générale
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Bonzom%2C+V">Valentin Bonzom</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="1009.5100v1-abstract-short" style="display: inline;">
+        Loop quantum gravity has provided us with a canonical framework especially devised for background independent and diffeomorphism invariant gauge field theories. In this quantization the fundamental excitations are called spin network states, and in the context of general relativity, they give a meaning to quantum geometry. Spin foams are a sort of path integral for spin network states, supposed to&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('1009.5100v1-abstract-full').style.display = 'inline'; document.getElementById('1009.5100v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="1009.5100v1-abstract-full" style="display: none;">
+        Loop quantum gravity has provided us with a canonical framework especially devised for background independent and diffeomorphism invariant gauge field theories. In this quantization the fundamental excitations are called spin network states, and in the context of general relativity, they give a meaning to quantum geometry. Spin foams are a sort of path integral for spin network states, supposed to enable the computations of transition amplitudes between these states. The spin foam quantization has proved very efficient for topological field theories, like 2d Yang-Mills, 3d gravity or BF theories. Different models have also been proposed for 4-dimensional quantum gravity. In this PhD manuscript, I discuss several methods to study spin foam models. In particular, I present some recurrence relations on spin foam amplitudes, which generically encode classical symmetries at the quantum level, and are likely to help fill the gap with the Hamiltonian constraints. These relations can be naturally interpreted in terms of elementary deformations of discrete geometric structures, like simplicial geometries. Another interesting method consists in exploring the way spin foam models can be written as path integrals for systems of geometries on a lattice, taking inspiration from topological models and Regge calculus. This leads to a very geometric view on spin foams, and gives classical action principles which are studied in details.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('1009.5100v1-abstract-full').style.display = 'none'; document.getElementById('1009.5100v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 26 September, 2010; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> September 2010.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">PhD. Thesis 2010, in French, Centre de Physique Théorique</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+  <li class="arxiv-result">
+    <div class="is-marginless">
+      <p class="list-title is-inline-block"><a href="https://arxiv.org/abs/gr-qc/0309028">arXiv:gr-qc/0309028</a>
+        <span>&nbsp;[<a href="https://arxiv.org/pdf/gr-qc/0309028">pdf</a>, <a href="https://arxiv.org/ps/gr-qc/0309028">ps</a>, <a href="https://arxiv.org/format/gr-qc/0309028">other</a>]&nbsp;</span>
+      </p>
+      <div class="tags is-inline-block">
+        <span class="tag is-small is-link tooltip is-tooltip-top" data-tooltip="General Relativity and Quantum Cosmology">gr-qc</span>
+        
+          
+            <span class="tag is-small is-grey tooltip is-tooltip-top" data-tooltip="High Energy Physics - Theory">hep-th</span>
+          
+        </div>
+      
+    </div>
+    
+    <p class="title is-5 mathjax">
+      
+        Boucles et <span class="search-hit mathjax">Mousses</span> de Spin en Gravite Quantique
+      
+    </p>
+    <p class="authors">
+      <span class="has-text-black-bis has-text-weight-semibold">Authors:</span>
+      
+      <a href="/search/?searchtype=author&amp;query=Livine%2C+E+R">Etera R. Livine</a>
+      
+    </p>
+    
+    <p class="abstract mathjax">
+      <span class="has-text-black-bis has-text-weight-semibold">Abstract</span>:
+      <span class="abstract-short has-text-grey-dark mathjax" id="gr-qc/0309028v1-abstract-short" style="display: inline;">
+        I review the formalism of loop quantum gravity, in both its real and complex formulations, and spin foam theory which is its path integral counterpart. Spin networks for non-compact groups are introduced (following hep-th/0205268) to deal with gauge invariant structures based on the Lorentz group. The whole formalism is studied in details in three dimensions in both its canonical formulation (lo&hellip;
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('gr-qc/0309028v1-abstract-full').style.display = 'inline'; document.getElementById('gr-qc/0309028v1-abstract-short').style.display = 'none';">&#9661; More</a>
+      </span>
+      <span class="abstract-full has-text-grey-dark mathjax" id="gr-qc/0309028v1-abstract-full" style="display: none;">
+          I review the formalism of loop quantum gravity, in both its real and complex formulations, and spin foam theory which is its path integral counterpart. Spin networks for non-compact groups are introduced (following hep-th/0205268) to deal with gauge invariant structures based on the Lorentz group. The whole formalism is studied in details in three dimensions in both its canonical formulation (loop gravity) and its spin foam formulation. The main output (following gr-qc/0212077) is the discreteness of timelike intervals and the continuous character of spacelike distances even at the quantum level. Then it is explained how to extend these considerations to the 4-dimensional case. I review the Barrett-Crane model, its geometrical interpretation, its link with general relativity and the role of causality. It is shown to be the history formulation of a covariant canonical formulation of loop gravity (following gr-qc/0209105), whose link with standard loop quantum gravity is discussed. Similarly to the 3d case, spacelike areas turn out continuous. Finally, ways of extracting informations from the non-perturbative spin foam structures are discussed.
+        <a class="is-size-7" style="white-space: nowrap;" onclick="document.getElementById('gr-qc/0309028v1-abstract-full').style.display = 'none'; document.getElementById('gr-qc/0309028v1-abstract-short').style.display = 'inline';">&#9651; Less</a>
+      </span>
+    </p>
+    
+
+    <p class="is-size-7"><span class="has-text-black-bis has-text-weight-semibold">Submitted</span> 4 September, 2003; 
+      <span class="has-text-black-bis has-text-weight-semibold">originally announced</span> September 2003.
+      
+    </p>
+    
+    <p class="comments is-size-7">
+      <span class="has-text-black-bis has-text-weight-semibold">Comments:</span>
+      <span class="has-text-grey-dark mathjax">165 pages, in French; PhD Thesis 2003, Centre de Physique Theorique CNRS-UPR 7061 (France)</span>
+    </p>
+    
+
+    
+
+    
+  </li>
+
+</ol>
+
+
+  
+
+
+      <div class="is-hidden-tablet">
+        <!-- feedback for mobile only -->
+        <span class="help" style="display: inline-block;"><a href="https://github.com/arXiv/arxiv-search/releases">Search v0.5.6 released 2020-02-24</a>&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+  </main>
+  <footer>
+    <footer class="ds-site-footer">
+  <div class="ds-site-footer-grid">
+    <div class="ds-site-footer-main">
+      <div class="ds-site-footer-ack">
+        We gratefully acknowledge support from our <a href="https://info.arxiv.org/about/major_funders.html"><strong>major funders</strong></a>,
+        <a href="https://info.arxiv.org/about/ourmembers.html"><strong>member institutions</strong></a><span class="ack-member-inline" hidden>, <strong></strong></span>,
+        and all contributors.
+      </div>
+      <nav class="ds-site-footer-links" aria-label="Site navigation">
+        <a href="https://info.arxiv.org/about">About</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help">Help</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help/contact.html">Contact</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help/subscribe.html">Subscribe</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help/license/index.html">Copyright</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help/policies/privacy_policy.html">Privacy</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://info.arxiv.org/help/web_accessibility.html">Accessibility</a> <span class="ds-site-footer-sep" aria-hidden="true">&middot;</span>
+        <a href="https://status.arxiv.org/" target="_blank" rel="noopener noreferrer">Operational Status<span class="is-sr-only"> (opens in new tab)</span></a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+  </footer>
+  <script src="https://static.arxiv.org/static/base/1.0.0a5/js/member_acknowledgement.js"></script>
+  </body>
+</html>

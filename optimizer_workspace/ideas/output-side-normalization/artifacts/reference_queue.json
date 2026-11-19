@@ -1,0 +1,156 @@
+{
+  "review_date": "2026-11-15",
+  "timezone": "Asia/Shanghai",
+  "external_retrieval_status": "retrieved_via_explicit_http_proxy",
+  "proxy": "http://star-proxy.oa.com:3128",
+  "validation_manifest": "external_source_manifest.json",
+  "references": [
+    {
+      "id": "toner",
+      "name": "Toner: Improving Muon and AdamW with Input Geometry",
+      "priority": 1,
+      "status": "author_article_and_pinned_author_code_retrieved",
+      "authors": ["Mohamad Amin Mohamadi", "Kaiyue Wen", "Tianhao Wang", "Zhiyuan Li"],
+      "commit": "dab7f3777c75e740536df822f50ffa1d929a340c",
+      "website_commit": "453badd98fe389f009884063ca88378db15bf582",
+      "urls": ["https://mohamad-amin.github.io/blog/toner", "https://github.com/mohamad-amin/Toner"],
+      "artifacts": ["external-sources/toner-blog-pinned.html", "external-sources/toner-dab7f377.tar.gz"]
+    },
+    {
+      "id": "go_muon",
+      "name": "Second-Order Muon Done Right: A Principled Marriage of Spectral Geometry and Curvature",
+      "priority": 1,
+      "status": "paper_retrieved_author_code_not_identified",
+      "authors": ["Tong Che"],
+      "arxiv_id": "2608.09763",
+      "version": "v1",
+      "urls": ["https://arxiv.org/abs/2608.09763v1", "https://arxiv.org/pdf/2608.09763v1"],
+      "artifacts": ["papers/go-muon-2608.09763.pdf", "retrieval/second-order-muon.html"],
+      "unverified_claims": ["isotropic_weight_decay_in_proposal"]
+    },
+    {
+      "id": "muon",
+      "name": "Muon author implementation",
+      "priority": 1,
+      "status": "pinned_author_implementation_retrieved",
+      "provenance": "local_muon_source_reference",
+      "urls": [
+        "https://github.com/KellerJordan/Muon"
+      ],
+      "commit": "f98f1cacc0263b04290753e32be8d498c1efc806",
+      "artifacts": ["external-sources/muon-f98f1cac.py"],
+      "benchmark": "Use the pinned Toner reproduction runners for scientific comparison; the independent moving modded-nanogpt repository was not downloaded."
+    },
+    {
+      "id": "kfac",
+      "name": "Optimizing Neural Networks with Kronecker-factored Approximate Curvature",
+      "priority": 1,
+      "status": "paper_retrieved",
+      "arxiv_id": "1503.05671",
+      "version": "v7",
+      "artifacts": ["papers/kfac-1503.05671.pdf"],
+      "urls": [
+        "https://arxiv.org/abs/1503.05671",
+        "https://arxiv.org/pdf/1503.05671"
+      ]
+    },
+    {
+      "id": "empirical_fisher_limitations",
+      "name": "Limitations of the Empirical Fisher Approximation for Natural Gradient Descent",
+      "priority": 1,
+      "status": "paper_retrieved",
+      "arxiv_id": "1905.12558",
+      "version": "v3",
+      "artifacts": ["papers/empirical-fisher-limitations-1905.12558.pdf"],
+      "urls": [
+        "https://arxiv.org/abs/1905.12558",
+        "https://arxiv.org/pdf/1905.12558"
+      ]
+    },
+    {
+      "id": "shampoo",
+      "name": "Shampoo: Preconditioned Stochastic Tensor Optimization",
+      "priority": 2,
+      "status": "paper_retrieved",
+      "arxiv_id": "1802.09568",
+      "version": "v2",
+      "artifacts": ["papers/shampoo-1802.09568.pdf"],
+      "urls": [
+        "https://arxiv.org/abs/1802.09568",
+        "https://arxiv.org/pdf/1802.09568"
+      ]
+    },
+    {
+      "id": "soap",
+      "name": "SOAP: Improving and Stabilizing Shampoo using Adam",
+      "priority": 2,
+      "status": "paper_retrieved_local_implementation_snapshotted",
+      "arxiv_id": "2409.11321",
+      "version": "v2",
+      "artifacts": ["papers/soap-2409.11321.pdf", "local-sources/soap.py"],
+      "urls": [
+        "https://arxiv.org/abs/2409.11321",
+        "https://arxiv.org/pdf/2409.11321"
+      ],
+      "author_code_link_not_downloaded": "https://github.com/nikhilvyas/SOAP"
+    },
+    {
+      "id": "spectrally_targeted_muon",
+      "name": "Spectrally Targeted Muon",
+      "priority": 3,
+      "status": "paper_retrieved",
+      "authors": ["Vishrut Goyal", "Rohan Ramkumar"],
+      "arxiv_id": "2610.10965",
+      "version": "v1",
+      "urls": ["https://arxiv.org/abs/2610.10965v1", "https://arxiv.org/pdf/2610.10965v1"],
+      "artifacts": ["papers/spectrally-targeted-muon-2610.10965.pdf"]
+    },
+    {
+      "id": "freon",
+      "name": "Muon is Not That Special: Random or Inverted Spectra Work Just as Well",
+      "priority": 3,
+      "status": "paper_retrieved",
+      "arxiv_id": "2605.11181",
+      "version": "v1",
+      "urls": ["https://arxiv.org/abs/2605.11181v1", "https://arxiv.org/pdf/2605.11181v1"],
+      "artifacts": ["papers/freon-2605.11181.pdf", "retrieval/freon-fulltext.html"],
+      "third_party_discovery_artifact": "external-sources/freon-README.md",
+      "third_party_discovery_url": "https://github.com/John-HW-Cao/Freon",
+      "author_code_status": "not_identified"
+    },
+    {
+      "id": "mousse",
+      "name": "Mousse: Rectifying the Geometry of Muon with Curvature-Aware Preconditioning",
+      "priority": 3,
+      "status": "paper_and_pinned_author_code_retrieved",
+      "arxiv_id": "2603.09697",
+      "version": "v2",
+      "commit": "d00c1bf17790fbe56424ee5567cce80d8e75f4b2",
+      "urls": ["https://arxiv.org/abs/2603.09697v2", "https://arxiv.org/pdf/2603.09697v2", "https://github.com/Anti-Entrophic/Mousse"],
+      "artifacts": ["papers/mousse-2603.09697.pdf", "external-sources/mousse-d00c1bf1.tar.gz"]
+    },
+    {
+      "id": "newton_muon",
+      "name": "The Newton-Muon Optimizer",
+      "priority": 2,
+      "status": "paper_retrieved",
+      "authors": ["Zhehang Du", "Weijie Su"],
+      "arxiv_id": "2604.01472",
+      "version": "v1",
+      "urls": ["https://arxiv.org/abs/2604.01472v1", "https://arxiv.org/pdf/2604.01472v1"],
+      "artifacts": ["papers/newton-muon-2604.01472.pdf"],
+      "author_code_link_not_downloaded": "https://github.com/zhehangdu/Newton-Muon"
+    },
+    {
+      "id": "batch_size_optimizer",
+      "name": "The Best Optimizer Depends on Batch Size",
+      "priority": 2,
+      "status": "paper_retrieved",
+      "authors": ["Xingyu Dang", "Kaiyue Wen", "Sadhika Malladi"],
+      "arxiv_id": "2610.08975",
+      "version": "v2",
+      "urls": ["https://arxiv.org/abs/2610.08975v2", "https://arxiv.org/pdf/2610.08975v2"],
+      "artifacts": ["papers/batch-size-optimizer-2610.08975.pdf"]
+    }
+  ]
+}
