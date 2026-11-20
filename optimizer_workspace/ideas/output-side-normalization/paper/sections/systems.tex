@@ -1,29 +1,29 @@
-\section{Closing the latency gap: lagged two-sided MuonT at 4\%--5\% overhead}
+\section{Closing the latency gap: \texttt{fast\_lag} from stage calibration to eight-A100 wall-clock speedup}
 \label{sec:systems}
 
 At the algorithmic level, lagged output normalization should add very little
 wall-clock cost. Vanilla input-side \taxid{MuonT} (\muont{}) computes three
 width-512 and one width-2048 dense moments per layer plus three right matrix
-products per update, yet runs only $+\sysMuontVsMuon\%$ ($+21.2$\,ms/step)
-slower than plain \taxid{Muon} because forward row capture uses three fused
-Triton launches and input root refinement overlaps the backward pass. By
-contrast, \taxid{WT-MLP} (\mlpdiag{}) adds five width-512 dense moments and
-\emph{zero} width-2048 dense moments per layer --- less nominal $O(d^2 + d^3)$
-moment and eigendecomposition work than \taxid{MuonT}'s own input side --- and
-one-update lag (\taxid{WT-MLP-Lag} / \mlpdiaglag{},
-Figure~\ref{fig:method_arch}b) makes roughly $900$\,ms of the next step's
-forward and backward pass available to hide output statistics and root work
-while costing less than $0.001$ nats of held-out loss.
+products per update, yet runs only $+\sysMuontVsMuon\%$ ($+21.2$\,ms/step in
+Wave~0; $+\sysExecMuontVsMuonPct\%$ in \texttt{wave\_sym\_fastlag}) slower than
+plain \taxid{Muon} because forward row capture uses three fused Triton launches
+and input root refinement overlaps the backward pass. By contrast,
+\taxid{WT-MLP} (\mlpdiag{}) adds five width-512 dense moments and \emph{zero}
+width-2048 dense moments per layer --- less nominal $O(d^2 + d^3)$ moment and
+eigendecomposition work than \taxid{MuonT}'s own input side --- and one-update
+lag (\taxid{WT-MLP-Lag}, \taxid{WT-Sym-Lag}; Figure~\ref{fig:method_arch}b)
+makes roughly $900$\,ms of the next step's forward and backward pass available
+to hide output statistics and root work.
 
 Why, then, did Wave~4's \taxid{WT-MLP-Lag} run $+\sysLegacyMlpVsMuon\%$ slower
 than \taxid{Muon} ($+18.0\%$ over \taxid{MuonT}), and Wave~3's
 \taxid{DT-All-Lag} (\denselag{}) run $+\sysLegacyAllVsMuon\%$ slower?
 Stage-level profiling alongside Wave~10's matched null (\taxid{Null-OD} /
 \nullod{}, which still cost $+\sysWaveTenNullVsMuon\%$ over \taxid{Muon} with
-\emph{zero} dense output roots) localized the gap to three implementation
-bottlenecks rather than intrinsic arithmetic cost, and eliminating them brings
-both lagged geometries inside a $3.6\%$--$5.4\%$ steady-step budget over
-\taxid{Muon}.
+\emph{zero} dense output roots) localized the gap to implementation bottlenecks
+rather than intrinsic arithmetic cost. We detail the three-pillar redesign
+(\texttt{fast\_lag}) below, followed by its full-budget execution across four
+uncontended eight-A100 nodes in \texttt{wave\_sym\_fastlag}.
 
 \subsection{Root-cause decomposition and three-pillar redesign}
 \label{sec:systems-pillars}
@@ -39,67 +39,78 @@ from overlapping with the next step:
 \item Even more expensively, \texttt{OutputToner.begin()} only enqueued
   candidate graph roots; flagged root-repair iterations and exact
   \texttt{cuSOLVER eigh} fallbacks ($\approx 4$--$6$ per update globally) were
-  not launched until \texttt{\_collect\_lagged()} called
-  \texttt{\_finish\_roots()} immediately before \texttt{optimizer.step()} on
-  update $t+1$, blocking the main stream synchronously ($+\sysRootsLegacyMlpMs$\,ms
-  in \texttt{mlpdiag\_lag} and $+\sysRootsLegacyAllMs$\,ms in \texttt{all\_lag}).
+  deferred until \texttt{\_collect\_lagged()} invoked \texttt{\_finish\_roots()}
+  right before \texttt{optimizer.step()} on update $t+1$, blocking the main
+  stream synchronously ($+\sysRootsLegacyMlpMs$\,ms in \texttt{mlpdiag\_lag}
+  and $+\sysRootsLegacyAllMs$\,ms in \texttt{all\_lag}).
 \end{enumerate}
-In our optimized \texttt{fast\_lag} runner, end-of-step timing synchronizes
-only \texttt{torch.cuda.current\_stream()}, while full side-stream
-synchronization occurs only at checkpoint serialization and shutdown. To
-prevent update $t+1$'s first backward pass from overwriting update $t$'s
-sampled cotangent buffers without doubling memory, a lightweight CUDA event
-\texttt{ev\_rows\_consumed} is recorded on the priority-0 output side stream
-immediately after \texttt{syrk\_list\_packed} and local diagonal row-sums finish
-reading the buffers ($\approx 1.4$\,ms); \texttt{select\_microbatch(0)} on
-update $t+1$ ($\approx 40$\,ms later) waits on that event at $0.0$\,ms stall.
-Finally, once microbatch~0's $\approx 235$\,ms forward--backward pass is queued
-on the main stream, \texttt{select\_microbatch($k\ge 1$)} opportunistically
-queries the readiness event and resolves all repairs, exact \texttt{eigh}
-fallbacks, unit-RMS normalizations, and FP16 factor splits on the background
-side stream roughly $700$\,ms before \texttt{step()} consumes them.
+In \texttt{fast\_lag}, end-of-step timing synchronizes only
+\texttt{torch.cuda.current\_stream()}, while full side-stream synchronization
+occurs only at checkpoint serialization and shutdown. To prevent update $t+1$'s
+first backward pass from overwriting update $t$'s sampled cotangent buffers
+without doubling memory, a lightweight CUDA event \texttt{ev\_rows\_consumed} is
+recorded on the priority-0 output side stream immediately after
+\texttt{syrk\_list\_packed} and local diagonal row-sums finish reading the
+buffers ($\approx 1.4$\,ms); \texttt{select\_microbatch(0)} on update $t+1$
+waits on that event at $0.0$\,ms stall. Once microbatch~0's $\approx 235$\,ms
+forward--backward pass is queued on the main stream,
+\texttt{select\_microbatch($k\ge 1$)} opportunistically polls readiness and
+resolves all repairs, exact \texttt{eigh} fallbacks, unit-RMS normalizations,
+and FP16 factor splits on the background side stream roughly $700$\,ms before
+\texttt{step()} consumes them.
 
-\paragraph{Pillar 2: Grouped block-level Triton capture and 2D-tiled inline diagonal.}
+\paragraph{Pillar 2: Per-site block-level Triton capture and symmetric inline diagonals.}
 Wave~10's null arm revealed a $+\sysCapLegacyMs$\,ms/step floor even with no
-dense output roots. That floor came from wrapping all 224 linear layers in
-\texttt{RowObservedLinear}, inserting $224\times 4 = 896$ opaque custom-op
-boundaries per update into \texttt{torch.compile}'s AOTAutograd backward graph
-and issuing $2{,}688$ eager \texttt{index\_select}, multiply, and
-\texttt{index\_copy\_} kernels writing $1.8$\,GiB of BF16 rows. We replace all
-224 wrappers with four view-transparent block-level autograd hooks per
-transformer block: one 3-projection Triton gather on $(q,k,v)$, residual-branch
-hooks on $o$ and $\text{down}$ preserving Inductor residual fusion, and a
-grouped hook on $(\text{gate},\text{up})$. When $(\text{gate},\text{up})$ use
-diagonal moments (\texttt{inner\_outer\_mlpdiag\_lag}), a deterministic,
-atomic-free 2D-tiled Triton kernel (\texttt{BLOCK\_R=16, BLOCK\_C=64})
-accumulates sampled FP32 row squares directly in registers without allocating
-or writing the 64 $[4576, 2048]$ BF16 buffers --- cutting backward capture
-overhead $\sysCapSpeedup\times$ (from $+\sysCapLegacyMs$\,ms to
-$+\sysCapFastMlpMs$\,ms across four microbatches) and reducing measured 32-layer
-peak memory by $\sysMemSavedGib$\,GiB.
+dense output roots, caused by wrapping all 224 linear layers in
+\texttt{RowObservedLinear} ($896$ opaque custom-op boundaries per update inside
+\texttt{torch.compile}'s AOTAutograd backward graph and $2{,}688$ eager gather
+kernels writing $1.8$\,GiB of BF16 rows). We replace all 224 wrappers with four
+view-transparent block-level autograd hooks per transformer block. When
+$(\text{gate},\text{up})$ use diagonal moments, an atomic-free 2D-tiled Triton
+kernel (\texttt{BLOCK\_R=16, BLOCK\_C=64}) accumulates sampled FP32 row squares
+directly in registers without allocating the 64 $[4576, 2048]$ BF16 buffers ---
+cutting backward capture overhead $\sysCapSpeedup\times$ (from
+$+\sysCapLegacyMs$\,ms to $+\sysCapFastMlpMs$\,ms) and saving
+$\sysMemSavedGib$\,GiB in isolated 32-layer profiles ($\sysExecMlpLagSavedWaveFourGib$\,GiB
+in full eight-rank DDP). Under eight-rank \texttt{DDP(gradient\_as\_bucket\_view=True)}
+with \texttt{torch.compile}, DDP's 25\,MB gradient buckets split \texttt{model.body}
+into $\approx 2$-layer compiled backward partitions; allocating independent
+per-site FP32 partial tensors (\texttt{InlineDiagonalAccumulator}, $128$\,KB per
+block, $4$\,MiB total, cleared in one \texttt{torch.\_foreach\_zero\_} call)
+prevents cross-bucket saved-tensor \texttt{\_version} increments while
+preserving bitwise-exact reductions. In \taxid{WT-Sym} and \taxid{WT-Sym-Lag},
+the same deterministic two-stage Triton \texttt{reduce\_row\_squares} +
+$262$\,KB \texttt{all\_reduce} + \texttt{diagonal\_roots} pipeline runs
+asynchronously on \texttt{\_input\_side\_stream} for width-2048 \texttt{in:down}
+during \texttt{begin()}, deleting \texttt{self.input.groups["f"]} and
+eliminating all $2048\times 2048$ input \texttt{syrk}, $268.6$\,MB
+\texttt{reduce\_scatter}, cached eigenbases, and host \texttt{eigh} jobs.
 
 \paragraph{Pillar 3: Compiled Ozaki FP16-split Tensor-Core update stack.}
 Because deterministic training disables TF32 (\texttt{allow\_tf32=False}),
-\texttt{BlockToner}'s eager FP32 \texttt{torch.bmm} products executed on
-$19.5$\,TFLOPS SIMT cores and synced \texttt{.tolist()} host finite checks
-every update. Compiling \texttt{block\_update\_stack} with upstream's
-FP16-split Ozaki scheme (\texttt{PR.\_EXACT}) moves all dense left and right
+eager FP32 \texttt{torch.bmm} products executed on $19.5$\,TFLOPS SIMT cores and
+synced \texttt{.tolist()} host finite checks every update. Compiling
+\texttt{block\_update\_stack} (supporting both 2D dense and 1D diagonal right
+and left factors in \texttt{\_compiled\_block\_in} / \texttt{\_compiled\_block\_out})
+with upstream's FP16-split Ozaki scheme (\texttt{PR.\_EXACT}) moves all dense
 factor products onto $312$\,TFLOPS Tensor Cores with full FP32 accuracy, fuses
 post-$\Nten$ direction and decay into two right products instead of three, and
-masks nonfinite updates on device so host checking runs at $0.0$\,ms after the
-main-stream step barrier, shrinking owned-matrix update overhead from
+masks nonfinite updates on device, shrinking owned-matrix update overhead from
 $+\sysUpdLegacyMlpMs$\,ms to $+\sysUpdFastMlpMs$\,ms.
 
 \begin{table}[t]
 \centering
-\caption{Calibrated eight-A100 steady-step latency decomposition (overheads
-relative to \muont{} per stage; total step time and percentage overhead relative
-to vanilla Muon at $1.074$\,s/step) and peak rank-0 memory. Stage timings are
-measured on SM80 A100-SXM4-40GB via rotated ABBA interleaved microbenchmarks
-and calibrated against the exact Wave~0, Wave~3, Wave~4, and Wave~10 eight-rank
-steady-step baselines.}
+\caption{Eight-A100 steady-step latency decomposition and peak Rank-0 allocation
+across legacy DDP waves, calibrated single-process SM80 ABBA stage profiles, and
+executed uncontended eight-A100 DDP full-budget runs (\texttt{wave\_sym\_fastlag},
+steps $2{,}049$--$4{,}096$ median). Under full eight-rank DDP, background
+\texttt{reduce\_scatter} and mid-step \texttt{eigh} fallbacks share NVLink and
+SMs with DDP's 25\,MB bucket \texttt{all\_reduce} collectives, adding
+$\approx 2\%$--$4\%$ over single-process stage calibration; removing
+\texttt{in:down}'s $268.6$\,MB \texttt{reduce\_scatter} in \taxid{WT-Sym-Lag}
+reclaims $\sysExecSymLagSavedMlpLagMs$\,ms/step and $\sysExecSymLagSavedMlpLagGib$\,GiB.}
 \label{tab:systems}
-\scriptsize\setlength{\tabcolsep}{3.5pt}
+\scriptsize\setlength{\tabcolsep}{3.8pt}
 \resizebox{\textwidth}{!}{\input{results/table_systems}}
 \end{table}
 
@@ -109,78 +120,132 @@ steady-step baselines.}
 \begin{tikzpicture}
 \begin{axis}[
   paperplot,
-  width=0.84\textwidth, height=5.8cm,
-  xbar stacked, bar width=9.5pt,
-  title={Calibrated 8-A100 steady-step latency breakdown above vanilla \taxid{Muon}},
+  width=0.86\textwidth, height=6.8cm,
+  xbar stacked, bar width=9.0pt,
+  title={8-A100 steady-step latency breakdown above vanilla \taxid{Muon} ($1{,}074$\,ms base)},
   xlabel={Extra step latency above \taxid{Muon} (ms/update; $1{,}074$\,ms base)},
-  xmin=0, xmax=450,
-  ytick={0,1,2,3,4,5},
+  xmin=0, xmax=535,
+  ytick={0,1,2,3,4,5,6,7},
   yticklabels={
-    {\taxid{MuonT} ($+2.0\%$)},
+    {\taxid{MuonT} ($+2.0\text{--}2.3\%$)},
     {\taxid{DT-All-Lag} legacy ($+33.9\%$)},
     {\taxid{WT-MLP-Lag} legacy ($+20.3\%$)},
+    {\taxid{WT-Sym} no-lag 8$\times$A100 ($+14.9\%$)},
     {\taxid{Null-OD} Wave 10 ($+11.3\%$)},
-    {\textbf{\taxid{DT-All-Lag}} \texttt{fast\_lag} ($\mathbf{+5.1\%}$)},
-    {\textbf{\taxid{WT-MLP-Lag}} \texttt{fast\_lag} ($\mathbf{+3.8\%}$)}
+    {\taxid{DT-All-Lag} \texttt{fast} cal.\ ($+5.1\%$)},
+    {\textbf{\taxid{WT-MLP-Lag}} \texttt{fast} 8$\times$A100 ($\mathbf{+8.2\%}$)},
+    {\textbf{\taxid{WT-Sym-Lag}} \texttt{fast} 8$\times$A100 ($\mathbf{+6.2\%}$)}
   },
   legend columns=4,
-  legend style={at={(0.5,-0.28)}, anchor=north, column sep=6pt},
+  legend style={at={(0.5,-0.23)}, anchor=north, column sep=6pt},
 ]
 \addplot[fill=famRef!35, draw=famRef!70] table[y=idx, x=input_base_ms] {figs/systems_bars.dat};
 \addlegendentry{Input \taxid{MuonT} base}
 \addplot[fill=famNull!75, draw=famNull!95] table[y=idx, x=capture_ms] {figs/systems_bars.dat};
 \addlegendentry{Bwd capture}
 \addplot[fill=famOD!75, draw=famOD!95] table[y=idx, x=update_ms] {figs/systems_bars.dat};
-\addlegendentry{Ozaki / update GEMMs}
+\addlegendentry{Ozaki GEMMs}
 \addplot[fill=famWT!78, draw=famWT!95] table[y=idx, x=roots_ms] {figs/systems_bars.dat};
-\addlegendentry{Exposed async roots / RS}
-\node[font=\tiny, text=famRef, anchor=west] at (axis cs:24,0) {$+21.2$\,ms};
-\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:366,1) {$+364$\,ms};
-\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:221,2) {$+218$\,ms};
-\node[font=\tiny, text=famNull!90!black, anchor=west] at (axis cs:120,3) {$+121$\,ms};
-\node[font=\tiny, text=famDT!95!black, anchor=west] at (axis cs:58,4) {$\mathbf{+55}$\,\textbf{ms} ($+3.1\%$ vs.\ \taxid{MuonT})};
-\node[font=\tiny, text=famWT, anchor=west] at (axis cs:44,5) {$\mathbf{+41}$\,\textbf{ms} ($+1.8\%$ vs.\ \taxid{MuonT})};
+\addlegendentry{Exposed async roots / DDP overlap}
+\node[font=\tiny, text=famRef, anchor=west] at (axis cs:24,0) {$+21.2$\,ms ($+24.7$\,ms in \texttt{sym\_fastlag})};
+\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:366,1) {$+364$\,ms ($+25.6\%$ vs.\ \taxid{MuonT})};
+\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:221,2) {$+218$\,ms ($+18.0\%$ vs.\ \taxid{MuonT})};
+\node[font=\tiny, text=famWT!90!black, anchor=west] at (axis cs:163,3) {$+161$\,ms ($+\sysExecSymVsMuontPct\%$ vs.\ \taxid{MuonT}, $\tau=0$)};
+\node[font=\tiny, text=famNull!90!black, anchor=west] at (axis cs:120,4) {$+121$\,ms ($+9.1\%$ vs.\ \taxid{MuonT})};
+\node[font=\tiny, text=famDT!95!black, anchor=west] at (axis cs:58,5) {$+55$\,ms (stage cal.: $+3.1\%$ vs.\ \taxid{MuonT})};
+\node[font=\tiny, text=famWT, anchor=west] at (axis cs:91,6) {$\mathbf{+88}$\,\textbf{ms} ($\mathbf{+\sysExecMlpLagVsMuontPct\%}$ vs.\ \taxid{MuonT}; cal.\ $+1.8\%$)};
+\node[font=\tiny, text=famWT, anchor=west] at (axis cs:70,7) {$\mathbf{+67}$\,\textbf{ms} ($\mathbf{+\sysExecSymLagVsMuontPct\%}$ vs.\ \taxid{MuonT}; \textbf{fastest to $\text{C4}\le 3.52$})};
 \end{axis}
 \end{tikzpicture}%
 }
-\caption{Decomposition of per-update latency above vanilla \taxid{Muon}
-($1.074$\,s). Eliminating the per-step global CUDA barrier, synchronous fallback
-stalls, and per-linear custom-op graph partitions reduces \taxid{WT-MLP-Lag}
-(\mlpdiaglag{}) from $+\sysLegacyMlpVsMuon\%$ ($+218$\,ms) to
-$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ ($+39$--$44$\,ms, or
-$+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ above \taxid{MuonT}), and
-brings even fully dense \taxid{DT-All-Lag} (\denselag{}) down to
-$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over \taxid{Muon}.}
+\caption{Per-update latency above vanilla \taxid{Muon} ($1.074$\,s) from legacy
+Waves~3--10 through single-process SM80 stage calibration to executed
+uncontended eight-A100 DDP runs (\texttt{wave\_sym\_fastlag}). On full eight-rank
+DDP, \texttt{fast\_lag} cuts \taxid{WT-MLP-Lag} step overhead over \taxid{MuonT}
+by more than $3\times$ ($+17.6\% \to +\sysExecMlpLagVsMuontPctTwo\%$, saving
+$\sysExecMlpLagSavedWaveFourMs$\,ms/step and $\sysExecMlpLagSavedWaveFourS$\,s
+end-to-end) and cuts \taxid{WT-Sym-Lag} from $+\sysExecSymVsMuontPctTwo\%$
+($\tau=0$) to $+\sysExecSymLagVsMuontPctTwo\%$ (saving
+$\sysExecSymLagSavedNolagMs$\,ms/step and $\sysExecSymLagSavedNolagS$\,s
+end-to-end).}
 \label{fig:systems}
 \end{figure}
 
-\subsection{Parity verification and wall-clock break-even}
+\subsection{Parity verification, eight-A100 DDP execution, and wall-clock crossings}
 \label{sec:systems-parity}
 
-All three optimizations preserve exact target equations and pass every existing
-correctness gate on SM80 A100 hardware: all 42 CPU unit tests, all 11 two-rank
-NCCL \texttt{experiment.gpu\_checks} gates, pre- and post-$\Nten$ FP64
-reference checks ($\max$ relative error $4.16\times 10^{-6}$), \texttt{tpu}-mode
-update parity against upstream \texttt{FastTonerCore} ($\max$ relative error
-$1.02\times 10^{-7}$), and 24-update uninterrupted-versus-step-22-resumed
-continuation past the 20-step exact-root warmup and CUDA-graph transition with
-\emph{zero} bitwise error ($0.00$ across all 96 tensors in
-\texttt{inner\_outer\_mlpdiag\_lag} and all 99 tensors in
-\texttt{inner\_outer\_all\_lag}).
+All optimizations and symmetric-MLP extensions pass every correctness gate on
+SM80 A100 hardware: all \sysCpuUnitTests{} CPU unit tests, all 11 two-rank NCCL
+\texttt{experiment.gpu\_checks} gates plus a compiled 32-layer DDP multi-step
+verification, pre- and post-$\Nten$ FP64 reference checks ($\max$ relative error
+$4.16\times 10^{-6}$), \texttt{tpu}-mode update parity against upstream
+\texttt{FastTonerCore} ($\max$ relative error $1.02\times 10^{-7}$), and
+24-update uninterrupted-versus-step-22-resumed continuation past the 20-step
+exact-root warmup and CUDA-graph transition with \emph{zero} bitwise error
+($0.00$ across all 96 tensors in \mlpdiaglag{}, 99 in \denselag{},
+\sysContSymNolagTensors{} in \symmlpdiag{}, and \sysContSymLagTensors{} in
+\symmlpdiaglag{}).
 
-Table~\ref{tab:systems} and Figure~\ref{fig:systems} show the resulting latency
-and memory profile. Crucially, the lag mechanism itself --- independent of
-whether width-2048 factors are diagonalized --- now hides almost all dense root
-and fallback latency: even \texttt{inner\_outer\_all\_lag} drops from
-$+\sysLegacyAllVsMuon\%$ to $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$
-over vanilla Muon, while \texttt{inner\_outer\_mlpdiag\_lag} reaches
-$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over Muon
-($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \muont{}) at
-$\sysMemFastMlpGib$\,GiB peak allocation. Because Wave~4's
-\texttt{inner\_outer\_mlpdiag\_lag} already reached the $\text{C4}\le 3.52$
-milestone in $\sysTokenSavingPct\%$ fewer tokens than \muont{} ($2.36\text{B}$
-versus $2.49\text{B}$ tokens), cutting step overhead over \muont{} below $2.1\%$
-crosses the wall-clock break-even threshold ($0.9474 \times 1.018 \approx
-\sysWallclockRatio$), turning a $+16.7\%$ elapsed-time loss into a projected
-$3.5\%$ wall-clock speedup pending full-run confirmation on an uncontended
-eight-A100 node.
+Tables~\ref{tab:systems} and~\ref{tab:crossings} and Figure~\ref{fig:systems}
+report the executed four-node uncontended eight-A100 wave
+(\texttt{wave\_sym\_fastlag}). Three systems findings stand out:
+\begin{enumerate}
+\item \textbf{More than $3\times$ full-run DDP overhead reduction on
+  \taxid{WT-MLP-Lag}:} Relative to same-wave \taxid{MuonT} ($\sysExecMuontStepS$\,s/step,
+  $\sysExecMuontEtoeS$\,s end-to-end, $\sysExecMuontGib$\,GiB), \texttt{fast\_lag}
+  \taxid{WT-MLP-Lag} runs at $\sysExecMlpLagStepS$\,s/step
+  ($+\sysExecMlpLagVsMuontPctTwo\%$ step, $+\sysExecMlpLagEtoePctTwo\%$ end-to-end
+  at $\sysExecMlpLagEtoeS$\,s; $+\sysExecMlpLagVsMuonPctTwo\%$ step and
+  $+\sysExecMlpLagEtoeMuonPctTwo\%$ end-to-end over Wave-0 \taxid{Muon}) and
+  $\sysExecMlpLagGib$\,GiB peak allocation --- cutting Wave~4's legacy overhead
+  ($+17.58\%$ vs.\ same-wave \taxid{MuonT}) by $\sysExecMlpLagSavedWaveFourMs$\,ms/step,
+  $\sysExecMlpLagSavedWaveFourS$\,s ($11.4$\,min) end-to-end, and
+  $\sysExecMlpLagSavedWaveFourGib$\,GiB of VRAM, closely matching the isolated
+  $\sysMemFastMlpGib$\,GiB memory projection.
+\item \textbf{Calibrated single-process versus full eight-rank DDP overlap:}
+  The $\approx 3.9$-percentage-point difference between single-process stage
+  calibration ($+\sysFastMlpVsMuontMid\%$ vs.\ \taxid{MuonT}) and full eight-rank
+  DDP execution ($+\sysExecMlpLagVsMuontPctTwo\%$) reflects multi-rank NVLink and
+  SM contention between the priority-0 output side stream's \texttt{reduce\_scatter}
+  / mid-step \texttt{cuSOLVER eigh} fallbacks ($\approx 20{,}000$--$22{,}000$ per
+  rank) and DDP's 25\,MB bucket \texttt{all\_reduce} collectives during backward
+  microbatches $1..3$. Eliminating dense $2048\times 2048$ \texttt{in:down}
+  \texttt{reduce\_scatter} in \taxid{WT-Sym-Lag} removes $\sysExecSymLagSavedMlpLagMs$\,ms/step
+  of that contention, bringing full-run eight-A100 overhead down to
+  $\sysExecSymLagStepS$\,s/step ($+\sysExecSymLagVsMuontPctTwo\%$ step and
+  $+\sysExecSymLagEtoePctTwo\%$ end-to-end over same-wave \taxid{MuonT};
+  $+\sysExecSymLagVsMuonPctTwo\%$ step and $+\sysExecSymLagEtoeMuonPctTwo\%$
+  end-to-end over \taxid{Muon}) at $\sysExecSymLagGib$\,GiB --- saving
+  $\sysExecSymLagSavedNolagMs$\,ms/step and $\sysExecSymLagSavedNolagS$\,s over
+  synchronous no-lag \taxid{WT-Sym} ($\sysExecSymStepS$\,s/step,
+  $+\sysExecSymVsMuontPctTwo\%$).
+\item \textbf{Uncensored launch-anchored wall-clock win at $\text{C4}\le 3.52$:}
+  Table~\ref{tab:crossings} reports launch-anchored elapsed seconds (covering
+  compilation, training, and periodic evaluation) across all three C4 milestones.
+  At $\text{C4}\le 3.59$, \taxid{WT-Sym-Lag} ($\sysCrossSymLagThreeFiveNineS$\,s)
+  already beats vanilla \taxid{Muon} ($4{,}880.0$\,s). At $\text{C4}\le 3.52$,
+  \taxid{WT-Sym-Lag} crosses at update $4{,}501$ in
+  $\sysCrossSymLagThreeFiveTwoS$\,s --- fastest overall ahead of \taxid{Muon}
+  ($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s), same-wave \taxid{MuonT}
+  ($\sysCrossMuontSymThreeFiveTwoS$\,s), and Wave-0 \taxid{MuonT}
+  ($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s) --- while \texttt{fast\_lag}
+  \taxid{WT-MLP-Lag} ($\sysCrossMlpLagFastThreeFiveTwoS$\,s) also edges Wave-0
+  \taxid{MuonT}. At $\text{C4}\le 3.46$, \taxid{Muon} is censored at budget
+  exhaustion ($\waveZeroMuonCfourFinalAbs{}$), whereas all \texttt{WT} arms cross
+  at update $5{,}001$ and finish $0.0021$--$0.0029$ nats below same-wave
+  \taxid{MuonT}.
+\end{enumerate}
+
+\begin{table}[t]
+\centering
+\caption{Uncensored launch-anchored elapsed-time crossings ($\text{C4}\le 3.59,
+3.52, 3.46$) and full-budget endpoints across eight-A100 runs. Every \texttt{WT}
+arm reaches $\text{C4}\le 3.52$ in $250$ fewer updates ($2.36\text{B}$ versus
+$2.49\text{B}$ tokens); on \texttt{fast\_lag}, \taxid{WT-Sym-Lag} converts that
+token saving into the fastest absolute wall-clock crossing
+($\sysCrossSymLagThreeFiveTwoS$\,s), while vanilla \taxid{Muon} is censored at
+$\text{C4}\le 3.46$.}
+\label{tab:crossings}
+\scriptsize\setlength{\tabcolsep}{4.5pt}
+\resizebox{\textwidth}{!}{\input{results/table_crossings}}
+\end{table}

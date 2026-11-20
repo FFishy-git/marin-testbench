@@ -5,77 +5,82 @@ We separate three kinds of evidence, because conflating them is the easiest way
 to overstate a study of this shape.
 
 \paragraph{Run directories are not independent observations.}
-This project produced \nRunDirs{} completed full-budget run directories, but
-only \nDistinctRuns{} distinct training trajectories:
-\nDuplicateGroups{} groups covering \nDuplicateDirs{} directories are bitwise
-identical to one another, because several waves re-ran the same scientific
-configuration to measure a systems change. Table~\ref{tab:evidence} lists them.
-We verified this by comparing full 5{,}120-point training-loss trajectories, not
-by trusting the wave labels, and every number in this paper counts each such
-group once. Reporting those repeats as replications would have turned one
-observation of the baseline into four.
+This project produced \nRunDirs{} completed full-budget run directories, holding
+\nDistinctRuns{} distinct training trajectories: \nDuplicateGroups{} groups
+covering \nDuplicateDirs{} historical directories are bitwise identical to one
+another because Waves~7--10 re-ran the same scientific configuration to measure
+systems changes (Table~\ref{tab:evidence}), whereas all four runs in
+\texttt{wave\_sym\_fastlag} are distinct trajectories. We verified this by
+comparing full 5{,}120-point training-loss series rather than trusting wave
+labels, and every count in this paper counts each bitwise-identical group once.
 
 \begin{table}[t]
 \centering
-\caption{Bitwise-identical run groups. Each group is one trajectory recorded
-under several wave labels while systems changes were measured around it; the
-recorded losses agree at all 5{,}120 updates. Verified by
-\texttt{scripts/check\_duplicates.py}.}
+\caption{Bitwise-identical run groups across Waves~7--10. Each group is one
+trajectory recorded under several wave labels while systems changes were
+measured around it; the recorded losses agree at all 5{,}120 updates.}
 \label{tab:evidence}
-\footnotesize\setlength{\tabcolsep}{4pt}
+\footnotesize\setlength{\tabcolsep}{6.0pt}
 \input{results/table_duplicates}
 \end{table}
 
 \paragraph{Which claims are replicated, and which are single-seed.}
-The complementarity result (Section~\ref{sec:complement}) and the freshness
-result (Section~\ref{sec:freshness}) rest on single-seed comparisons, albeit
-with paired data order and standard errors two orders of magnitude below the
-effects. The leading geometry's benefit is replicated on three seeds
-(Section~\ref{sec:replication}), with a factor-of-two spread and the largest
-value on the seed used for selection. The matched-null effect is observed in
-three separate nulls across three waves. Nothing here is replicated on a seed
-reserved from exploration: seeds 0, 1 and 2 have all been inspected, which is
-why Section~\ref{sec:program} reserves 3, 4 and 5.
+The complementarity result (Section~\ref{sec:complement}), the freshness result
+(Section~\ref{sec:freshness}), and the symmetric width-2048 ablation and
+eight-A100 \texttt{fast\_lag} wall-clock crossings
+(Sections~\ref{sec:sym-ablation} and~\ref{sec:systems}) rest on seed-0
+comparisons with exact token pairing and standard errors two orders of magnitude
+below the paired training effects. \taxid{WT-MLP}'s quality benefit is
+replicated on three seeds (Section~\ref{sec:replication}), with a factor-of-two
+spread and the largest value on the selection seed, while the matched-null
+effect is observed in three separate nulls across Waves~1, 3, and~10. Nothing
+here is replicated on a seed reserved from exploration: seeds 0, 1 and 2 have
+all been inspected, which is why Section~\ref{sec:program} reserves 3, 4 and 5.
 
 \paragraph{Known confounds and what remains open.}
 Three boundaries govern how the current numbers should be read.
 \emph{Full-budget learning-rate neighborhood}: while Section~\ref{sec:tuning}
 shows that the 320-step optimum ($0.064$) regresses full-budget \muont{} by
 \waveTwelveMuontSelDiffMag{} nats and Section~\ref{sec:mech-graft} rules out
-step-size inflation (\mechMlpdiagGraftNorm{} norm ratio), the fine-grained
-full-budget curve around $0.0226$ ($\{0.016, 0.0226, 0.032, 0.045\}$) remains
-to be executed (Section~\ref{sec:program}, Item~1).
-\emph{Uncontended eight-rank \texttt{fast\_lag} timing}: the
-$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ step-time overhead in
-Section~\ref{sec:systems} is measured via rotated ABBA A100 stage benchmarks
-calibrated against the Wave~0/3/4/10 eight-rank steady-step baselines while
-cluster keepers held $1.06$\,GiB per GPU; end-to-end launch-anchored timing
-awaits an uncontended eight-A100 run in Item~1.
-\emph{Wave-crossing null for \mlpdiag{}}: \nullmlp{} ran in Wave~3 against
-Wave~2's \mlpdiag{}; Item~2 pairs them in the same wave on \texttt{fast\_lag}.
+step-size inflation (\mechMlpdiagGraftNorm{} norm ratio), the $\{0.016, 0.032,
+0.045\}$ full-budget points around our $0.0226$ anchor remain to be executed
+(Section~\ref{sec:program}, Item~1).
+\emph{Same-wave \texttt{fast\_lag} matched null and baseline polling jitter}:
+Wave-3 \nullmlp{} crossed a wave boundary relative to Wave-2 \mlpdiag{}, and
+\texttt{wave\_sym\_fastlag} has not yet executed its own \texttt{fast\_lag}
+\taxid{Null-WT} control (Item~2; Table~\ref{tab:main} marks net ${}^{\ddagger}$
+deltas accordingly). In addition, \texttt{wave\_sym\_fastlag/muont} is bitwise
+identical to \texttt{wave0/muont} through update~\symWaveExactSteps{} and
+diverges by $\symWaveMuontVsWaveZeroSel{}$ late selection nats thereafter due to
+upstream asynchronous host \texttt{eigh} polling
+(Appendix~\ref{app:systems}); we therefore report \texttt{wave\_sym\_fastlag}
+deltas against both same-wave \taxid{MuonT} and \texttt{wave0/muont}.
+\emph{Single-seed wall-clock margin}: \taxid{WT-Sym-Lag}'s launch-anchored lead
+at $\text{C4}\le 3.52$ ($\sysCrossSymLagThreeFiveTwoS$\,s versus
+$\sysCrossMuonWaveZeroThreeFiveTwoS$\,s for \taxid{Muon} and
+$\sysCrossMuontSymThreeFiveTwoS$\,s for same-wave \taxid{MuonT}) is a modest
+$8$--$107$\,s margin on one seed and requires multi-seed confirmation in Item~4.
 
 \paragraph{Reproduction fidelity.}
 Our baseline is a runtime adaptation, not an exact reproduction of the pinned
 reference: A100 with FlashAttention-2 rather than H100 with FA3, microbatch 4
 with 4-way accumulation rather than 8 with 2-way, deterministic algorithms
 enabled, and explicit compiler options rather than the reference mode argument.
-The data and budget are mathematically identical. Our baseline's final C4 sits
-$+0.0021$ nats from the pinned reference value while our plain-Muon run sits
+The data and budget are mathematically identical. Our Wave-0 baseline's final C4
+sits $+0.0021$ nats from the pinned reference value while plain \taxid{Muon} sits
 $-0.0003$ from its own, so our reproduction of the baseline-to-preconditioned
-gap is $0.0091$ against a reference $0.0115$. That residual, $0.0024$ nats, is
-\emph{larger than most of the effects in Table~\ref{tab:main}}. It does not
-invalidate within-study comparisons, which are paired and share every
-implementation detail, but it does bound how much weight any single arm's
-margin can carry on its own, and it is a reason to prefer the five-window and
-paired-training statistics over final evaluations.
+gap is $0.0091$ against a reference $0.0115$ (and $0.0107$ in
+\texttt{wave\_sym\_fastlag}). That residual ($0.0008$--$0.0024$ nats) does not
+invalidate paired within-wave comparisons, which share every implementation
+detail, but it bounds how much weight any single final evaluation can carry on
+its own.
 
 \paragraph{Generality.}
 One model size, one token budget, one hardware configuration, one data mixture.
 We have one larger-batch pair and no larger model. The arm geometries are tied
-to this architecture's projection structure --- in particular to the MLP
-expansion ratio of 4, which is what makes the width-2048 output moments both
-expensive and the natural thing to diagonalize. A different expansion ratio
-would change the cost balance that drives our best arm's design.
+to this architecture's projection structure --- in particular to the SwiGLU MLP
+expansion ratio of 4, which concentrates $96.2\%$ of $O(d^3)$ eigendecomposition
+work in the width-2048 projections.
 
 \section{Related work}
 \label{sec:related}
@@ -86,28 +91,25 @@ cheap fixed-degree iteration is competitive at scale, and the preconditioned
 variant we baseline against adds input-side whitening to it. Our arms are
 modifications of that baseline, not of Muon itself, and we report plain Muon
 only as a reference point. We are not aware of a published study that adds
-output-cotangent second moments to a Muon-type optimizer and measures the result
-against a matched null; the closest published forms apply two-sided factors with
-a common exponent, and where our arms approach such a form we label them formula
-controls rather than reproductions, because we could not obtain an author
-implementation to compare decay shaping and normalization conventions against.
+output-cotangent second moments to a Muon-type optimizer, separates pre- versus
+post-SwiGLU width-2048 covariance regimes, and measures the result against a
+matched execution-path null; where our arms approach a published two-sided form
+we label them formula controls rather than reproductions.
 
 \paragraph{Kronecker-factored and full-matrix preconditioners.}
 K-FAC \citep{martens2015kfac} and the Shampoo family
 \citep{gupta2018shampoo,anil2020scalable} use both sides of the gradient, and
 our motivation is theirs. Two differences shape our results. First, those
 methods do not orthogonalize, so their preconditioner supplies conditioning
-that Newton--Schulz already supplies here --- which is a plausible reason the
-output side buys so little on top of the input side in our setting, and is
-consistent with our finding that the output moment's rotation is nearly
-worthless while its scale is not. Second, Shampoo-family implementations
+that Newton--Schulz already supplies here --- consistent with our finding that
+at width 2048 on pre-SwiGLU outputs, current diagonal scale beats a stale
+eigenbasis, whereas on post-SwiGLU \texttt{in:down} off-diagonal structure still
+helps during early constant-LR training. Second, Shampoo-family implementations
 routinely accept preconditioner staleness of hundreds of steps, whereas we find
-a four-update staleness already costly enough that an exact diagonal beats a
-stale dense root. We read that as a statement about the Muon regime rather than
-a contradiction: when the base step is already well conditioned, what remains
-for a preconditioner to add is mostly current-scale information, which is
-exactly the part that staleness destroys. SOAP \citep{vyas2024soap} occupies
-the middle ground and would be a natural comparison under a tuned protocol.
+a four-update eigenbasis staleness already costly on rapidly drifting cotangents
+while a one-update factor lag ($\tau=1$, one-sixteenth of the EMA window) hides
+almost all side-stream latency. SOAP \citep{vyas2024soap} occupies the middle
+ground and is a natural comparison under a tuned protocol.
 
 \paragraph{Empirical Fisher and what $B$ measures.}
 Our $B$ is an uncentered moment of observed cotangents, the quantity whose gap
@@ -117,21 +119,17 @@ Section~\ref{sec:program} specifies the factorization check that would be
 needed to earn that description, and it has not been run.
 
 \paragraph{Optimizer evaluation methodology.}
-Our strongest methodological point is not new in kind --- that optimizer
-comparisons are dominated by tuning protocol has been argued forcefully
-\citep{schmidt2021crowded,choi2019empirical}, and \citet{kaddour2023nodata}
-make the related point that apparent training speedups often dissolve under
-matched budgets. Our contribution is a concrete instance with the mechanism
-exposed: the baseline's own learning-rate headroom exceeded the modification's
-fixed-rate gain by an order of magnitude, and a short-schedule tuning proxy
-inverted the ranking rather than merely blurring it. We add the matched-null
-control as a second, cheaper discipline that we have not seen reported for
-preconditioner modifications, and which in our case accounted for a fifth to a
-third of an apparent effect.
+That optimizer comparisons are dominated by tuning protocol has been argued
+forcefully \citep{schmidt2021crowded,choi2019empirical,kaddour2023nodata}. Our
+contribution is a concrete instance with the horizon mechanism exposed: a
+320-step screening proxy selected an over-stepped learning rate ($0.064$) that
+degraded the 5{,}120-step baseline itself by \waveTwelveMuontSelDiffMag{} nats.
+We add the matched execution-path null as a second discipline that accounted for
+a fifth to a third of raw fixed-rate gains.
 
 \paragraph{Newton--Schulz as a finite map.}
 Our step-budget and operand-precision measurements (Appendix~\ref{app:numerics})
 treat the iteration as the finite, rounded object it is, and find a direction
 plateau at seven steps. Related work on compensated and mixed-precision matrix
-products \citep{henry2019leveraging} informs the arithmetic but we were unable
-to obtain the full text and cite it as related literature only.
+products \citep{henry2019leveraging} informs our Ozaki FP16-split Tensor-Core
+update stack in Section~\ref{sec:systems}.

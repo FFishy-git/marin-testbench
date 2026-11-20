@@ -65,67 +65,83 @@ shared as in Table~\ref{tab:projections}.
 \end{align*}
 with input-shaped decay $Q_{p,t}=W_{p,t}\hat R_p^{\,2}$ in every case except
 \leftall{}, whose decay is left-shaped, $Q_{p,t}=\hat L_p^{\,2}W_{p,t}$.
-Here, in \mlpdiag{}, the starred factors are dense for
+Here, in \mlpdiag{} (\taxid{WT-MLP}), the starred output factors are dense for
 $p\in\{q,k,v,o,\text{down}\}$ and diagonal for $p\in\{\text{gate},\text{up}\}$.
-\alldiag{} is the same with starred factors diagonal everywhere;
-\texttt{inner\_outer\_hidden} is the same with starred factors dense on the
-width-512 group and \emph{absent} on $\text{gate},\text{up}$, whose cotangents
-are then not observed at all. \texttt{inner\_outer\_all\_diag} replaces
-\emph{both} sides by diagonals:
+\alldiag{} (\taxid{OD-All}) is the same with starred output factors diagonal
+everywhere; \texttt{inner\_outer\_hidden} (\taxid{Abl-No2048}) is the same with
+starred factors dense on the width-512 group and \emph{absent} on
+$\text{gate},\text{up}$, whose cotangents are then not observed at all.
+\texttt{inner\_outer\_all\_diag} (\taxid{Abl-BothDiag}) replaces \emph{both}
+sides by diagonals at \emph{all} widths:
 \[
 D_{p,t}=\Lambda^{\text{out}}_{\text{out},p}\,
 \Nten\!\left(\Lambda^{\text{out}}_{\text{in},p}\,U_{p,t}\,
 \Lambda^{\text{in}}_{\text{in},p}\right)\Lambda^{\text{in}}_{\text{out},p},
 \qquad
-Q_{p,t}=W_{p,t}\left(\Lambda^{\text{in}}_{\text{out},p}\right)^{2},
+Q_{p,t}=W_{p,t}\left(\Lambda^{\text{in}}_{\text{out},p}\right)^{2}.
 \]
-with the superscript naming the statistic's side and the subscript the inner or
-outer root. This arm does not contain the baseline as a special case, which is
-why its large regression does not isolate the output-side diagonal; that
-isolation is what \alldiag{} provides.
+
+\paragraph{Symmetric MLP width-thresholded arms (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}).}
+Both \texttt{inner\_\allowbreak outer\_\allowbreak sym\_\allowbreak mlpdiag}
+($\opcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{0}$) and
+\texttt{inner\_\allowbreak outer\_\allowbreak sym\_\allowbreak mlpdiag\_\allowbreak lag}
+($\opcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{1}$) threshold \emph{both} right-input
+and left-cotangent factors strictly by dimension ($d=512$ dense spectral,
+$d=2048$ exact age-zero inline diagonal), with output lag $\tau\in\{0,1\}$ and
+current-step input roots throughout:
+\begin{align*}
+p\in\{q,k,v,o\}\ (512\times 512):\quad
+  D_{p,t} &= \hat L_p^{(t-\tau)}\Nten\!\left(L_p^{(t-\tau)}U_{p,t}R_p^{(t)}\right)\hat R_p^{(t)},\\
+p\in\{\text{gate},\text{up}\}\ (2048\times 512):\quad
+  D_{p,t} &= \hat L_p^{\text{diag},(t-\tau)}\Nten\!\left(L_p^{\text{diag},(t-\tau)}U_{p,t}R_{\text{mlp}}^{(t)}\right)\hat R_{\text{mlp}}^{(t)},\\
+p=\text{down}\ (512\times 2048):\quad
+  D_{\text{down},t} &= \hat L_{\text{down}}^{(t-\tau)}\Nten\!\left(L_{\text{down}}^{(t-\tau)}U_{\text{down},t}R_{\text{down}}^{\text{diag},(t)}\right)\hat R_{\text{down}}^{\text{diag},(t)},
+\end{align*}
+with input-shaped decay $Q_{p,t}=W_{p,t}\bigl(\hat R_p^{(t)}\bigr)^2$ on
+width-512 inputs and
+$Q_{\text{down},t}=W_{\text{down},t}\bigl(\hat R_{\text{down}}^{\text{diag},(t)}\bigr)^2$
+on \texttt{down}, where
+$R_{\text{down}}^{\text{diag},(t)} = \In^{\text{diag}}_{2048}(C_{\text{down},t})$
+and $\hat R_{\text{down}}^{\text{diag},(t)} = \Out^{\text{diag}}_{2048}(C_{\text{down},t})$
+are computed asynchronously on \texttt{\_input\_side\_stream} during the
+backward pass via deterministic two-stage Triton row-square reductions and a
+$262$\,KB \texttt{all\_reduce}, eliminating all $2048\times 2048$ dense Gram and
+eigendecomposition state on both sides of the SwiGLU MLP.
 
 \paragraph{Matched nulls.}
 \nullall{} runs \dense{}'s path with $L_p=\hat L_p=I$ forced for all $p$;
 \nullmlp{} does the same for \mlpdiag{}, preserving which groups would have been
 dense and which diagonal. Both retain cotangent capture, pooled moments,
 communication, root computation, host refresh, scheduling and checkpoint state.
-Note that forcing identity left factors in \leftall{} would give
-$D=\Nten(U)$, $Q=W$ --- a plain Muon-form update at the baseline's learning rate
-rather than a baseline null --- which is why \leftall{}'s matched control is a
-different arm, and why we did not run it: \leftall{}'s regression is large
-enough ($+0.0087$) that no plausible path effect explains it.
 
 \paragraph{Lagged arms.}
-\texttt{inner\_outer\_all\_lag} and \texttt{inner\_outer\_mlpdiag\_lag} compute
-exactly their parent's factors and apply them one update late,
+The lagged variants \texttt{inner\_\allowbreak outer\_\allowbreak all\_lag},
+\texttt{inner\_\allowbreak outer\_\allowbreak mlpdiag\_lag}, and
+\texttt{inner\_\allowbreak outer\_\allowbreak sym\_\allowbreak mlpdiag\_lag}
+compute their parent's output factors and apply them one update late ($\tau=1$),
 \[
 D_t=\hat L^{(t-1)}\,\Nten\!\left(L^{(t-1)}U_tR^{(t)}\right)\hat R^{(t)} ,
 \]
-with the input side current. The first update has no earlier rows and applies
-input factors only. In the mixed arm both the dense and the diagonal left
-factors advance together, so the arm has one left-factor age rather than two.
+with the input side current. Update $t=1$ has no earlier cotangent rows and
+applies input factors only ($L^{(0)}=\hat L^{(0)}=I$). Both dense width-512 and
+diagonal width-2048 left factors advance together at lag $\tau=1$.
 
 \paragraph{Fixed-age and fused arms.}
 \outerdiag{} applies only the outer diagonal output factor,
 $D_{p,t}=\hat L^{\text{diag}}_p\Nten(U_{p,t}R_p)\hat R_p$, and \fused{} is the
 same equation with the post-Newton--Schulz products fused into three right
 multiplications instead of four:
-$-(\eta\lambda W\hat R+\eta s\hat L X)\hat R$. That is the same real arithmetic
-in a different floating-point order; our CPU diagnostics bound the discrepancy
-at a relative Frobenius error of $1.4\times10^{-7}$, and the two arms' paired
-training-loss difference is $+0.000033$ with a standard error of $0.000049$ ---
-indistinguishable from zero, which is the expected result for a change of
-kernels rather than equations and a useful check on it. The fixed-age series
-additionally pins input host-basis installation to the next update boundary, so
-every logged installation has age exactly one and no refresh is discarded.
+$-(\eta\lambda W\hat R+\eta s\hat L X)\hat R$ (relative Frobenius difference
+$1.4\times10^{-7}$; paired training-loss difference $+0.000033 \pm 0.000049$).
+The fixed-age series pins input host-basis installation to the next update
+boundary so every logged installation has age one and no refresh is discarded.
 
 \paragraph{Execution notes that the equations do not capture.}
-The baseline calls the upstream batched optimizer; every output-side arm uses a
-per-matrix path with direct FP32 root products and separately formed direction
-and decay. From the second wave onward the per-matrix path is replaced by a
-batched one, \texttt{block\_update\_stack}, which issues one update per shape
-group per rank instead of one per matrix, cutting kernel launches on the update
-path from roughly $10^4$ to a few hundred per step; momentum matches the
-per-matrix path bitwise and the applied delta differs only by FP32
-reassociation inside the batched products, bounded at a relative $10^{-4}$.
-Step times are therefore comparable within a wave and not across the first two.
+In Waves~0--10, the baseline calls the upstream batched optimizer while legacy
+output-side arms used an eager FP32 \texttt{block\_update\_stack} path (batched
+by shape group from Wave~2 onward). Under \texttt{fast\_lag} in
+\texttt{wave\_sym\_fastlag}, \texttt{\_compiled\_\allowbreak block\_in} and
+\texttt{\_compiled\_\allowbreak block\_out} compile the update stack with
+upstream's Ozaki FP16-split Tensor-Core scheme (\texttt{PR.\_EXACT}), matching
+FP64 reference directions to $4.16\times 10^{-6}$ while running on $312$\,TFLOPS
+Tensor Cores.

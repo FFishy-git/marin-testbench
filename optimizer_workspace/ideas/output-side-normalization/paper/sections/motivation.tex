@@ -80,7 +80,7 @@ plotted in Figure~\ref{fig:motivation}. The final column ($\mathrm{Drift}_{16}$)
 is the $32$-layer mean $250$-update top-$16$ Grassmann subspace drift between
 updates $2{,}250$ and $2{,}500$ (Section~\ref{sec:mot-drift}).}
 \label{tab:motivation}
-\scriptsize\setlength{\tabcolsep}{3.6pt}
+\footnotesize\setlength{\tabcolsep}{4.8pt}
 \resizebox{\textwidth}{!}{\input{results/table_motivation}}
 \end{table}
 
@@ -152,7 +152,8 @@ entire $2.68\text{B}$-token training run:
   \texttt{in:down} behaves quite differently from pre-SwiGLU \texttt{out:gate}
   and \texttt{out:up}: despite massive neuron scale spread (mean
   $\mathrm{CV}_{\diag}$ growing from \motInDownEarlyCvMean{} to
-  \motInDownFinalCvMean{}), its $\mathrm{erank}/d$ is only
+  \motInDownFinalCvMean{}, giving high $R^2(A^{-1/2}) = \motInDownExpVarLMedPct\%$
+  purely from coordinate variance heterogeneity), its $\mathrm{erank}/d$ is only
   \motInDownErankMedPct\%, $\rho_{\mathrm{rms}}$ is \motInDownCorrRmsMed{}
   ($6.8\times$ \texttt{out:gate}'s RMS, or $46\times$ higher correlation energy
   per coordinate), and $56.6\%$ of $\|\tilde C_{\text{down}}-I_d\|_F^2$ lies off
@@ -174,7 +175,9 @@ together and compound neuron scale anisotropy. By contrast, the forward
 post-SwiGLU input $x_{\text{down}} = \operatorname{SiLU}(g)\odot u$ has strictly
 positive channel means from one-sided $\operatorname{SiLU}$, adding a dense
 outer-product mean term $\mu\mu^{\Tr}$ to $\mathbb E[x_{\text{down}}x_{\text{down}}^{\Tr}]$
-that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
+that keeps $C_{\text{down}}$ strongly correlated off-diagonal --- a sharp,
+falsifiable prediction tested directly by symmetric width-2048 diagonalization
+(\taxid{WT-Sym}, Section~\ref{sec:sym-ablation}).
 \end{finding}
 
 \begin{figure}[t]
@@ -183,8 +186,8 @@ that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
 \begin{tikzpicture}
 \begin{groupplot}[
   paperplot,
-  group style={group size=2 by 2, horizontal sep=1.65cm, vertical sep=1.70cm},
-  width=7.1cm, height=4.8cm,
+  group style={group size=2 by 2, horizontal sep=1.75cm, vertical sep=1.70cm},
+  width=7.4cm, height=4.9cm,
 ]
 \nextgroupplot[
   ybar=0.8pt, bar width=2.4pt,
@@ -279,14 +282,15 @@ that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
 tokens across all $32$ layers). \textbf{(a)} Subtracting $I_d$ separates
 genuinely diagonal moments (\texttt{out:gate}, \texttt{out:up}) from isotropic
 but rotation-dominated residual moments (\texttt{out:o}, \texttt{out:down}),
-matching $R^2(A^{-1/2})$. \textbf{(b)} The architectural split in
+while showing why \texttt{in:down} still retains $56.6\%$ off-diagonal
+anisotropy despite high scale spread. \textbf{(b)} The architectural split in
 $\mathrm{DiagAniso}(\tilde M)$ holds throughout training. \textbf{(c)}
 Pre-SwiGLU \texttt{out:gate} and \texttt{out:up} hug the single-step sampling
 floor $N_t^{-1/2}=0.0052$ across the entire run, whereas width-$512$ inputs sit
-$35\times$ higher. \textbf{(d)} Rapid cotangent subspace rotation triggers
-$\motFbOutTotal$ exact \texttt{cuSOLVER eigh} fallbacks across the eight GPUs
-versus $\motFbInTotal$ on inputs (only $\motFbInPostWarmup$ input fallbacks
-after $0.13\text{B}$ tokens).}
+$35\times$ higher and \texttt{in:down} sits $6.8\times$ higher. \textbf{(d)}
+Rapid cotangent subspace rotation triggers $\motFbOutTotal$ exact
+\texttt{cuSOLVER eigh} fallbacks across the eight GPUs versus $\motFbInTotal$ on
+inputs (only $\motFbInPostWarmup$ input fallbacks after $0.13\text{B}$ tokens).}
 \label{fig:motivation}
 \end{figure}
 
@@ -339,9 +343,9 @@ checkpoint, short-horizon top-$16$ drift is $24\times$--$36\times$ larger on
 \motOutGateShortDriftTopSixteen{}) than on \texttt{in:attn} and \texttt{in:mlp}
 (\motInAttnShortDriftTopSixteen{} and \motInMlpShortDriftTopSixteen{}).
 
-Evaluating the two-iteration fixed-point root solver directly on the saved
-cached bases $X_{t-\tau}^{\Tr}\tilde M_t X_{t-\tau}$ at update $2{,}500$ shows
-the immediate numerical consequence. On the input side, the median ratio of
+Evaluating the two-iteration fixed-point root solver directly on the cached
+eigenbases $X_{t-\tau}^{\Tr}\tilde M_t X_{t-\tau}$ saved at update $2{,}500$
+shows the immediate numerical consequence. On the input side, the median ratio of
 estimated root error to acceptance tolerance is
 \motInAttnCachedEstOverTolMed{}--\motInOCachedEstOverTolMed{}, comfortably below
 $1.0$. On the output side, \texttt{out:k} sits at median ratio
@@ -374,12 +378,15 @@ temporal drift in Figure~\ref{fig:motivation}(d) dictate three concrete design
 choices before any candidate optimizer is trained:
 
 \begin{enumerate}
-\item \textbf{Keep dense input whitening ($R,\hat R$) intact.} Between $94\%$
-  and $99\%$ of width-$512$ input anisotropy --- and $57\%$ of post-SwiGLU
+\item \textbf{Keep width-512 input whitening dense, and treat width-2048
+  \texttt{in:down} as a distinct quality--speed trade-off.} Between $98\%$
+  and $99\%$ of width-$512$ input anisotropy --- and $56.6\%$ of post-SwiGLU
   \texttt{in:down}'s --- lies off the coordinate diagonal. Dropping or
-  diagonalizing the input side forfeits the primary domain conditioning of the
-  finite polynomial map $\Nten$; output-cotangent normalization should be added
-  \emph{on top of} dense input whitening rather than substituted for it.
+  diagonalizing width-$512$ inputs forfeits the primary domain conditioning of
+  the finite polynomial map $\Nten$; diagonalizing \texttt{in:down} alongside
+  \texttt{out:gate,up} (\taxid{WT-Sym}) eliminates all width-$2048$ dense Gram
+  and eigendecomposition work on \emph{both} sides, but unlike pre-SwiGLU
+  outputs it discards real off-diagonal $\mu\mu^{\Tr}$ structure.
 \item \textbf{Threshold output richness by width (\taxid{WT-MLP} / \mlpdiag{}),
   with pure diagonals (\taxid{OD-All} / \alldiag{}) as the
   zero-eigendecomposition limit.} The two width-$2048$ pre-SwiGLU cotangents
@@ -397,13 +404,13 @@ choices before any candidate optimizer is trained:
   defines an eigendecomposition-free speed bound via \texttt{gate},
   \texttt{up}, \texttt{q}, and \texttt{k}.
 \item \textbf{Lag output factors by one update on an asynchronous side stream
-  (\taxid{WT-MLP-Lag} / \mlpdiaglag{}).} Diagonalizing width-$2048$ outputs
+  (\taxid{WT-MLP-Lag}, \taxid{WT-Sym-Lag}).} Diagonalizing width-$2048$ outputs
   eliminates the largest host bottlenecks, but fast subspace drift on width-$512$
   cotangents (\texttt{out:v}, \texttt{out:k}) still triggers frequent iterative
-  repairs and exact \texttt{eigh} fallbacks. Applying factors
-  $(L^{(t-1)},\hat L^{(t-1)})$ built from the previous update's cotangents --- a
-  staleness of one-sixteenth of the $\beta=0.938$ EMA window --- moves output
-  Gram reduction, root refinement, and fallback resolution off the synchronous
-  post-backward critical path and overlaps them with the next update's forward
-  and backward pass.
+  repairs and exact \texttt{eigh} fallbacks ($\approx 20{,}000$--$22{,}000$ on
+  Rank~0 per run). Applying factors $(L^{(t-1)},\hat L^{(t-1)})$ built from the
+  previous update's cotangents --- a staleness of one-sixteenth of the
+  $\beta=0.938$ EMA window --- moves output Gram reduction, root refinement, and
+  fallback resolution off the synchronous post-backward critical path and
+  overlaps them with the next update's forward and backward pass.
 \end{enumerate}

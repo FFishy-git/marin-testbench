@@ -2,11 +2,12 @@
 \label{sec:method}
 
 Section~\ref{sec:mot-consequences} derived three structural requirements from the
-baseline \taxid{MuonT} (\muont{}) trajectory: retain dense input whitening
-($R,\hat R$), threshold output preconditioning by projection width (dense at
-$d=512$, exact elementwise diagonal at $d=2048$), and lag output factors by one
-update on an asynchronous side stream. Figure~\ref{fig:method_arch} illustrates
-both the spatial assignment across a transformer layer and the asynchronous
+baseline \taxid{MuonT} (\muont{}) trajectory: retain dense width-$512$ input
+whitening, threshold output preconditioning by projection width (dense at
+$d=512$, exact elementwise diagonal at $d=2048$, testing both dense and diagonal
+\texttt{in:down} at $d=2048$), and lag output factors by one update on an
+asynchronous side stream. Figure~\ref{fig:method_arch} illustrates both the
+spatial assignment across a transformer layer and the asynchronous
 one-step-lagged pipeline (\texttt{fast\_lag}). We now specify how the output
 moments are observed and sharded across eight GPUs, and establish a formal
 five-slot operator taxonomy covering every candidate, null control, and ablation
@@ -16,20 +17,21 @@ evaluated in the study.
 \centering
 \input{figs/method_arch}
 \caption{Spatial and temporal architecture of width-thresholded two-sided MuonT.
-\textbf{(a)} Within each 32-layer block (\taxid{WT-MLP} / \mlpdiag{}), all four
-right-input moments ($C_t$) and the five width-$512$ left-cotangent moments
-($\delta_q,\delta_k,\delta_v,\delta_o,\delta_{\text{down}}$, where residual
-cotangents are $>99\%$ rotational) receive dense spectral roots ($\fFull$),
-whereas pre-SwiGLU width-$2048$ cotangents ($\delta_{\text{gate}},\delta_{\text{up}}$,
-decorrelated off-diagonally by the Hadamard gate $\operatorname{SiLU}(g)\odot u$)
-receive exact age-zero inline diagonal roots ($\fDiag$), eliminating $96.2\%$ of
-output $O(d^3)$ eigendecomposition work and saving $\sysMemSavedGib$\,GiB.
-\textbf{(b)} In \taxid{WT-MLP-Lag} (\mlpdiaglag{}) on the \texttt{fast\_lag}
-runner ($\tau=1$), step $t$'s Tensor-Core Ozaki update consumes ready factors
-$(L^{(t-1)},\hat L^{(t-1)})$ while a priority-0 side stream overlaps packed
-\texttt{syrk}, \texttt{reduce\_scatter}, CUDA-graph roots, and mid-step
-\texttt{cuSOLVER eigh} fallback resolution under the $\approx 900$\,ms
-forward--backward window of step $t+1$.}
+\textbf{(a)} Within each 32-layer block, all width-$512$ inputs and the five
+width-$512$ left-cotangents ($\delta_q,\delta_k,\delta_v,\delta_o,\delta_{\text{down}}$,
+where residual cotangents are $>99\%$ rotational) receive dense spectral roots
+($\fFull$), whereas pre-SwiGLU width-$2048$ cotangents
+($\delta_{\text{gate}},\delta_{\text{up}}$, decorrelated off-diagonally by the
+Hadamard gate $\operatorname{SiLU}(g)\odot u$) receive exact age-zero inline
+diagonal roots ($\fDiag$), eliminating $96.2\%$ of output $O(d^3)$ work and
+saving $\sysMemSavedGib$\,GiB; post-SwiGLU \texttt{in:down} ($2048$) stays dense
+in \taxid{WT-MLP} ($\fFull$) and switches to inline diagonal in \taxid{WT-Sym}
+($\fDiag$). \textbf{(b)} In \taxid{WT-MLP-Lag} and \taxid{WT-Sym-Lag} on the
+\texttt{fast\_lag} runner ($\tau=1$), step $t$'s Tensor-Core Ozaki update
+consumes ready factors $(L^{(t-1)},\hat L^{(t-1)})$ while a priority-0 side
+stream overlaps packed \texttt{syrk}, \texttt{reduce\_scatter}, CUDA-graph
+roots, and mid-step \texttt{cuSOLVER eigh} fallback resolution under the
+$\approx 900$\,ms forward--backward window of step $t+1$.}
 \label{fig:method_arch}
 \end{figure}
 
@@ -58,7 +60,7 @@ is distinct. The two width-2048 output moments (``w.'') are where the cost of th
 output side concentrates; every cotangent is observed at the projection's
 output, at the point named in the last column.}
 \label{tab:projections}
-\footnotesize\setlength{\tabcolsep}{3.4pt}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
 \begin{tabular}{@{}llcllc@{}}
 \toprule
 Proj. & Shape ($m\times n$) & $s$ & Input moment & Output moment & Cotangent at \\
@@ -67,7 +69,7 @@ $q,k$ & $512\times512$ & 1 & $A_{\text{attn}}$, shared & $B_q,B_k$, w.\ 512 & pr
 $v$ & $512\times512$ & 1 & $A_{\text{attn}}$, shared & $B_v$, w.\ 512 & pre-reshape \\
 $o$ & $512\times512$ & 1 & $A_o$, w.\ 512 & $B_o$, w.\ 512 & pre-residual \\
 gate, up & $2048\times512$ & 2 & $A_{\text{mlp}}$, shared & $B_{\text{gate}},B_{\text{up}}$, \textbf{w.\ 2048} & pre-SwiGLU \\
-down & $512\times2048$ & 1 & $A_{\text{down}}$, w.\ 2048 & $B_{\text{down}}$, w.\ 512 & pre-residual \\
+down & $512\times2048$ & 1 & $A_{\text{down}}$, \textbf{w.\ 2048} & $B_{\text{down}}$, w.\ 512 & pre-residual \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -131,14 +133,17 @@ running the full capture, reduction, and root pipeline before forcing
 $L=\hat L=I$). Superscript $(\cdot)^{\text{dn}}$ restricts an operator to the
 $32$ \texttt{down} matrices ($12.6\%$ of weights).
 
-Table~\ref{tab:arms} organizes all $17$ configurations into six taxonomic
-families that structure the tables and figures throughout the rest of the paper:
+Table~\ref{tab:arms} organizes all \nOptimizerArms{} configurations into six
+taxonomic families that structure the tables and figures throughout the rest of
+the paper:
 \textbf{I.\ Baselines (\texttt{Ref})}, pairing unwhitened \taxid{Muon} with
 input-whitened \taxid{MuonT};
 \textbf{II.\ Width-Thresholded Two-Sided (\texttt{WT})}, our proposed core
-family combining dense $d=512$ and diagonal $d=2048$ output factors at $\tau=0$
-(\taxid{WT-MLP}) and $\tau=1$ (\taxid{WT-MLP-Lag}, with symmetric width-thresholding
-$\opcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{\tau}$ denoted \taxid{WT-Sym});
+family forming a complete $2\times 2$ factorial across asymmetric output
+width-thresholding ($\opcfg{\fFull}{\fFull}{\fFull}{\fDiag}{\tau}$:
+\taxid{WT-MLP}, \taxid{WT-MLP-Lag}) and symmetric MLP width-thresholding
+($\opcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{\tau}$: \taxid{WT-Sym},
+\taxid{WT-Sym-Lag}) at $\tau\in\{0,1\}$;
 \textbf{III.\ Pure-Diagonal Output (\texttt{OD})}, the zero-eigendecomposition
 limit across all seven outputs (\taxid{OD-All}) or outer-only (\taxid{OD-Outer});
 \textbf{IV.\ Dense Two-Sided Ceiling (\texttt{DT})}, applying dense spectral
@@ -149,21 +154,22 @@ reassociation and host-thread contention from geometry (\taxid{Null-WT},
 \taxid{Null-Dense}, \taxid{Null-OD}); and
 \textbf{VI.\ Structural \& Input-Degradation Ablations (\texttt{Abl})}, testing
 scope truncation (\taxid{Abl-No2048}, \taxid{Abl-OuterDense},
-\taxid{Abl-DownOnly}) and input removal or diagonalization (\taxid{Abl-OutOnly},
-\taxid{Abl-BothDiag}, \taxid{Abl-DownSwap}). Full update equations appear in
-Appendix~\ref{app:arms}.
+\taxid{Abl-DownOnly}) and input removal or all-width diagonalization
+(\taxid{Abl-OutOnly}, \taxid{Abl-BothDiag}, \taxid{Abl-DownSwap}). Full update
+equations appear in Appendix~\ref{app:arms}.
 
 \begin{table}[t]
 \centering
-\caption{Systematic taxonomy of all executed optimizer arms under the five-slot
-operator signature $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\tau}$ of
-\eqref{eq:tuple}. Badge legend: $\fFull$ full spectral $(L,\hat L)$ or
-$(R,\hat R)$; $\fDiag$ exact age-zero elementwise diagonal; $\fOuterFull /
-\fOuterDiag$ outer $-1/8$ factor $\hat L$ only ($L=I$); $\fNone$ identity
-(uncollected); $\fNullFull / \fNullDiag$ computed and withheld matched null
-($L=\hat L=I$). Shaded rows mark the cost--quality Pareto family.}
+\caption{Systematic taxonomy of all \nOptimizerArms{} executed optimizer arms
+under the five-slot operator signature
+$\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\tau}$ of \eqref{eq:tuple}. Badge
+legend: $\fFull$ full spectral $(L,\hat L)$ or $(R,\hat R)$; $\fDiag$ exact
+age-zero elementwise diagonal; $\fOuterFull / \fOuterDiag$ outer $-1/8$ factor
+$\hat L$ only ($L=I$); $\fNone$ identity (uncollected); $\fNullFull / \fNullDiag$
+computed and withheld matched null ($L=\hat L=I$). Shaded rows mark the
+cost--quality Pareto family.}
 \label{tab:arms}
-\scriptsize\setlength{\tabcolsep}{3.5pt}
+\scriptsize\setlength{\tabcolsep}{4.2pt}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llcl@{}}
 \toprule
@@ -173,9 +179,11 @@ Taxonomic ID & Code identifier & $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\
 \taxid{MuonT} & \muont{} & \tcfg{\fFull}{\fFull}{\fNone}{\fNone}{0} & \textbf{Primary baseline}: dense right-input whitening \\
 \taxid{Muon} & \texttt{muon} & \tcfg{\fNone}{\fNone}{\fNone}{\fNone}{\text{---}} & Unpreconditioned orthogonalized momentum reference \\
 \addlinespace[2.5pt]
-\multicolumn{4}{@{}l}{\textcolor{famWT}{\pagesfsb II.\ Width-Thresholded Two-Sided (\texttt{WT} --- Proposed Core Family)}} \\
-\rowcolor{pagepanel} \textbf{\taxid{WT-MLP}} & \mlpdiag{} & \tcfg{\fFull}{\fFull}{\fFull}{\fDiag}{0} & \textbf{Primary quality geometry}: dense $512$, exact diag $2048$ \\
-\rowcolor{pagepanel} \textbf{\taxid{WT-MLP-Lag}} & \mlpdiaglag{} & \tcfg{\fFull}{\fFull}{\fFull}{\fDiag}{1} & \textbf{Primary Pareto geometry}: 1-step async lag (\texttt{fast\_lag}) \\
+\multicolumn{4}{@{}l}{\textcolor{famWT}{\pagesfsb II.\ Width-Thresholded Two-Sided (\texttt{WT} --- Asymmetric \& Symmetric $2\times 2$ Factorial)}} \\
+\rowcolor{pagepanel} \textbf{\taxid{WT-MLP}} & \mlpdiag{} & \tcfg{\fFull}{\fFull}{\fFull}{\fDiag}{0} & \textbf{Primary quality geometry}: asymmetric $2048$ output diag ($\tau=0$) \\
+\rowcolor{pagepanel} \textbf{\taxid{WT-MLP-Lag}} & \mlpdiaglag{} & \tcfg{\fFull}{\fFull}{\fFull}{\fDiag}{1} & \textbf{Quality--speed Pareto}: asymmetric $2048$ diag, 1-step \texttt{fast\_lag} \\
+\rowcolor{pagepanel} \textbf{\taxid{WT-Sym}} & \symmlpdiag{} & \tcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{0} & \textbf{Symmetric MLP $2048$ diag}: inline diag on \texttt{in:down} \& \texttt{out:gate,up} ($\tau=0$) \\
+\rowcolor{pagepanel} \textbf{\taxid{WT-Sym-Lag}} & \symmlpdiaglag{} & \tcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{1} & \textbf{Fastest wall-clock Pareto}: symmetric $2048$ diag, 1-step \texttt{fast\_lag} \\
 \addlinespace[2.5pt]
 \multicolumn{4}{@{}l}{\textcolor{famOD}{\pagesfsb III.\ Pure-Diagonal Output (\texttt{OD} --- Zero-Eigendecomposition Limit)}} \\
 \rowcolor{pagepanel} \textbf{\taxid{OD-All}} & \alldiag{} & \tcfg{\fFull}{\fFull}{\fDiag}{\fDiag}{0} & \textbf{Zero-\texttt{eigh} speed bound}: age-$0$ diagonal on all 7 outputs \\
@@ -196,7 +204,7 @@ Taxonomic ID & Code identifier & $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\
 \taxid{Abl-DownOnly} & \outerdown{} & \tcfg{\fFull}{\fFull}{\fOuterFull^{\text{dn}}}{\fNone}{0} & Narrow output addition on $32$ \texttt{down} matrices only \\
 \taxid{Abl-DownSwap} & \downhybrid{} & \tcfg{\fFull}{\fNone}{\fFull^{\text{dn}}}{\fNone}{0} & Narrow substitution: $512$ output replaces $2048$ \texttt{down} input \\
 \taxid{Abl-OutOnly} & \leftall{} & \tcfg{\fNone}{\fNone}{\fFull}{\fFull}{0} & \textbf{Broad substitution}: removes all right-input whitening \\
-\taxid{Abl-BothDiag} & \bothdiag{} & \tcfg{\fDiag}{\fDiag}{\fDiag}{\fDiag}{0} & \textbf{Input degradation}: diagonalizes both input and output sides \\
+\taxid{Abl-BothDiag} & \bothdiag{} & \tcfg{\fDiag}{\fDiag}{\fDiag}{\fDiag}{0} & \textbf{All-width input degradation}: diagonalizes both sides everywhere \\
 \bottomrule
 \end{tabular}%
 }
@@ -209,12 +217,11 @@ Taxonomic ID & Code identifier & $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\
 Adding output factors to this implementation changes the numerical path for
 every block matrix: the baseline uses a batched update with fused
 direction/decay products and split-precision root products, while the
-output-side arms use a per-matrix path with direct FP32 products and separately
-formed direction and decay. Momentum is bitwise identical, but the applied
-delta differs by floating-point reassociation, and the host refresh schedule
-changes because there are now two root engines competing for the same two
-worker threads. A loss difference between an output-side arm and the baseline
-therefore confounds geometry with execution.
+output-side arms use an owned-layer path. Momentum is bitwise identical, but the
+applied delta differs by floating-point reassociation, and the host refresh
+schedule changes because two root engines now share host worker threads. A loss
+difference between an output-side arm and the baseline therefore confounds
+geometry with execution.
 
 The matched null resolves this. It runs the candidate's entire code path ---
 cotangent capture, pooled moments, communication, root computation, host
@@ -224,16 +231,17 @@ minus null isolates geometry; null minus baseline measures the path.
 Section~\ref{sec:null} reports that the second quantity is not small.
 
 \paragraph{The latency variant.}
-Output rows exist only after the backward pass, so the implementation launches
-output statistics and roots after the last microbatch's backward and then waits
-for them inside the same update. That wait is on the critical path. The lagged
-arms apply factors computed from the \emph{previous} update's rows, moving
-collection to just before the next launch and giving the work a full update plus
-a forward and backward to complete. At $\beta=0.938$ a one-update lag is about
-one-sixteenth of the averaging window, far less staleness than Shampoo-family
-methods accept, but it is still a change to the update and not a pure
-efficiency control: candidate-minus-lagged measures what the staleness costs,
-and the pair together separate latency from geometry.
+Output rows exist only after the backward pass, so synchronous ($\tau=0$)
+execution launches output statistics and roots after the last microbatch's
+backward and waits for them inside the same update. That wait sits on the
+critical path. The lagged arms ($\tau=1$) apply factors computed from the
+\emph{previous} update's rows, moving collection to just before the next launch
+and giving the work a full update plus a forward and backward to complete. At
+$\beta=0.938$ a one-update lag is about one-sixteenth of the averaging window,
+far less staleness than Shampoo-family methods accept, and comparing $\tau=0$
+against $\tau=1$ on both asymmetric (\taxid{WT-MLP} vs.\ \taxid{WT-MLP-Lag}) and
+symmetric (\taxid{WT-Sym} vs.\ \taxid{WT-Sym-Lag}) width-thresholding separates
+staleness from spatial geometry.
 
 \subsection{Where the cost is}
 \label{sec:method-cost}
@@ -246,13 +254,14 @@ $d^3$ and Gram accumulation as $d^2$, so the two MLP-expansion projections carry
 partials and 1.000 of the 1.156\,GiB of cached eigenbases. Per rank, an arm with
 dense output factors on all blocks adds roughly 0.58\,GiB of replicated Gram
 partials, an equal \verb|reduce_scatter| payload per update, about 1.8\,GiB of
-BF16 sampled-row buffers, and 0.75\,GiB of owned output state.
+BF16 sampled-row buffers, and 0.75\,GiB of owned output state. On the input
+side, the 32 width-2048 \texttt{in:down} statistics similarly contribute
+$268.6$\,MB of packed \verb|reduce_scatter| volume per update and four
+$2048\times 2048$ cached eigenbases per rank.
 
-This is why the arm taxonomy includes three complementary ways to cheapen the
-output side rather than one, and why the width-2048 factors are the natural
-first target: \taxid{Abl-No2048} (\noexp{}) removes them, \taxid{WT-MLP}
-(\mlpdiag{}) diagonalizes them, and \taxid{OD-All} (\alldiag{}) diagonalizes
-everything, removing output eigendecomposition entirely. Newton--Schulz remains
-the dominant per-matrix cost in every arm, so no arm on this path can be faster
-than a Muon-form update on the same path; the savings available are savings
-against the dense output arms, not against the baseline.
+This is why our taxonomy spans four progressive cost tiers across the width-2048
+projections: \taxid{DT-All} keeps all width-2048 sides dense, \taxid{WT-MLP}
+diagonalizes the two width-2048 outputs, \taxid{WT-Sym} diagonalizes
+\emph{both} width-2048 MLP sides (\texttt{out:gate,up} and \texttt{in:down})
+while keeping all width-512 sides dense, and \taxid{OD-All} diagonalizes all
+seven outputs to eliminate output eigendecompositions altogether.

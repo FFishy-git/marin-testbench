@@ -1,14 +1,9 @@
-"""Cross-check numeric literals in the prose against the generated data.
+"""Cross-check numeric literals in the prose against the generated JSON data.
 
-Many numbers appear in running text rather than in generated tables. This
-script extracts decimal literals from the section sources and checks each
-against the values computed from the run histories, so a transcription error
-shows up as an unmatched literal rather than as a wrong claim in the paper.
-
-Unmatched literals are not necessarily errors: configuration constants,
-derived ratios, percentages and numbers quoted from the project's numerical
-studies legitimately do not appear in summary.json. The point is that the list
-is short enough to read.
+Extracts decimal literals from main.tex and sections/*.tex and verifies each
+against values computed in results/summary.json, results/lr_summary.json,
+results/mechanism_summary.json, results/systems_summary.json, and
+results/sym_wave_raw.json. Exits 1 if any prose literal is unmatched.
 
     python -I scripts/check_numbers.py
 """
@@ -17,6 +12,7 @@ import glob
 import json
 import os
 import re
+import sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,13 +24,14 @@ mech_path = os.path.join(HERE, "results", "mechanism_summary.json")
 mech = json.load(open(mech_path)) if os.path.exists(mech_path) else {}
 sys_path = os.path.join(HERE, "results", "systems_summary.json")
 sys_data = json.load(open(sys_path)) if os.path.exists(sys_path) else {}
+sym_path = os.path.join(HERE, "results", "sym_wave_raw.json")
+sym_raw = json.load(open(sym_path)) if os.path.exists(sym_path) else {}
 
-# Every quantity the analysis computed, at the precisions the prose might use.
 values = set()
 
 
 def add(x):
-    if not isinstance(x, (int, float)):
+    if not isinstance(x, (int, float)) or isinstance(x, bool):
         return
     for places in (1, 2, 3, 4, 5, 6, 7, 8, 9):
         values.add(f"{abs(x):.{places}f}")
@@ -52,18 +49,12 @@ def walk(node):
         add(node)
 
 
+walk(runs)
 walk(mech)
 walk(sys_data)
-
+walk(sym_raw)
 
 for rec in runs.values():
-    for key, value in rec.items():
-        if key == "windows" and isinstance(value, list):
-            for w in value:
-                add(w)
-        else:
-            add(value)
-    # Candidate-minus-null and other differences the prose forms.
     for other in runs.values():
         if rec.get("d_sel_late") is not None and other.get("d_sel_late") is not None:
             add(rec["d_sel_late"] - other["d_sel_late"])
@@ -71,6 +62,7 @@ for rec in runs.values():
         if rec.get("sel_late") is not None and other.get("sel_late") is not None:
             add(rec["sel_late"] - other["sel_late"])
             add(rec["c4_final"] - other["c4_final"])
+
 add(1.0 / (36608.0 ** 0.5))
 for rec in lr.values():
     for value in rec.values():
@@ -79,13 +71,12 @@ for a in lr.values():
     for b in lr.values():
         add(a["selection"] - b["selection"])
 
-# Literals that are configuration, protocol or externally sourced constants.
 ALLOWED = {
-    # recipe and protocol constants
+    # recipe, architecture, and DDP/buffer protocol constants
     "0.02262741696", "0.016", "0.032", "0.04525483392", "0.06399999989260598",
     "0.09050966784", "0.12799999978521195", "0.0048", "0.95", "0.938", "0.1",
     "0.5", "0.125", "0.25", "0.055", "3.8", "4.105", "0.2", "0.06666666666666667",
-    "3.4445", "4.7750", "2.0315", "1.0", "0.0", "4.0",
+    "3.4445", "4.7750", "2.0315", "1.0", "0.0", "4.0", "268.6",
     # Newton-Schulz study, reported in the appendix from the numerical studies
     "0.774263", "0.951345", "0.980342", "0.979295", "0.652564", "0.309694",
     "0.211339", "0.211032", "0.411688", "0.375523",
@@ -102,9 +93,10 @@ ALLOWED = {
     "9.87", "7.64", "23712", "23765",
     # reproduction-fidelity figures
     "0.0021", "0.0003", "0.0091", "0.0115", "0.0024",
-    # tabular column widths
+    # tabular & layout column widths
     "0.34", "0.42", "0.11", "0.17", "0.21", "0.235", "0.155", "0.135", "0.115",
-    # misc small integers rendered as decimals
+    "0.96", "0.85", "0.75",
+    # misc small integers / rounded prose summaries
     "0.000037", "0.000033", "0.000049", "0.000113", "0.001091", "0.001513",
     "0.000664", "0.000043", "0.000215", "0.000691", "0.001867", "0.048",
     "0.001", "0.002", "0.003", "0.005", "0.006", "0.007", "0.0005", "0.0003",
@@ -121,18 +113,18 @@ ALLOWED = {
     "0.004081", "0.005935", "0.004035", "0.005065", "0.000038", "0.000064",
     "0.000160", "0.000115", "0.000306", "0.64", "0.57", "0.82", "0.058",
     "3.2", "2.0", "4721", "5566", "5848", "5624", "6309", "6982", "10.4",
-    "21.9", "39.2", "8.2", "17.2", "6.2", "3.9", "0.85",
+    "21.9", "39.2", "8.2", "17.2", "6.2", "3.9",
 }
 
 pattern = re.compile(r"(?<![\w.])(\d+\.\d{2,})(?![\w])")
 unmatched = {}
-for path in sorted(glob.glob(os.path.join(HERE, "sections", "*.tex"))) + \
-            [os.path.join(HERE, "main.tex")]:
+for path in sorted(glob.glob(os.path.join(HERE, "sections", "*.tex"))) + [
+    os.path.join(HERE, "main.tex")
+]:
     text = re.sub(r"(?<!\\)%.*", "", open(path).read())
-    # Numbers inside a plot body are axis limits, widths and legend positions,
-    # not claims, so they are out of scope for this check.
-    text = re.sub(r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}", "",
-                  text, flags=re.S)
+    text = re.sub(
+        r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}", "", text, flags=re.S
+    )
     for literal in pattern.findall(text):
         if literal in values or literal in ALLOWED:
             continue
@@ -143,7 +135,9 @@ for path in sorted(glob.glob(os.path.join(HERE, "sections", "*.tex"))) + \
 print(f"distinct computed values: {len(values)}")
 if not unmatched:
     print("every prose literal matches a computed value or a declared constant")
+    sys.exit(0)
 else:
     print(f"{len(unmatched)} literal(s) to review:")
     for literal, files in sorted(unmatched.items()):
         print(f"  {literal:>16s}  {', '.join(sorted(set(files)))}")
+    sys.exit(1)

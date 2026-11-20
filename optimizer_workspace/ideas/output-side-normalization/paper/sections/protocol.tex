@@ -23,13 +23,12 @@ training distribution in addition to an external one.
 
 \begin{table}[t]
 \centering
-\caption{The pinned recipe. All 33 full-budget runs share every row; arms differ
-only in the optimizer's factor choices. The learning rate in the last row is the
-recipe's value, and Section~\ref{sec:tuning} shows it is not the baseline's
-optimum --- the single most consequential fact about every number in
-Section~\ref{sec:results}.}
+\caption{The pinned recipe. All \nDistinctRuns{} distinct full-budget runs share
+every architectural and data row (except the single 1M-batch pair and the four
+Wave-12 transferred-LR runs); arms in the core comparison differ only in the
+optimizer's factor choices.}
 \label{tab:recipe}
-\scriptsize\setlength{\tabcolsep}{3.4pt}
+\footnotesize\setlength{\tabcolsep}{6.0pt}
 \begin{tabular}{llll}
 \toprule
 Model & & Training & \\
@@ -71,7 +70,9 @@ large enough to mislead: our two baselines differ by $-0.048$ nats in windowed
 selection loss while differing by only $+0.001$ in windowed C4, with held-out
 components moving in opposite directions. That is the signature of a different
 evaluation sample, not a different model. Every delta we report is therefore
-taken against its \emph{own seed's} baseline, and cross-seed statements use C4.
+taken against its \emph{own seed's} (and, where implementation waves introduce
+host-polling drift, its \emph{own wave's}) baseline, and cross-seed statements
+use C4.
 
 \textbf{Training loss} is recorded at every update --- 5{,}120 points per run
 against 22 evaluations --- and is by far the densest statistic available. We use
@@ -132,9 +133,10 @@ recorded losses are \emph{bitwise identical} to the originals across all
 5{,}120 updates. Comparing full training-loss trajectories rather than trusting
 wave labels, the \nRunDirs{} completed run directories hold \nDistinctRuns{}
 distinct trajectories, with \nDuplicateGroups{} identical groups covering
-\nDuplicateDirs{} directories; Table~\ref{tab:evidence} in
-Section~\ref{sec:limitations} lists them. Every count in this paper is of
-distinct trajectories. Reporting those repeats as
+\nDuplicateDirs{} directories (all four runs of the uncontended eight-A100
+\texttt{wave\_sym\_fastlag} wave are distinct trajectories, as asynchronous host
+\texttt{eigh} polling diverges after step~\symWaveExactSteps{};
+Table~\ref{tab:evidence} in Section~\ref{sec:limitations}). Every count in this
+paper is of distinct trajectories. Reporting deterministic repeats as
 replications would be the single easiest way to overstate this study, and we
-flag it here because the temptation is structural: deterministic repeats look
-like confirmations in any results table that does not label them.
+flag it here because the temptation is structural.

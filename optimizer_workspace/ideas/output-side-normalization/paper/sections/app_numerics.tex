@@ -29,7 +29,7 @@ near-deficiency is what makes the iteration amplify tiny input differences.
 Varying the step budget $q\in\{3,5,7,10\}$ at fixed coefficients and
 normalization gives the geometry and cost in Table~\ref{tab:nsbudget}.
 
-\begin{table}[t]
+\begin{table}[!ht]
 \centering
 \caption{Newton--Schulz step budget against direction geometry and nominal
 cost, on saved mid-training tensors. ``Products'' counts matrix multiplications
@@ -81,7 +81,7 @@ point; root inputs are exact apart from process-local graph flags; a tiny
 difference in the map's input is amplified from a relative Frobenius error of
 $1.45\times10^{-6}$ to $0.0369$ in its output, reproducibly, on GPU and in CPU
 emulation. We then tested three candidate fixes, and all three failed:
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}\setlength{\topsep}{3pt}
 \item \textbf{Higher operand precision.} Compensated products that retain
   low-order BF16 components reduce the output pair's relative error from
   $0.0368$ (single product) through $6.79\times10^{-5}$ (three products) to

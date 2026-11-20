@@ -4,10 +4,11 @@
 Table~\ref{tab:main} reports the core seed-0 comparison across all six taxonomic
 families against the seed-matched \taxid{MuonT} baseline, separating raw
 held-out selection deltas from \textbf{net-of-null geometry deltas} alongside
-external C4, paired final-window training deltas, and legacy-to-\texttt{fast\_lag}
-step-time and memory profiles. Figure~\ref{fig:plane} pairs the resulting
-cost--quality Pareto frontier with a multi-metric causal attribution plot across
-all candidates and input-degradation controls.
+external C4, paired final-window training deltas, and steady-step and peak-VRAM
+profiles across both legacy Waves~0--10 and the uncontended eight-A100
+\texttt{wave\_sym\_fastlag} wave (${}^{\ddagger}$). Figure~\ref{fig:plane} pairs
+the resulting cost--quality Pareto frontier with a multi-metric causal
+attribution plot across all candidates and input-degradation controls.
 
 \begin{table}[t]
 \centering
@@ -21,12 +22,17 @@ matched execution-path null (\taxid{Null-WT} for width-$512$-dense arms;
 \taxid{Null-Dense} for full-dense arms and conservative ${}^{\S}$ bounds where
 $-0.0039$ holds against \taxid{Null-WT}; same-wave \taxid{Null-OD} for
 Wave-10 upstream-product ${}^{\dagger}$ rows, where legacy-product \fused{} is
-$-0.0033$ raw at $+8.8\%$ step). \textbf{Step \%} reports steady-step overhead
-over \taxid{MuonT}, with $\text{legacy}\to\texttt{fast\_lag}$ calibrated A100
-shifts from Section~\ref{sec:systems}. Shaded rows mark the Pareto-optimal
-family.}
+$-0.0033$ raw at $+8.8\%$ step). Rows marked ${}^{\ddagger}$ are executed on
+uncontended eight-A100 nodes in \texttt{wave\_sym\_fastlag} paired against
+same-wave \taxid{MuonT} (against Wave-0 \taxid{MuonT}, their raw $\Delta$Sel is
+$\fastMlpLagSelWaveZero{}$, $\symMlpSelWaveZero{}$, and $\symMlpLagSelWaveZero{}$,
+and both symmetric arms reach $\symMlpLagCfourFinalSame{}$ final $\Delta$C4;
+net ${}^{\ddagger}$ values use Wave-3 \taxid{Null-WT} pending a dedicated
+\texttt{fast\_lag} null in Section~\ref{sec:program}). Step~$\%$ marked
+${}^{\ast}$ on \taxid{DT-All-Lag} denotes calibrated SM80 stage overhead
+(Section~\ref{sec:systems}). Shaded rows mark the Pareto-optimal family.}
 \label{tab:main}
-\scriptsize\setlength{\tabcolsep}{3.0pt}
+\scriptsize\setlength{\tabcolsep}{3.8pt}
 \resizebox{\textwidth}{!}{\input{results/table_main}}
 \end{table}
 
@@ -37,19 +43,20 @@ family.}
 \begin{groupplot}[
   paperplot,
   group style={group size=2 by 1, horizontal sep=2.55cm},
-  height=7.6cm,
+  height=8.4cm,
 ]
 \nextgroupplot[
-  width=7.85cm,
-  title={(a) Cost--quality Pareto plane \& \texttt{fast\_lag} shift},
+  width=8.65cm,
+  title={(a) Cost--quality Pareto plane \& \texttt{fast\_lag} frontier},
   xlabel={Step-time overhead versus \taxid{MuonT} (\%)},
   ylabel={$\Delta$ Held-out selection loss (nats)},
-  xmin=-5.5, xmax=44.5, ymin=-0.0082, ymax=0.0108,
+  xmin=-25.5, xmax=47.5, ymin=-0.0086, ymax=0.0108,
+  xtick={-20,-10,0,10,20,30,40},
   scaled y ticks=false,
   ytick={-0.008,-0.006,-0.004,-0.002,0,0.002,0.004,0.006,0.008,0.010},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
   legend columns=2,
-  legend style={at={(0.5,-0.17)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
+  legend style={at={(0.5,-0.16)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
 ]
 \input{figs/plane_plots}
 
@@ -58,47 +65,50 @@ family.}
   title={(b) Multi-metric causal attribution},
   xlabel={$\Delta$ Loss versus \taxid{MuonT} (nats; left is better)},
   xmin=-0.0078, xmax=0.0118,
-  ymin=-0.65, ymax=12.65,
+  ymin=-0.65, ymax=15.65,
   scaled x ticks=false,
   xtick={-0.006,-0.003,0,0.003,0.006,0.009},
   xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3, font=\tiny},
-  ytick={0,1,2,3,4,5,6,7,8,9,10,11,12},
+  ytick={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15},
   yticklabels={
     {\taxid{Abl-BothDiag}},
     {\taxid{Abl-OutOnly}},
     {\taxid{Muon}},
     {\taxid{Abl-DownSwap}},
     {\taxid{Abl-DownOnly}},
+    {\textbf{\taxid{WT-Sym-Lag}}$^{\ddagger}$},
+    {\textbf{\taxid{WT-Sym}}$^{\ddagger}$},
     {\taxid{OD-Outer}$^{\dagger}$},
     {\taxid{Abl-No2048}},
     {\taxid{Abl-OuterDense}},
     {\textbf{\taxid{OD-All}}},
     {\taxid{DT-All}},
     {\taxid{DT-All-Lag}},
-    {\textbf{\taxid{WT-MLP-Lag}}},
+    {\textbf{\taxid{WT-MLP-Lag}}$^{\ddagger}$},
+    {\taxid{WT-MLP-Lag} (W4)},
     {\textbf{\taxid{WT-MLP}}}
   },
   yticklabel style={font=\tiny},
   legend columns=2,
-  legend style={at={(0.5,-0.17)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
+  legend style={at={(0.5,-0.16)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
 ]
 \input{figs/attribution_plots}
 \end{groupplot}
 \end{tikzpicture}%
 }
 \caption{Master cost--quality and causal-attribution summary across all
-taxonomic families. \textbf{(a)} Step-time overhead versus held-out selection
+taxonomic families. \textbf{(a)} Steady-step overhead versus held-out selection
 delta (down and left is better; \taxid{Abl-BothDiag} at $+0.0180$ sits off-scale
-above the arrow). The shaded region below the dashed ochre line ($-0.0013$)
-marks net-of-null improvement; dashed arrows and starred points show the
-calibrated \texttt{fast\_lag} shift moving \taxid{WT-MLP-Lag} from $+18.0\%$ to
-$+1.8\%$ and \taxid{DT-All-Lag} from $+25.6\%$ to $+3.1\%$ over \taxid{MuonT}
-(Section~\ref{sec:systems}). \textbf{(b)} Decomposition of raw selection deltas
-into matched-null execution-path share (ochre) plus net geometry gain (family
-fill) across positive two-sided candidates (above dashed divider) versus
-input-removal/degradation controls (below divider), overlaid with external
-$\Delta\text{C4}$ diamonds and paired final-window $\Delta\text{Train}\pm
-2\,\text{SE}$.}
+above the arrow). Dashed arrows connect legacy Wave-4 \taxid{WT-MLP-Lag}
+($+18.0\%$) and synchronous \taxid{WT-Sym} ($+\sysExecSymVsMuontPct\%$) to their
+executed eight-A100 \texttt{fast\_lag} counterparts (filled stars at
+$+\sysExecMlpLagVsMuontPct\%$ and $+\sysExecSymLagVsMuontPct\%$ over same-wave
+\taxid{MuonT}; open pentagon shows stage-calibrated \taxid{DT-All-Lag} at
+$+3.1\%$). \textbf{(b)} Decomposition of raw selection deltas into matched-null
+execution-path share (ochre) plus net geometry gain (family fill) across
+positive two-sided candidates (above dashed divider) versus input-degradation
+controls (below divider), overlaid with external $\Delta\text{C4}$ diamonds and
+paired final-window $\Delta\text{Train}\pm 2\,\text{SE}$.}
 \label{fig:plane}
 \end{figure}
 
@@ -123,36 +133,30 @@ down-projection-only arms the same pattern holds: adding an outer output factor
 input factors with output ones (\taxid{Abl-DownSwap}) gives $+0.002512$.
 \end{finding}
 
-This asymmetry has a plausible structural reading that our data supports but
-does not prove. The input moment conditions the \emph{domain} of the update,
-which is what the orthogonalization in \eqref{eq:ns} then acts on; the output
-moment rescales the \emph{codomain} after the fact. Removing the first leaves
-$\Nten$ operating on an unconditioned matrix, and no amount of output-side
-rescaling recovers that. Consistent with this, the fully diagonal arm
-\taxid{Abl-BothDiag} (\bothdiag{}) --- the only arm that degrades the
-\emph{input} side as well --- is the worst arm in the study at $+0.018011$,
-worse than plain \taxid{Muon}, despite applying output factors in the same
-places as the leading arm. Whatever value the output side has here, it is
-conditional on a well-conditioned input side, and cheapening the input side is a
-much more expensive mistake than cheapening the output side.
-
-Figure~\ref{fig:traindelta} shows these orderings are not artifacts of the
-evaluation window. The paired training-loss differences separate within the
-first 200M tokens and keep their sign for the remaining 2.5B.
+This asymmetry has a plausible structural reading that our data supports. The
+input moment conditions the \emph{domain} of the update, which is what the
+orthogonalization in \eqref{eq:ns} then acts on; the output moment rescales the
+\emph{codomain} after the fact. Removing the first leaves $\Nten$ operating on
+an unconditioned matrix, and no amount of output-side rescaling recovers that.
+Consistent with this, the all-width diagonal arm \taxid{Abl-BothDiag}
+(\bothdiag{}) --- which degrades the $>98\%$ off-diagonal width-512 inputs as
+well --- is the worst arm in the study at $+0.018011$, worse than plain
+\taxid{Muon}. Figure~\ref{fig:traindelta} shows these orderings separate within
+the first 200M tokens and keep their sign for the remaining 2.5B.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   paperplot,
-  width=0.88\textwidth, height=6.8cm,
+  width=0.86\textwidth, height=6.4cm,
   title={Paired per-update training-loss trajectories across taxonomic families},
   xlabel={Tokens processed (billions)}, ylabel={Paired $\Delta$ training loss (nats)},
   xmin=0, xmax=2.69, ymin=-0.020, ymax=0.016,
   scaled y ticks=false,
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
   legend columns=2,
-  legend style={at={(0.5,-0.19)}, anchor=north, font=\scriptsize, column sep=8pt, row sep=1pt},
+  legend style={at={(0.5,-0.25)}, anchor=north, font=\scriptsize, column sep=8pt, row sep=1pt},
   every axis plot/.append style={line width=0.95pt},
 ]
 \fill[famWT!5] (axis cs:0,-0.020) rectangle (axis cs:2.69,0);
@@ -205,74 +209,55 @@ for \taxid{WT-MLP}.
 
 \begin{finding}[The control is not neutral, and it changes a conclusion]
 Running the candidate's code path with identity factors recovers 22--36\% of
-the apparent improvement. This is not a small correction to an effect of
-0.006 nats. It is large enough to have inverted this project's first
-conclusion: the arm favored after the first wave, \taxid{Abl-DownOnly}
+the apparent improvement. This is large enough to have inverted this project's
+first conclusion: the arm favored after the first wave, \taxid{Abl-DownOnly}
 (\outerdown{}), improved selection loss by $0.001370$, which is \emph{within}
 the null level later measured at $0.001286$. Its apparent advantage was
 substantially execution path, and nothing in the first wave could have revealed
 that.
 \end{finding}
 
-We do not fully know what the null's gain \emph{is}. The candidate path differs
-from the baseline in floating-point association inside the update, in having two
-root engines contending for two host worker threads, and in the arrival history
-of cached eigenbases. Any of these can perturb a trajectory, and a perturbation
-that happens to help is not a result --- but it is also not something a
-geometry claim may absorb. One feature of the evidence bounds it: the nulls and
-the candidates have different temporal shapes. Both nulls begin the run
-\emph{worse} than the baseline ($+0.001717$ and $+0.001220$ nats in the first
-536M-token window) and drift to a small advantage by the final window, whereas
-the candidates open with a large advantage that decays toward a stable offset
-(\taxid{DT-All} goes from $-0.015940$ to $-0.004975$; see
-Table~\ref{tab:windows}). A path artifact that accumulates and a geometry
-effect that front-loads are at least distinguishable in shape, which is weak
-evidence that they have different origins. And a third null, \taxid{Null-OD}
-(\nullod{}), run in a later systems wave with upstream arithmetic, independently
-shows the same end-of-run effect at $-0.002010$ selection, so this is a property
-of adding the machinery rather than a one-run artifact.
+The nulls and the candidates exhibit distinct temporal shapes: both nulls begin
+the run \emph{worse} than the baseline ($+0.001717$ and $+0.001220$ nats in
+Window~1) and drift gradually negative, whereas \taxid{DT-All} and
+\taxid{WT-MLP} open with a large front-loaded advantage ($-0.015940$ and
+$-0.009582$; Table~\ref{tab:windows}). A third null, \taxid{Null-OD}
+(\nullod{}), run in Wave~10 with upstream arithmetic, independently shows a
+similar end-of-run drift ($-0.002010$ selection against Wave-10 \muont{}). Two
+cross-wave attribution gaps remain explicit: Wave-3 \taxid{Null-WT} spans a wave
+boundary relative to Wave-2 \taxid{WT-MLP}, and \texttt{wave\_sym\_fastlag} has
+not yet run its own \texttt{fast\_lag} null (Item~2 in Section~\ref{sec:program}).
 
-One limitation is ours to own: \taxid{Null-WT} ran in a different wave from
-\taxid{WT-MLP}, so their difference also spans a change in host scheduling and
-source revision. The \taxid{DT-All} / \taxid{Null-Dense} pair is same-wave and
-is the cleaner measurement. Closing this is the first attribution item in
-Section~\ref{sec:program}, and it costs one run.
-
-\subsection{Freshness beats richness}
+\subsection{Freshness beats richness on pre-SwiGLU width-2048 outputs}
 \label{sec:freshness}
 
-The width-2048 output moments carry 96.2\% of the output
-eigendecomposition work (Section~\ref{sec:method-cost}), so the obvious economy
-is to attack them. What we did not expect is that attacking them \emph{improves}
-the loss.
+The width-2048 output moments carry 96.2\% of the output eigendecomposition work
+(Section~\ref{sec:method-cost}), so the obvious economy is to attack them. What
+is striking is that attacking them \emph{improves} the loss: \taxid{WT-MLP}
+(\mlpdiag{}) replaces those two dense roots with elementwise diagonals and beats
+\taxid{DT-All} (\dense{}) on selection loss ($-0.006584$ against $-0.005782$)
+while costing 17 percentage points less per step on the legacy runner. Dropping
+those factors entirely (\taxid{Abl-No2048} / \noexp{}) reaches only $-0.003068$.
 
-\taxid{WT-MLP} (\mlpdiag{}) replaces exactly those two dense roots with
-elementwise diagonals and beats \taxid{DT-All} (\dense{}) on selection loss
-($-0.006584$ against $-0.005782$) while costing 17 percentage points less per
-step on the legacy runner. The two arms that retain dense width-2048 roots,
-\taxid{DT-All} and \taxid{Abl-OuterDense} (\outerall{}), are the two slowest
-arms in the study. Meanwhile dropping those factors entirely, in
-\taxid{Abl-No2048} (\noexp{}), reaches only $-0.003068$ --- worse than
-diagonalizing them.
-
-\begin{finding}[Scale is worth tracking; rotation at this refresh rate is not]
-A cheap, exact, always-current approximation of the widest output moments beats
-an expensive, stale one, and both beat omitting them. The moments carry real
-information, and the part of that information which was not paying for itself
-is the eigenbasis, because the eigenbasis cannot be re-estimated fast enough to
-keep up with the moment it describes.
+\begin{finding}[Scale is worth tracking; stale rotation on noise-floor moments is not]
+A cheap, exact, age-zero diagonal approximation of the widest pre-SwiGLU output
+moments beats an expensive, stale eigenbasis, and both beat omitting them. At
+width 2048 on \texttt{gate} and \texttt{up}, off-diagonal correlations sit on
+the $N_t^{-1/2}$ sampling floor while cached eigenbases lag a rapidly drifting
+moment by roughly three updates.
 \end{finding}
 
-Figure~\ref{fig:freshness} is the direct evidence, taken from the runs' own
-counters rather than inferred. The dense-output arms sit at a mean maximum basis
-age near three updates against a nominal four-update refresh cadence, and
-accumulate roughly 32{,}000 exact-eigendecomposition fallbacks over a run, about
-six of 224 statistics per update. The pure-diagonal arm (\taxid{OD-All}) logs an
-age of zero and \emph{no} fallbacks, because elementwise powers of the current
-moment need no basis at all. The dense roots are thus routinely approximations
-of a moment that has already moved, while the EMA's own averaging window is only
-about 16 updates, so a three-update-old basis is a meaningful fraction of the
-statistic's memory.
+Figure~\ref{fig:freshness} shows the direct run-counter evidence. Dense-output
+arms sit near a mean maximum basis age of three updates against a four-update
+refresh target and accumulate roughly $32{,}000$ Rank-0 exact \texttt{eigh}
+fallbacks over a run; diagonalizing width-2048 outputs in \taxid{WT-MLP} cuts
+Rank-0 fallbacks by \motFbMlpdiagDropPct\% (from $\motFbRankZeroOut$ to
+$\motFbRankZeroMlpdiagOut$) while capturing \motOutGateExpVarLMedPct\% and
+\motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$ (\mechOutGateExpVarLPct\% and
+\mechOutUpExpVarLPct\% under active two-sided preconditioning), and
+\taxid{OD-All} logs age zero and zero fallbacks everywhere. Separately, Wave~7
+pinned input-basis installation to age one with zero discarded refreshes, and
+diagonal-output arms still improved final C4 by $0.0022$--$0.0038$ nats there.
 
 \begin{figure}[t]
 \centering
@@ -280,8 +265,8 @@ statistic's memory.
 \begin{tikzpicture}
 \begin{groupplot}[
   paperplot,
-  group style={group size=2 by 1, horizontal sep=1.7cm},
-  width=7.1cm, height=5.2cm,
+  group style={group size=2 by 1, horizontal sep=2.15cm},
+  width=7.35cm, height=5.0cm,
   every axis plot/.append style={line width=0.95pt},
 ]
 \nextgroupplot[
@@ -324,48 +309,103 @@ eliminates them completely.}
 \label{fig:freshness}
 \end{figure}
 
-Two observations clarify this result in light of Section~\ref{sec:motivation}.
-First, richness and freshness vary together in Table~\ref{tab:main}, because
-diagonal factors are both coordinate-restricted and age-zero. As established on
-the baseline trajectory in Section~\ref{sec:mot-aniso}, the width-2048
-pre-SwiGLU moments $B_{\text{gate}}$ and $B_{\text{up}}$ already sit at the
-single-update correlation noise floor (\motOutGateCorrRmsMed{} and
-\motOutUpCorrRmsMed{}), so exact diagonal scaling captures
-\motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$
-(\mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% under active two-sided
-preconditioning; Section~\ref{sec:mech-graft}) while cutting Rank-0 exact
-\texttt{eigh} fallbacks by \motFbMlpdiagDropPct\% (from $\motFbRankZeroOut$ to
-$\motFbRankZeroMlpdiagOut$). Second, a later wave pinned input-basis
-installation to a fixed age of one update, verifying zero discarded refreshes
-across all four of its arms, and the diagonal-output arms still beat the
-baseline by $0.0022$--$0.0038$ nats of final C4 there, removing variable
-\emph{input} staleness as a confound.
+\subsection{Asymmetric versus symmetric width-2048 diagonalization}
+\label{sec:sym-ablation}
 
-The latency variants point the same way without resolving it. Lagging the dense
-left factors by one update costs $+0.000113$ nats of paired training loss
-(s.e.\ $0.000043$) and $+0.001091$ mean late C4 --- small but resolvable, so a
-one-update lag is close to free on loss but not free. Lag was introduced to
-hide the post-backward wait, and it did not deliver: the lagged dense arm's
-end-to-end overhead is $+31.3$\%, worse than the unlagged arm's own cost profile
-once other changes landed in the same wave, so we cannot attribute timing
-changes to lag alone.
+Finding~3.1 in Section~\ref{sec:mot-aniso} made an explicit architectural
+prediction: width-$2048$ \emph{pre-SwiGLU} cotangents (\texttt{out:gate},
+\texttt{out:up}) are zero-mean Hadamard products with
+$\motOutGateDiagAnisoMedPct\%$ and $\motOutUpDiagAnisoMedPct\%$ diagonal
+anisotropy, whereas width-$2048$ \emph{post-SwiGLU} activations
+($x_{\text{down}} = \operatorname{SiLU}(g)\odot u$) have strictly positive
+channel means ($\mu\mu^{\Tr} > 0$) that keep $56.6\%$ of
+$\|\tilde C_{\text{down}} - I\|_F^2$ off-diagonal ($\mathrm{DiagAniso} =
+\motInDownDiagAnisoMedPct\%$). In \texttt{wave\_sym\_fastlag}, we tested that
+asymmetry directly on four uncontended eight-A100 nodes by completing the
+$2\times 2$ \texttt{WT} factorial with \taxid{WT-Sym} (\symmlpdiag{}, $\tau=0$)
+and \taxid{WT-Sym-Lag} (\symmlpdiaglag{}, $\tau=1$), which apply exact age-zero
+inline diagonal roots to \emph{both} width-$2048$ MLP sides (\texttt{out:gate,up}
+and \texttt{in:down}) while keeping all width-$512$ inputs and cotangents dense:
+
+\begin{enumerate}
+\item \textbf{Preserving dense width-512 inputs avoids \taxid{Abl-BothDiag}'s
+  collapse and beats \taxid{MuonT} at convergence.} Whereas diagonalizing all
+  inputs in \taxid{Abl-BothDiag} regressed late selection by $+0.0180$ nats,
+  retaining dense width-$512$ roots allows both \taxid{WT-Sym} and
+  \taxid{WT-Sym-Lag} to outperform same-wave \taxid{MuonT} across every
+  end-of-run metric: late selection improves by $\symMlpSelSame{}$ and
+  $\symMlpLagSelSame{}$ nats ($\symMlpSelWaveZero{}$ and
+  $\symMlpLagSelWaveZero{}$ against Wave-0 \taxid{MuonT}), final selection by
+  $\symMlpSelFinalSame{}$ and $\symMlpLagSelFinalSame{}$, late C4 by
+  $\symMlpCfourSame{}$ and $\symMlpLagCfourSame{}$, and final C4 by
+  $\symMlpCfourFinalSame{}$ and $\symMlpLagCfourFinalSame{}$ nats
+  ($\symMlpCfourFinalAbs{}$ and $\symMlpLagCfourFinalAbs{}$ versus
+  $\symWaveMuontCfourFinalAbs{}$ for same-wave \taxid{MuonT}).
+\item \textbf{Five-window trajectories isolate the early off-diagonal
+  \texttt{in:down} conditioning penalty.} Comparing same-wave \taxid{WT-Sym-Lag}
+  directly against same-wave \taxid{WT-MLP-Lag} ($\fastMlpLagSelSame{}$ late
+  selection, $\fastMlpLagSelWaveZero{}$ versus Wave-0) pinpoints exactly when
+  dense $R_{\text{down}}$ matters (Table~\ref{tab:windows}). During the
+  1{,}024-step constant-LR plateau ($\eta=0.0226$), \taxid{WT-MLP-Lag} opens a
+  $\fastMlpLagWinOneSame{} \pm \fastMlpLagWinOneSeSame{}$ paired training-loss
+  lead over \taxid{MuonT}, whereas diagonalizing \texttt{in:down} in
+  \taxid{WT-Sym} and \taxid{WT-Sym-Lag} incurs an early deficit of
+  $\symMlpWinOneSame{} \pm \symMlpWinOneSeSame{}$ and
+  $\symMlpLagWinOneSame{} \pm \symMlpLagWinOneSeSame{}$ nats --- a
+  $\symLagVsMlpLagWinOne{} \pm \symLagVsMlpLagWinOneSe{}$ head-to-head penalty
+  in Window~1. Once linear LR decay begins, that gap closes monotonically across
+  Windows~2--5 ($\symLagVsMlpLagWinTwo{} \to \symLagVsMlpLagWinThree{} \to
+  \symLagVsMlpLagWinFour{} \to \symLagVsMlpLagWinFive{}$ nats against
+  \taxid{WT-MLP-Lag}, reaching $\symMlpWinFiveSame{}$ and
+  $\symMlpLagWinFiveSame{}$ against \taxid{MuonT} in Window~5). By update
+  5{,}120, \taxid{WT-Sym-Lag} matches and slightly edges \taxid{WT-MLP-Lag} on
+  final C4 ($\symMlpLagCfourFinalAbs{}$ versus $\fastMlpLagCfourFinalAbs{}$,
+  $\symLagVsMlpLagCfourFinal{}$ nats), while \taxid{WT-MLP-Lag} retains a
+  $\symLagVsMlpLagSelLateMag{}$-nat lead on 11-point late selection
+  ($\fastMlpLagSelLateAbs{}$ versus $\symMlpLagSelLateAbs{}$) and
+  $\symLagVsMlpLagSelFinalMag{}$ on final selection.
+\item \textbf{Removing dense $2048\times 2048$ \texttt{in:down} saves
+  $\sysExecSymLagSavedMlpLagMs$\,ms/step and $\sysExecSymLagSavedMlpLagGib$\,GiB.}
+  Replacing dense \texttt{in:down} with asynchronous inline diagonal moments
+  eliminates $268.6$\,MB/step of input \texttt{reduce\_scatter} traffic, cuts
+  Rank-0 input \texttt{eigh} fallbacks from $\fastMlpLagInFb{}$ to
+  $\symMlpLagInFb{}$ ($\symMlpInFb{}$ in no-lag \taxid{WT-Sym}), reduces peak
+  allocation to $\sysExecSymGib{}$--$\sysExecSymLagGib{}$\,GiB (just
+  $+\sysExecSymExtraGib{}$--$+\sysExecSymLagExtraGib{}$\,GiB above
+  \taxid{MuonT}), and makes \taxid{WT-Sym-Lag} the fastest two-sided arm in the
+  study ($\sysExecSymLagStepS$\,s/step, $+\sysExecSymLagVsMuontPct\%$ over
+  \taxid{MuonT}).
+\end{enumerate}
+
+\begin{finding}[Pre- and post-SwiGLU width-2048 moments behave asymmetrically,
+matching Table~\ref{tab:motivation}]
+Diagonalizing width-2048 \emph{outputs} (\texttt{out:gate,up} in \taxid{WT-MLP})
+outperforms full dense preconditioning across every window, whereas
+additionally diagonalizing the width-2048 \emph{input} (\texttt{in:down} in
+\taxid{WT-Sym} / \taxid{WT-Sym-Lag}) incurs a $\symLagVsMlpLagWinOne{}$-nat
+early constant-LR training penalty before recovering during LR decay to tie
+final C4 ($\symMlpLagCfourFinalAbs{}$). Thus \taxid{WT-MLP-Lag} is Pareto-optimal
+for held-out quality across training, while \taxid{WT-Sym-Lag} trades mid-run
+selection margin for minimal VRAM ($\sysExecSymLagGib$\,GiB) and the fastest
+wall-clock crossing.
+\end{finding}
 
 \subsection{Replication across seeds and one batch size}
 \label{sec:replication}
 
-The leading geometry was run on three seeds with paired initialization and data
-order within each seed. On the fixed external C4 set, the metric that is
-comparable across seeds, it improves final loss by $0.006264$, $0.003738$ and
-$0.003651$ nats on seeds 0, 1 and 2 --- mean $0.004551$, and negative on every
-seed. The 11-point late means are $-0.006078$, $-0.004153$ and $-0.003967$.
-Figure~\ref{fig:seeds} shows the spread against the null level.
+The leading geometry (\taxid{WT-MLP}) was run on three seeds with paired
+initialization and data order within each seed. On the fixed external C4 set, it
+improves final loss by $0.006264$, $0.003738$ and $0.003651$ nats on seeds 0, 1
+and 2 --- mean $0.004551$, and negative on every seed. The 11-point late means
+are $-0.006078$, $-0.004153$ and $-0.003967$. Figure~\ref{fig:seeds} shows the
+spread against the null level.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   paperplot,
-  width=0.80\textwidth, height=5.0cm,
+  width=0.76\textwidth, height=4.8cm,
   title={Cross-seed replication of \taxid{WT-MLP} on fixed Paloma C4},
   xlabel={Seed}, ylabel={$\Delta$ C4 versus seed-matched \taxid{MuonT} (nats)},
   xtick={0,1,2}, xticklabels={Seed 0 (selection), Seed 1, Seed 2},
@@ -396,59 +436,68 @@ dashed ochre) by roughly $0.002$ nats on the two fresh seeds.}
 \label{fig:seeds}
 \end{figure}
 
-Three qualifications matter more than the mean. Seed 0 is the seed on which
-this geometry was selected among eight candidates, and it is also the seed with
-the largest effect; the two fresh seeds give 60\% and 58\% of its margin. The
-narrow-window behaviour differs by seed: on seed 1 the advantage shrinks
-monotonically as the learning rate decays toward zero ($-0.004749$ over the
-late 11 evaluations against $-0.002269$ over the final 4), while on seed 0 it
-does not. And no baseline seed-to-seed variability estimate exists for this
-recipe, so we cannot convert three paired runs into a confidence statement. We
-report the three numbers and decline to put an interval on them.
+Three qualifications matter more than the mean: Seed~0 was used to select among
+eight candidates and gives the largest effect (seeds 1 and 2 give 60\% and 58\%
+of its margin); on seed~1 the selection advantage narrows during late decay
+($-0.004749$ over the late 11 evaluations versus $-0.002269$ over the final 4);
+and without an independent baseline seed-variance estimate, we report the three
+paired points directly rather than forming a parametric interval. At a 1M-token
+batch over the same 2.68B tokens, \taxid{WT-MLP} similarly improves late C4 by
+$0.003522$ and selection by $0.002029$ nats at $+14.5$\% end-to-end time.
 
-The single larger-batch pair we ran is consistent and smaller: at a 1M-token
-batch over the same 2.68B tokens, the leading geometry improves late C4 by
-$0.003522$ and selection by $0.002029$ nats at $+14.5$\% end-to-end time. One
-pair at one batch size is not a scaling result, and we draw no trend from two
-points.
-
-\subsection{The cost side, and why there is still no win}
+\subsection{Token-to-target savings and the legacy versus \texttt{fast\_lag} wall-clock boundary}
 \label{sec:cost}
 
-Every arm in Table~\ref{tab:main} that improves loss also costs more time and
-more memory. The cheapest candidate that clearly clears its null, \alldiag{},
-costs $+10.4$\% median step time, $+8.2$\% end-to-end, and 1.8\,GiB of extra
-peak allocation. The leading arm costs $+21.9$\% step time. Only two arms are
-cheaper than the baseline in time, \texttt{muon} and \texttt{down\_hybrid}, and
-both are worse in loss.
+Every two-sided arm in Table~\ref{tab:main} reaches a given held-out loss in
+fewer tokens than \taxid{MuonT} while adding per-step compute. Specifically,
+every width-thresholded and pure-diagonal arm (\taxid{WT-MLP},
+\taxid{WT-MLP-Lag}, \taxid{WT-Sym}, \taxid{WT-Sym-Lag}, and \taxid{OD-All})
+crosses the $\text{C4}\le 3.52$ evaluation threshold at update $4{,}501$
+($2.36\text{B}$ tokens) versus update $4{,}751$ ($2.49\text{B}$ tokens) for
+\taxid{MuonT} and \taxid{Muon} --- a $\sysTokenSavingPct\%$ token reduction
+($250$ updates) --- and crosses $\text{C4}\le 3.46$ at update $5{,}001$, whereas
+vanilla \taxid{Muon} never reaches $3.46$ within the budget (finishing censored
+at $\waveZeroMuonCfourFinalAbs{}$).
 
-We checked whether the fixed-token gains are large enough to pay for the extra
-time by asking when each run first reached a given C4 level. They are not. At
-targets of 3.59, 3.52 and 3.46 nats, the baseline crosses at 4721, 5566 and 5848
-seconds; the leading arm crosses at 5624, 6309 and 6982. Every candidate we
-checked, in every wave, reaches every threshold \emph{later} in wall-clock time
-than the baseline, including the arms that reach it in fewer tokens. Two arms
-reach the 3.52 evaluation one token-interval earlier than the baseline and
-still take longer to get there.
+Whether that $\sysTokenSavingPct\%$ token saving translates into an actual
+\emph{elapsed-time} speedup depends entirely on whether per-update overhead stays
+below the $\approx 5.5\%$ break-even line:
+\begin{itemize}
+\item \textbf{Legacy research runner (Waves~0--10):} On the initial
+  implementation, even the cheapest candidate (\taxid{OD-All}) paid $+10.4\%$
+  steady-step overhead ($+8.2\%$ end-to-end), while Wave-2 \taxid{WT-MLP} paid
+  $+21.9\%$ and Wave-4 \taxid{WT-MLP-Lag} paid $+18.0\%$. Consequently, at C4
+  targets of $3.59$, $3.52$, and $3.46$ nats, Wave-0 \taxid{MuonT} crossed at
+  $4{,}721$, $5{,}566$, and $5{,}848$\,s, whereas Wave-2 \taxid{WT-MLP} crossed
+  later at $5{,}624$, $6{,}309$, and $6{,}982$\,s.
+\item \textbf{Uncontended eight-A100 \texttt{fast\_lag} runner
+  (\texttt{wave\_sym\_fastlag}):} Removing the synchronization, backward-hook,
+  and SIMT-FP32 bottlenecks documented in Section~\ref{sec:systems} reduces
+  full-run eight-A100 step overhead over same-wave \taxid{MuonT} to
+  $+\sysExecMlpLagVsMuontPct\%$ on \taxid{WT-MLP-Lag} and
+  $+\sysExecSymLagVsMuontPct\%$ on \taxid{WT-Sym-Lag} (Table~\ref{tab:crossings}).
+  At that overhead, \taxid{WT-Sym-Lag} crosses $\text{C4}\le 3.59$ in
+  $\sysCrossSymLagThreeFiveNineS$\,s (ahead of vanilla \taxid{Muon} at
+  $4{,}880.0$\,s) and crosses $\text{C4}\le 3.52$ in
+  $\sysCrossSymLagThreeFiveTwoS$\,s --- beating same-wave \taxid{MuonT}
+  ($\sysCrossMuontSymThreeFiveTwoS$\,s), Wave-0 \taxid{MuonT}
+  ($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s), and vanilla \taxid{Muon}
+  ($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s) in launch-anchored wall-clock time,
+  while \texttt{fast\_lag} \taxid{WT-MLP-Lag} crosses $\text{C4}\le 3.52$ in
+  $\sysCrossMlpLagFastThreeFiveTwoS$\,s (edging Wave-0 \taxid{MuonT} and saving
+  $600$\,s over Wave~4).
+\end{itemize}
 
-\begin{finding}[No elapsed-time advantage exists at any checked target]
-Across all completed waves, no output-side arm reaches any loss target in less
-wall-clock time than input-side MuonT. The fixed-token improvements are real
-and the time costs are larger, so on a fixed time budget the baseline is ahead.
+\begin{finding}[Crossing the 5.3\% token-saving threshold turns legacy wall-clock
+losses into a launch-anchored \texttt{fast\_lag} win at $\text{C4}\le 3.52$]
+On the unoptimized runner ($+10.4\%$ to $+39.2\%$ step overhead), no candidate
+reached any loss target faster in wall-clock time than \taxid{MuonT}. Once
+\texttt{fast\_lag} brings eight-A100 steady-step overhead down to
+$+\sysExecSymLagVsMuontPct\%$ ($+\sysExecSymLagEtoePct\%$ end-to-end),
+\taxid{WT-Sym-Lag}'s $250$-step token lead overtakes both \taxid{MuonT} and
+vanilla \taxid{Muon} at $\text{C4}\le 3.52$ ($\sysCrossSymLagThreeFiveTwoS$\,s)
+while finishing $0.0136$ nats ahead of censored \taxid{Muon} at full budget.
 \end{finding}
-
-These crossings reflect the unoptimized research runner rather than the
-intrinsic cost of output normalization. Two arms (\mlpdiag{} and \alldiag{}, as
-well as \texttt{inner\_outer\_mlpdiag\_lag}) already cross the $3.52$-nat C4
-threshold \sysTokenSavingPct\% earlier in tokens than \muont{} ($2.36\text{B}$
-versus $2.49\text{B}$ tokens) and lose in elapsed time only because the legacy
-runner adds $+18\%$--$+22\%$ per update. Section~\ref{sec:systems} shows that
-eliminating the per-step global synchronization barrier, synchronous fallback
-stalls, and per-linear custom-op backward wrappers reduces
-\texttt{inner\_outer\_mlpdiag\_lag} to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
-over vanilla Muon ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over
-\muont{}), crossing the wall-clock break-even threshold (Appendix~\ref{app:numerics}
-separately reports a seven-step Newton--Schulz plateau shared by all arms).
 
 \subsection{Step-norm invariance and directional rotation}
 \label{sec:mech-graft}
@@ -514,7 +563,7 @@ block matrices at updates 2{,}500 and 5{,}120 rules this out directly:
 \begin{axis}[
   paperplot,
   ybar=1.6pt, bar width=7.2pt,
-  width=0.80\textwidth, height=5.2cm,
+  width=0.78\textwidth, height=5.0cm,
   unbounded coords=discard,
   title={Instantaneous update rotation at matched Frobenius step norm (update 2{,}500)},
   xlabel={Block projection ($m\times n$)},

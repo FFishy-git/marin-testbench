@@ -4,158 +4,149 @@
   % ======================================================================
   % PANEL (a): Spatial Width-Thresholding in Transformer Layer \ell
   % ======================================================================
-  \filldraw[fill=white, draw=pagerule, rounded corners=4pt, line width=0.6pt] (0.0,0.0) rectangle (7.78,7.15);
-  \fill[pagepanel, rounded corners=4pt] (0.04,6.56) rectangle (7.74,7.11);
-  \node[anchor=west, font=\pagesfsb\footnotesize\color{pageink}] at (0.20,6.83)
-    {(a) Spatial Width-Thresholding in Block $\ell$ (\taxid{WT-MLP})};
+  \filldraw[fill=white, draw=pagerule, rounded corners=4pt, line width=0.6pt] (0.0,5.80) rectangle (20.40,11.50);
+  \fill[pagepanel, rounded corners=4pt] (0.04,10.88) rectangle (20.36,11.46);
+  \node[anchor=west, font=\pagesfsb\footnotesize\color{pageink}] at (0.28,11.17)
+    {(a) Spatial Width-Thresholding in Transformer Block $\ell$ (\taxid{WT-MLP} vs.\ \taxid{WT-Sym})};
 
-  % --- Sub-block 1: Multi-Head Attention (d = 512) ---
-  \filldraw[fill=famWT!4, draw=famWT!30, rounded corners=3pt, line width=0.5pt] (0.16,3.88) rectangle (7.62,6.42);
-  \node[anchor=north west, font=\pagesfsb\scriptsize\color{famWT}] at (0.26,6.36)
+  % --- Left Sub-block: Multi-Head Attention (d = 512) ---
+  \filldraw[fill=famWT!4, draw=famWT!30, rounded corners=3pt, line width=0.5pt] (0.24,6.56) rectangle (9.86,10.70);
+  \node[anchor=north west, font=\pagesfsb\scriptsize\color{famWT}] at (0.42,10.62)
     {Attention Sub-Block ($d = 512$)};
 
-  % Input RMSNorm -> in:attn
-  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.28,5.32) rectangle (2.05,5.96);
-  \node[align=center, font=\tiny\color{pageink}] at (1.165,5.64)
+  % Attention Row 1: RMSNorm -> Q,K,V <- Dense 512
+  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.42,8.92) rectangle (2.92,9.96);
+  \node[align=center, font=\tiny\color{pageink}] at (1.67,9.44)
     {\texttt{RMSNorm}$(h_\ell)$\\ $\fFull$ \texttt{in:attn} ($512$)};
-
-  % Q, K, V projections
-  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (2.40,5.32) rectangle (4.48,5.96);
-  \node[align=center, font=\tiny\color{pageink}] at (3.44,5.64)
+  \draw[->, famWT!80, line width=0.6pt] (2.92,9.44) -- (3.30,9.44);
+  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (3.30,8.92) rectangle (6.06,9.96);
+  \node[align=center, font=\tiny\color{pageink}] at (4.68,9.44)
     {$W_q,\,W_k,\,W_v$\\ {\color{pagemuted}$3 \times (512\times 512)$}};
-  \draw[->, famWT!80, line width=0.6pt] (2.05,5.64) -- (2.40,5.64);
-
-  % Attention mixing -> W_o
-  \draw[->, pageink!70, line width=0.6pt] (3.44,5.32) -- node[right, font=\tiny\color{pagemuted}] {RoPE + SDPA} (3.44,4.72);
-  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.28,4.04) rectangle (2.05,4.68);
-  \node[align=center, font=\tiny\color{pageink}] at (1.165,4.36)
-    {attn context\\ $\fFull$ \texttt{in:o} ($512$)};
-  \draw[->, famWT!80, line width=0.6pt] (2.05,4.36) -- (2.40,4.36);
-  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (2.40,4.04) rectangle (4.48,4.68);
-  \node[align=center, font=\tiny\color{pageink}] at (3.44,4.36)
-    {$W_o \to h_\ell + \Delta h$\\ {\color{pagemuted}$512\times 512$ (residual)}};
-
-  % Left cotangents for Attention
-  \filldraw[fill=famWT!12, draw=famWT!85, rounded corners=2pt, line width=0.6pt] (4.88,5.30) rectangle (7.48,5.98);
-  \node[align=center, font=\tiny\color{famWT!95!black}] at (6.18,5.64)
+  \draw[->, famWT, densely dashed, line width=0.65pt] (6.46,9.44) -- (6.06,9.44);
+  \filldraw[fill=famWT!12, draw=famWT!85, rounded corners=2pt, line width=0.6pt] (6.46,8.92) rectangle (9.68,9.96);
+  \node[align=center, font=\tiny\color{famWT!95!black}] at (8.07,9.44)
     {$\fFull$ \textbf{Dense $512\times 512$}\\ $\delta_q,\delta_k,\delta_v$ ($R^2\!=\!31\text{--}72\%$)};
-  \draw[->, famWT, densely dashed, line width=0.6pt] (4.88,5.64) -- (4.48,5.64);
 
-  \filldraw[fill=famWT!14, draw=famWT!90, rounded corners=2pt, line width=0.65pt] (4.88,4.02) rectangle (7.48,4.70);
-  \node[align=center, font=\tiny\color{famWT!95!black}] at (6.18,4.36)
+  % Attention mixing -> Row 2: W_o
+  \draw[->, pageink!70, line width=0.6pt] (4.68,8.92) -- node[right, font=\tiny\color{pagemuted}] {RoPE + SDPA} (4.68,7.92);
+  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.42,6.78) rectangle (2.92,7.88);
+  \node[align=center, font=\tiny\color{pageink}] at (1.67,7.33)
+    {attn context\\ $\fFull$ \texttt{in:o} ($512$)};
+  \draw[->, famWT!80, line width=0.6pt] (2.92,7.33) -- (3.30,7.33);
+  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (3.30,6.78) rectangle (6.06,7.88);
+  \node[align=center, font=\tiny\color{pageink}] at (4.68,7.33)
+    {$W_o \to h'_\ell$\\ {\color{pagemuted}$512\times 512$ (residual)}};
+  \draw[->, famWT, densely dashed, line width=0.65pt] (6.46,7.33) -- (6.06,7.33);
+  \filldraw[fill=famWT!14, draw=famWT!90, rounded corners=2pt, line width=0.65pt] (6.46,6.78) rectangle (9.68,7.88);
+  \node[align=center, font=\tiny\color{famWT!95!black}] at (8.07,7.33)
     {$\fFull$ \textbf{Dense $512\times 512$}\\ $\delta_o$ ($>99\%$ rotational)};
-  \draw[->, famWT, densely dashed, line width=0.6pt] (4.88,4.36) -- (4.48,4.36);
 
-  % --- Sub-block 2: SwiGLU MLP (d = 512 <-> 2048) ---
-  \filldraw[fill=famOD!4, draw=famOD!32, rounded corners=3pt, line width=0.5pt] (0.16,0.70) rectangle (7.62,3.72);
-  \node[anchor=north west, font=\pagesfsb\scriptsize\color{famOD}] at (0.26,3.66)
+  % --- Right Sub-block: SwiGLU MLP (d = 512 <-> 2048) ---
+  \filldraw[fill=famOD!4, draw=famOD!32, rounded corners=3pt, line width=0.5pt] (10.16,6.56) rectangle (20.16,10.70);
+  \node[anchor=north west, font=\pagesfsb\scriptsize\color{famOD}] at (10.34,10.62)
     {SwiGLU Feed-Forward Sub-Block ($512 \leftrightarrow 2048$)};
 
-  % Input RMSNorm -> in:mlp -> gate, up
-  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.28,2.62) rectangle (2.05,3.26);
-  \node[align=center, font=\tiny\color{pageink}] at (1.165,2.94)
+  % MLP Row 1: RMSNorm -> W_gate, W_up <- 2D-Tiled Diag 2048
+  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (10.34,8.92) rectangle (13.16,9.96);
+  \node[align=center, font=\tiny\color{pageink}] at (11.75,9.44)
     {\texttt{RMSNorm}$(h'_\ell)$\\ $\fFull$ \texttt{in:mlp} ($512$)};
-  \draw[->, famWT!80, line width=0.6pt] (2.05,2.94) -- (2.40,2.94);
-  \filldraw[fill=white, draw=famOD!90, rounded corners=2pt, line width=0.75pt] (2.40,2.62) rectangle (4.48,3.26);
-  \node[align=center, font=\tiny\color{pageink}] at (3.44,2.94)
-    {$W_{\text{gate}},\,W_{\text{up}}$ ($s=2$)\\ {\color{famOD!90!black}$2 \times (\mathbf{2048}\times 512)$}};
-
-  % Hadamard SwiGLU gate
-  \draw[->, famOD!85, line width=0.6pt] (3.44,2.62) -- (3.44,2.28);
-  \filldraw[fill=famOD!13, draw=famOD!75, rounded corners=6pt, line width=0.55pt] (2.36,1.82) rectangle (4.52,2.26);
-  \node[font=\tiny\color{famOD!95!black}] at (3.44,2.04) {$\operatorname{SiLU}(g)\odot u$ (Hadamard)};
-  \draw[->, pageink!70, line width=0.6pt] (3.44,1.82) -- (3.44,1.50);
-
-  % Post-SwiGLU in:down -> W_down
-  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (0.28,0.84) rectangle (2.05,1.50);
-  \node[align=center, font=\tiny\color{pageink}] at (1.165,1.17)
-    {$\fFull$ \texttt{in:down} ($2048$)\\ {\color{pagemuted}dense ($\mu\mu^{\Tr}\!>\!0$)}};
-  \draw[->, famWT!80, line width=0.6pt] (2.05,1.17) -- (2.40,1.17);
-  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (2.40,0.84) rectangle (4.48,1.50);
-  \node[align=center, font=\tiny\color{pageink}] at (3.44,1.17)
-    {$W_{\text{down}} \to h'_\ell + \Delta h$\\ {\color{pagemuted}$512\times 2048$ (residual)}};
-
-  % Pre-SwiGLU 2048 Inline Diagonal Hero Box
-  \filldraw[fill=famOD!15, draw=famOD, rounded corners=2.5pt, line width=0.85pt] (4.88,2.16) rectangle (7.48,3.34);
-  \node[align=center, font=\tiny\color{famOD!95!black}] at (6.18,2.75)
+  \draw[->, famWT!80, line width=0.6pt] (13.16,9.44) -- (13.52,9.44);
+  \filldraw[fill=white, draw=famOD!90, rounded corners=2pt, line width=0.75pt] (13.52,8.92) rectangle (16.32,9.96);
+  \node[align=center, font=\tiny\color{pageink}] at (14.92,9.44)
+    {$W_{\text{gate}},\,W_{\text{up}}$ ($s\!=\!2$)\\ {\color{famOD!90!black}$2 \times (\mathbf{2048}\times 512)$}};
+  \draw[->, famOD, densely dashed, line width=0.75pt] (16.72,9.44) -- (16.32,9.44);
+  \filldraw[fill=famOD!15, draw=famOD, rounded corners=2.5pt, line width=0.85pt] (16.72,8.80) rectangle (19.98,10.06);
+  \node[align=center, font=\tiny\color{famOD!95!black}] at (18.35,9.43)
     {$\fDiag$ \textbf{2D-Tiled Diag $2048$}\\ $\delta_{\text{gate}},\delta_{\text{up}}$ ($\rho_{\mathrm{rms}}\!\approx\!N_t^{-1/2}$)\\ $82\%/78\%$ diag; $-1.11$\,GiB};
-  \draw[->, famOD, densely dashed, line width=0.75pt] (4.88,2.94) -- (4.48,2.94);
 
-  % W_down residual output cotangent
-  \filldraw[fill=famWT!14, draw=famWT!90, rounded corners=2pt, line width=0.65pt] (4.88,0.84) rectangle (7.48,1.50);
-  \node[align=center, font=\tiny\color{famWT!95!black}] at (6.18,1.17)
+  % Hadamard SwiGLU gate -> Row 2: W_down
+  \draw[->, famOD!85, line width=0.6pt] (14.92,8.92) -- (14.92,8.60);
+  \filldraw[fill=famOD!13, draw=famOD!75, rounded corners=6pt, line width=0.55pt] (13.38,8.16) rectangle (16.46,8.58);
+  \node[font=\tiny\color{famOD!95!black}] at (14.92,8.37) {$\operatorname{SiLU}(g)\odot u$ (Hadamard)};
+  \draw[->, pageink!70, line width=0.6pt] (14.92,8.16) -- (14.92,7.88);
+
+  \filldraw[fill=white, draw=famWT!65, rounded corners=2pt, line width=0.5pt] (10.34,6.78) rectangle (13.16,7.88);
+  \node[align=center, font=\tiny\color{pageink}] at (11.75,7.33)
+    {\texttt{in:down} ($2048$, $\mu\mu^{\Tr}\!>\!0$)\\ $\fFull$ \texttt{WT-MLP} / $\fDiag$ \texttt{WT-Sym}};
+  \draw[->, famWT!80, line width=0.6pt] (13.16,7.33) -- (13.52,7.33);
+  \filldraw[fill=white, draw=famWT!80, rounded corners=2pt, line width=0.6pt] (13.52,6.78) rectangle (16.32,7.88);
+  \node[align=center, font=\tiny\color{pageink}] at (14.92,7.33)
+    {$W_{\text{down}} \to h_{\ell+1}$\\ {\color{pagemuted}$512\times 2048$ (residual)}};
+  \draw[->, famWT, densely dashed, line width=0.65pt] (16.72,7.33) -- (16.32,7.33);
+  \filldraw[fill=famWT!14, draw=famWT!90, rounded corners=2pt, line width=0.65pt] (16.72,6.78) rectangle (19.98,7.88);
+  \node[align=center, font=\tiny\color{famWT!95!black}] at (18.35,7.33)
     {$\fFull$ \textbf{Dense $512\times 512$}\\ $\delta_{\text{down}}$ ($>99\%$ rotational)};
-  \draw[->, famWT, densely dashed, line width=0.6pt] (4.88,1.17) -- (4.48,1.17);
 
-  % Panel (a) Bottom Strip
-  \fill[pagepanel, rounded corners=2pt] (0.16,0.12) rectangle (7.62,0.58);
-  \node[font=\tiny\color{pageink}] at (3.89,0.35)
-    {$\fFull$ Dense spectral ($5\times 512$ out + $4$ in) \quad$\mid$\quad $\fDiag$ Age-$0$ inline diagonal ($2\times 2048$ out; $-96.2\%$ output $O(d^3)$)};
+  % Panel (a) Full-Width Legend Strip
+  \fill[pagepanel, rounded corners=2pt] (0.24,5.94) rectangle (20.16,6.40);
+  \node[font=\tiny\color{pageink}] at (10.20,6.17)
+    {$\fFull$ \textbf{Dense spectral roots:} width-$512$ inputs \& cotangents (+ \texttt{in:down} in \taxid{WT-MLP}) \quad$\mid$\quad $\fDiag$ \textbf{Age-$0$ inline diagonal:} width-$2048$ \texttt{out:gate,up} (+ \texttt{in:down} in \taxid{WT-Sym})};
 
   % ======================================================================
   % PANEL (b): Asynchronous 1-Step Lagged Pipeline (fast_lag, \tau = 1)
   % ======================================================================
-  \filldraw[fill=white, draw=pagerule, rounded corners=4pt, line width=0.6pt] (8.10,0.0) rectangle (16.40,7.15);
-  \fill[pagepanel, rounded corners=4pt] (8.14,6.56) rectangle (16.36,7.11);
-  \node[anchor=west, font=\pagesfsb\footnotesize\color{pageink}] at (8.30,6.83)
-    {(b) Asynchronous 1-Step Lagged Pipeline (\texttt{fast\_lag}, $\tau = 1$)};
+  \filldraw[fill=white, draw=pagerule, rounded corners=4pt, line width=0.6pt] (0.0,0.0) rectangle (20.40,5.52);
+  \fill[pagepanel, rounded corners=4pt] (0.04,4.90) rectangle (20.36,5.48);
+  \node[anchor=west, font=\pagesfsb\footnotesize\color{pageink}] at (0.28,5.19)
+    {(b) Asynchronous 1-Step Lagged Pipeline (\taxid{WT-MLP-Lag} \& \taxid{WT-Sym-Lag}, \texttt{fast\_lag}, $\tau = 1$)};
 
   % Step timeline banner
-  \draw[->, pagemuted, line width=0.55pt] (8.30,6.22) -- (16.20,6.22);
-  \draw[pagemuted, line width=0.55pt] (11.95,6.12) -- (11.95,6.32);
-  \node[font=\pagesfsb\tiny\color{pageink}, anchor=south] at (10.10,6.22) {Step $t$};
-  \node[font=\pagesfsb\tiny\color{famWT}, anchor=south] at (14.08,6.22) {Step $t+1$ ($\approx 900$\,ms Fwd+Bwd overlap window)};
+  \draw[->, pagemuted, line width=0.55pt] (3.00,4.54) -- (20.14,4.54);
+  \draw[pagemuted, line width=0.65pt] (10.12,4.42) -- (10.12,4.66);
+  \node[font=\pagesfsb\tiny\color{pageink}, anchor=south] at (6.56,4.56) {Step $t$};
+  \node[font=\pagesfsb\tiny\color{famWT}, anchor=south] at (15.13,4.56) {Step $t+1$ ($\approx 900$\,ms Fwd+Bwd overlap window)};
 
   % --- Lane 1: Main CUDA Stream ---
-  \node[anchor=west, font=\pagesfsb\scriptsize\color{pageink}] at (8.28,5.88) {Main CUDA Stream (Compute-Bound)};
-  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (8.30,4.58) rectangle (10.28,5.66);
-  \node[align=center, font=\tiny\color{pageink}] at (9.29,5.12)
-    {\textbf{Fwd+Bwd MB 0..3}\\ grouped block hooks\\ $(+11.1\,\text{ms})$};
+  \node[align=left, anchor=west, font=\pagesfsb\scriptsize\color{pageink}] at (0.26,3.88)
+    {Main Stream\\ {\tiny\color{pagemuted}(Compute-Bound)}};
+  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (3.00,3.40) rectangle (6.74,4.36);
+  \node[align=center, font=\tiny\color{pageink}] at (4.87,3.88)
+    {\textbf{Fwd+Bwd MB 0..3 $(t)$}\\ 4 block hooks $(+11.1\,\text{ms})$};
 
-  \filldraw[fill=famWT!15, draw=famWT, rounded corners=2pt, line width=0.8pt] (10.36,4.58) rectangle (11.90,5.66);
-  \node[align=center, font=\tiny\color{famWT!95!black}] at (11.13,5.12)
-    {\textbf{Ozaki Update$(t)$}\\ uses $L^{(t-1)},\hat L^{(t-1)}$\\ $(+1.7\,\text{ms})$};
+  \filldraw[fill=famWT!15, draw=famWT, rounded corners=2pt, line width=0.8pt] (6.90,3.40) rectangle (10.00,4.36);
+  \node[align=center, font=\tiny\color{famWT!95!black}] at (8.45,3.88)
+    {\textbf{Ozaki Update$(t)$}\\ $L^{(t-1)},\hat L^{(t-1)}$ $(+1.7\,\text{ms})$};
 
-  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (12.00,4.58) rectangle (13.42,5.66);
-  \node[align=center, font=\tiny\color{pageink}] at (12.71,5.12)
-    {\textbf{MB 0 $(t+1)$}\\ $\approx 235$\,ms\\ waits \texttt{ev\_rows}};
+  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (10.24,3.40) rectangle (13.44,4.36);
+  \node[align=center, font=\tiny\color{pageink}] at (11.84,3.88)
+    {\textbf{MB 0 $(t+1)$}\\ $\approx 235$\,ms (waits \texttt{ev\_rows})};
 
-  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (13.50,4.58) rectangle (15.32,5.66);
-  \node[align=center, font=\tiny\color{pageink}] at (14.41,5.12)
-    {\textbf{MB 1..3 $(t+1)$}\\ $\approx 665$\,ms Fwd+Bwd\\ queries readiness};
+  \filldraw[fill=pagepanel, draw=pagemuted!80, rounded corners=2pt, line width=0.55pt] (13.60,3.40) rectangle (17.88,4.36);
+  \node[align=center, font=\tiny\color{pageink}] at (15.74,3.88)
+    {\textbf{MB 1..3 $(t+1)$}\\ $\approx 665$\,ms Fwd+Bwd (polls readiness)};
 
-  \filldraw[fill=famWT!15, draw=famWT, rounded corners=2pt, line width=0.8pt] (15.40,4.58) rectangle (16.24,5.66);
-  \node[align=center, font=\tiny\color{famWT!95!black}] at (15.82,5.12)
-    {\textbf{Upd}\\ $(t\!+\!1)$\\ $L^{(t)}$};
+  \filldraw[fill=famWT!15, draw=famWT, rounded corners=2pt, line width=0.8pt] (18.04,3.40) rectangle (20.14,4.36);
+  \node[align=center, font=\tiny\color{famWT!95!black}] at (19.09,3.88)
+    {\textbf{Update$(t\!+\!1)$}\\ uses $L^{(t)},\hat L^{(t)}$};
 
   % --- Lane 2: Priority-0 Output Side Stream ---
-  \node[anchor=west, font=\pagesfsb\scriptsize\color{famOD}] at (8.28,3.96) {Priority-0 Output Side Stream + Host Pool};
-  \filldraw[fill=famOD!15, draw=famOD, rounded corners=2pt, line width=0.65pt] (10.30,2.52) rectangle (11.26,3.68);
-  \node[align=center, font=\tiny\color{famOD!95!black}] at (10.78,3.10)
-    {\textbf{\texttt{syrk}}\\ packed\\ $1.4$\,ms};
+  \node[align=left, anchor=west, font=\pagesfsb\scriptsize\color{famOD}] at (0.26,2.26)
+    {Output Stream\\ {\tiny\color{pagemuted}(Priority-0 + Host)}};
+  \filldraw[fill=famOD!15, draw=famOD, rounded corners=2pt, line width=0.65pt] (6.74,1.78) rectangle (8.86,2.74);
+  \node[align=center, font=\tiny\color{famOD!95!black}] at (7.80,2.26)
+    {\textbf{\texttt{syrk}}\\ packed ($1.4$\,ms)};
 
-  \filldraw[fill=famDT!16, draw=famDT!95!black, rounded corners=2pt, line width=0.65pt] (11.34,2.52) rectangle (13.38,3.68);
-  \node[align=center, font=\tiny\color{pageink}] at (12.36,3.10)
-    {\textbf{\texttt{reduce\_scatter}}\\ + CUDA-Graph Roots\\ {\color{pagemuted}(overlaps Upd + MB 0)}};
+  \filldraw[fill=famDT!16, draw=famDT!95!black, rounded corners=2pt, line width=0.65pt] (9.02,1.78) rectangle (13.48,2.74);
+  \node[align=center, font=\tiny\color{pageink}] at (11.25,2.26)
+    {\textbf{\texttt{reduce\_scatter} + Graph Roots}\\ {\color{pagemuted}(overlaps Update$(t)$ + MB 0)}};
 
-  \filldraw[fill=famNull!15, draw=famNull!90!black, rounded corners=2pt, line width=0.65pt] (13.46,2.52) rectangle (15.36,3.68);
-  \node[align=center, font=\tiny\color{pageink}] at (14.41,3.10)
-    {\textbf{Mid-Step Repair / \texttt{eigh}}\\ + \texttt{unitRMS} + FP16 Split\\ {\color{pagemuted}$\sim 700$\,ms before Upd$(t\!+\!1)$}};
+  \filldraw[fill=famNull!15, draw=famNull!90!black, rounded corners=2pt, line width=0.65pt] (13.64,1.78) rectangle (18.08,2.74);
+  \node[align=center, font=\tiny\color{pageink}] at (15.86,2.26)
+    {\textbf{Mid-Step Repair / \texttt{eigh}}\\ {\color{pagemuted}+\,\texttt{unitRMS} + FP16 Split ($\sim 700$\,ms early)}};
 
-  % Cross-stream lightweight CUDA events
-  \draw[->, famOD!90!black, densely dashed, line width=0.7pt] (10.12,4.58) -- (10.48,3.68);
-  \draw[->, famOD!90!black, line width=0.75pt] (11.20,3.68) -- node[pos=0.52, fill=white, inner sep=0.8pt, font=\tiny\color{famOD!95!black}] {\texttt{ev\_rows} ($0$\,ms stall)} (12.18,4.58);
-  \draw[->, famNull!90!black, densely dotted, line width=0.7pt] (13.68,4.58) -- (13.95,3.68);
-  \draw[->, famWT, line width=0.85pt] (15.26,3.68) -- node[pos=0.48, left, font=\tiny\color{famWT}] {$L^{(t)},\hat L^{(t)}$} (15.68,4.58);
+  % Dedicated Cross-Stream Event Band
+  \draw[->, famOD!90!black, densely dashed, line width=0.7pt] (6.52,3.40) -- (7.02,2.74);
+  \draw[->, famOD!90!black, line width=0.75pt] (8.68,2.74) -- node[pos=0.50, fill=white, inner sep=1pt, font=\tiny\color{famOD!95!black}] {\texttt{ev\_rows} ($0$\,ms stall)} (10.52,3.40);
+  \draw[->, famNull!90!black, densely dotted, line width=0.7pt] (14.04,3.40) -- (14.34,2.74);
+  \draw[->, famWT, line width=0.85pt] (17.84,2.74) -- node[pos=0.50, right, font=\tiny\color{famWT}] {$L^{(t)},\hat L^{(t)}$} (18.36,3.40);
 
-  % Legacy bottleneck contrast callout
-  \filldraw[fill=famAbl!5, draw=famAbl!45, densely dashed, rounded corners=2.5pt, line width=0.5pt] (8.26,0.74) rectangle (16.24,2.22);
-  \node[align=left, anchor=west, font=\tiny\color{pageink}] at (8.38,1.48)
-    {{\color{famAbl!95!black}\pagesfsb Eliminated legacy bottlenecks:}\\     1.\ Stream-local step timer removes end-of-step \texttt{cuda.synchronize()} barrier.\\     2.\ Mid-step \texttt{select\_microbatch(1..3)} resolves \texttt{cuSOLVER eigh} fallbacks off critical path ($+89\text{--}230\,\text{ms} \to +6.6\text{--}21\,\text{ms}$).\\     3.\ 4 block-level hooks + compiled Ozaki Tensor-Core GEMMs replace 896 custom-op wrappers \& SIMT FP32};
+  % Bottom Split: Eliminated Bottlenecks (left) + Executed 8-A100 Summary (right)
+  \filldraw[fill=famAbl!5, draw=famAbl!45, densely dashed, rounded corners=2.5pt, line width=0.5pt] (0.24,0.16) rectangle (13.34,1.54);
+  \node[align=left, anchor=west, font=\tiny\color{pageink}] at (0.42,0.85)
+    {{\color{famAbl!95!black}\pagesfsb Eliminated legacy bottlenecks:} (1) Stream-local timer drops per-step \texttt{cuda.synchronize()}.\\     (2) Mid-step \texttt{select\_microbatch(1..3)} hides \texttt{eigh} fallbacks ($+89\text{--}230\,\text{ms} \to +6.6\text{--}21\,\text{ms}$).\\     (3) Per-site block hooks + Ozaki Tensor-Core GEMMs avoid DDP bucket conflicts \& SIMT FP32.};
 
-  % Panel (b) Bottom Strip
-  \fill[pagepanel, rounded corners=2pt] (8.26,0.12) rectangle (16.24,0.58);
-  \node[font=\tiny\color{pageink}] at (12.25,0.35)
-    {\taxid{WT-MLP-Lag}: $\mathbf{+3.6\%\text{--}4.1\%}$ vs.\ Muon ($+1.6\%\text{--}2.1\%$ vs.\ MuonT, $21.58$\,GiB) $\;\mid\;$ \taxid{DT-All-Lag}: $\mathbf{+4.8\%\text{--}5.4\%}$ vs.\ Muon};
+  \filldraw[fill=pagepanel, draw=famWT!45, rounded corners=2.5pt, line width=0.55pt] (13.54,0.16) rectangle (20.16,1.54);
+  \node[align=left, anchor=west, font=\tiny\color{pageink}] at (13.72,0.85)
+    {{\color{famWT}\pagesfsb Executed 8$\times$A100 \texttt{fast\_lag}:}\\     \textbf{\taxid{WT-Sym-Lag}}: $\mathbf{+3.8\%}$ vs.\ MuonT ($20.81$\,GiB)\\     \textbf{\taxid{WT-MLP-Lag}}: $\mathbf{+5.8\%}$ vs.\ MuonT ($21.59$\,GiB)\\     {\color{pagemuted}Beats MuonT \& Muon to $\text{C4}\le 3.52$ ($5{,}459$\,s)}};
 \end{tikzpicture}%
 }

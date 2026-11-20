@@ -1,10 +1,12 @@
 \section{Conclusion}
 
 We audited input and output-cotangent second moments across a baseline \muont{}
-trajectory, derived a width-thresholded, one-step-lagged output normalization
-scheme, and evaluated it across \nDistinctRuns{} full-budget 2.68B-token
-training trajectories, 28 short-schedule learning-rate trials, a post-training
-step-geometry audit, and a stage-optimized A100 implementation.
+trajectory, derived a $2\times 2$ family of asymmetric and symmetric
+width-thresholded two-sided updates, and evaluated \nOptimizerArms{} optimizer
+configurations across \nDistinctRuns{} distinct full-budget 2.68B-token
+trajectories (\nRunDirs{} completed run directories), 28 short-schedule
+learning-rate trials, a post-training step-geometry audit, and uncontended
+eight-A100 \texttt{fast\_lag} executions.
 
 Four findings define the scope and design of output-side normalization in
 Muon-type optimizers:
@@ -12,44 +14,52 @@ Muon-type optimizers:
 \item \textbf{Architectural covariance split and cotangent drift.}
   Across all 32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$
   tokens) of baseline \muont{}, pre-SwiGLU width-2048 cotangents
-  (\texttt{gate}, \texttt{up}) are Hadamard products whose off-diagonal
-  correlations hug the single-step sampling floor (median RMS
+  (\texttt{gate}, \texttt{up}) are zero-mean Hadamard products whose
+  off-diagonal correlations sit on the sampling floor (median RMS
   \motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
-  \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered moment
+  \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
   anisotropy on the diagonal (\motOutGateExpVarLMedPct\% and
   \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$, rising to \mechOutGateExpVarLPct\%
   and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
-  residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
-  rotational and cotangent eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$
-  faster than RMSNormed inputs, triggering $\motFbOutTotal{}$ exact
-  eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
-  inputs.
-\item \textbf{Width-thresholded complementarity and pure step rotation.}
+  residual width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
+  rotational, post-SwiGLU width-2048 \texttt{in:down} retains $56.6\%$
+  off-diagonal anisotropy from positive channel means, and cotangent eigenspaces
+  drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed
+  inputs ($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact fallbacks).
+\item \textbf{Width-thresholded complementarity, step rotation, and causal
+  SwiGLU validation.}
   Output moments help on top of input whitening ($\mlpdiagsel{}$ nats held-out
-  selection loss for \taxid{WT-MLP} / \mlpdiag{} across all five training
-  windows and all three seeds; $-0.0059$ nats net of matched execution-path
-  null \taxid{Null-WT}) and fail when substituted for it (\taxid{Abl-OutOnly} /
-  \leftall{}, $\leftallsel{}$ nats), while pure diagonal output scaling
-  (\taxid{OD-All} / \alldiag{}) retains two-thirds of that gain with zero
-  eigendecompositions. Instantaneous step norms match \taxid{MuonT} to
-  \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating updates
-  by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit learning-rate inflation.
-\item \textbf{Lagged execution at $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
-  overhead over vanilla Muon.} Removing device-wide per-step synchronization,
-  synchronous fallback stalls, per-linear backward custom-op partitions, and
-  SIMT-FP32 bottlenecks in \texttt{fast\_lag} reduces \taxid{WT-MLP-Lag}
-  (\mlpdiaglag{}) from $+\sysLegacyMlpVsMuon\%$ to
-  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over \taxid{Muon}
-  ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \taxid{MuonT},
-  saving \sysMemSavedGib\,GiB) and brings even fully dense \taxid{DT-All-Lag}
-  (\denselag{}) down to $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over
-  \taxid{Muon} --- crossing the \sysTokenSavingPct\% token-reduction break-even
-  threshold with bitwise-exact 24-step continuation parity.
+  selection loss for \taxid{WT-MLP} across all five windows and three seeds;
+  $-0.0059$ nats net of \taxid{Null-WT}) and fail when substituted for it
+  (\taxid{Abl-OutOnly}, $\leftallsel{}$ nats), while \taxid{OD-All} retains
+  two-thirds of that gain with zero output eigendecompositions and instantaneous
+  step norms match \taxid{MuonT} to \mechMlpdiagGraftNorm{} at a
+  $\mechMlpdiagGraftDeg^\circ$ rotation. Symmetrically diagonalizing
+  \texttt{in:down} (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}) confirms the pre- versus
+  post-SwiGLU covariance split, incurring a $\symLagVsMlpLagWinOne{}$-nat early
+  constant-LR training cost before recovering during LR decay to match
+  \taxid{WT-MLP-Lag} on final C4 ($\symMlpLagCfourFinalAbs{}$).
+\item \textbf{Executed eight-A100 \texttt{fast\_lag} at
+  $+\sysExecSymLagVsMuontPct\%$--$+\sysExecMlpLagVsMuontPct\%$ over MuonT and
+  wall-clock crossing ahead of MuonT and Muon.}
+  Removing per-step global synchronization, synchronous fallback stalls,
+  custom-op backward wrappers (with per-site accumulators safe under DDP bucket
+  partitioning), and SIMT-FP32 products cuts full-run eight-A100 steady-step
+  overhead over same-wave \taxid{MuonT} from $+17.6\%$ to
+  $+\sysExecMlpLagVsMuontPct\%$ ($\sysExecMlpLagStepS$\,s,
+  $\sysExecMlpLagGib$\,GiB) on \taxid{WT-MLP-Lag} and
+  $+\sysExecSymLagVsMuontPct\%$ ($\sysExecSymLagStepS$\,s,
+  $\sysExecSymLagGib$\,GiB) on \taxid{WT-Sym-Lag}, enabling \taxid{WT-Sym-Lag} to
+  reach $\text{C4}\le 3.52$ in $\sysCrossSymLagThreeFiveTwoS$\,s --- faster in
+  launch-anchored wall-clock time than same-wave \taxid{MuonT}
+  ($\sysCrossMuontSymThreeFiveTwoS$\,s), Wave-0 \taxid{MuonT}
+  ($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s), and vanilla \taxid{Muon}
+  ($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s).
 \item \textbf{Methodological discipline.} Matched execution-path nulls
   accounted for a fifth to a third of raw fixed-rate gains, and 320-step
   learning-rate screening selected an over-stepped rate ($0.064$) that
   regressed full-budget \muont{} itself by \waveTwelveMuontSelDiffMag{} nats
-  relative to the recipe rate ($0.0226$). Both controls are inexpensive, and
-  together they narrow final end-to-end confirmation to the compact full-budget
-  learning-rate curve around $0.0226$ specified in Section~\ref{sec:program}.
+  relative to $0.0226$. Together they focus remaining confirmation on the
+  compact full-budget curve around $0.0226$, same-wave \texttt{fast\_lag} null,
+  and reserved seeds specified in Section~\ref{sec:program}.
 \end{enumerate}

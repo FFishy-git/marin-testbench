@@ -5,6 +5,8 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{fullpage}
+\usepackage{lmodern}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
@@ -25,38 +27,51 @@
 \usepackage[round]{natbib}
 \PassOptionsToPackage{hyphens}{url}
 
-% The template's smile.sty and ims.bst are not redistributed with this
-% directory, so the preamble loads the standard packages they provide and the
-% bibliography uses plainnat. macro.tex and paperstyle.sty are the template's
-% own files and stay unchanged; settings of this paper go below.
 \providecommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
-% macro.tex calls \captionsetup at its top and \crefname in its finding box,
-% both of which smile.sty would have provided, so caption and cleveref load
-% before it. cleveref must follow hyperref, which paperstyle.sty would
-% otherwise load later; loading it here with no options avoids an option clash
-% with paperstyle's own \RequirePackage{hyperref}.
 \usepackage{caption}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \input{macro.tex}
-% Page style: title panel, headings, captions, finding boxes, running header
-% (paperstyle.sty; palantir sets the title block whose tinted panel holds the
-% abstract alone).
-\usepackage[palantir]{paperstyle}
 
-\setlength{\headsep}{15pt}
+% Clean full-page standard article typography and palette compatibility helpers
+% (paperstyle.sty remains on disk untouched but is not loaded).
+\definecolor{pageink}{HTML}{1C2B33}
+\definecolor{pagemuted}{HTML}{5F6B73}
+\definecolor{pagelink}{HTML}{2E5AA8}
+\definecolor{pagepanel}{HTML}{F1F4F7}
+\definecolor{pageaccent}{HTML}{2E5AA8}
+\definecolor{pagerule}{HTML}{D2D7DB}
+\colorlet{sectionblue}{pageink}
+
+\newcommand*{\pagesf}{\sffamily}
+\newcommand*{\pagesfsb}{\sffamily\bfseries}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{pageink}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{pageink}}{\thesubsection}{0.75em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{pageink}}{\thesubsubsection}{0.75em}{}
+\titleformat{\paragraph}[runin]{\normalfont\normalsize\bfseries\color{pageink}}{\theparagraph}{0.75em}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{0.75em}
+
+\captionsetup{font=small, labelfont=bf, width=0.96\textwidth}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=pagelink,
+  citecolor=pagelink,
+  urlcolor=pagelink,
+  hypertexnames=false
+}
+
 \urlstyle{tt}
 \interfootnotelinepenalty=10000
-% Table 1 compares every executed arm and needs more of a page than the 70%
-% that LaTeX allows a top float by default.
-\renewcommand{\topfraction}{0.85}
-\hypersetup{hypertexnames=false}
+\renewcommand{\topfraction}{0.88}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.75}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 \graphicspath{{figs/}}
-% Every number the prose quotes from a run is written by scripts/analyze.py and
-% scripts/analyze_lr.py directly from the per-update histories, and read here
-% once, before the abstract. Editing these files by hand defeats the point.
+% Every number the prose quotes from a run is written by deterministic scripts
+% from the per-update histories and JSON summaries, and read here before the abstract.
 \input{results/run_numbers}
 \input{results/lr_numbers}
 \input{results/derived_numbers}
@@ -65,12 +80,10 @@
 \input{results/mechanism_numbers}
 \input{results/systems_numbers}
 
-% Notation. The two sides of a linear layer's update: the input (activation)
-% second moment and the output (cotangent) second moment.
 \usetikzlibrary{arrows.meta, calc, fit, backgrounds, decorations.pathreplacing, shapes.geometric}
 \usepgfplotslibrary{groupplots}
 
-% Unified colorblind-safe taxonomic palette (harmonized with paperstyle.sty):
+% Unified colorblind-safe taxonomic palette:
 %   I.   Ref  (Charcoal)     -- Baselines: Muon, MuonT
 %   II.  WT   (Royal Navy)   -- Width-Thresholded Two-Sided (Proposed Core Family)
 %   III. OD   (Deep Teal)    -- Pure-Diagonal Output (Zero-Eigendecomposition Limit)
@@ -86,7 +99,6 @@
 \definecolor{famSlate}{HTML}{52606D}
 \definecolor{famMuted}{HTML}{8A949C}
 
-% Legacy aliases preserved for full backward compatibility across generated plots.
 \definecolor{laBlueLine}{HTML}{1B4F9C}
 \definecolor{laOrangeLine}{HTML}{B97720}
 \definecolor{laPurpleLine}{HTML}{0E7470}
@@ -123,7 +135,6 @@
 \newcommand{\nomark}{\textcolor{crossred}{\ding{55}}}
 
 % Formal 5-slot operator signature A(R_512, R_2048 | L_512, L_2048 | \tau)
-% and crisp visual factor badges.
 \newcommand{\opcfg}[5]{\mathcal{A}\!\left(#1,\,#2\;\middle|\;#3,\,#4\;\middle|\;#5\right)}
 \newcommand{\tcfg}[5]{$(#1,#2\mid #3,#4\mid #5)$}
 \newcommand{\fFull}{\textcolor{famWT}{\bullet}}
@@ -144,6 +155,8 @@
 \newcommand{\denselag}{\texttt{inner\_outer\_all\_lag}}
 \newcommand{\mlpdiag}{\texttt{inner\_outer\_mlpdiag}}
 \newcommand{\mlpdiaglag}{\texttt{inner\_outer\_mlpdiag\_lag}}
+\newcommand{\symmlpdiag}{\texttt{inner\_outer\_sym\_mlpdiag}}
+\newcommand{\symmlpdiaglag}{\texttt{inner\_outer\_sym\_mlpdiag\_lag}}
 \newcommand{\alldiag}{\texttt{inner\_outer\_leftdiag}}
 \newcommand{\outerdiag}{\texttt{outer\_leftdiag}}
 \newcommand{\fused}{\texttt{outer\_leftdiag\_fused}}
@@ -157,62 +170,56 @@
 \newcommand{\downhybrid}{\texttt{down\_hybrid}}
 \newcommand{\bothdiag}{\texttt{inner\_outer\_all\_diag}}
 
-\title{Width-Thresholded Output-Cotangent Normalization in Muon-Type Optimizers}
-\papershorttitle{Output-Side Normalization}
-\author{\todo{authors}}
-\paperaffiliations{\todo{affiliations}}
-\papermeta{Date}{\today}
-\papermeta{Status}{Scoped empirical, mechanistic, and systems draft. Section~\ref{sec:program} specifies the final full-budget LR confirmation.}
+\title{\textbf{Width-Thresholded Output-Cotangent Normalization\\in Muon-Type Optimizers}}
+\author{\todo{authors}\\[3pt]{\small \todo{affiliations}}}
+\date{\small \today}
 
 \begin{document}
 
 \maketitle
-\pagestyle{paper}
 
 \begin{abstract}
-Muon-type optimizers orthogonalize the momentum of each weight matrix and, in
-their preconditioned variants, whiten it against the second moment of the
-layer's \emph{inputs}. The second moment of the layer's \emph{output cotangents}
-is equally available and is not used. Auditing all 352 input and cotangent EMA
-moments across 32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$
-tokens) of a pure baseline MuonT trajectory reveals why naive two-sided dense
-whitening is mismatched to a transformer: pre-SwiGLU width-2048 cotangents
-(\texttt{gate}, \texttt{up}) are Hadamard products whose off-diagonal
-correlations sit on the single-update sampling floor (median RMS
+Muon-type optimizers orthogonalize weight momentum and, in preconditioned
+variants (\taxid{MuonT}), whiten it against the layer's \emph{input} second
+moment while leaving the \emph{output-cotangent} second moment unused. Auditing
+all 352 input and cotangent EMA moments across 32 layers and eight checkpoints
+($0.13\text{B}$--$2.68\text{B}$ tokens) of baseline \taxid{MuonT} explains why
+naive dense two-sided whitening is poorly matched to a transformer: pre-SwiGLU
+width-2048 cotangents (\texttt{gate}, \texttt{up}) are zero-mean Hadamard
+products whose off-diagonal correlations hug the sampling floor (median RMS
 \motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
-\motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered moment
-anisotropy on the diagonal (\motOutGateExpVarLMedPct\% and
-\motOutUpExpVarLMedPct\% of $\|L-I\|_F^2$, rising to \mechOutGateExpVarLPct\%
-and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
-residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
-rotational and cotangent eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$
-faster than RMSNormed inputs, triggering $\motFbOutTotal{}$ exact
-eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
-inputs. Guided by this structure, we evaluate \emph{width-thresholded output
-normalization} (\taxid{WT-MLP} / \mlpdiag{}, dense at $d=512$ and exact diagonal
-at $d=2048$) and its pure-diagonal limit (\taxid{OD-All} / \alldiag{}) across
-\nDistinctRuns{} full-budget trajectories on a pinned 265M-parameter transformer
-(2.68B tokens, eight A100s per run). Output moments help \emph{on top of} input
-whitening ($\mlpdiagsel{}$ nats held-out loss across all five windows and all
-three seeds, $-0.0059$ nats net of a matched execution-path null absorbing
-\nullsharedense--\nullsharemlpcfour\% of raw gains) and fail when substituted
-for it (\taxid{Abl-OutOnly} / \leftall{}, $\leftallsel{}$ nats), while matching
-MuonT's instantaneous step norm to \mechMlpdiagGraftNorm{}
-($\mechMlpdiagGraftNormPct\%$) at a $\mechMlpdiagGraftDeg^\circ$ directional
-rotation. Eliminating synchronization, backward-wrapper, and SIMT-FP32
-bottlenecks in a one-step-lagged runner (\texttt{fast\_lag}) cuts calibrated
-eight-A100 step overhead over vanilla Muon from $+\sysLegacyMlpVsMuon\%$ to
-$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
-($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over MuonT, saving
-\sysMemSavedGib\,GiB) for \taxid{WT-MLP-Lag} (\mlpdiaglag{}) and
-$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ for dense \taxid{DT-All-Lag}
-(\denselag{}), crossing the \sysTokenSavingPct\% token-saving break-even line.
-Finally, 320-step learning-rate screening fails to transfer because its selected
-rate ($0.064$) regresses full-budget MuonT itself by \waveTwelveMuontSelDiff{}
-nats relative to the recipe rate ($0.0226$), focusing remaining confirmation on
-a compact full-budget sweep around $0.0226$.
+\motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
+anisotropy on the diagonal, whereas residual width-512 cotangents (\texttt{o},
+\texttt{down}) are $>99\%$ rotational, post-SwiGLU width-2048 inputs
+(\texttt{in:down}) carry $56.6\%$ off-diagonal anisotropy from strictly positive
+channel means, and cotangent eigenspaces drift
+$5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed inputs
+($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact eigendecomposition fallbacks).
+Evaluating \nOptimizerArms{} configurations across \nDistinctRuns{} full-budget
+trajectories on a pinned 265M-parameter transformer ($2.68\text{B}$ tokens, eight
+A100s per run), asymmetric width-thresholding (\taxid{WT-MLP} / \mlpdiag{}, dense
+at $d=512$ and inline diagonal on width-2048 outputs) improves held-out loss by
+$\mlpdiagsel{}$ nats ($-0.0059$ net of a matched null absorbing
+\nullsharedense--\nullsharemlpcfour\% of raw gains) across all five windows and
+three seeds at matched step norm (\mechMlpdiagGraftNorm{}, $\mechMlpdiagGraftDeg^\circ$
+rotation), while substituting output for input whitening fails ($\leftallsel{}$
+nats) and symmetric MLP width-thresholding (\taxid{WT-Sym}, also diagonalizing
+\texttt{in:down}) causally confirms the pre-/post-SwiGLU split by trading an
+early constant-LR conditioning penalty for matched final C4 ($\symMlpLagCfourFinalAbs{}$).
+On uncontended eight-A100 nodes, our asynchronous one-step-lagged runner
+(\texttt{fast\_lag}) cuts full-run steady-step overhead over \taxid{MuonT} from
+$+18.0\%$ to $+\sysExecMlpLagVsMuontPct\%$ ($\sysExecMlpLagStepS$\,s,
+$\sysExecMlpLagGib$\,GiB) on \taxid{WT-MLP-Lag} and $+\sysExecSymLagVsMuontPct\%$
+($\sysExecSymLagStepS$\,s, $\sysExecSymLagGib$\,GiB) on \taxid{WT-Sym-Lag},
+enabling \taxid{WT-Sym-Lag} to cross $\text{C4}\le 3.52$ in
+$\sysCrossSymLagThreeFiveTwoS$\,s --- ahead of same-wave \taxid{MuonT}
+($\sysCrossMuontSymThreeFiveTwoS$\,s), Wave-0 \taxid{MuonT}
+($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s), and vanilla \taxid{Muon}
+($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s). Finally, 320-step learning-rate
+screening over-steps the 5{,}120-step horizon ($\waveTwelveMuontSelDiff{}$ nats on
+\taxid{MuonT} at $0.064$ versus $0.0226$), focusing remaining confirmation on a
+compact full-budget curve around $0.0226$.
 \end{abstract}
-\suppressfloats[t]
 
 \input{sections/intro}
 \input{sections/background}
@@ -228,14 +235,11 @@ a compact full-budget sweep around $0.0226$.
 \FloatBarrier
 \input{sections/conclusion}
 
-\newpage
+\FloatBarrier
 \bibliographystyle{plainnat}
 \bibliography{refs}
 
-\newpage
 \appendix
-{\makeatletter\patchcmd{\l@section}{\addvspace{1.0em \@plus\p@}}{\addvspace{0.3em \@plus\p@}}{}{}\makeatother
- \color{sectionblue}\tableofcontents}
 \input{sections/app_arms}
 \input{sections/app_runs}
 \input{sections/app_numerics}

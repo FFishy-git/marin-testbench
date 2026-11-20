@@ -62,7 +62,7 @@ mandatory.
 ]
 \fill[famNull!10] (axis cs:0.056,4.20) rectangle (axis cs:0.102,4.64);
 \node[font=\tiny, text=famNull!90!black, align=center, anchor=south]
-  at (axis cs:0.077,4.205) {short-horizon\\ flat top};
+  at (axis cs:0.077,4.34) {short-horizon\\ flat top};
 \addplot[color=famRef, mark=oplus*] table[x=lr, y=muont] {figs/lr_sweep.dat};
 \addlegendentry{\taxid{MuonT} ($.064$)}
 \addplot[color=famOD, mark=diamond*] table[x=lr, y=inner_outer_leftdiag] {figs/lr_sweep.dat};
@@ -73,8 +73,8 @@ mandatory.
 \addlegendentry{\taxid{OD-Outer-F} ($.064$)}
 \draw[pagemuted!80, densely dotted, line width=0.75pt]
   (axis cs:0.02262741696,4.20) -- (axis cs:0.02262741696,4.64);
-\node[font=\tiny, text=pagemuted!95!black, rotate=90, anchor=south east]
-  at (axis cs:0.02262741696,4.62) {recipe $.0226$};
+\node[font=\tiny, text=pagemuted!95!black, rotate=90, anchor=north west]
+  at (axis cs:0.02262741696,4.21) {recipe $.0226$};
 
 \nextgroupplot[
   width=5.55cm,
@@ -83,24 +83,24 @@ mandatory.
   xlabel={Matrix learning rate $\eta$},
   ylabel={Full-budget late selection (nats)},
   xmode=log, log basis x=2,
-  xmin=0.014, xmax=0.115, ymin=3.348, ymax=3.575,
+  xmin=0.014, xmax=0.132, ymin=3.335, ymax=3.595,
   scaled y ticks=false,
   ytick={3.36,3.40,3.44,3.48,3.52,3.56},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
   xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784},
   xticklabels={.016,.023,.032,.045,.064,.091},
   xticklabel style={font=\tiny, rotate=38, anchor=east},
-  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny, inner sep=2pt},
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny, inner sep=1.5pt},
   every axis plot/.append style={line width=0.95pt, mark size=1.9pt},
 ]
-\fill[famWT!8] (axis cs:0.0155,3.348) rectangle (axis cs:0.046,3.575);
+\fill[famWT!8] (axis cs:0.0155,3.335) rectangle (axis cs:0.046,3.595);
 \node[font=\tiny, text=famWT, align=center, anchor=south]
-  at (axis cs:0.031,3.351) {Item 1 sweep basin};
+  at (axis cs:0.031,3.338) {Item 1 sweep basin};
 \addplot[color=famRef, line width=1.1pt, mark=oplus*] table[x=lr, y=muont] {figs/lr_horizon.dat};
 \addlegendentry{\taxid{MuonT}}
 \addplot[only marks, color=famWT, mark=star, mark size=2.9pt, line width=0.85pt]
   table[x=lr, y=wt_mlp] {figs/lr_horizon.dat};
-\addlegendentry{\textbf{\taxid{WT-MLP}} ($3.370$)}
+\addlegendentry{\textbf{\taxid{WT-MLP}}}
 \addplot[color=famWT, densely dashed, mark=square*] table[x=lr, y=od_outer_fused] {figs/lr_horizon.dat};
 \addlegendentry{\taxid{OD-Outer-F}}
 \addplot[color=famOD, densely dotted, mark=diamond*] table[x=lr, y=od_all] {figs/lr_horizon.dat};
@@ -112,24 +112,24 @@ mandatory.
 \draw[-Latex, famAbl, line width=0.95pt] (axis cs:0.064,3.377) -- (axis cs:0.064,3.471);
 \node[font=\tiny, text=famAbl!95!black, align=left, anchor=west, inner sep=1pt]
   at (axis cs:0.066,3.418) {\textbf{$+0.1001$}\\ over-step};
-\node[font=\tiny, text=famAbl!95!black, anchor=south east, inner sep=1pt]
-  at (axis cs:0.108,3.533) {$3.525$ cliff};
+\node[font=\tiny, text=famAbl!95!black, anchor=south, inner sep=1pt]
+  at (axis cs:0.09051,3.536) {$3.525$ cliff};
 
 \nextgroupplot[
-  width=4.65cm,
+  width=5.10cm,
   ybar,
   title={(c) Wave-12 $\Delta$ vs.\ $.064$},
   ylabel={$\Delta$ Late selection (nats)},
   symbolic x coords={OD-Outer-F,OD-All,OD-Outer},
-  xtick=data,
+  xtick={OD-Outer-F,OD-All,OD-Outer},
   xticklabels={
-    {\shortstack{\taxid{OD-Outer-F}\\ {\tiny$\eta=.064$}}},
-    {\shortstack{\taxid{OD-All}\\ {\tiny$\eta=.091$}}},
-    {\shortstack{\taxid{OD-Outer}\\ {\tiny$\eta=.091$}}}
+    {\shortstack{\taxid{OD-Outer-F}\\ {\tiny$\eta\!=\!.064$}}},
+    {\shortstack{\taxid{OD-All}\\ {\tiny$\eta\!=\!.091$}}},
+    {\shortstack{\taxid{OD-Outer}\\ {\tiny$\eta\!=\!.091$}}}
   },
   xticklabel style={font=\tiny},
   ymin=-0.019, ymax=0.066,
-  enlarge x limits=0.28,
+  enlarge x limits=0.31,
   scaled y ticks=false,
   ytick={-0.01,0,0.01,0.02,0.03,0.04,0.05,0.06},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
@@ -164,11 +164,11 @@ against $\eta=0.064$ past the full-budget cliff.}
 
 \subsection{At their own best rates, the geometries still led --- on that schedule}
 
-At the interior optima the output-side arms retained an advantage over the
+At the interior optima the output-side arms retained a clear advantage over the
 independently tuned baseline: $-0.019633$ for \taxid{OD-All} (\alldiag{}) and
-$-0.014299$ for \taxid{OD-Outer} (\outerdiag{}), both at
+$-0.014299$ for \taxid{OD-Outer} (\outerdiag{}), both at rate
 $\lrBestLROuterLeftdiag{}$, and $-0.009946$ for \taxid{OD-Outer-F} (\fused{}) at
-$\lrBestLROuterLeftdiagFused{}$. Taken alone, this is the paper's most
+rate $\lrBestLROuterLeftdiagFused{}$. Taken alone, this is the paper's most
 favourable evidence --- larger gains than anything in Table~\ref{tab:main}, and
 obtained after giving the baseline its own best rate.
 
@@ -202,8 +202,9 @@ relative Wave-12 deltas, exposing two structural reasons why transfer failed:
   \taxid{MuonT}'s true full-budget optimum all along.
 \item \textbf{The $+0.050$-nat candidate regressions reflect an LR-grid split across
   equivalent equations.} In Appendix~\ref{app:arms}, \taxid{OD-Outer}
-  (\outerdiag{}) and \taxid{OD-Outer-F} (\fused{}) implement the \emph{exact
-  same mathematical update}, differing only by FP32 product fusion
+  (\texttt{outer\_\allowbreak leftdiag}) and \taxid{OD-Outer-F}
+  (\texttt{outer\_\allowbreak leftdiag\_\allowbreak fused}) implement the exact
+  same mathematical update, differing only by FP32 product fusion
   ($1.4\times 10^{-7}$ relative error). On the flat top of the 320-step curve
   (Figure~\ref{fig:lr}a), evaluation noise caused \taxid{OD-All} and
   \taxid{OD-Outer} to select $0.09051$ ($4\times$ recipe) while

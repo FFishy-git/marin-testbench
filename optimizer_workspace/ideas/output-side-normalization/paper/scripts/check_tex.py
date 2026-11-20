@@ -1,9 +1,4 @@
-"""Static checks on the manuscript that substitute for a trial compile.
-
-No TeX toolchain is available in the authoring environment, so this verifies
-what can be verified without one: that every \\input target exists, that every
-\\ref and \\cite resolves, that user-defined macros are defined before use, and
-that environments and braces balance per file.
+"""Static checks on the manuscript: \\input targets, labels/refs, citations, macros, and brace/env balance.
 
     python -I scripts/check_tex.py
 """
@@ -14,9 +9,6 @@ import sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Control sequences provided by the document class, the loaded packages, the
-# template's own macro.tex/paperstyle.sty, or plain TeX. Checking against a
-# curated list keeps the report short enough to act on.
 KNOWN = set("""
 documentclass usepackage PassOptionsToPackage RequirePackage input include
 begin end newcommand renewcommand providecommand NewDocumentCommand
@@ -26,7 +18,7 @@ title author date maketitle thanks footnote footnotemark footnotetext
 section subsection subsubsection paragraph subparagraph appendix
 label ref eqref pageref cite citep citet bibliography bibliographystyle
 tableofcontents newpage clearpage pagebreak linebreak hfill vfill hspace vspace
-textbf textit texttt textsc textrm emph underline textsuperscript
+textbf textit texttt textsc textrm emph underline textsuperscript texorpdfstring
 mathbb mathbf mathrm mathcal mathsf operatorname text
 frac dfrac tfrac nicefrac sqrt sum prod int lim max min log exp cos sin
 left right big Big bigg Bigg langle rangle lVert rVert lvert rvert
@@ -67,9 +59,9 @@ bfseries normalfont itshape ttfamily rmfamily sffamily mdseries
 linewidth textwidth columnwidth textheight headsep parindent parskip baselineskip
 abovedisplayskip abovedisplayshortskip topsep
 today verb uppercase lowercase romannumeral number the
-thesection thesubsection thesubsubsection thetcbcounter thefootnote
+thesection thesubsection thesubsubsection theparagraph thetcbcounter thefootnote
 tabcolsep arraystretch extracolsep
-titleformat titlespacing tcbset newmdenv ifblank notblank
+titleformat titlespacing tcbset newmdenv ifblank notblank allowbreak enlargethispage sloppy itemsep
 @plus @minus
 """.split())
 
@@ -87,7 +79,6 @@ def main():
     main_path = os.path.join(HERE, "main.tex")
     files = [("main.tex", strip_comments(read(main_path)))]
 
-    # Resolve \input targets transitively.
     queue = list(files)
     seen = {"main.tex"}
     problems = []
@@ -108,17 +99,17 @@ def main():
 
     whole = "\n".join(text for _, text in files)
 
-    # Labels and references.
     labels = set(re.findall(r"\\label\{([^}]+)\}", whole))
     refs = set(re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", whole))
     for missing in sorted(refs - labels):
         problems.append(f"undefined reference: {missing}")
-    duplicates = [l for l in labels
-                  if len(re.findall(r"\\label\{" + re.escape(l) + r"\}", whole)) > 1]
+    duplicates = [
+        l for l in labels
+        if len(re.findall(r"\\label\{" + re.escape(l) + r"\}", whole)) > 1
+    ]
     for dup in sorted(set(duplicates)):
         problems.append(f"duplicate label: {dup}")
 
-    # Citations against refs.bib.
     bib = read(os.path.join(HERE, "refs.bib"))
     keys = set(re.findall(r"@\w+\{([^,]+),", bib))
     cited = set()
@@ -129,10 +120,9 @@ def main():
     for unused in sorted(keys - cited):
         problems.append(f"note: bib entry never cited: {unused}")
 
-    # Macro definitions versus use.
     defined = set(re.findall(
         r"\\(?:newcommand|renewcommand|providecommand|def|NewDocumentCommand)"
-        r"\s*\{?\\([A-Za-z@]+)", whole))
+        r"\s*\*?\s*\{?\\([A-Za-z@]+)", whole))
     for extra in ("macro.tex", "paperstyle.sty"):
         path = os.path.join(HERE, extra)
         if os.path.exists(path):
@@ -142,16 +132,14 @@ def main():
                 r"newtcolorbox|newenvironment|newmdenv|DeclareMathOperator)"
                 r"\s*\*?\s*(?:\[[^]]*\])?\s*\{?\\?([A-Za-z@]+)", text))
             defined |= set(re.findall(r"\\newif\\if([A-Za-z@]+)", text))
-    # Environment names are not control sequences.
+
     envs = set(re.findall(r"\\begin\{([A-Za-z*]+)\}", whole))
     used = set(re.findall(r"\\([A-Za-z@]+)", whole))
     unknown = sorted(used - defined - KNOWN - envs)
-    # Filter obvious package-provided plotting/tabular keys.
     unknown = [u for u in unknown if not u.startswith(("pgf", "tikz", "axis", "group"))]
     for name in unknown:
         problems.append(f"possibly undefined macro: \\{name}")
 
-    # Environment and brace balance per file.
     for name, text in files:
         opens = re.findall(r"\\begin\{([A-Za-z*]+)\}", text)
         closes = re.findall(r"\\end\{([A-Za-z*]+)\}", text)
