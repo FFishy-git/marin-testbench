@@ -7,7 +7,10 @@ compute interpretation, and remaining experimental program.
 [DETAILS.md](DETAILS.md) holds the machine-oriented evidence that
 ENDEAVOR.md's claims rest on: the automated wave ledger, timestamped
 operational milestones, process identities, commit SHAs and file digests.
-The 900-second ledger refresh writes DETAILS.md, not ENDEAVOR.md.
+The existing 900-second Bash monitor refreshes the detailed ledger in
+`DETAILS.md` and the recurring research-status block in `ENDEAVOR.md` from
+the same authenticated reports. Dated experiment milestones and results
+remain in `ENDEAVOR.md`, outside its automated block.
 
 Wave 0 is complete: four seed-0, 0.5M-batch runs on 32 A100s.
 Outer-left down had the lowest final loss and took 5.04% longer than

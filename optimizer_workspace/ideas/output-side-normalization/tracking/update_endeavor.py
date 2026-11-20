@@ -54,8 +54,19 @@ from ns_lr_full_model_queue_reporting import lines as ns_lr_full_model_queue_lin
 from ns_training_path_exit_followup_reporting import lines as ns_training_path_exit_followup_lines
 from ns_training_path_exit_reporting import lines as ns_training_path_exit_lines
 from ns_training_path_lr_queue_reporting import lines as ns_training_path_lr_queue_lines
+from ns_training_path_query_serialized_followup_reporting import (
+    lines as ns_training_path_query_serialized_followup_lines,
+)
+from ns_training_path_query_serialized_reporting import lines as ns_training_path_query_serialized_lines
+from ns_training_path_recheck_exit_followup_reporting import lines as ns_training_path_recheck_exit_followup_lines
+from ns_training_path_recheck_exit_reporting import lines as ns_training_path_recheck_exit_lines
 from ns_training_path_recovery_reporting import lines as ns_training_path_recovery_lines
 from ns_training_path_reporting import lines as ns_training_path_lines
+from ns_training_path_scan_exit_followup_reporting import lines as ns_training_path_scan_exit_followup_lines
+from ns_training_path_scan_exit_lr_queue_reporting import lines as ns_training_path_scan_exit_lr_queue_lines
+from ns_training_path_scan_exit_reporting import lines as ns_training_path_scan_exit_lines
+from ns_training_path_serialized_followup_reporting import lines as ns_training_path_serialized_followup_lines
+from ns_training_path_serialized_reporting import lines as ns_training_path_serialized_lines
 from ns_training_path_transition_followup_reporting import lines as ns_training_path_transition_followup_lines
 from ns_training_path_transition_lr_queue_reporting import lines as ns_training_path_transition_lr_queue_lines
 from ns_training_path_transition_reporting import lines as ns_training_path_transition_lines
@@ -146,6 +157,15 @@ SUMMARY_SECTIONS = {
     "NS Marker-Exit Recovery Diagnostic",
     "NS Whole-Process Exit-Drain Diagnostic",
     "NS Mixed-Exit-Bracket Diagnostic",
+    "NS Missing-Environment Scan-Exit Diagnostic",
+    "NS Whole-Process Recheck-Exit Diagnostic",
+    "NS Serialized Ownership Diagnostic",
+    "NS Query-Serialized Ownership Diagnostic",
+    "NS Query-Serialized Independent Terminal Waiter",
+    "NS Serialized Independent Terminal Waiter",
+    "NS Recheck-Exit Independent Terminal Waiter",
+    "NS Scan-Exit Independent Terminal Waiter",
+    "NS Scan-Exit Actual-LR Queue",
     "NS Transition Independent Terminal Waiter",
     "NS Exit-Drain Independent Terminal Waiter",
     "NS Actual-LR Training-Path Queue",
@@ -3438,6 +3458,15 @@ def render(root: Path, now: datetime) -> str:
     lines.extend(ns_training_path_transition_lines(root, local_time))
     lines.extend(ns_training_path_transition_followup_lines(root, local_time))
     lines.extend(ns_training_path_transition_lr_queue_lines(root, local_time))
+    lines.extend(ns_training_path_scan_exit_lines(root, local_time))
+    lines.extend(ns_training_path_recheck_exit_lines(root, local_time))
+    lines.extend(ns_training_path_serialized_lines(root, local_time))
+    lines.extend(ns_training_path_query_serialized_lines(root, local_time))
+    lines.extend(ns_training_path_query_serialized_followup_lines(root, local_time))
+    lines.extend(ns_training_path_serialized_followup_lines(root, local_time))
+    lines.extend(ns_training_path_recheck_exit_followup_lines(root, local_time))
+    lines.extend(ns_training_path_scan_exit_followup_lines(root, local_time))
+    lines.extend(ns_training_path_scan_exit_lr_queue_lines(root, local_time))
     lines.extend(ns_training_path_exit_followup_lines(root, local_time))
     lines.extend(ns_training_path_lr_queue_lines(root, local_time))
     lines.extend(selected_lr_production_cpu_lines(root))
@@ -4141,6 +4170,7 @@ def research_summary(payload: str, now: datetime) -> str:
 
 def replace_block(original: str, payload: str, start: str, end: str, anchor: str) -> str:
     """Replace one bounded block, refusing missing or ambiguous document boundaries."""
+    payload = "\n".join(line.rstrip() for line in payload.split("\n"))
     if start in original or end in original:
         if original.count(start) != 1 or original.count(end) != 1:
             raise ValueError("Ambiguous automated ledger markers")

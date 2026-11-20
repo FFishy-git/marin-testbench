@@ -61,6 +61,8 @@
 \input{results/lr_numbers}
 \input{results/derived_numbers}
 \input{results/evidence_numbers}
+\input{results/mechanism_numbers}
+\input{results/systems_numbers}
 
 % Notation. The two sides of a linear layer's update: the input (activation)
 % second moment and the output (cotangent) second moment.
@@ -95,12 +97,12 @@
 \newcommand{\nullmlp}{\texttt{null\_mlpdiag}}
 \newcommand{\leftall}{\texttt{left\_all}}
 
-\title{Whitening the Other Side: Output-Cotangent Moments in Muon-Type Optimizers}
+\title{Width-Thresholded Output-Cotangent Normalization in Muon-Type Optimizers}
 \papershorttitle{Output-Side Normalization}
 \author{\todo{authors}}
 \paperaffiliations{\todo{affiliations}}
 \papermeta{Date}{\today}
-\papermeta{Status}{Work in progress. Section~\ref{sec:program} lists what is unresolved.}
+\papermeta{Status}{Scoped empirical, mechanistic, and systems draft. Section~\ref{sec:program} specifies the final full-budget LR confirmation.}
 
 \begin{document}
 
@@ -111,31 +113,39 @@
 Muon-type optimizers orthogonalize the momentum of each weight matrix and, in
 their preconditioned variants, whiten it against the second moment of the
 layer's \emph{inputs}. The second moment of the layer's \emph{output cotangents}
-is equally available and is not used. We add it, defining a family of
-output-side normalized updates over a pinned 265M-parameter transformer recipe,
-and run \nDistinctRuns{} full-budget training trajectories (2.68B tokens each,
-eight A100s per run) to measure what it buys. Three results hold up. Output-side moments help
-\emph{on top of} input whitening and not instead of it: added, the best geometry
-improves held-out loss by \mlpdiagsel{} nats, while substituting output for
-input normalization is \emph{worse} than either at \leftallsel{} nats. A matched
-null control, which performs identical collection, communication and root work
-with identity factors, recovers a fifth to a third of the apparent gain, so
-reported improvements that omit such a control overstate geometry by that much.
-And freshness dominates richness: diagonal output factors recomputed exactly
-every update beat dense factors refreshed every four updates at half the step
-overhead, while deleting the widest output factor entirely is worse than
-diagonalizing it. The fourth result is cautionary and currently governs the
-others. The effect is small next to the baseline's own tuning headroom:
-tuning MuonT's learning rate alone improves the same metric by
-\lrMuontGainFromTuning{} nats, \lrHeadroomRatio{} times the largest output-side
-gain at the recipe rate, and learning rates selected on a short schedule do not
-transfer, turning two of three geometries from winners into
-\transferWorst{}-nat losers at full budget. No arm has shown a wall-clock win at
-any loss target. We therefore present output-side normalization as a measured,
-reproducible, and still-unpriced effect, and specify the small set of
-experiments --- a null at the selected rate, a full-budget learning-rate
-neighborhood, one freshness ablation, and checkpoint-only mechanistic probes ---
-that would settle whether it is worth its cost.
+is equally available and is not used. Across \nDistinctRuns{} full-budget
+training trajectories on a pinned 265M-parameter transformer (2.68B tokens,
+eight A100s per run), we study \emph{width-thresholded output normalization}
+(\mlpdiag{}), which applies dense spectral output factors at hidden width
+($d=512$) and switches to exact elementwise diagonals at MLP-expansion width
+($d=2048$), alongside its pure-diagonal limit (\alldiag{}). Four results emerge.
+First, output moments help \emph{on top of} input whitening (\mlpdiagsel{} nats
+held-out loss across all five training windows and all three seeds, and
+$-0.0059$ nats net of a matched execution-path null that absorbs \nullsharedense--\nullsharemlpcfour\%
+of raw gains), whereas substituting output for input whitening regresses by
+\leftallsel{} nats. Second, checkpoint audits of all 352 EMA moments across 32
+layers explain \emph{why} width-thresholding matches or beats full dense roots:
+pre-SwiGLU cotangents are Hadamard products whose off-diagonal correlations sit
+at the finite-sample floor (median RMS \mechOutGateCorrRmsMed{} and
+\mechOutUpCorrRmsMed{}), putting \mechOutGateExpVarLPct\% and
+\mechOutUpExpVarLPct\% of $\|L - I\|_F^2$ on the diagonal despite
+$\mechOutGateDiagMaxMean\times$ coordinate-scale anisotropy, whereas
+residual-stream width-512 cotangents are $97\%$ rotational; instantaneous step
+norms match input-side MuonT to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$)
+while rotating updates by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit
+step-size inflation. Third, eliminating synchronization, backward-wrapper, and
+SIMT-FP32 bottlenecks in a one-step-lagged runner (\texttt{fast\_lag}) cuts
+calibrated eight-A100 steady-step overhead over vanilla Muon from
+$+\sysLegacyMlpVsMuon\%$ to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over MuonT, saving
+\sysMemSavedGib\,GiB) for \texttt{mlpdiag\_lag} and
+$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ even for dense
+\texttt{all\_lag}, crossing the \sysTokenSavingPct\% token-saving wall-clock
+break-even threshold. Fourth, short-schedule ($320$-step) learning-rate
+screening fails to transfer because its selected rate ($0.064$) regresses
+full-budget MuonT itself by \waveTwelveMuontSelDiff{} nats relative to the
+recipe rate ($0.0226$), focusing remaining confirmation on a compact full-budget
+neighborhood around $0.0226$.
 \end{abstract}
 \suppressfloats[t]
 
@@ -144,6 +154,8 @@ that would settle whether it is worth its cost.
 \input{sections/method}
 \input{sections/protocol}
 \input{sections/results}
+\input{sections/mechanism}
+\input{sections/systems}
 \input{sections/tuning}
 \input{sections/program}
 \input{sections/limitations}

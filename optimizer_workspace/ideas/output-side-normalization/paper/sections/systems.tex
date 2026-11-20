@@ -1,0 +1,178 @@
+\section{Closing the latency gap: lagged two-sided MuonT at 4\%--5\% overhead}
+\label{sec:systems}
+
+At the algorithmic level, lagged output normalization should add very little
+wall-clock cost. Vanilla input-side \muont{} computes three width-512 and one
+width-2048 dense moments per layer plus three right matrix products per update,
+yet runs only $+\sysMuontVsMuon\%$ ($+21.2$\,ms/step) slower than plain Muon
+because forward row capture uses three fused Triton launches and input root
+refinement overlaps the backward pass. By contrast, \mlpdiag{} adds five
+width-512 dense moments and \emph{zero} width-2048 dense moments per layer ---
+less nominal $O(d^2 + d^3)$ moment and eigendecomposition work than \muont{}'s
+own input side --- and one-update lag (\texttt{inner\_outer\_mlpdiag\_lag},
+Section~\ref{sec:method-controls}) makes roughly $900$\,ms of the next step's
+forward and backward pass available to hide output statistics and root work
+while costing less than $0.001$ nats of held-out loss.
+
+Why, then, did Wave~4's \texttt{inner\_outer\_mlpdiag\_lag} run $+\sysLegacyMlpVsMuon\%$
+slower than Muon ($+18.0\%$ over \muont{}), and Wave~3's
+\texttt{inner\_outer\_all\_lag} run $+\sysLegacyAllVsMuon\%$ slower? Stage-level
+profiling alongside Wave~10's matched null (\texttt{null\_leftdiag\_upstream\_fused},
+which still cost $+\sysWaveTenNullVsMuon\%$ over Muon with \emph{zero} dense
+output roots) localized the gap to three implementation bottlenecks rather than
+intrinsic arithmetic cost, and eliminating them brings both lagged geometries
+inside a $3.6\%$--$5.4\%$ steady-step budget over Muon.
+
+\subsection{Root-cause decomposition and three-pillar redesign}
+\label{sec:systems-pillars}
+
+\paragraph{Pillar 1: True asynchronous lag and opportunistic mid-step fallback resolution.}
+Two synchronization barriers in the initial runner prevented one-update lag
+from overlapping with the next step:
+\begin{enumerate}
+\item \texttt{train.py} executed a device-wide \texttt{torch.cuda.synchronize()}
+  at the end of every update to record \texttt{step\_seconds}, stalling the
+  host until the newly launched output side stream completed inside the
+  \emph{current} update.
+\item Even more expensively, \texttt{OutputToner.begin()} only enqueued
+  candidate graph roots; flagged root-repair iterations and exact
+  \texttt{cuSOLVER eigh} fallbacks ($\approx 4$--$6$ per update globally) were
+  not launched until \texttt{\_collect\_lagged()} called
+  \texttt{\_finish\_roots()} immediately before \texttt{optimizer.step()} on
+  update $t+1$, blocking the main stream synchronously ($+\sysRootsLegacyMlpMs$\,ms
+  in \texttt{mlpdiag\_lag} and $+\sysRootsLegacyAllMs$\,ms in \texttt{all\_lag}).
+\end{enumerate}
+In our optimized \texttt{fast\_lag} runner, end-of-step timing synchronizes
+only \texttt{torch.cuda.current\_stream()}, while full side-stream
+synchronization occurs only at checkpoint serialization and shutdown. To
+prevent update $t+1$'s first backward pass from overwriting update $t$'s
+sampled cotangent buffers without doubling memory, a lightweight CUDA event
+\texttt{ev\_rows\_consumed} is recorded on the priority-0 output side stream
+immediately after \texttt{syrk\_list\_packed} and local diagonal row-sums finish
+reading the buffers ($\approx 1.4$\,ms); \texttt{select\_microbatch(0)} on
+update $t+1$ ($\approx 40$\,ms later) waits on that event at $0.0$\,ms stall.
+Finally, once microbatch~0's $\approx 235$\,ms forward--backward pass is queued
+on the main stream, \texttt{select\_microbatch($k\ge 1$)} opportunistically
+queries the readiness event and resolves all repairs, exact \texttt{eigh}
+fallbacks, unit-RMS normalizations, and FP16 factor splits on the background
+side stream roughly $700$\,ms before \texttt{step()} consumes them.
+
+\paragraph{Pillar 2: Grouped block-level Triton capture and 2D-tiled inline diagonal.}
+Wave~10's null arm revealed a $+\sysCapLegacyMs$\,ms/step floor even with no
+dense output roots. That floor came from wrapping all 224 linear layers in
+\texttt{RowObservedLinear}, inserting $224\times 4 = 896$ opaque custom-op
+boundaries per update into \texttt{torch.compile}'s AOTAutograd backward graph
+and issuing $2{,}688$ eager \texttt{index\_select}, multiply, and
+\texttt{index\_copy\_} kernels writing $1.8$\,GiB of BF16 rows. We replace all
+224 wrappers with four view-transparent block-level autograd hooks per
+transformer block: one 3-projection Triton gather on $(q,k,v)$, residual-branch
+hooks on $o$ and $\text{down}$ preserving Inductor residual fusion, and a
+grouped hook on $(\text{gate},\text{up})$. When $(\text{gate},\text{up})$ use
+diagonal moments (\texttt{inner\_outer\_mlpdiag\_lag}), a deterministic,
+atomic-free 2D-tiled Triton kernel (\texttt{BLOCK\_R=16, BLOCK\_C=64})
+accumulates sampled FP32 row squares directly in registers without allocating
+or writing the 64 $[4576, 2048]$ BF16 buffers --- cutting backward capture
+overhead $\sysCapSpeedup\times$ (from $+\sysCapLegacyMs$\,ms to
+$+\sysCapFastMlpMs$\,ms across four microbatches) and reducing measured 32-layer
+peak memory by $\sysMemSavedGib$\,GiB.
+
+\paragraph{Pillar 3: Compiled Ozaki FP16-split Tensor-Core update stack.}
+Because deterministic training disables TF32 (\texttt{allow\_tf32=False}),
+\texttt{BlockToner}'s eager FP32 \texttt{torch.bmm} products executed on
+$19.5$\,TFLOPS SIMT cores and synced \texttt{.tolist()} host finite checks
+every update. Compiling \texttt{block\_update\_stack} with upstream's
+FP16-split Ozaki scheme (\texttt{PR.\_EXACT}) moves all dense left and right
+factor products onto $312$\,TFLOPS Tensor Cores with full FP32 accuracy, fuses
+post-$\Nten$ direction and decay into two right products instead of three, and
+masks nonfinite updates on device so host checking runs at $0.0$\,ms after the
+main-stream step barrier, shrinking owned-matrix update overhead from
+$+\sysUpdLegacyMlpMs$\,ms to $+\sysUpdFastMlpMs$\,ms.
+
+\begin{table}[t]
+\centering
+\caption{Calibrated eight-A100 steady-step latency decomposition (overheads
+relative to \muont{} per stage; total step time and percentage overhead relative
+to vanilla Muon at $1.074$\,s/step) and peak rank-0 memory. Stage timings are
+measured on SM80 A100-SXM4-40GB via rotated ABBA interleaved microbenchmarks
+and calibrated against the exact Wave~0, Wave~3, Wave~4, and Wave~10 eight-rank
+steady-step baselines.}
+\label{tab:systems}
+\scriptsize\setlength{\tabcolsep}{3.5pt}
+\input{results/table_systems}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.86\textwidth, height=5.8cm,
+  xbar stacked, bar width=10pt,
+  xlabel={Extra step latency above vanilla Muon (ms/update, $1{,}074$\,ms base)},
+  xmin=0, xmax=395,
+  ytick={0,1,2,3,4,5},
+  yticklabels={
+    {MuonT ($+2.0\%$)},
+    {Legacy \texttt{all\_lag} ($+33.9\%$)},
+    {Legacy \texttt{mlpdiag\_lag} ($+20.3\%$)},
+    {Wave-10 \texttt{null} ($+11.3\%$)},
+    {\textbf{Fast \texttt{all\_lag}} ($\mathbf{+5.1\%}$)},
+    {\textbf{Fast \texttt{mlpdiag\_lag}} ($\mathbf{+3.8\%}$)}
+  },
+  yticklabel style={font=\scriptsize},
+  label style={font=\small}, tick label style={font=\footnotesize},
+  grid=major, grid style={gray!18},
+  axis line style={gray!55}, tick align=outside,
+  legend columns=4,
+  legend style={at={(0.5,-0.22)}, anchor=north, font=\scriptsize,
+                draw=gray!40, fill=white, column sep=6pt},
+]
+\addplot[fill=gray!45, draw=gray!70] table[y=idx, x=input_base_ms] {figs/systems_bars.dat};
+\addlegendentry{Input MuonT base}
+\addplot[fill=laOrangeLine!75, draw=laOrangeLine!95] table[y=idx, x=capture_ms] {figs/systems_bars.dat};
+\addlegendentry{Bwd capture}
+\addplot[fill=laPurpleLine!75, draw=laPurpleLine!95] table[y=idx, x=update_ms] {figs/systems_bars.dat};
+\addlegendentry{Update GEMMs}
+\addplot[fill=laBlueLine!75, draw=laBlueLine!95] table[y=idx, x=roots_ms] {figs/systems_bars.dat};
+\addlegendentry{Output roots/RS}
+\end{axis}
+\end{tikzpicture}
+\caption{Decomposition of per-update latency above vanilla Muon ($1.074$\,s).
+Eliminating the per-step global CUDA barrier, synchronous fallback stalls, and
+per-linear custom-op graph partitions reduces \texttt{inner\_outer\_mlpdiag\_lag}
+from $+\sysLegacyMlpVsMuon\%$ ($+218$\,ms) to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+($+39$--$44$\,ms, or $+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ above
+\muont{}), and brings even fully dense \texttt{inner\_outer\_all\_lag} down to
+$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over Muon.}
+\label{fig:systems}
+\end{figure}
+
+\subsection{Parity verification and wall-clock break-even}
+\label{sec:systems-parity}
+
+All three optimizations preserve exact target equations and pass every existing
+correctness gate on SM80 A100 hardware: all 42 CPU unit tests, all 11 two-rank
+NCCL \texttt{experiment.gpu\_checks} gates, pre- and post-$\Nten$ FP64
+reference checks ($\max$ relative error $4.16\times 10^{-6}$), \texttt{tpu}-mode
+update parity against upstream \texttt{FastTonerCore} ($\max$ relative error
+$1.02\times 10^{-7}$), and 24-update uninterrupted-versus-step-22-resumed
+continuation past the 20-step exact-root warmup and CUDA-graph transition with
+\emph{zero} bitwise error ($0.00$ across all 96 tensors in
+\texttt{inner\_outer\_mlpdiag\_lag} and all 99 tensors in
+\texttt{inner\_outer\_all\_lag}).
+
+Table~\ref{tab:systems} and Figure~\ref{fig:systems} show the resulting latency
+and memory profile. Crucially, the lag mechanism itself --- independent of
+whether width-2048 factors are diagonalized --- now hides almost all dense root
+and fallback latency: even \texttt{inner\_outer\_all\_lag} drops from
+$+\sysLegacyAllVsMuon\%$ to $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$
+over vanilla Muon, while \texttt{inner\_outer\_mlpdiag\_lag} reaches
+$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over Muon
+($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \muont{}) at
+$\sysMemFastMlpGib$\,GiB peak allocation. Because Wave~4's
+\texttt{inner\_outer\_mlpdiag\_lag} already reached the $\text{C4}\le 3.52$
+milestone in $\sysTokenSavingPct\%$ fewer tokens than \muont{} ($2.36\text{B}$
+versus $2.49\text{B}$ tokens), cutting step overhead over \muont{} below $2.1\%$
+crosses the wall-clock break-even threshold ($0.9474 \times 1.018 \approx
+\sysWallclockRatio$), turning a $+16.7\%$ elapsed-time loss into a projected
+$3.5\%$ wall-clock speedup pending full-run confirmation on an uncontended
+eight-A100 node.

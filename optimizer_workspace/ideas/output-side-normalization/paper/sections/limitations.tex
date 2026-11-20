@@ -37,19 +37,22 @@ three separate nulls across three waves. Nothing here is replicated on a seed
 reserved from exploration: seeds 0, 1 and 2 have all been inspected, which is
 why Section~\ref{sec:program} reserves 3, 4 and 5.
 
-\paragraph{Known confounds we did not remove.}
-Four, in descending order of how much they matter.
-\emph{Learning rate}: every fixed-rate number is measured at a rate that is far
-from the baseline's optimum (Section~\ref{sec:tuning}), and we have no
-full-budget tuned comparison. \emph{Richness versus freshness}: the diagonal
-arms are simultaneously lower-rank and always-current, so
-Section~\ref{sec:freshness}'s conclusion is an inference, not an isolated
-measurement. \emph{Wave-crossing controls}: the leading arm's matched null ran
-in a different wave, spanning a change in host scheduling and source revision;
-the dense arm's null is same-wave and is the cleaner pair.
-\emph{Execution path}: the output-side arms use a per-matrix update path with
-different floating-point association from the baseline's batched path, which is
-what the nulls bound but do not eliminate.
+\paragraph{Known confounds and what remains open.}
+Three boundaries govern how the current numbers should be read.
+\emph{Full-budget learning-rate neighborhood}: while Section~\ref{sec:tuning}
+shows that the 320-step optimum ($0.064$) regresses full-budget \muont{} by
+\waveTwelveMuontSelDiffMag{} nats and Section~\ref{sec:mech-graft} rules out
+step-size inflation (\mechMlpdiagGraftNorm{} norm ratio), the fine-grained
+full-budget curve around $0.0226$ ($\{0.016, 0.0226, 0.032, 0.045\}$) remains
+to be executed (Section~\ref{sec:program}, Item~1).
+\emph{Uncontended eight-rank \texttt{fast\_lag} timing}: the
+$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ step-time overhead in
+Section~\ref{sec:systems} is measured via rotated ABBA A100 stage benchmarks
+calibrated against the Wave~0/3/4/10 eight-rank steady-step baselines while
+cluster keepers held $1.06$\,GiB per GPU; end-to-end launch-anchored timing
+awaits an uncontended eight-A100 run in Item~1.
+\emph{Wave-crossing null for \mlpdiag{}}: \nullmlp{} ran in Wave~3 against
+Wave~2's \mlpdiag{}; Item~2 pairs them in the same wave on \texttt{fast\_lag}.
 
 \paragraph{Reproduction fidelity.}
 Our baseline is a runtime adaptation, not an exact reproduction of the pinned

@@ -1,9 +1,9 @@
 # Output-Side Normalization in MuonT: Endeavor
 
-Updated on 2026-11-19, Asia/Shanghai. This is the authoritative record for
+Updated on 2026-11-20, Asia/Shanghai. This is the authoritative record for
 the research question, executed experiments, mathematical definitions,
 results, and remaining experimental program.
-Unqualified clock times in the November 16-19 continuation use Asia/Shanghai
+Unqualified clock times in the November 16-20 continuation use Asia/Shanghai
 (UTC+08:00). Current running status refers to the stated observation time.
 
 ## Navigation
@@ -25,35 +25,336 @@ live in [`DETAILS.md`](DETAILS.md), preserved verbatim and in original order.
 
 ## Current Experiment State
 
-Evidence checkpoint, November 19, 2026 19:30 Asia/Shanghai.
+Evidence checkpoint, November 20, 2026 02:01 Asia/Shanghai.
 Receipt and explicit live-observation times are shown below. Saved
 receipts alone do not establish current GPU occupancy.
 `PVC` denotes
 `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
 
-At 19:26:10 the transition aggregate retains 18/54 completed commands
-and 6/18 accepted decisions. MuonT BF16 and FP32 with five, seven and
+Latest status check: Wave12 remains the latest full-budget, large-window
+analyzed and privately SwanLab-verified wave. The newer query diagnostic
+failed at01:14:48 with6/54completed commands and2/18accepted MuonT controls;
+the ten-step command was never spawned. Its controller, validator and
+waiter are absent. Read-only process/GPU inspection at01:58 verifies the
+same restored eight-rank keeper on the original eight A100s, not training.
+The distinct streaming successor was prepared at01:55:47 with353source
+files and210declared helpers; its17-case local suite passes. Fresh manifest
+checking finds no source drift. Its archived201-test acceptance,
+failed-precommand predecessor seal, frozen binding and GPU launch remain
+pending. No new full-budget result, cloud import or optimizer superiority
+is established. The sole original monitor publishes both journals at
+01:57:54 from its01:53:27report and resumes its900-second sleep.
+The task controller currently records the broader goal as paused; this
+status check updates the journals without starting a new experiment or
+altering the existing monitor. See
+[Streaming Diagnostic Prepared](#streaming-diagnostic-prepared).
+Earlier checkpoints below remain preserved historical observations.
+
+The distinct missing-environment scan-exit diagnostic now has accepted
+CPU/source coverage: 129 cases, 178 helpers and 547 inventory entries
+at 20:56:19. A fresh archived-entry check passes at 20:58, and its
+separate failed-predecessor seal passes at 20:59. It retains all prior
+failures, the six accepted MuonT controls and fused five-step rejection.
+Only ownership observation changes; numerical readers, tolerances,
+training/configuration bytes, compilation and CUDA graphs are unchanged.
+Independent seal checking passes, freeze completes at 21:02:50, and
+the issued-controller check passes before launch. Controller
+`3403676/942778625` acknowledges at 21:07:10. Validator
+`3405014/942784407` acknowledges at 21:08:36 as its direct child,
+after exact keeper release. The 22:03:52 aggregate admits eight of
+54 commands and two of eighteen case decisions. The BF16/five-step
+and BF16/seven-step MuonT lower-LR controls pass all five existing
+acceptance gates; each has 39 passing scalar-loss comparisons and
+no failed tensor comparison at
+updates 22/23/24. First-resumed graph-state scalars retain their
+existing diagnostic-only treatment; no tolerance or graph waiver
+is added. Ten-step continuous and interrupted commands are completed.
+Its resumed command fails before training at 22:03:52 in the complete
+ownership scan: a previously confirmed marked child remains unstable
+through three rechecks. Execution and cleanup exits are 1/1; no ten-step
+numerical decision is established. Controller and validator stop
+`needs_attention`; the controller records keeper restoration at 22:04:12.
+The independent waiter also stops `needs_attention` at 22:12:06 because
+the complete cleanup/terminal requirements are unavailable. Independent
+22:12:53 read-only verification finds all three original owners, failed
+launcher/ranks and retained child absent. Keeper3517296 and its exact eight
+ranks exclusively occupy the same eight physical A100s. These observations
+do not waive either failed cleanup exit or supply the missing 54-command/
+18-decision terminal. See
+[Missing-Environment Scan-Exit Successor](#missing-environment-scan-exit-successor).
+The original journal monitor remains live with its exclusive lock;
+its latest completed publication is 23:00:58 from the 22:56:51 report.
+Its 900-second loop now includes the receipt-authenticated scan-exit
+and terminal-waiter reports alongside preserved failed diagnostics.
+A manual refresh completes at 21:18 with a 21:14:07 report timestamp:
+the waiter projection passes, while diagnostic counts are withheld
+because mutable evidence changes during inspection. The next cycle
+retries; no stable count or numerical result is inferred from that refusal.
+The waiter acknowledges at 21:11:58. Its fourth 21:57:06 observation
+still finds the exact original owners live; this retained observation is
+historical. Its 24-case archive and fresh archived-entry check pass.
+The failed waiter is not restarted and no complete terminal is issued.
+A separate actual-LR predecessor reader is CPU/archive accepted at
+21:32:26: 34 cases and 193 helpers. Fresh archived checking passes;
+the 21:33:45 read-only observation records `waiting_for_scan_exit_owners`.
+Its numerical and execution archives remain separate, including their
+conflicting handoff identities. No canonical seal, successor GPU
+command or production authority is issued.
+A distinct actual-LR adapter candidate is now CPU/archive accepted
+at 21:53:00: 16 archived tests, 185 helpers and 559 inventory entries.
+Fresh archived checking passes. All 54 numerical configurations and
+162 commands are preserved; only the candidate owner and declared
+scan-exit execution-helper transformation change. The separate
+execution-owner archive accepts at 21:59:22 with 53 passing cases,
+203 helpers and 577 inventory entries. Fresh archived checking passes
+at 22:01. The distinct queue now pins that receipt; all 47 local queue
+tests pass, including the five previously deferred archive tests.
+Its separate CPU/source archive accepts at 22:05:07 with 47 passing cases,
+214 helpers and 588 inventory entries; fresh archived checking passes.
+The reporter pins that accepted receipt and is included in both automated
+blocks. The queue remains unlaunched because the original complete terminal
+is unavailable. No queue intent, canonical seal or successor GPU binding
+is created. The final integrated journal/reporting suite passes 267 cases.
+Wave 12 remains the latest full-budget, large-window analyzed and
+privately SwanLab-verified wave. No optimizer superiority is established.
+
+The distinct recheck-exit ownership correction passes all 55 local
+tests: 41 exit/recheck regressions and 14 failure-preservation cases.
+It resolves a marked process disappearing or becoming terminal during
+the final recheck only after existing identity-bound whole-process exit
+proof, then repeats the complete scan. Three scan attempts and the
+one-second exit deadline remain unchanged. Numerical configurations,
+readers, tolerances, compilation and CUDA graphs are preserved.
+The distinct source archive accepts at 22:42:24 with all 136 cases,
+183 helpers and 552 inventory entries. Fresh archived-entry checking
+passes at 22:43. The inherited zombie fixture is separately derived
+with complete stat evidence and observed directory disappearance;
+the original fixture and failed archives remain unchanged. The separate
+predecessor seal passes at 22:44:56 and independent seal checking
+passes. Freeze and the fresh issued-controller check pass by 22:49.
+The controller acknowledges at 22:51:58 as `3557212/943407368`.
+Its direct validator `3558375/943415476` acknowledges at 22:53:19
+after exact keeper release. The diagnostic fails at 22:59:49 after
+1/54 completed commands and 0/18 case decisions. The MuonT BF16/
+five-step lower-LR continuous command completes; the interrupted
+command fails before training in `complete_scan_exhausted` with two
+previously marked helpers unstable across three complete scans.
+Execution and cleanup exits are 1/1. The controller records failure
+and keeper restoration at 23:00:07. Independent 23:00:38 inspection
+finds controller and validator absent, no validator-marked descendants,
+and exact restored keeper3564728 with its eight original ranks on the
+same eight physical A100s. The recheck-exit correction did not resolve
+this execution failure; no case is numerically accepted. The separate read-only
+waiter accepts all 24 archived cases and passes fresh archived checking.
+It acknowledges at 22:54:23 as `3559219/943421918`; its first
+22:54:29 observation finds both exact owners live, 0/54 completed
+commands and 0/18 decisions. That observation is historical. Its
+original next 900-second cycle stops `needs_attention` at 23:09:30
+because the complete cleanup/restoration predicates are unsatisfied.
+No terminal command is issued. Fresh 23:11:03 read-only checking
+finds controller, validator and waiter absent, no validator-marked
+descendants, and the same restored keeper on all eight original A100s.
+The failed diagnostic and consumed waiter are not restarted.
+The integrated journal/reporting suite passes 284 test executions
+(264 distinct testcase identities); the 136-case acceptance archive
+separately requires and passes unique case identities.
+
+The CPU-only helper-churn experiment completes at 23:09:30 against
+the exact issued ownership-helper bytes. With zero, one or two
+successive marked-helper exits, the original three-scan protocol
+returns every surviving and newly discovered marked process.
+Churn continuing through all three scans instead produces
+`complete_scan_exhausted` and returns no partial ownership result.
+All five regression cases pass. This reproduces the refusal mechanism
+in a fake process tree; it does not establish the live failure's cause.
+A later command-digest comparison identifies both retained helpers as
+matching the rank's compute-occupancy `nvidia-smi` query. This supports
+testing concurrent ownership inspections, but does not prove live
+causality. The startup-ordering proposal below is superseded by a
+distinct serialized-ownership diagnostic. Its CPU/source archive
+accepts 141 unique cases at 23:35:02; fresh archived-entry and separate
+failed-predecessor seal checks pass. Its 30-second canonical lock
+encloses the entire unchanged ownership inspection. Trainer/configuration
+bytes, numerical readers, tolerances, three complete scans, the
+one-second exit proof, compilation and CUDA graphs remain unchanged.
+Freeze completes November 19 at 23:46:29, and fresh issued checking
+passes. Controller3595881 acknowledges at 23:51:10; its direct
+validator3597661 acknowledges at 23:52:56 after exact keeper release.
+The first continuous command fails before training at 23:54:13 when
+waiting ranks exhaust the new 30-second inspection lock. The retained
+result is 0/54 completed commands and 0/18 decisions, with execution/
+cleanup exits1/1. Controller restoration is recorded at 23:54:30.
+Independent 23:56:15 checking finds both owners absent, no validator
+markers, and the exact restored keeper3598689/ranks3598829-3598836
+exclusively on the original eight A100s. No numerical acceptance or
+complete terminal follows. The separately accepted24-case read-only
+waiter3598600 acknowledges at 23:54:12 and retains its23:54:17
+historical owner observation; its original900-second schedule remains.
+No failed controller or waiter is restarted. See
+[Serialized Ownership Diagnostic](#serialized-ownership-diagnostic).
+The sole original Bash monitor publishes both journals November20
+at00:00:10 from its November19 23:56:01 report, then resumes `sleep 900`.
+All259 affected CPU cases pass. Whole-inspection serialization fails
+within its unchanged30-second lock bound; a smaller query/marker-scan
+critical section is now separately CPU/source accepted at00:11:29 with
+142unique cases,193helpers562inventory entries. Fresh archived checking
+passes. The original waiter stops00:09:18 on its scheduled interval;
+fresh00:10:16 checking confirms controller, validator and waiter absent,
+no validator markers and the same restored keeper. Separate predecessor
+sealing passes at00:13:48 with2746evidence files and1352checkpoint
+identities; independent archived seal checking passes. Freeze publishes
+at00:18:47, and the fresh issued-controller check passes. The distinct
+controller3633332/start943964742 acknowledges at00:24:51; direct
+validator3637693/start943978129 acknowledges at00:27:05 after exact
+keeper release. The first MuonT BF16/five-step lower-LR continuous
+command finishes24updates with zero execution/cleanup exits at00:30:14.
+The interrupted22-update command also finishes with zero exits at
+00:35:15. The resumed command finishes at00:38:20 with zero exits;
+the00:40:46aggregate admits3/54commands and0/18decisions. That saved
+observation is superseded by the00:56:09aggregate:4/54commands and
+1/18decisions. The first five-step MuonT case passes all five unchanged
+gates, checkpoints22/24 and39/39scalar-loss comparisons. Checkpoint23
+retains16diagnostic-only graph-state scalar differences and no failed
+tensor comparisons. The seven-step continuous command finishes cleanly
+at00:53:40; its complete case decision remains pending. The interrupted
+22-update command also finishes cleanly at00:58:38; aggregate00:59:29
+admits5/54commands and1/18decisions. The resumed24-update command
+finishes01:01:43 with integer execution/cleanup0/0 and marked descendants
+absent. Aggregate01:04:16 admits6/54commands and1/18decisions, `validating`,
+with no error. This observation is superseded by the01:14:48failed aggregate:
+6/54commands and2/18decisions. Both five-step and seven-step MuonT lower-LR
+controls pass all five unchanged continuation gates and39/39loss checks.
+The validator fails before launching the ten-step command in
+`complete_scan_exhausted`. None of six retained unstable PIDs was previously
+confirmed marked. Controller and validator exit with recorded execution/
+cleanup1/1; keeper restoration records0 at01:15:06. Independent01:16:42
+read-only checking finds both owners absent, no validator markers, and exact
+restored keeper3731474 with ranks3731705-3731712 on the original eight A100s.
+The original waiter stops `needs_attention` at01:28:01 on its scheduled
+900-second cycle, retaining four observations and no complete terminal.
+Independent01:30:59 read-only checking finds controller, validator, waiter
+and all six completed launcher handles absent, no validator markers, and
+the same exact restored keeper on all eight original A100s. The failed
+execution/cleanup exits remain1/1; absence does not supply missing coverage.
+No GPU successor authority exists, and no failed one-shot is restarted.
+The separate read-only waiter3638945/
+start943982783 acknowledges at00:27:52 after24-case archive acceptance
+and fresh archived checking. Its first00:27:57 observation verifies
+both exact owners live,0/54completed commands and0/18decisions.
+Its third00:57:59observation still waits for the original owners.
+The original monitor publishes both journals at00:58:51 from its
+00:54:14 report and returns to its900-second sleep. All242unique
+integrated journal cases pass; source/content lint and diff-check pass.
+A separate query-serialized actual-LR predecessor reader now accepts
+39unique CPU/archive cases at00:55:08 with211authenticated helpers.
+Fresh archived-entry checking passes; its00:57:24read-only observation
+finds the exact controller, validator and waiter live and returns
+`ready: false`. No seal, GPU handoff or successor launch is issued.
+The distinct actual-LR adapter candidate is prepared at01:12:32 with187
+helpers, preserving54configurations/162commands and the original5120
+schedule. Three families retain all three actual LRs, BF16/FP32 and5/7/10
+iterations. Only the candidate owner changes; the conflicting execution
+handoff is explicitly transformed to the accepted query helper, with its
+original numerical bytes retained in the planned archive inventory.
+Its16-case local CPU suite passes in393.58seconds. Separate archived
+acceptance at01:21:54 passes16unique cases in381.99seconds, with187helpers
+and561inventory entries. Fresh archived-entry checking passes at01:23.
+The distinct unmarked-process churn CPU study reproduces three-scan
+exhaustion using exact issued scanner bytes; six new regressions and the
+five earlier marked-churn cases pass. The distinct, unissued streaming
+observation-order candidate subsequently passes46local scanner cases:
+all36pinned handoff cases plus10ordering/lifecycle cases. Reading each
+process environment immediately after its identity avoids the reproduced
+unmarked exit race; continuous marked churn, PID reuse, missing files,
+live marker loss and surviving threads still refuse. All57combined
+scanner/churn cases and5focused journal cases pass. This is CPU mechanism
+evidence, not live causal proof or archive/GPU acceptance. Complete scan
+body/rechecks, namespace filters, three attempts and one-second exit proof
+remain unchanged; accepted issued scanners are untouched. No separate
+execution owner, queue, seal or launch is inferred. The original monitor
+publishes both journals at01:38:23 from its01:34:01report and returns to
+`sleep900`. See [Streaming Observation-Order Study](#streaming-observation-order-study).
+No new full-budget loss result, SwanLab import or optimizer superiority exists.
+
+The following 20:35 and earlier checkpoints are retained observations.
+The mixed-exit-bracket diagnostic stops `needs_attention` at19:59:22
+with23/54 completed commands and7/18 case decisions: six accepted
+MuonT controls and the preserved fused BF16/five-step rejection.
+The next fused BF16/seven-step resumed command fails before training
+in a complete ownership-marker scan. Its execution/cleanup exits
+are1/1, so it is excluded from completed trajectories and supplies
+no seven-step numerical decision. This is an execution failure;
+no source, command or log substitution is established by the
+validator's generic identity-error message.
+Independent20:06:15 read-only checking verifies controller3118453,
+validator3118822 and all issued training-command handles absent,
+with no validator or command markers. Restored keeper3313700 and
+its eight ranks exclusively occupy the same eight physical A100s
+with exact recorded generations. The terminal waiter stops
+`needs_attention` at20:04:58; the actual-LR queue stops
+`needs_attention` at20:05:59 with0/6 phases because the required
+complete predecessor terminal is absent. Neither failed one-shot
+is restarted. See [Transition Partial Failure And Restoration](#transition-partial-failure-and-restoration).
+The original Bash journal monitor1588227 remains live, retains its
+exclusive lock and900-second sleep between refreshes. Its last
+completed publication is20:30:47, using its20:27:24 report observation.
+Both automated blocks now retain the failed diagnostic and stopped
+waiters; manual failure and review milestones remain preserved.
+Wave12 remains
+the latest full-budget, large-window analyzed and privately
+SwanLab-verified production wave. No new production wave or cloud
+import is inferred, and the optimizer-improvement objective remains open.
+
+The distinct precision-placement execution archive
+`PVC/run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/receipt.json`
+records CPU/source acceptance at 20:31:01 with 49 staged cases,
+163 helpers and 531 inventory entries. A fresh archived-entry check
+passes by 20:32; the broader CPU numerical suite passes 113 cases
+in 165.57 seconds. Missing transitive imports are now required even
+when their sibling files do not exist, including same-package
+relative imports; declared external modules remain separate.
+All 158 CPU-study parent helpers and the earlier 43/46-case archives
+remain unchanged. This closes the reported missing-local-import gap
+for static helper imports, not dynamic-import authority, CUDA numerics
+or live ownership. No precision CUDA owner or launch exists. See
+[Precision Import-Closure Correction](#precision-import-closure-correction).
+
+The following19:54 and earlier checkpoints are retained observations,
+not current liveness claims.
+At 19:50:23 the transition aggregate retains 21/54 completed commands
+and 7/18 case decisions: six accepted and one rejected.
+MuonT BF16 and FP32 with five, seven and
 ten Newton-Schulz iterations each pass all five continuation gates
 and 39/39 scalar-loss comparisons at matrix LR 0.04525483392.
-Fused-normalization and matched-null decisions remain pending. Fresh
-19:27 process inspection finds both original owners, the original
+The first fused BF16/five-step case is rejected: boundary22 and
+captured-row/update-work pass, but post-cached-root24 and scalar-loss
+continuation fail.419/2,199update24tensor comparisons fail across
+all eight ranks; three of39scalar-loss comparisons fail.
+See [Fused Five-Step Continuation Rejection](#fused-five-step-continuation-rejection).
+All other fused and matched-null decisions remain pending. Fresh
+19:47:28 process inspection finds both original owners, the original
 terminal waiter, reviewed actual-LR queue waiter and sole Bash monitor
-live. The queue's 19:20:04 observation remains
+live. The queue's 19:35:14 observation remains
 `waiting_for_transition_owners`, with zero of six handoff phases.
-The monitor publishes both journals at 19:15:29 and keeps its
+The monitor publishes both journals at 19:34:05 and its next
+scheduled updater is verified live at19:52. It keeps its
 900-second sleep between refreshes. No complete transition terminal,
 actual-LR GPU launch or production result follows from partial coverage.
 
-A new CPU-only precision-placement screen is implemented: eighteen
+A new CPU-only precision-placement screen completes at19:41:16: eighteen
 explicit five/seven/ten-step schedules compare matched one/two/three
 FP32 prefix versus suffix iterations against homogeneous controls.
-Thirteen focused tests pass at the unchanged tolerance, preserving
-two per-matrix reduction differences as negative evidence. Separate
-archive acceptance is running; no mixed saved-pair measurement is yet
-claimed. A source audit also finds a second-read race in the unlaunched
-compiler-localization loader. Its distinct correction builds controls
-and traces from one authenticated buffer; 24 component and 23 execution
-CPU tests pass. Accepted archives and running GPU sources are unchanged.
+The reviewed source archive passes64CPUcases and fresh archived-entry
+checking. Independent retained verification passes at19:42:28,
+covering all18trials,36exact finite same-input repeats and exact
+reproduction of all six homogeneous controls. Every C/R pair remains
+rejected at the original tolerance. Suffix precision lowers pair error
+versus matched prefix precision in all six comparisons, but no mixed
+output passes its own FP64 finite-polynomial reference. The five-step
+two-BF16/three-FP32 suffix is retained only as an exploratory endpoint
+placement. A source audit's second-read race in the unlaunched
+compiler-localization loader is corrected in this distinct archive.
+Accepted parent archives and running GPU sources are unchanged.
 See [NS Precision-Placement Screen](#ns-precision-placement-screen).
 Wave 12 remains the latest full-budget, large-window analyzed and
 privately SwanLab-verified production wave. Better quality and
@@ -929,8 +1230,17 @@ The new milestones are recorded in
 | Training-path actual-LR original terminal handoff | Distinct predecessor CPU/source accepted at09:53:20; original attempt and follow-ups have failed, no seal issued | Receipt `PVC/run-preparation/ns-training-path-actual-lr-predecessor-cpu/20261119T0953/receipt.json` retains twelve passing archived tests,169 helpers and538 inventory entries. All114 integrated tests pass. Canonical independent terminal, complete54-command/18-case evidence, retained rejections, original owner/waiter/descendant absence and exact restoration remain required before the one-shot seal. Original-owner absence does not supply missing completion evidence; the actual-LR queue stops13:36:09 before all six phases. No GPU execution or production authority. |
 | Training-path actual-LR owner-only adapter preparation | Distinct source candidate and CPU archive accepted; 43 integrated CPU tests pass; execution owner/controller unissued | Candidate `PVC/candidates/ns-training-path-actual-lr-adapter-20261119T1018` changes only `experiment/fused_attribution_owner.py` at 10:19:09. Receipt `PVC/run-preparation/ns-training-path-actual-lr-adapter-cpu/20261119T1020/receipt.json` accepts fourteen archived tests, 171 helpers and 542 inventory entries at 10:21:54; fresh archived checking passes. All 43 integrated numerical/adapter CPU tests pass in 168.93 seconds. All 169 parent helpers, six training files, five numerical readers and 54 actual-LR configurations are preserved. Real unowned trainer/validator invocations refuse before outputs. No predecessor seal, execution owner/controller, GPU binding or launch is issued. |
 | Training-path actual-LR separate execution owner | Distinct CPU/source archive accepted at10:55:01; fresh archived check passes; GPU unissued | Receipt `PVC/run-preparation/ns-training-path-actual-lr-execution-owner-cpu/20261119T1051/receipt.json` accepts53 archived tests in188.76seconds,177 helpers and548 inventory entries. All53 local tests pass in186.89seconds. The accepted adapter candidate and all171 parent helper bytes remain unchanged. Freeze requires an explicit original-terminal seal hash; visible ranks use accepted live hidden-parent proof and identity inventory, without hidden-only checks. No seal, binding, GPU transfer, diagnostic launch or production result. |
-| Mixed-exit-bracket transition diagnostic | Running; 12/54 commands and 3/18 accepted MuonT decisions at November 19 18:30:58 | BF16 five/seven/ten-iteration cases pass all five required gates and 39/39 scalar-loss comparisons each. FP32/five continuous24/interrupted22/resumed24 have execution/cleanup exits 0/0; its case comparison is pending. Exact controller/validator/waiter generations are live at 18:26:22. Complete coverage, independent canonical terminal and exact restoration remain required. |
+| Mixed-exit-bracket transition diagnostic | Terminal `needs_attention` at November 19 19:59:22; 23/54 completed commands and 7/18 decisions | Six MuonT BF16/FP32 five/seven/ten-step controls pass. Fused BF16/five-step continuation rejects; seven-step resumed execution fails before training on ownership-marker scan exhaustion, so no seven-step decision exists. Exact restoration is independently verified at 20:06:15. Original owners and both follow-up waiters are absent; the actual-LR queue stopped with 0/6 phases. The distinct scan-exit successor below preserves this failure; complete successor coverage and terminal remain required. |
+| Missing-environment scan-exit diagnostic | Failed November19 22:03:52; 8/54 commands and2/18 decisions; exact restoration independently verified | BF16/five and seven-step MuonT controls pass all existing gates. Ten-step resumed execution fails before training in the complete ownership scan; its execution/cleanup exits are1/1, not a numerical decision. The original waiter stops22:12:06. Read-only22:12:53 checking verifies owners/descendants absent and exact keeper restoration. No complete terminal, production or cloud result. |
+| Scan-exit actual-LR predecessor reader | Separate CPU34/193-helper archive accepted November 19 21:32:26; archived check passes; waiting for original owners | Pinned file-only reader preserves all four failed coverage summaries and accepted/rejected decisions without tensor rehashing. Read-only 21:33:45 observation finds original controller, validator and waiter live. Numerical/execution archives remain unmerged; no canonical seal, successor execution owner or GPU command is issued. |
+| Scan-exit actual-LR adapter and execution owner | Separate CPU16 adapter and CPU53/203-helper execution archives accepted November19 21:53/21:59; archived checks pass; GPU unissued | Numerical candidate/configuration/reader bytes remain unchanged. The declared execution handoff changes to the accepted scan-exit source and preserves its original numerical bytes as a fixture. All54configs/162commands retain the original schedule and tolerances. The distinct47-case/214-helper queue archive accepts22:05; its required complete predecessor terminal is unavailable. No queue intent, successor seal or GPU launch exists. |
+| Recheck-exit diagnostic | Failed November19 22:59:49; 1/54 commands and0/18 decisions; exact restoration independently verified | CPU136/source acceptance and separate seal/checks pass before acknowledged launch. Sustained marked-helper churn exhausts the original three scans in the interrupted command. Execution/cleanup exits1/1 remain; waiter stops23:09:30. Fresh23:11:03 checking verifies original owners/waiter absent and exact restored keeper. No complete terminal or numerical case acceptance. |
+| Serialized whole-ownership diagnostic | CPU141 accepted; acknowledged launch November19 23:51:10; failed23:54:13 with0/54 commands and0/18 decisions | First continuous command fails before training on the new30-second lock wait. No deadline, scan-attempt or tolerance change follows. Controller records restoration23:54:30; independent23:56:15 checking verifies owner/validator-marker absence and exact keeper3598689 on the original eight A100s. Whole-inspection serialization is insufficient within this bound. No optimizer-quality or cloud result. |
+| Serialized read-only terminal waiter | CPU24/191-helper archive accepted November19 23:52:31; stopped `needs_attention` November20 00:09:18 | Waiter3598600/start943780809 stops on its original900-second schedule without a canonical terminal claim. Fresh00:10:16 checking finds its consumed handle and both original owners absent, with the same exact restored keeper. The earlier23:54:17 observation remains historical. No restart or new GPU authority. |
+| Query-serialized ownership diagnostic | CPU142/193-helper archive accepted November20 00:11:29; controller/validator acknowledged00:24:51/00:27:05; validating3/54commands0/18decisions | Source authentication and acknowledgment wait remain outside the unchanged30-second lock; hostname/query/complete-scan and final-generation statements retain exact order inside. First MuonT BF16/five-step lower-LR continuous24/interrupted22/resumed24 commands have zero execution/cleanup exits. The first numerical case comparison remains pending. No production wave or cloud result. |
+| Query-serialized read-only terminal waiter | CPU24/195-helper archive accepted November20 00:26:45; acknowledged00:27:52 | Waiter3638945/start943982783 verifies both exact original owners live at00:27:57,0/54commands0/18decisions, then retains its900-second schedule. Complete coverage, clean execution/cleanup, actual owner/descendant absence and exact keeper restoration remain required before its canonical terminal. No keeper transfer or new GPU authority. |
 | Transition actual-LR successor | Adapter and execution CPU/source archives accepted; independent archived-entry check passes by November 19 18:30; GPU unissued | The distinct candidate retains 54 configurations/162 commands and unchanged numerical gates. Execution receipt `PVC/run-preparation/ns-training-path-transition-actual-lr-execution-cpu/20261119T1822/receipt.json` accepts 53 unique tests in 255.05 seconds, 191 helpers and 565 inventory entries at 18:27:09. All 179 accepted adapter helpers and candidate bytes remain unchanged. Freeze and GPU launch additionally require the complete transition terminal and caller-bound predecessor seal. |
+| Precision-placement CUDA component | Distinct 49-case CPU/source archive accepted November 19 20:31:01; CUDA unissued | Receipt `PVC/run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/receipt.json` retains 163 helpers and 531 inventory entries; fresh archived checking and 113 integrated CPU tests pass. Missing transitive static imports are rejected without relying on sibling existence. An independently accepted exclusive owner, completed predecessor gates and compiled/graph CUDA evidence remain required. |
 | Start-accuracy predecessor evidence seal | One-shot seal completed at 19:53:29; exact original restoration verified | Archived sealer hashes 17 canonical evidence files, including both full retained root-stage output files, and verifies original owners/descendants absent and exact healthy keeper `1547502/933501005`, ranks `1547638` through `1547645`, on all eight original A100s. Receipt: `PVC/run-preparation/root-start-predecessor-seal-20261118.json`. Subsequent checks authenticate canonical file identities and small receipt hashes; the seal grants no historical attribution or production acceptance. |
 | Proposed Waves 13-15, full-budget attribution LR study | GPU-denied after continuation failure; no production candidate, release or launch | Three LR waves each compare MuonT, fused normalization and identity-outer matched null, with balanced assignments across `.9`/`.80`/`.144` and `.139` untouched. Controller/preparer/Bash-monitor implementation remains mutable and unissued. Saved-state CPU diagnosis, a distinct corrected candidate and complete unchanged-tolerance GPU validation are required before production acceptance. Each successor also waits for preceding complete histories, large-window analysis, cloud verification and exact restoration; settings and gates are in "Full-Budget Attribution Wave Plan" below. |
 
@@ -5873,6 +6183,14 @@ Normalization is performed once. Orientation, expression ordering,
 coefficients `(3.4445, -4.7750, 2.0315)`, `eps=1e-5` and
 `rtol=1e-5`, `atol=1e-6` remain unchanged.
 
+For each batch matrix, initialize `X = FP32(U)/(||FP32(U)||_F+eps)`,
+then transpose if rows exceed columns. With scheduled product `P_i`,
+each iteration evaluates `A = P_i(X, X^T)`, then
+`X = a*X + P_i(b*A + c*P_i(A,A), X)`. Return the original
+orientation in FP32. `P_i` is FP32 batched multiplication, or
+batched multiplication of operands rounded to BF16 and restored to
+FP32. No extra renormalization occurs between iterations.
+
 Before execution, fix the comparison rule: compare prefix and suffix
 at the same step count and FP32-product count, reporting C/R relative
 Frobenius error and worst-matrix error alongside each output's own
@@ -5917,6 +6235,724 @@ are independently verified. A useful placement must still justify its
 own GPU protocol and actual-configuration continuation checks before
 fair full-budget LR tuning, five large shared-token windows, verified
 private histories and fresh paired seeds.
+
+At 19:31:36 the first complete archive passes60cases in144.38seconds
+and records158helpers/526inventory entries. Independent review
+withholds measurement: loaded helper origins were not checked by
+both public entry points, verification omitted the published replay
+report, and subprocess/XML failures could omit a structured receipt.
+This archive remains preserved and unlaunched. The correction adds
+entry/helper-origin checks before accepted-evidence reads, reconstructs
+the complete replay report including saved-output comparisons and
+checks scope/tolerance, and retains timeout/start/XML failures.
+Four boundary regressions bring focused coverage to17passing cases
+in10.36seconds.
+
+The distinct reviewed archive passes64cases in153.41seconds and is
+accepted at19:37:53:
+`PVC/run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/receipt.json`.
+It retains158helpers/526inventory entries, with only the two declared
+parent corrections and three new helpers. Fresh archived-entry
+checking passes by19:39. Independent code re-review clears all three
+findings; full public-verifier tampering, separate subprocess-start
+failure and malformed-XML regressions remain coverage gaps.
+The CPU saved-pair measurement is issued from this archive at19:39;
+its complete eighteen-schedule result and independent verification
+remain pending. No CUDA or optimizer acceptance follows.
+The original single Bash monitor publishes both journals at19:34:05.
+At19:34:40 GPU coverage is20/54commands and6/18decisions; the first
+fused BF16/five-step interrupted22 command completes, while its
+resumed24 and comparison remain pending.
+
+#### Precision-Placement CPU Result
+
+The archived measurement completes with integer-zero exit at
+19:41:16. Independent verification completes at19:42:28, rederiving
+all eighteen trials' output hashes, full replay reports, saved-output
+comparisons, C/R and repeated C/R comparisons, own-reference errors,
+per-matrix metrics and geometry from retained tensors. All six
+homogeneous controls reproduce their prior full-batch outputs exactly;
+all36same-input repeat comparisons are exact finite.
+Evidence:
+`PVC/run-preparation/ns-precision-placement-saved-pair-20261119T1940/result.json`
+and `retained-verification.json`.
+
+| Steps | FP32 Iterations | Prefix C/R Error | Suffix C/R Error | Worst-Matrix Suffix Error |
+| --- | ---: | ---: | ---: | ---: |
+| 5 | 1 | `0.00912089` | `0.00406587` | `0.00652437` |
+| 5 | 2 | `0.00844020` | `0.000458246` | `0.000761564` |
+| 5 | 3 | `0.00614314` | `0.0000349660` | `0.0000897796` |
+| 7 | 1 | `0.0215829` | `0.0180140` | `0.0215898` |
+| 7 | 2 | `0.0209555` | `0.0123973` | `0.0162282` |
+| 7 | 3 | `0.0188395` | `0.00548877` | `0.00897795` |
+
+Errors are relative Frobenius differences between continuous and
+resumed inputs' outputs. All eighteen full-batch pairs fail
+`rtol=1e-5`, `atol=1e-6`; the homogeneous five/seven-step FP32
+pair errors remain `1.00113e-5` and `1.95859e-5`.
+Suffix placement reduces pair error relative to its matched prefix
+by2.24/18.42/175.69times at five steps and1.20/1.69/3.43times at
+seven steps. This result is limited to one historical occurrence
+and CPU operand emulation.
+
+The five-step two-BF16/three-FP32 suffix uses six BF16-operand and nine
+FP32 products. Its771,245/4,194,304 pair elements fail the original
+pointwise tolerance. Its continuous/resumed own-reference comparisons
+also fail in3,530,584/3,529,756elements, with relative errors
+`0.000258459 / 0.000256545`. By contrast, homogeneous five/seven-step
+FP32 outputs pass their own references. Every mixed schedule fails
+both own-reference comparisons. The suffix's continuous mean cosine
+to the partial polar is0.9513715, close to homogeneous five-step FP32,
+but cosine alone hides its pointwise errors and does not measure
+optimizer loss. Seven-step three-FP32 suffix retains0.9803958mean
+cosine yet has much larger pair/reference errors.
+
+Each cosine is the whole-matrix Frobenius inner product of the
+output with its source's FP64 SVD partial polar, divided by the
+product of their Frobenius norms; the reported mean weights all
+sixteen batch matrices equally. The partial polar replaces non-null
+singular values by one, with null directions set to zero at
+`sigma <= eps_fp64*max(rows,columns)*sigma_max`.
+
+Decision: the screen meets its CPU stopping condition. Precision at
+the suffix is worth retaining as a bounded numerical hypothesis;
+none of these schedules is a continuation correction. Do not enlarge
+the current running matrix or alter accepted controls. After the
+current original and actual-LR diagnostics complete with canonical
+terminals and exact restoration, a separately accepted CUDA protocol
+may compare the five-step two-BF16/three-FP32 suffix with its reverse
+placement and homogeneous five-step BF16/FP32 and ten-step BF16 controls.
+Require two opposite-order fresh processes, full original source
+layouts, separate training-eager and diagnostic-compiled controls,
+call/capture-executed/replay/repeat evidence, raw event-timing samples,
+independent retained reconstruction and exact cleanup/restoration.
+Compilation and graphs remain enabled. Preserve the original saved
+ten-step BF16 C/R rejection and the completed fully compiled NS
+diagnostic's failed historical-control and pair predicates; source
+authentication or new owner acceptance cannot change those outcomes.
+Original tolerances stay unchanged. This proposed mixed-schedule
+CUDA successor is not implemented, accepted, queued or launched.
+The corrected compiler-localization numerical archive is preserved;
+its exclusive owner and new transition-queue binding remain required.
+Whole-training efficiency, fair LR-tuned quality, fresh paired seeds,
+five large shared-token windows and verified private SwanLab histories
+are still required for an optimizer improvement claim.
+
+#### Fused Five-Step Continuation Rejection
+
+November19 19:50:23, Asia/Shanghai: the original transition aggregate
+publishes its first fused result, `outer_leftdiag_fused_ns_tpu_q5_full_lr_lower`,
+at matrix LR0.04525483392. Continuous24/interrupted22/resumed24
+complete with successful execution and cleanup, but the numerical
+case is rejected. The full5,120-update LR schedule, compiled
+surrounding training helpers, cached-root graphs and original
+`rtol=1e-5`, `atol=1e-6` remain unchanged.
+
+Boundary22passes2,127tensor comparisons with zero failures and zero
+scalar/structure differences. Post-cached-root24fails419/2,199tensor
+comparisons, spanning all eight ranks, with zero scalar/structure
+differences. Rank failure counts are248/27/27/24/25/23/23/22.
+Update23is diagnostic only:120/2,167tensor comparisons fail and
+sixteen graph-state flag differences remain recorded. Captured
+output rows, update equations and matched work pass their gate.
+Of39scalar-loss comparisons,36pass and three update24evaluations
+fail:
+
+| Metric | Resumed | Continuous | Resumed Minus Continuous |
+| --- | ---: | ---: | ---: |
+| Selection Loss | `6.820275175` | `6.820408647` | `-0.000133472` |
+| Held-Out DCLM | `6.720488783` | `6.720626453` | `-0.000137670` |
+| Held-Out StarCoder | `8.254213303` | `8.254301800` | `-0.0000884964` |
+
+These signs are resumed-versus-continuous reproducibility differences;
+they do not compare optimizer quality or establish a loss improvement.
+The five-step BF16 budget has not corrected this fused continuation
+case. MuonT's same-mode/same-budget control passes, but this partial
+matrix does not locate the fused discrepancy's upstream source.
+Retain the rejection and finish all18decisions before a canonical
+terminal. The separately reviewed actual-LR queue must preserve
+rejected cases and wait for exact restoration; its readiness is not
+granted by successful process exits. Full-budget attribution Waves13-15
+remain withheld. No production history or SwanLab upload follows.
+
+#### Precision-Placement CUDA Component Draft
+
+November19 19:54: the proposed five-schedule CUDA diagnostic now has
+local numerical-map and file-backed execution/reconstruction code.
+The maps retain the unmodified pinned routine for homogeneous
+five-step BF16/FP32 and ten-step BF16 controls. Two changed five-step
+maps place three FP32 iterations after or before two BF16-operand
+iterations. Each iteration's three products share its explicit
+mode. Default CUDA products use pinned BF16 operands with FP32
+accumulation; CPU product injection is restricted to synthetic
+test emulation.
+
+Each of two fresh opposite-order processes declares120phase files:
+five schedules, four repeated-source calls and six phases
+(`pinned_eager`, `compiled_call`, `capture_executed`, `replay`,
+`replay_repeat`, `timed_final`). Fifty raw CUDA-event replay samples
+are retained per compiled call. Eager training-path controls remain
+separate from fully compiled diagnostic controls. The snapshot
+called capture-executed follows the first explicit graph replay.
+Reconstruction authenticates files and rederives source pairs,
+historical outputs, own-FP64 finite-polynomial errors, same-input
+repeats, graph drift and event statistics, preserving every failure.
+Kernel-event timing excludes compile, capture, transfers and training.
+
+Focused tests and independent review are running; this draft has
+no accepted source archive, CUDA/Inductor evidence, exclusive owner,
+new predecessor binding or launch. The current transition and
+actual-LR queue continue unchanged. The draft cannot authorize CUDA
+initialization without a separately accepted caller that verifies
+physical-device ownership before initialization, between calls and
+after reconstruction. CPU/source acceptance and exclusive restoration
+must precede execution; later training integration still needs original
+continuation gates and full-budget quality-cost comparisons.
+
+At19:56:23, a distinct CPU/source archive accepts the numerical
+maps and execution/reconstruction component:
+`PVC/run-preparation/ns-precision-placement-execution-cpu/20261119T1957/receipt.json`.
+All43staged cases pass13.27seconds:22map cases and21file-backed
+execution cases. Fresh archived-entry checking passes by19:58.
+The archive retains all158reviewed parent helpers byte-for-byte
+and adds five helpers, giving163helpers/531inventory entries.
+The preparer derives the authenticated parent preparation AST,
+changing only successor parent, helper/test lists, counts, status
+and scope import; no inherited helper is overwritten.
+Required source lint passes. Independent review and the broader
+numerical regression suite remain pending at this checkpoint.
+No CUDA/Inductor execution, exclusive owner, new predecessor seal,
+GPU handoff or training acceptance is inferred.
+
+CPU tests cover exact pinned FP32 controls on square/tall/wide
+FP32/BF16 inputs, explicit mixed recurrence parity with CPU-only
+operand emulation and real Dynamo compilation using the CPU eager
+backend. File-backed tests cover120-phase round trips, opposite
+process pairing, partial/changed/aliased inventories, source/storage
+mutation, timed-final nonfinite drift, raw-event arithmetic, owner
+denial before CUDA and public reconstruction of rehashed report
+substitutions. These tests do not exercise CUDA BF16 accumulation
+or Inductor lowering.
+
+The original transition's19:55:35aggregate has22/54commands and
+7/18decisions:6accepted and1rejected. The fused BF16/seven-step
+continuous24command completes; its remaining trajectories and
+decision remain pending. Fresh19:56:59process inspection finds both
+original owners, both waiters and the sole Bash monitor live.
+Queue19:50:25remains `waiting_for_transition_owners`,0/6phases.
+The existing monitor publishes both journals19:52:49 and continues
+its900-second sleep. The completed CPU result and partial
+continuation rejection supply no full-budget loss window or new
+SwanLab history. Wave12remains the latest analyzed/verified
+production wave; the full efficiency/performance objective is open.
+
+#### Precision CUDA Review Checkpoint
+
+November19 20:13, Asia/Shanghai: a distinct corrected CPU/source
+archive is retained at
+`PVC/run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/receipt.json`,
+accepted20:02:22.675480. It passes46staged cases in32.67seconds,
+retains163helpers/531inventory entries and changes none of the
+158accepted parent helpers. The original43-case archive remains
+preserved. A fresh hidden-CUDA archived-origin `--phase check`
+exits zero by20:13; this checks that exact46-case receipt and archive.
+
+The preceding integrated CPU suite passes107cases in159.51seconds,
+and the corrected focused execution suite passes24cases in14.60seconds.
+Two independently identified defects are corrected: phase loads now
+clone output inside the bound-file context rather than escaping
+mmap-backed storage, and the imported release-owner hasher is mandatory
+and origin-checked. Regression cases cover backing-file overwrite and
+omitted/rebound hasher sources. Source identities, commands and test
+XMLs are retained in DETAILS.
+
+Independent review still withholds CUDA execution: closure discovery
+in `ns_precision_placement_execution.py` queues an imported helper
+only if its sibling already exists. A transitive local dependency
+missing from both the helper directory and inventory can therefore
+escape that origin check. The synthetic test-closure builder repeats
+the same omission. Next correction must distinguish declared external
+imports from required local imports and reject missing local helpers,
+with a real missing-transitive regression before a new acceptance
+archive and review. The current46-case acceptance is retained, not
+rewritten or promoted into complete source-origin coverage.
+
+No exclusive owner, predecessor seal, CUDA/Inductor execution,
+training continuation, full-budget quality-cost result or SwanLab
+history is issued. The two original continuation waiters have stopped
+after the transition failure described below; the precision successor
+cannot bypass those incomplete predecessor gates.
+
+#### Precision Import-Closure Correction
+
+November 19 20:35, Asia/Shanghai: the missing-transitive-import
+review finding is corrected in a distinct CPU/source archive:
+`PVC/run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/receipt.json`.
+Acceptance is recorded at 20:31:01.747039; 49 staged tests pass
+in 32.68 seconds, with 163 helpers and 531 inventory entries.
+The 22 map tests and 27 execution/reconstruction tests retain the
+original numerical tolerances. A fresh hidden-CUDA invocation of
+the archived preparer with `--phase check` passes by 20:32.
+The integrated compiler-localization, precision-study, map and
+execution suite passes 113 cases in 165.57 seconds.
+
+The execution binder walks authenticated static imports throughout
+the required transitive helper closure. Declared standard-library,
+Torch, Triton and NumPy imports are external; every other imported
+module requires an authenticated local helper regardless of whether
+its file exists. Same-package relative imports bind their local
+sources as well; parent-relative imports are refused. Fresh-process
+regressions append a deferred import to an authenticated transitive
+helper, rehash that helper, and verify refusal for an absent file/hash,
+a present file without its hash, and a missing relative dependency.
+Existing valid package/flat import branches remain accepted.
+This is static-import coverage, not a claim that arbitrary dynamic
+imports are authenticated by that walk.
+
+Compared with the preceding 46-case archive, only execution binding,
+its regression tests and the preparer's expected test count change.
+All 158 reviewed CPU-study parent helpers remain byte-for-byte exact,
+as do the precision maps and their tests. The earlier 43/46-case
+archives and the first failed 49-case test attempt remain preserved.
+Receipt, archive, source and XML hashes are retained in DETAILS.
+Scoped source lint and `git diff --check` pass.
+
+The next experiment remains the separately owned five-schedule,
+two-opposite-order CUDA diagnostic already specified above, retaining
+eager/compiled controls, graph phases and full saved batches. It is
+not launched: the failed training-path predecessor lacks complete
+54-command/18-decision terminal evidence, and no precision execution
+owner has been accepted. First prepare a distinct ownership-only
+successor that resolves missing-environment reads using coherent
+directory absence or identity-bound whole-process exit followed by
+a complete rescan. Preserve the failed 23/54 diagnostic, its fused
+rejection, stopped waiter/queue identities and exact restoration.
+Do not restart consumed one-shots, increase retries as a substitute
+for exit proof, relax tolerances or alter training mathematics.
+
+The original Bash journal monitor publishes both documents at
+20:30:47 and resumes `sleep 900` without a restart. Wave 12 remains
+the latest full-budget, large-window analyzed, privately verified
+SwanLab wave. No new training result, whole-training efficiency
+claim, cloud import or optimizer superiority follows from CPU/source
+acceptance; the research objective remains active.
+
+#### Transition Partial Failure And Restoration
+
+November19 20:06, Asia/Shanghai: the distinct original-training-path
+mixed-exit-bracket diagnostic has stopped, preserving its frozen
+candidate `PVC/candidates/ns-training-path-exit-transition-closure-corrected-20261119T1700`
+and binding `PVC/run-preparation/ns-training-path-exit-transition-20261119-binding.json`.
+Executed matrix LR remains0.04525483392, with the full5,120-update
+schedule, continuous24/interrupted22/resumed24, eight ranks,
+original numerical readers, compiled surrounding helpers, CUDA
+graphs and `rtol=1e-5`, `atol=1e-6` unchanged.
+
+Aggregate `PVC/run-preparation/validation-ns-training-path-exit-transition-20261119-gpu.json`
+stops at19:59:22 with23/54 authenticated complete commands,
+7/18 decisions, six accepted MuonT controls and one rejected fused
+BF16/five-step case. The fused BF16/seven-step continuous24 and
+interrupted22 trajectories both complete with execution/cleanup0/0.
+Its resumed24 command, PID3313401, fails at19:59:21 before model
+construction or training. No seven-step continuation decision,
+remaining fused/null result or complete matrix is claimed.
+
+The rank0 traceback identifies `complete_scan_exhausted` in the
+issued ownership helper after three marker-scan attempts, retaining
+unstable PID3313593. Its failure-attribution snapshot says the
+process was not previously confirmed marked; a later read finds
+its `/proc` files absent. Those separate reads cannot establish
+the process's coherent marker identity or the failure's cause.
+The resumed command records execution/cleanup1/1 and marked
+descendants absent. The validator's generic
+`NS full-model command, exact process generation, cleanup or log identity differs`
+therefore reflects a nonzero-exit receipt here, not demonstrated
+command/source/log tampering or an optimizer numerical rejection.
+The full failure log and execution receipt remain preserved at
+`PVC/validation/ns_training_path_transition_20261119/outer_leftdiag_fused_ns_tpu_q7_full_lr_lower_resumed.log`
+and its `.execution.json` companion.
+
+The controller records validator/cleanup1/1 and keeper restoration0
+at19:59:40. Independent fresh checking at20:06:15 uses the exact
+issued, binding-authenticated helper and verifies both original
+owners, all23 completed-command handles and the failed command
+absent. All validator/command markers are absent. Restored
+keeper3313700 and ranks3313868-3313875 retain their recorded
+generations and exclusively occupy the same eight A100 UUIDs.
+Controller-marker matches belong only to that exact restored keeper.
+Observation:
+`PVC/run-preparation/endeavor-transition-failure-restoration-observation-20261119T2006.json`.
+This verifies restoration, not full numerical reconstruction.
+
+The original read-only terminal waiter records `needs_attention`
+at20:04:58 because the owners exited without complete accepted
+terminal prerequisites. Its error wording does not overturn the
+separately verified physical restoration. The reviewed actual-LR
+queue records `needs_attention` at20:05:59 with0/6 phases: its
+external reader refuses the absent canonical predecessor terminal.
+Both processes are absent at the fresh check, and no terminal,
+predecessor seal, actual-LR freeze or successor GPU launch is issued.
+The original Bash journal monitor remains live and keeps its
+exclusive900-second loop.
+
+Next experiment remains gated: preserve the consumed failure and
+the six accepted/one rejected numerical decisions, then prepare a
+distinct ownership-only correction if justified by coherent process
+evidence and CPU regressions. Do not relax numerical tolerances,
+reinterpret failed cases as accepted, restart this one-shot identity,
+or allow the old actual-LR queue to proceed on restoration alone.
+Full18-case coverage and independent terminal reconstruction are
+still required before a new actual-LR handoff. The precision-placement
+CUDA component remains unlaunched. Wave12's five536,870,912-token
+windows and exact shared evaluations remain the latest full-budget
+analysis; no new full-resolution SwanLab history exists from this
+failed diagnostic. Better quality and efficiency than fairly tuned
+MuonT remain unestablished.
+
+#### Missing-Environment Scan-Exit Successor
+
+November 19 21:00, Asia/Shanghai: the distinct namespace
+`ns-training-path-scan-exit-20261119` passes complete CPU/source
+acceptance at 20:56:19. Candidate:
+`PVC/candidates/ns-training-path-scan-exit-reviewed-20261119T2058`.
+Receipt:
+`PVC/run-preparation/ns-training-path-scan-exit-20261119-cpu/reviewed-20261119T2058/receipt.json`.
+All 129 cases pass in 18.54 seconds: 45 owner lifecycle, 36 inherited
+handoff, 33 missing-environment lifecycle and 15 source/preservation
+cases. The archive contains 178 helpers and 547 inventory entries;
+fresh archived-origin checking passes at 20:58.
+
+Hypothesis: the three-rescan failure can be resolved by waiting for
+coherent whole-process teardown when a scanned process's environment
+file disappears. The new handler pins a direct process directory with
+`O_DIRECTORY|O_NOFOLLOW`, brackets its exact ownership through
+descriptor-relative kernel-stat reads, and requires empty command,
+zero resident memory and kernel-exit evidence. It accepts verified
+directory disappearance or the unchanged inherited whole-process
+drain when an empty environment becomes readable, then repeats the
+complete scan. Missing live files, directory aliases/replacement,
+PID reuse, identity drift and surviving threads remain refusals.
+The earlier transient PID's marker ownership is still unknown.
+
+The original mixed-bracket empty-command sampling, pidfd identity,
+whole-process drain and timeout remain unchanged. The fresh diagnostic
+retains eighteen cases and 54 eight-rank commands at matrix LR
+0.04525483392, using continuous24/interrupted22/resumed24 on the
+original 5,120-update schedule. Training/configuration bytes,
+numerical readers, `rtol=1e-5`, `atol=1e-6`, compilation and CUDA
+graphs are unchanged. Prior accepted archives and consumed one-shots
+are preserved.
+
+The first staging archive at
+`PVC/run-preparation/ns-training-path-scan-exit-20261119-cpu/20261119T2100`
+retains 129 passing cases but is `needs_attention` because source
+changed during staging. It supplies no accepted source or launch.
+The reviewed archive above is separate. The new preservation seal at
+`PVC/run-preparation/ns-training-path-scan-exit-predecessor-seal-20261119.json`
+authenticates the failed transition's 23/54 commands, 7/18 decisions,
+six accepted controls, fused five-step rejection, failed seven-step
+resumed command, stopped eleven-observation terminal waiter and
+zero-phase actual-LR queue. All older failures and checkpoint identities
+remain included. Seal creation passes at 20:59; independent seal
+checking, freeze, keeper transfer and GPU launch remain pending.
+
+This is an ownership-execution gate. Complete diagnostic coverage and
+an independently reconstructed terminal remain required before a
+distinct actual-LR handoff. Precision CUDA placement, full-budget
+waves, shared large-window comparisons and verified private SwanLab
+uploads remain separate next steps. Wave 12 is still the latest
+complete analyzed/uploaded wave, and better quality and efficiency
+than fairly tuned MuonT remain unestablished.
+
+November 19 21:09 launch milestone: independent archived seal checking
+passes before freeze. The new binding at
+`PVC/run-preparation/ns-training-path-scan-exit-20261119-binding.json`
+records freeze at 21:02:50; the issued controller's `--phase check`
+passes. Controller acknowledgment at 21:07:10 and direct validator
+acknowledgment at 21:08:36 are recorded in
+`PVC/controllers/ns-training-path-scan-exit-20261119/controller.json`
+and `PVC/run-preparation/ns-training-path-scan-exit-20261119-state.json`.
+The controller holds the original node/allocation-manager locks and
+records exact predecessor keeper release complete. The first of
+54 commands runs continuous24 for
+`muont_ns_tpu_q5_full_lr_lower_0p5m_seed0.json`, retaining the original
+schedule and numerical gates. Fresh process inspection at 21:09
+finds both original owners live and the old keeper absent.
+
+`tracking/ns_training_path_scan_exit_reporting.py` binds the accepted
+CPU receipt, preservation seal, frozen binding and acknowledged
+controller by digest. The original Bash monitor publishes both journals
+at 21:07:43 and keeps its 900-second sleep. Its next cycle will
+include the distinct report. Five focused report/split/concurrent-edit
+regressions pass in 23.32 seconds; scoped source/content lint passes,
+with the inherited journal-size exception unchanged. The first local
+test command fails before collection on a missing guard module path;
+the corrected guarded run above is separate. A new read-only terminal
+waiter is being CPU-archived against this launch; it is not yet accepted
+or started. Complete diagnostic results, independent terminal,
+actual-LR handoff, precision CUDA work, full-budget experiments and
+verified SwanLab uploads remain pending.
+
+November 19 21:19 waiter and monitoring milestone: the separate archive
+`PVC/run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/receipt.json`
+accepts 24 cases in 4.51 seconds at 21:09:11 and retains all 178
+issued helpers unchanged, adding only the waiter and its test.
+Fresh archived checking passes before acknowledgment at 21:11:58
+as `3412036/942807401`. Its saved 21:12:03 observation finds both
+original owners exact/live and waits; no terminal child is issued.
+The waiter checks every 900 seconds, invokes only the original
+canonical verifier after complete coverage and clean restoration,
+and retains rejected cases and failed one-shot evidence.
+
+The aggregate at 21:17:00 records 2/54 commands and 0/18 decisions.
+The first continuous24 receipt records execution/cleanup 0/0 at
+21:11:08; the interrupted22 command is also admitted. Resumed24
+is active. The eight training ranks occupy the original A100 UUIDs
+at 21:16. These are bounded correctness trajectories; no shared
+large training window, full-budget loss comparison or cloud history
+is available from this diagnostic.
+
+The new saved-waiter report is included in both journals. Manual
+refresh completes at 21:18 with report time 21:14:07. It preserves
+an explicit diagnostic-evidence refusal because mutable receipts
+change during inspection; coherent progress is retried by the sole
+existing Bash monitor. The waiter projection authenticates its
+archive, acknowledged generation and saved observation. The original
+monitor remains live, holds its exclusive lock and sleeps 900 seconds.
+The 328-case integrated journal suite passes in 151.63 seconds;
+six final scan-exit/waiter/split/concurrent regressions pass in
+29.77 seconds. The final integrated rerun passes 329 cases in
+161.70 seconds by 21:20. Scoped source/content lint and Bash syntax pass.
+Full journal lint reports only the inherited size limit, detailed
+in DETAILS; evidence and historical results are not removed.
+
+Next gates remain full eighteen-case coverage and independent
+terminal reconstruction, then a distinct actual-LR handoff retaining
+all rejections. Precision CUDA placement and full-budget studies
+still require their own accepted execution gates. Completed waves
+will continue to receive shared large-window analyses and separately
+verified full-resolution private SwanLab uploads. No optimizer
+quality/efficiency improvement over fairly tuned MuonT is established.
+
+November 19 21:21 final publication verification: both journals retain
+the accepted diagnostic, distinct acknowledged waiter and dated
+two-command/zero-decision observation. The final 329-case suite is
+recorded at
+`PVC/run-preparation/test-endeavor-scan-exit-final-integrated-20261119T2117.xml`.
+Source/content lint and `git diff --check` pass. Controller, direct
+validator, terminal waiter and sole Bash monitor remain live; the
+monitor's original sleep child remains in its 900-second interval.
+No required foreground check/test session remains. Complete
+diagnostic decisions, successor experiments, large-window outcomes
+and verified new SwanLab histories remain open.
+
+November 19 21:35 diagnostic and handoff milestone: the aggregate at
+21:31:55 records 3/54 completed commands and 1/18 case decisions.
+`muont_ns_tpu_q5_full_lr_lower` accepts at matrix LR `0.04525483392`
+on continuous24/interrupted22/resumed24 with the original 5,120-update
+schedule. All five protocol gates pass, as do all 39 scalar-loss
+comparisons. Tensor comparison failures are zero across all eight
+ranks at updates 22/23/24. The first-resumed update23 checkpoint
+retains its recorded `cached_root_graph_active` scalar differences
+for groups `d` and `f`; this endpoint remains diagnostic-only under
+the unchanged acceptance protocol. No numerical tolerance, compilation
+or CUDA-graph requirement is relaxed. Supporting aggregate:
+`PVC/run-preparation/validation-ns-training-path-scan-exit-20261119-gpu.json`.
+This is a bounded correctness result, not a full-budget loss comparison
+or a quality/efficiency outcome.
+
+The distinct reader namespace
+`ns-training-path-scan-exit-actual-lr-predecessor-20261119`
+is independently CPU/archive accepted at 21:32:26:
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-predecessor-cpu/staged-20261119T2132/receipt.json`.
+All 34 archived cases pass, with 193 authenticated helpers. The
+closure retains the 180-helper issued waiter archive, pinned reporter
+parents, both prior predecessor implementations/preparers/tests and
+three new reader/preparer/test files. Staging and acceptance are
+separate phases; fresh archived-origin checking passes. Tests exercise
+live/zombie/incomplete owners, real reaped CPU children, incomplete or
+rebound terminal evidence, unchanged failed checkpoint identities,
+one-shot publication and changed-after-test source refusal. All four
+failed coverage summaries are authenticated: original44/14, recovery2/0,
+exit-drain6/2 and transition23/7. Rejected decisions remain retained.
+No tensor payload is freshly read or hashed by the predecessor.
+
+The numerical and execution archives have distinct
+`owned_output_handoff.py` identities. The source plan records this
+conflict rather than merging or replacing either accepted archive.
+The read-only observation at 21:33:45 publishes
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-readiness-20261119T2134.json`
+with `ready: false` and `waiting_for_scan_exit_owners`. Original
+controller, validator and terminal waiter are exact/live; all three
+completed command parents are absent. No canonical handoff seal,
+execution-owner/controller binding, allocation transfer or successor
+GPU command is issued. Full54-command/18-decision coverage, exact
+restoration and the existing independent waiter terminal remain
+required before sealing.
+
+The original Bash monitor successfully publishes a coherent
+three-command/zero-decision projection at 21:26:38 and resumes
+`sleep 900` with its exclusive lock. The waiter records its second
+observation at 21:27:04. Fresh 21:35 inspection keeps all three
+original owners and the sole monitor live. Both journals are archived
+under the common update lock before this milestone. Required scoped
+source lint and `git diff --check` pass. The broader inherited handoff
+and journal suite finishes with 422 passes in 191.77 seconds:
+`PVC/run-preparation/test-ns-scan-exit-lr-predecessor-integrated-20261119T2134.xml`.
+All source/content lint checks pass; full document lint reports only
+the retained 500KiB journal-size rule. Final verification is published
+November 19 21:38 under the shared lock, preserving the accepted source
+and all prior evidence. Wave 12 remains the latest
+full-budget analyzed and privately SwanLab-verified wave. Actual-LR
+gates, precision CUDA placement, new full-budget experiments, shared
+large-window analysis and verified full-resolution uploads remain open.
+
+November 19 21:39 progress update: the 21:36:56 aggregate admits
+4/54 commands and retains the one accepted five-step MuonT control.
+The fourth command is `muont_ns_tpu_q7_full_lr_lower` continuous24;
+its execution receipt at 21:34:29 records integer-zero execution
+and cleanup with marked descendants absent. Interrupted/resumed
+seven-step trajectories and their case decision remain pending.
+Original controller, validator, independent waiter and sole Bash
+monitor are live at 21:38; the monitor retains its 900-second sleep.
+No handoff seal, successor GPU launch, new full-budget result or
+cloud upload is inferred. Both journals are archived under the
+shared lock before this update; accepted sources remain unchanged.
+
+November 19 21:55 actual-LR adapter milestone: the distinct candidate
+`PVC/candidates/ns-training-path-scan-exit-actual-lr-adapter-20261119T2144`
+is prepared from the accepted numerical adapter. Its CPU archive at
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-adapter-cpu/20261119T2146/receipt.json`
+accepts all16tests at21:53:00, with185helpers and559inventory entries.
+The local corrected suite passes16cases in354.68seconds; the archived
+suite passes16cases in359.15seconds. Fresh archived-origin checking
+passes. The original trainer, NS numerical readers, all54actual-LR
+configurations,162continuous/interrupted/resumed commands, original
+5120-update schedule, tolerances, compilation and cached-root graphs
+are unchanged.
+
+The sole changed inherited helper is `owned_output_handoff.py`, now
+the separately accepted scan-exit version. The original numerical
+version is retained as a fixture. The source closure includes the
+accepted missing-environment handler and transitive pinned derivation
+parents; the conflicting numerical and canonical-terminal archives
+are not merged. Real unowned trainer/validator invocations refuse
+before outputs. Rehashed training/configuration/metadata changes,
+changed parent sources and incomplete archive evidence remain
+refusals. The first local test run retains16fixture errors from an
+incorrect copied handler pin; it supplies no acceptance. The corrected
+source uses the independently checked accepted handler digest.
+
+Distinct execution-owner/controller/test sources are now implemented
+and bound to this accepted adapter receipt. Their CPU archive is
+running and supplies no accepted execution or GPU authority yet.
+The new queue sources are distinct from all consumed predecessors;
+87selected real lifecycle tests pass after correcting an inherited
+sealer-filename reference. Five complete-archive tests remain deferred
+until the required execution receipt exists, and are not counted as
+covered. Earlier failures remain retained. The queue is unbound to an
+execution acceptance, unarchived and unlaunched. No terminal seal or
+successor GPU binding is created.
+
+The running diagnostic's21:44:38aggregate retains6/54commands,
+1/18decisions: one accepted five-step MuonT control and pending
+seven-step comparison. Controller, validator and independent waiter
+are live at21:54. The waiter records its third observation21:42:05;
+the original Bash monitor publishes21:45:38 and resumes `sleep900`.
+Both journals are archived under the common lock before this milestone.
+All new source lint passes. Full coverage/independent terminal,
+accepted actual-LR execution and queue, precision CUDA placement,
+new full-budget waves, shared large-window comparisons and verified
+private full-resolution SwanLab uploads remain required. No optimizer
+superiority or goal completion is established.
+
+November 19 22:05 execution and control milestone: the distinct actual-LR
+execution owner is CPU/archive accepted at 21:59:22, with 53 passing tests,
+203 helpers and 577 inventory entries. Fresh checking from its archived
+tracking directory passes at 22:01. Accepted receipt:
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-execution-cpu/20261119T2154/receipt.json`.
+The accepted adapter candidate, all 54 configurations and 162 bounded
+commands, original 5,120-update schedule, numerical readers, tolerances,
+compilation and cached-root graphs remain unchanged. The new queue pins
+this execution receipt. All 47 local queue cases pass in 38.06 seconds,
+including the five complete-archive tests previously deferred. Its separate
+queue CPU/archive suite is running; no acceptance or launch is inferred.
+
+The scan-exit aggregate at 22:03:52 records 8/54 completed commands and
+2/18 decisions. Both `muont_ns_tpu_q5_full_lr_lower` and
+`muont_ns_tpu_q7_full_lr_lower` pass the five existing gates at matrix LR
+`0.04525483392`. Each has 39 passing scalar-loss comparisons. The seven-step
+control has 2,123/2,161/2,163 tensor comparisons at updates 22/23/24, with
+zero failed tensors. Its 16 first-resumed graph-state scalar differences
+retain the unchanged diagnostic-only policy. The ten-step control has
+completed continuous24 and interrupted22 commands; no case decision yet.
+These bounded continuation results establish no full-budget loss or
+whole-training efficiency result.
+
+At 22:04 the original controller, direct validator and independent waiter
+remain live. The sole Bash journal monitor publishes both documents at
+22:04:32 and resumes its 900-second sleep. The new queue reporter is
+included in both automated blocks; the missing import found by required
+lint is fixed. Both journals are archived under the common update lock
+before this milestone. Complete diagnostic coverage and independent
+terminal, accepted queue launch, actual-LR gates, precision CUDA placement,
+new full-budget waves, shared large-window comparisons and verified private
+full-history SwanLab uploads remain required. Wave 12 remains the latest
+full-budget analyzed and privately cloud-verified wave.
+
+November 19 22:15 failure and queue-acceptance milestone: the scan-exit
+diagnostic stops at 8/54 completed commands and 2/18 accepted control
+decisions. The next `muont_ns_tpu_q10_full_lr_lower` resumed command fails
+at 22:03:52 before training in `complete_scan_exhausted`. Its saved
+execution/cleanup exits are 1/1, with marked descendants absent.
+The ownership failure records previously confirmed marked child3517243,
+parent3516734, exact start tick943118652 and a retained live command
+digest. Later reads find its files absent. Those later reads cannot
+establish the cause or coherent identity at the original failure.
+The validator's generic command/generation/cleanup/log error supplies no
+evidence of source or log substitution. No ten-step numerical decision
+or full-budget result follows.
+
+The controller stops `needs_attention` at 22:04:12 and records zero-exit
+keeper restoration. The independent terminal waiter stops
+`needs_attention` at 22:12:06; neither one-shot is restarted.
+Read-only verification at 22:12:53 confirms controller, validator, waiter,
+failed launcher/ranks and retained marked child absent, no validator
+markers, and exact keeper3517296 with eight ranks exclusively occupying
+the original eight A100 UUIDs. Receipt:
+`PVC/run-preparation/endeavor-scan-exit-failure-restoration-observation-20261119T2213.json`.
+This verifies current restoration without changing the retained failed
+cleanup exits or incomplete diagnostic coverage.
+
+The separate actual-LR queue is CPU/archive accepted at 22:05:07:
+47 passing cases, 214 helpers and 588 inventory entries. Fresh archived
+checking passes. Receipt:
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-queue-cpu/20261119T2202/receipt.json`.
+It preserves the accepted execution/adapter archives and 54 configurations/
+162 commands. Its reporter now binds the receipt; the final integrated
+journal/reporting suite passes 267 cases in 93.94 seconds, including a
+both-document publication/refusal regression. The queue remains unlaunched
+because its original complete-terminal requirement cannot be met.
+The accepted source, failed queues and all consumed claims remain untouched.
+
+Next ownership hypothesis, planned and unlaunched: the scan's recheck
+branches for `current is None` and terminal state currently only mark the
+scan unstable. Test a distinct successor that requires process-directory
+absence or the existing identity-bound whole-process exit proof there,
+then repeats the complete scan. Keep PID reuse, surviving threads,
+live drift and incomplete absence as refusals. First reproduce the saved
+failure in CPU fixtures; then require a new source archive, preservation
+seal and all original distributed/numerical gates before GPU launch.
+The actual-LR and precision-placement numerical experiments remain pending
+behind those ownership gates.
+
+Both journals are archived under the common lock before this milestone.
+An extra manual renderer refresh is stopped after a shared-filesystem open
+stalls while holding the update lock; it publishes no new report. The sole
+original Bash monitor remains live in its 900-second sleep and will retry.
+Large-window results and verified full-history SwanLab uploads will be added
+here when a new full-budget wave completes. Wave 12 remains the latest such
+wave, and no optimizer superiority or goal completion is established.
 
 ### NS Step-Budget Quality-Cost Study
 
@@ -10282,10 +11318,977 @@ Only scale surviving candidates. A 4M-batch extension or Toner 300M/520M
 model requires its own configuration and validation. No GPU-hour forecast
 is established from the current end-to-end times alone.
 
+## Recheck-Exit Successor Preparation
+
+November 19, 2026 22:32, Asia/Shanghai. The next diagnostic tests whether
+requiring whole-process exit proof in the marked-process final recheck
+eliminates the scan-exit execution failure without weakening ownership
+checks. The accepted scan-exit attempt exhausted three rechecks before
+the ten-step MuonT resumed command entered training. The new helper
+`tracking/owned_output_recheck_exit.py` applies the existing exit proof
+to both unavailable and terminal recheck observations and requires a
+fresh complete scan afterward. PID reuse, partial process files,
+surviving threads and live ownership drift remain refusals.
+
+All 55 local ownership/preservation cases pass in 15.52 seconds:
+`PVC/run-preparation/test-recheck-exit-full-local-20261119T2235.xml`.
+The filename is a preparation label; execution completed before this
+22:32 checkpoint. Required scoped source lint passes. The planned
+distinct candidate is
+`PVC/candidates/ns-training-path-recheck-exit-reviewed-20261119T2232`,
+with CPU receipt target
+`PVC/run-preparation/ns-training-path-recheck-exit-20261119-cpu/reviewed-20261119T2232/receipt.json`.
+Preparation and the 136-case archived suite remain separate from
+acceptance and launch.
+
+The successor retains the failed scan-exit 8/54-command, 2/18-decision
+evidence, stopped four-observation waiter, accepted unissued actual-LR
+queue and all older failures. Its 18 cases and 54 commands preserve the
+original lower LR and 5,120-update schedule, training/configuration
+bytes, numerical readers and tolerances. Only the owner adapter and
+ownership helper change. After complete archive verification, the
+separate predecessor seal must prove consumed-owner/marker absence
+and exact healthy eight-A100 keeper restoration before freeze/check
+and a new acknowledged GPU diagnostic. No failed owner is restarted.
+Wave 12 remains the latest full-budget, large-window analyzed and
+SwanLab-verified wave. No optimizer superiority is established.
+
+### Recheck-Exit CPU Acceptance
+
+November 19, 2026 22:43, Asia/Shanghai. The corrected candidate
+`PVC/candidates/ns-training-path-recheck-exit-final-reviewed-20261119T2241`
+accepts its separate CPU/source archive at 22:42:24. All 136 unique
+cases pass in 21.68 seconds: 45 GPU-owner lifecycle, 36 handoff,
+41 exit/recheck and 14 failure-preservation cases. The accepted receipt
+contains 183 helpers and 552 inventory entries:
+`PVC/run-preparation/ns-training-path-recheck-exit-20261119-cpu/closure-reviewed-20261119T2241/receipt.json`.
+Fresh checking from that archived preparer and archived working
+directory passes at 22:43. Scoped source and journal-content lint pass;
+the inherited journal-size rule still fails separately.
+
+The first archive retains 135 passes and one zombie-fixture failure.
+The inherited fixture's 20-field stat record could not establish the
+stricter whole-process proof. Its successor-specific derivation supplies
+the complete terminal stat, empty process files and fake-clock directory
+disappearance, with an assertion that disappearance occurred. The
+second archive retains 135 passes and one source-contract assertion
+failure: the assertion incorrectly required a test file in the older
+numerical archive's helper map. The corrected test retains the explicit
+adapted-test hash and unchanged numerical-reader checks. Both failed
+archives remain `needs_attention` and unissued.
+
+Separate predecessor sealing, freeze/check, exact allocation transfer
+and GPU launch remain pending. The original single Bash monitor
+publishes both journals at 22:41:49 and returns to `sleep 900`.
+No complete diagnostic, production result, new SwanLab import or
+optimizer-superiority claim follows from CPU acceptance.
+
+### Recheck-Exit Seal And Freeze
+
+November 19, 2026 22:50, Asia/Shanghai. The separate predecessor seal
+passes at 22:44:56 and independent archived `check-seal` passes before
+freeze. The seal retains 2,321 evidence files, 1,328 checkpoint payload
+identities, the failed 8/54-command and 2/18-decision scan-exit result,
+the stopped waiter and the accepted unissued actual-LR queue. It
+verifies consumed-owner/marker absence and the exact restored keeper
+`3517296` with its eight original ranks on all eight physical A100s.
+These checks supply no missing numerical decision or complete terminal.
+Seal:
+`PVC/run-preparation/ns-training-path-recheck-exit-predecessor-seal-20261119.json`.
+
+Freeze publishes the distinct recheck-exit diagnostic binding and
+source archive; the fresh issued-controller `check` passes by 22:49.
+Binding:
+`PVC/run-preparation/ns-training-path-recheck-exit-20261119-binding.json`.
+The one-shot issued-controller `start` is underway at 22:50. Allocation
+transfer and validator acknowledgment remain unconfirmed at this entry.
+No consumed owner is restarted. The receipt-authenticated reporting
+projection is now included in both automated journal blocks, with the
+accepted CPU receipt, seal and frozen binding pinned. Six focused
+reporting/split-journal tests pass, followed by a fresh frozen-binding
+report test. The original 900-second Bash monitor loads this reporter
+on its next cycle without restart. Numerical readers, tolerances,
+compilation and CUDA graphs remain unchanged.
+
+### Recheck-Exit Launch And Terminal Waiter
+
+November 19, 2026 22:55, Asia/Shanghai. The fresh issued controller
+acknowledges at 22:51:58 as `3557212/943407368`. Its direct validator
+`3558375/943415476` acknowledges at 22:53:19 after exact recorded
+keeper release; state records the original node/manager locks and
+`validating`. Fresh 22:53:55 process inspection finds both generations
+live and old keeper3517296 absent. The first MuonT BF16/five-step
+lower-LR continuous command is underway. No completed trajectory,
+case decision or full-budget result is established at this entry.
+
+The distinct read-only terminal waiter accepts its 24-case CPU/source
+archive in 4.59 seconds, with 185 helpers and no GPU execution.
+Fresh archived `check` passes before `start`. The waiter acknowledges
+at 22:54:23 as `3559219/943421918`; its first 22:54:29 observation
+finds the exact controller and validator live and retains 0/54-command,
+0/18-decision progress. It checks those original generations every
+900 seconds and invokes only the issued canonical terminal after
+complete coverage, actual owner/descendant absence and clean exact
+restoration. Rejected cases remain evidence. No consumed waiter or
+queue is restarted.
+
+Launch receipt:
+`PVC/controllers/ns-training-path-recheck-exit-20261119/controller.json`.
+Waiter acceptance:
+`PVC/run-preparation/ns-training-path-recheck-exit-followup-cpu/20261119T2253/receipt.json`.
+Waiter acknowledgment:
+`PVC/run-preparation/ns-training-path-recheck-exit-terminal-followup-20261119/intent.json`.
+Both authenticated projections are included in the existing journal
+monitor's next cycle. Wave 12 remains latest full-budget, large-window
+analyzed and SwanLab-verified. Actual-LR/precision CUDA gates, production
+waves, large-window results and verified full histories remain open;
+no optimizer superiority is established.
+
+### Recheck-Exit Failure And Interpretation
+
+November 19, 2026 23:02, Asia/Shanghai. The launched recheck-exit
+diagnostic stops `needs_attention` at 22:59:49 after 1/54 completed
+commands and 0/18 case decisions. The BF16/five-step MuonT lower-LR
+continuous24 command completes; the interrupted22 command fails
+before training. Rank5's ownership check reports
+`complete_scan_exhausted` after three scans, with previously marked
+helpers3564679 and3564689 unstable. Both retained commands have the
+same helper-command digest as the earlier scan-exit failure. Delayed
+post-failure reads find their stat/cmdline files absent; those separate
+reads cannot establish their state during the failed scan.
+
+The failed interrupted command's execution and cleanup exits are1/1.
+It contributes no completed trajectory or numerical decision. The
+controller records terminal failure and keeper restoration at23:00:07.
+Independent read-only inspection at23:00:38 finds original controller
+3557212 and validator3558375 absent, no validator-marked descendants,
+and the exact restored keeper3564728 with ranks3564875-3564882 on
+all eight original physical A100s. Restoration does not waive failed
+cleanup or supply the missing54-command/18-decision terminal. The
+original waiter remains live; its22:54:29 owner observation is
+historical and its next900-second observation will evaluate failure.
+
+This result does not support the hypothesis that correcting final
+recheck exit handling alone resolves the live ownership failure.
+The next planned investigation must reproduce new marked helpers
+appearing across all three complete scans and test whether ownership
+attestation can be stabilized before concurrent compiler-helper churn.
+Any successor needs its own reviewed source, regression coverage,
+failed-evidence seal and ownership gates. Keep three scan attempts,
+the existing exit deadline, numerical tolerances, compilation and
+CUDA graphs unchanged. No successor is prepared or launched from
+this interpretation, and no failed owner or consumed waiter is restarted.
+
+Failure evidence:
+`PVC/run-preparation/validation-ns-training-path-recheck-exit-20261119-gpu.json`
+and
+`PVC/validation/ns_training_path_recheck_exit_20261119/muont_ns_tpu_q5_full_lr_lower_interrupted.{log,execution.json}`.
+The sole original Bash monitor publishes both new authenticated
+status blocks at23:00:58 and returns to `sleep900`. Seven focused
+reporting/split-journal tests and284 integrated journal/reporting test
+executions pass. Wave12 remains latest full-budget, large-window
+analyzed and SwanLab-verified. No new cloud import or optimizer
+superiority is established; the research goal remains active.
+
+### Helper-Churn Experiment And Next Diagnostic
+
+November 19, 2026 23:13, Asia/Shanghai. A CPU-only experiment using
+`tracking/owned_output_helper_churn.py` runs the exact issued recheck-exit
+ownership scan against an isolated fake process tree. Each exit occurs
+after its marker is read, proves directory absence, and creates a new
+marked helper for the next complete scan. The stable marked process
+remains present throughout. Accepted and issued helper bytes are unchanged.
+
+| Requested Successive Exits | Observed Exits | Result |
+| --- | ---: | --- |
+| 0 | 0 | Complete scan returns both original marked processes |
+| 1 | 1 | Complete scan returns the survivor and first replacement |
+| 2 | 2 | Complete scan returns the survivor and second replacement |
+| 3 | 3 | `complete_scan_exhausted`; no partial ownership returned |
+| 4 | 3 | Same refusal at the original three-scan limit |
+
+All five behavior tests pass in 0.69 seconds with hidden CUDA and the
+existing 60-second test/600-second session timeout guard. The fourth
+requested exit is never reached because the scan already refuses after
+three. Result:
+`PVC/run-preparation/owned-output-helper-churn-20261119T2309.json`.
+This controlled result reproduces exhaustion despite proven exits and
+preservation of the stable process. The live failed scan retained only
+its final unstable identities, so no per-attempt churn history or causal
+attribution is established.
+
+The next proposed diagnostic tests rank startup ordering. The issued
+trainer imports numerical and compiled modules before entering
+`require_fused_attribution_owner`. A distinct successor could attest all
+eight rank identities before those imports and hold a pre-import barrier
+until every rank passes. The later full ownership and physical-GPU checks
+must remain in place. First reproduce staggered helper startup in CPU
+fixtures, including a rank that fails attestation; then independently
+review the barrier and its failure behavior. No source for this startup
+barrier has been prepared, accepted or launched. Preserve the original
+training equations, configuration, three scan attempts, exit deadline,
+numerical tolerances, compilation and CUDA graphs.
+
+The original terminal waiter independently stops `needs_attention` at
+23:09:30 after its scheduled 900-second interval, reporting that the
+original owners exited without complete cleanup/restoration. It retains
+its first 22:54:29 observation and issues no canonical terminal.
+Fresh 23:11:03 read-only checking finds controller3557212, validator3558375
+and waiter3559219 absent, no validator-marked descendants, and the exact
+restored keeper3564728 with its eight ranks exclusively on the original
+A100s. This restoration does not waive failed execution/cleanup or
+complete the missing 54-command/18-decision protocol. No consumed
+controller, validator or waiter is restarted.
+
+The existing Bash monitor1588227 retains its original generation,
+exclusive lock and 900-second interval. Both automated journal blocks
+continue to use the same authenticated reports; the README now describes
+that split-journal behavior. Scientific milestones stay in this file,
+while dense receipts stay in DETAILS. Wave12 remains the latest
+full-budget, large-window analyzed and privately SwanLab-verified wave.
+The actual-LR queue remains unissued, and improvement over independently
+tuned MuonT remains unestablished.
+
+November 19, 2026 23:22 verification. The five CPU cases also pass in
+0.60 seconds under Torch's Python3.13 environment. A fresh run using the
+accepted archived ownership helpers reproduces all five issued-helper
+trial records exactly. Seven focused journal/monitor regressions pass
+in29.36seconds. The authenticated manual refresh publishes both
+status blocks by23:18; byte comparisons verify all manual prose remains
+unchanged. The original scheduled monitor then completes its refresh
+and resumes its900-second interval without restart. Scoped source and
+document-content lint, Bash syntax and `git diff --check` pass. Full
+journal lint still fails only the inherited500KiB file-size rule.
+
+### Serialized Ownership Diagnostic
+
+November 19, 2026 23:46, Asia/Shanghai. The retained command signatures
+for both unstable helpers in the failed recheck-exit interrupted run
+exactly match
+`["nvidia-smi", "--query-compute-apps=pid,gpu_uuid", "--format=csv,noheader"]`:
+three arguments and 64 argument bytes. Their recorded parents are
+training ranks. The unchanged rank ownership reader executes this
+query before scanning validator-marked processes. Concurrent readers
+are therefore a concrete candidate source of the marked transient
+helpers. A digest and parent match are evidence for this experiment,
+not proof of the failed scan's per-attempt history or live causality.
+
+The startup-barrier proposal above is superseded. Its exploratory
+12-case CPU result is preserved at
+`PVC/run-preparation/test-ns-training-startup-barrier-20261119T2331.xml`;
+the two exploratory source files were removed before acceptance or
+launch. No import barrier, trainer change or GPU authority followed.
+
+The distinct candidate is
+`PVC/candidates/ns-training-path-serialized-reviewed-20261119T2340`.
+`tracking/ns_training_owner_serialization.py` adds one canonical direct
+regular-file lock around the entire unchanged `require_controller`
+body, with `O_NOFOLLOW`, inode checks, nonblocking `flock` and a bounded
+30-second wait. A waiting rank cannot enter the complete ownership
+inspection until the previous reader exits. Every existing physical-GPU,
+process-generation, ancestry, lock, source and environment check remains.
+The trainer and numerical configurations are unchanged; all 18 cases
+and 54 lower-LR/full-5120-schedule diagnostic commands remain. Three
+complete scan attempts, the one-second exit proof, numerical readers
+and tolerances, compilation and cached-root CUDA graphs are preserved.
+
+The CPU fake-process study reproduces marked NVIDIA-query churn
+through all three scans and the original `complete_scan_exhausted`
+refusal. Once competing helper churn is quiescent, the same scan
+under the inspection lock returns all eight stable fake ranks.
+Contention, timeout, exceptional cleanup and aliased/replaced-lock
+tests pass. Together with source-preservation tests, all 19 local cases
+pass in 10.62 seconds. The first local run had 17 passes and two failures
+from missing inherited queue aliases; its XML is retained, and explicit
+parent aliases fix that preparation issue without changing numerical
+or ownership gates.
+
+The separate CPU/source archive accepts at 23:35:02 with 141 unique
+passing cases in 22.54 seconds, 189 helpers and 558 inventory entries:
+`PVC/run-preparation/ns-training-path-serialized-20261119-cpu/reviewed-20261119T2340/receipt.json`.
+Fresh archived-entry checking passes. Its separate failed-predecessor
+seal accepts at 23:37:10, preserving 2,535 evidence-file identities
+and 1,352 checkpoint identities:
+`PVC/run-preparation/ns-training-path-serialized-predecessor-seal-20261119.json`.
+A fresh independent archived seal check passes again before freeze.
+The failed recheck's 1/54 commands and 0/18 decisions, stopped waiter,
+all older failures and accepted unissued actual-LR queue stay intact.
+
+At this checkpoint freeze is in progress. No issued-controller check,
+acknowledged controller/validator, keeper transfer or new terminal waiter
+is yet claimed. The receipt-pinned reporter is integrated into both
+automated journal blocks; six focused reporting, split-document and
+monitor regressions pass in 13.23 seconds, and required scoped source
+lint passes. The sole original monitor publishes at 23:40:59 and keeps
+its original generation and 900-second interval. No duplicate monitor
+or uploader is started.
+
+This is an execution-correctness diagnostic, not a full-budget optimizer
+comparison. Wave 12 remains the latest completed, large-window analyzed
+and privately SwanLab-verified wave. No new loss result, optimizer
+superiority, whole-training efficiency improvement or cloud import is
+established. The next decision remains whether this unchanged numerical
+protocol can complete, followed by the separately gated actual-LR and
+precision-placement experiments and new full-budget wave comparisons.
+Dense receipt identities and verification hashes are in DETAILS.
+
+### Serialized Launch, Failure And Next Decision
+
+November 20, 2026 00:00, Asia/Shanghai. The preceding preparation
+checkpoint is historical. Freeze publishes November19 23:46:29:
+`PVC/run-preparation/ns-training-path-serialized-20261119-binding.json`.
+Fresh issued-controller checking passes before the distinct one-shot
+start. Controller3595881/start943762646 acknowledges23:51:10.
+Validator3597661/start943773234 acknowledges23:52:56 as its original
+direct child, after exact keeper release. Both launch commands use
+the separately accepted issued helper archive, not mutable checkout
+helpers. Trainer/configuration and all existing numerical gates remain.
+
+The separately accepted read-only terminal waiter has24unique passing
+cases in4.67seconds and191helpers. Fresh archived-entry checking passes:
+`PVC/run-preparation/ns-training-path-serialized-followup-cpu/20261119T2353/receipt.json`.
+It acknowledges at23:54:12 as3598600/start943780809. Its first
+23:54:17 observation reports `waiting_for_original_owners`, saved state
+`validating`,0/54 completed commands and0/18 decisions. This is a
+historical observation, not current diagnostic liveness. Its original
+900-second schedule is unchanged; no restart or duplicate waiter follows.
+
+The first MuonT BF16/five-step lower-LR continuous command fails before
+training at23:54:13. Waiting ranks raise
+`RuntimeError: Owner inspection lock deadline exhausted`.
+The command's execution and cleanup exits are1/1, with recorded
+marked-descendant absence. It is excluded from completed trajectories.
+The result remains0/54 completed commands and0/18 numerical decisions:
+`PVC/run-preparation/validation-ns-training-path-serialized-20261119-gpu.json`.
+The validator's generic exact-command/generation/cleanup/log rejection
+does not establish source substitution; the retained command log
+identifies the new lock-wait failure.
+
+The controller records `needs_attention` and keeper restoration at
+23:54:30. Independent23:56:15 read-only checking finds controller and
+validator absent, no validator-marked processes, and `same_keeper=True`
+for restored keeper3598689/start943781037 and ranks3598829-3598836.
+Those exact eight ranks exclusively occupy the same original A100s:
+`PVC/run-preparation/serialized-failure-restored-observation-20261119T2356.json`.
+Restoration does not waive failed execution/cleanup or supply missing
+54-command/18-decision coverage. No canonical complete terminal is
+issued, and the consumed diagnostic is not restarted.
+
+The result rejects whole-inspection serialization within its30-second
+wait bound. The critical section includes source/binding authentication
+as well as transient GPU queries and marked-process scans. The retained
+logs do not measure individual lock-holder durations or prove deadlock.
+The next proposed experiment isolates only the transient query/marker
+inspection under the same lock, keeping the source, ancestry, physical
+GPU and generation checks and their ordering intact outside or inside
+the appropriate boundary. First reproduce contention with a slow
+authenticated-source phase in CPU fixtures and verify identical
+acceptance/refusal behavior. A new GPU successor additionally requires
+its own accepted source archive, preserved failed evidence and original
+waiter/owner absence. Do not extend the wait, scan attempts or exit
+deadline, relax numerical tolerances, or disable compilation/graphs.
+This narrower candidate is proposed only; no source acceptance or
+launch is claimed.
+
+Seven focused journal/waiter/monitor regressions pass18.35seconds.
+All259 affected CPU cases pass140.90seconds. Required scoped source
+lint and journal-content lint pass; full journal lint reports only
+the existing500KiB size rule. The sole original Bash monitor publishes
+both files November20 at00:00:10 from its November19 23:56:01 report
+and resumes `sleep900`. Both automated blocks include the pinned
+serialized failure and waiter reports; manual milestones remain outside
+those blocks. Journals are archived under the same shared update lock
+before this final publication. No uploader or monitor is duplicated.
+
+Wave12 remains the latest full-budget wave with complete large-window
+analysis and privately verified SwanLab histories. This failed startup
+probe adds no loss history or optimizer-efficiency result. The accepted
+actual-LR queue remains unissued. Continue to record each new accepted
+candidate, acknowledged wave, shared large-window comparison, failure
+and verified cloud import separately in this file; the objective of
+improving on independently tuned MuonT remains open.
+
+### Query-Serialization CPU Acceptance
+
+November20 00:13, Asia/Shanghai. The next diagnostic now has a distinct
+prepared source and accepted CPU archive; the proposed status above is
+historical. The original whole-inspection waiter3598600 stops
+`needs_attention` at00:09:18.673294 on its scheduled900-second loop,
+without invoking a canonical terminal. Its process handle is absent.
+Fresh00:10:16 read-only checking also finds the original controller and
+validator absent, no validator-marked processes, and the same restored
+keeper3598689 on the original eight A100s:
+`PVC/run-preparation/query-serialized-stopped-predecessor-observation-20261120T0010.json`.
+
+The new implementation is
+`tracking/ns_training_path_query_serialized_source.py`, with separate
+preparer, predecessor reader and behavior tests. It derives the original
+18cases/54commands, actual lower-LR/full5120 schedule and unchanged
+trainer/configuration bytes. The existing `require_controller` statements
+retain their exact AST order. Binding/source authentication and the
+original acknowledgment wait move outside the lock. All statements from
+the hostname query through the final original-owner generation recheck
+remain inside it, including ancestry, held-node/manager-lock checks,
+both NVIDIA queries, physical ordinal/UUID checks, complete marked-process
+scan and occupied-rank verification. The same lock helper bytes retain
+the30-second wait, canonical/direct regular-file and inode checks.
+Three complete scans, one-second exit proof, numerical readers and
+tolerances, compilation and cached-root CUDA graphs remain unchanged.
+
+A CPU boundary regression holds one authenticated-source read open while
+another caller completes the actual derived ownership reader. The blocked
+caller remains unfinished until explicitly released. Both return the same
+verified state/binding. Separate-descriptor flock checks verify that all
+queries and marked-process scans occur under exclusive serialization.
+This reproduces the relevant concurrency distinction without sleeping,
+CUDA work, deadline extension or acceptance waiver. Other CPU cases
+preserve zero-progress failed evidence, refuse substituted failed commands/
+decisions/cleanup/generations, and deny any still-present original owner
+or descendant. It is mechanism/correctness evidence, not GPU efficiency
+or optimizer quality.
+
+Final candidate:
+`PVC/candidates/ns-training-path-query-serialized-final-reviewed-20261120T0012`.
+Separate acceptance at00:11:29.251949 has142unique passing cases in
+22.45seconds,193helpers and562inventory entries:
+`PVC/run-preparation/ns-training-path-query-serialized-20261120-cpu/reviewed-20261120T0012/receipt.json`.
+Fresh archived-entry checking passes. Initial preparation refused a
+duplicate helper before creating a candidate; helper-name deduplication
+fixes packaging without changing an ownership or numerical gate.
+The first successfully prepared candidate remains preserved; a distinct
+final candidate pins the now-terminal original waiter receipts.
+
+At this checkpoint the separate failed-predecessor seal is in progress.
+No issued successor binding, acknowledged GPU controller/validator or
+new waiter is claimed. Source lint and `git diff --check` pass. Journals
+are archived under the original shared update lock before this milestone;
+the sole15-minute Bash monitor is not restarted or duplicated. Dense
+receipt hashes remain in DETAILS. Wave12 is still latest complete,
+large-window analyzed and privately SwanLab-verified; the new CPU
+acceptance supplies no training loss, full-budget result or superiority
+over independently tuned MuonT.
+
+### Query-Serialization Seal And Issuance
+
+November20 00:23, Asia/Shanghai. The distinct failed-predecessor seal
+passes at00:13:48.340691, authenticating2746evidence files and
+1352checkpoint identities. Fresh archived `--phase check-seal` passes.
+This preserves the failed whole-inspection diagnostic, stopped original
+waiter, earlier accepted/rejected cases and still-unissued actual-LR
+queue; it does not turn partial coverage into a complete terminal.
+Seal:
+`PVC/run-preparation/ns-training-path-query-serialized-predecessor-seal-20261120.json`.
+
+Archived freeze completes at00:18:47.938866. The fresh issued controller's
+`--phase check` passes before one distinct `--phase start` invocation.
+Binding:
+`PVC/run-preparation/ns-training-path-query-serialized-20261120-binding.json`.
+Source archive:
+`PVC/run-preparation/source-ns-training-path-query-serialized-20261120.tar`.
+The executed candidate remains the final reviewed00:12 candidate above.
+At this observation start preflight is still running; no acknowledged
+controller/validator, keeper transfer or new training command is claimed.
+The original stopped waiter and all failed one-shots are not restarted.
+
+The journal reporter now pins the verified binding. Its first full
+regression run retains240passes and one reporting refusal because freeze
+published while the binding pin was unset. Pinning the independently
+verified binding resolves that refusal; the two focused cases pass in
+14.42seconds, and the complete rerun is in progress. The reporter's scope
+accurately distinguishes query/marker serialization from whole-inspection
+serialization. No accepted candidate or issued GPU source is edited.
+Required scoped source lint passes.
+
+The original Bash monitor1588227 remains the sole publisher, completing
+both journals at00:19:23 from its00:15:13 report and resuming `sleep900`.
+Both journals are archived under `.endeavor-update.lock` before this
+milestone. New experiment hypotheses, accepted releases, acknowledged
+launches, failures, large shared-token-window results and independently
+verified full SwanLab imports continue to receive distinct dated entries
+here. Wave12 remains latest full-budget analyzed/cloud-verified; this
+issuance supplies no new optimizer loss, efficiency or superiority result.
+
+### Query-Serialized Launch And Read-Only Waiter
+
+November20 00:30, Asia/Shanghai. The distinct controller acknowledges
+at00:24:51.867094 as3633332/start943964742. The original direct validator
+acknowledges at00:27:05.736020 as3637693/start943978129, after complete
+exact keeper release. The first bounded eight-rank command executes
+MuonT BF16/five-step lower-LR with the retained full5120 schedule,
+continuous24-update trajectory and checkpoint boundary22. Its log
+reaches update22 by00:30. The aggregate still admits0/54completed
+commands and0/18case decisions at this observation; running metrics
+alone do not supply clean execution/cleanup or continuation acceptance.
+
+The executed source/configuration remains the accepted final00:12
+candidate and00:18issued archive above. Its retained work directory is
+`PVC/validation/ns_training_path_query_serialized_20261119`, despite
+the November20 namespace date; this literal is part of the issued
+identity and is not rewritten. First-command log:
+`PVC/validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q5_full_lr_lower_continuous.log`.
+No source, numerical tolerance, scan budget, lock deadline, compilation
+or CUDA-graph gate is changed after issuance.
+
+The distinct read-only waiter archive accepts all24unique cases in
+5.02seconds at00:26:45.437056, retaining all193issued helper bytes plus
+its two new files. Fresh archived `--phase check --cpu` passes before
+the separate one-shot start. Waiter3638945/start943982783 acknowledges
+at00:27:52.277328; its first00:27:57.918722 observation verifies exact
+original controller and direct validator generations live, with
+0/54commands0/18decisions. It retains the900-second interval and may
+invoke only the issued independent canonical terminal after complete
+coverage, clean exits, actual owner/descendant absence and exact
+restoration. Failed old waiters/controllers remain consumed and unchanged.
+Waiter acceptance:
+`PVC/run-preparation/ns-training-path-query-serialized-followup-cpu/20261120T0026/receipt.json`.
+
+The reporter pins the verified controller acknowledgment and separately
+accepted waiter receipts. Both automated journal blocks include its
+saved observations; the original sole monitor is not restarted.
+The first waiter regression catches an omitted research-summary
+allowlist entry; that reporting omission is corrected without editing
+GPU sources. The earlier complete241-case journal suite passes in
+147.82seconds. New waiter/summary regression verification is in progress.
+Wave12 remains latest full-budget large-window analyzed and privately
+SwanLab-verified. This is an acknowledged correctness diagnostic, not
+a full-budget successor wave or evidence of optimizer superiority.
+
+### Query-Serialized First Commands And Journal Verification
+
+November20 00:39, Asia/Shanghai. The first MuonT BF16/five-step lower-LR
+continuous command finishes at00:30:14.275132, with24updates, integer
+execution/cleanup exits0/0 and marked-descendant absence. The interrupted
+22-update command finishes at00:35:15.292437 with the same clean exits.
+The aggregate at00:36:07.601060 admits2/54completed trajectories and
+0/18case decisions. The resumed log reaches24updates by00:39; neither
+that log nor matching displayed losses replaces its trajectory validation
+or the independently reconstructed case decision.
+Receipts are the `.execution.json` files beside the first-command log
+above and `muont_ns_tpu_q5_full_lr_lower_interrupted.log`.
+
+These two clean executions are progress beyond the previous startup
+failures, not complete diagnostic acceptance. Complete54-command/
+18-decision evidence, original-owner/descendant absence, clean exact
+keeper restoration and independent terminal remain required. Actual-LR
+and precision gates, full-budget successor experiments, large shared-token
+comparisons and independently verified SwanLab histories remain open.
+No optimizer-quality or whole-training efficiency improvement is claimed.
+
+All242integrated journal cases pass in164.70seconds. XML independently
+contains242unique testcase identities, zero failures/errors/skips:
+`PVC/run-preparation/test-endeavor-query-waiter-integrated-20261120T0032.xml`.
+The seven focused waiter/split-document/monitor cases pass20.53seconds.
+Required source lint, journal-content checks, Bash syntax and
+`git diff --check` pass. Full journal lint fails only the inherited
+500KiB size rule; no historical evidence is removed to satisfy it.
+
+The original sole Bash monitor publishes both documents at00:39:11
+from its00:34:25 report, retaining its original generation, exclusive
+lock and900-second schedule. Both automated blocks now contain the
+query diagnostic and its separately authenticated read-only waiter.
+The shared update lock initially defers the manual append while that
+publisher authenticates its report; no duplicate refresh is launched.
+Both journals are archived under that lock before this verification.
+Wave12 remains latest full-budget analyzed and privately cloud-verified.
+
+November20 00:41 progress receipt: the first resumed command finishes
+at00:38:20.014263 with integer execution/cleanup exits0/0 and marked
+descendants absent. The aggregate at00:40:46.417751 now admits
+3/54commands and0/18decisions; all three first-control trajectories
+are retained, while the numerical case comparison remains pending.
+Receipt:
+`PVC/validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q5_full_lr_lower_resumed.execution.json`.
+The00:39automated publication remains its dated2/54observation;
+the sole monitor will refresh from newer authenticated evidence on its
+next900-second cycle. No extra publisher or complete-terminal claim is
+created. Both journals are archived under the shared lock before this
+increment; the scientific objective and full-budget successors remain open.
+
+### Query-Serialized First Acceptance And Actual-LR Reader
+
+November20 00:59, Asia/Shanghai. The original validator records the
+first accepted MuonT BF16/five-step lower-LR case at00:50:57.442848.
+Executed configuration remains
+`experiment/configs/muont_ns_tpu_q5_full_lr_lower_0p5m_seed0.json`
+in the accepted final00:12candidate, matrixLR0.04525483392, eight
+A100 ranks, continuous24/interrupted22/resumed24 and the original
+full5120schedule. All five existing gates pass. Checkpoints22 and24
+have zero failed tensor or scalar comparisons, and all39scalar-loss
+comparisons pass. Checkpoint23 has zero failed tensor comparisons but
+16graph-state scalar differences; its original diagnostic-only treatment
+remains unchanged. This is within-arm continuation evidence, not a loss
+comparison against a candidate or evidence that five iterations are best.
+
+The next seven-step continuous command finishes24updates at
+00:53:40.787797 with integer execution/cleanup exits0/0 and marked
+descendants absent. Aggregate00:56:09.173383 admits4/54commands and
+1/18decisions. Receipt:
+`PVC/validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q7_full_lr_lower_continuous.execution.json`.
+The original interrupted command is running; no seven-step case decision
+or complete diagnostic terminal follows from its continuous history.
+The sole original read-only waiter retains its900-second interval and
+records its third waiting observation at00:57:59.476307.
+
+A distinct actual-LR predecessor reader is implemented in
+`tracking/ns_training_path_query_serialized_lr_predecessor.py`, with
+separate preparer and external-boundary tests. It derives the original
+isolated terminal reader, retaining complete54-command/18-decision
+coverage, the original waiter's sole canonical independent terminal,
+exact owner/terminal-child/marked-descendant absence, clean restoration
+and exact current keeper. It reuses checkpoint digests and checks payload
+identities without reading tensor payloads. Numerical and execution
+archives remain separate, including conflicting handoff-helper identities.
+The latest failed seal does not flatten every older summary: the reader
+authenticates its retained ancestor seals directly, preserving original
+44/14, recovery2/0, exit-drain6/2, transition23/7, scan-exit8/2,
+recheck1/0 and whole-inspection0/0, all rejections and consumed one-shots.
+
+Separate archived acceptance at00:55:08.098908 has39unique passing
+cases in18.76seconds and211authenticated helpers:
+`PVC/run-preparation/ns-training-path-query-serialized-actual-lr-predecessor-cpu/staged-20261120T0053/receipt.json`.
+Fresh archived-entry checking passes. Its00:57:24.601748 read-only
+observation returns `waiting_for_query_serialized_owners`, `ready: false`,
+with exact controller3633332, validator3637693 and waiter3638945 live,
+plus active marked descendants. No seal, GPU transfer or launch is issued.
+The integrated predecessor suites pass132executions in54.32seconds
+(46distinct inherited testcase identities); the acceptance archive
+separately verifies all39unique identities. Seven focused journal/
+split-publication/monitor regressions pass18.90seconds. Earlier fixture
+derivation failures remain archived. Scoped source lint and diff-check pass.
+
+Next experiment remains a distinct query-serialized actual-LR adapter,
+execution owner and queue for the preserved54configurations/162bounded
+commands: three families, three actual LRs, BF16/FP32 and5/7/10iterations.
+This reader acceptance does not prepare or launch those components.
+No old failed queue may consume these receipts. Only after full original
+coverage, clean restoration and independent terminal can its own
+unchanged-tolerance actual-LR gates proceed. Full-budget successor waves
+still require separate production ownership, complete536,870,912-token
+shared windows and exact shared evaluations, followed by independently
+verified complete private SwanLab histories before the next wave.
+Wave12 remains the latest completed/analyzed/cloud-verified wave; improving
+on independently tuned MuonT remains an open objective.
+
+The original Bash monitor1588227/start933927668 publishes both journals
+at00:58:51 from its00:54:14 report and resumes `sleep900`. Its source,
+generation and exclusive fd9 lock are unchanged. Both journals are
+archived under `.endeavor-update.lock` before this manual milestone.
+New hypotheses, accepted sources, acknowledged launches, failures,
+large-window results and verified cloud imports will continue to receive
+separate dated entries here, with dense receipts in DETAILS.
+
+November20 01:02 progress increment: the seven-step interrupted22-update
+command finishes00:58:38.852132 with integer execution/cleanup0/0 and
+marked descendants absent. Aggregate00:59:29.342790 admits5/54commands,
+1/18decisions, `validating`, no error. Its receipt is
+`PVC/validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q7_full_lr_lower_interrupted.execution.json`.
+Resumed validation and the complete seven-step decision remain pending.
+The00:58automated4/54observation remains historical until the sole
+monitor's next original900-second cycle. Source/content lint, Bash syntax
+and diff-check pass; full document lint reports only inherited500KiB
+size limits, ENDEAVOR791.4KB/DETAILS1608.7KB before this increment.
+Both journals are archived under the shared lock before this append;
+no history, failed evidence or accepted source is removed.
+
+### Query Actual-LR Adapter Preparation
+
+November 20 01:15, Asia/Shanghai. A distinct candidate is prepared at
+01:12:32.873523:
+`PVC/candidates/ns-training-path-query-serialized-actual-lr-adapter-20261120T0113`.
+Its source modules are `tracking/ns_training_path_query_serialized_lr_`
+with `parent.py`, `contract.py`, `validation.py` and `source.py`, plus
+the source-bound external-boundary tests. Preparation changes only
+`experiment/fused_attribution_owner.py` relative to the accepted numerical
+candidate. The plan preserves 54 configurations and 162 bounded eight-rank
+commands: MuonT, fused output normalization and matched identity-outer null;
+matrix LRs 0.04525483392, 0.06399999989260598 and 0.09050966784; BF16 and
+FP32 operands; five, seven and ten Newton-Schulz iterations. Continuous24
+versus interrupted22/resumed24 retains each original full5120 schedule.
+The planned bounded budget is1,358,954,496tokens, not a production wave.
+
+The adapter pins the independently accepted query actual-LR predecessor
+reader and187helper identities. Numerical and predecessor archives remain
+separate. Its explicit handoff transformation retains the original
+numerical helper as
+`fixtures/query-serialized-lr-original-owned_output_handoff.py`; all other
+inherited numerical helpers, trainer/configuration bytes, tolerances,
+compilation and CUDA graphs are unchanged. Source lint passes. The local
+16-case CPU suite completion is observed shortly after this checkpoint.
+Its XML records start01:06:52 and393.475seconds elapsed, placing completion
+near01:13:26; earlier tool-session polling prose lagged that artifact.
+CPU/archive acceptance and fresh archived-entry checking are not yet
+established at01:15. Preparation is not a GPU binding, execution-owner
+acceptance, terminal seal or launch.
+
+The original seven-step lower-LR resumed command finishes01:01:43.026252
+with integer execution/cleanup0/0 and marked descendants absent.
+Aggregate01:04:16.598908 retains6/54commands and1/18decisions, `validating`,
+no error. The first five-step MuonT case remains accepted; the seven-step
+numerical decision is pending. The original controller, validator and
+read-only waiter remain live in their exact generations. The sole Bash
+monitor retains its exclusive lock and900-second sleep after its00:58:51
+publication; its next cycle may publish newer evidence independently.
+
+Next: finish separate adapter CPU/archive acceptance, then implement and
+accept the distinct execution owner and queue with the reviewed query-only
+inspection-lock boundary. GPU gates require the original full54-command/
+18-decision coverage, clean restoration and independent canonical terminal.
+Full-budget successors still need separate production ownership, complete
+536,870,912-token shared windows and exact shared evaluations, followed by
+independently verified complete private SwanLab histories. Wave12 remains
+the latest full-budget analyzed and cloud-verified wave. No optimizer
+superiority is established. Both journals are archived under the shared
+lock before this milestone; dense identities and receipts are in DETAILS.
+
+### Query Scan Failure And Restored Allocation
+
+November 20 01:19, Asia/Shanghai. The01:14:48.607372 aggregate preserves
+6/54completed commands and2/18case decisions, then stops `needs_attention`.
+Both MuonT BF16/five-step and BF16/seven-step lower-LR controls pass all five
+original continuation gates at matrixLR0.04525483392. Seven-step
+configurationSHA is
+`138d37889cc168cc83347b8d36f2cd02ef22eae461c6a7810e23ecc07e510e3b`;
+checkpoints22/24 have zero failed tensor/scalar comparisons and all39loss
+checks pass. Checkpoint23 retains16diagnostic-only graph-state scalar
+differences and zero failed tensors, under its existing acceptance policy.
+These are within-arm continuation results, not optimizer-quality comparisons.
+
+The next ten-step continuous command is not launched. The failure occurs
+in the validator's pre-command `require_ns_training_path_gpu_owner` call,
+whose marker scan exhausts its three complete attempts. Retained unstable
+PIDs are3730921,3730943,3730947,3730948,3730949,3730952, all explicitly
+`previously_confirmed_marked: false`. Later missing process files are only
+delayed observations and do not establish coherent identity or live causality.
+The controller and validator stop; recorded execution/cleanup exits remain1/1.
+Restoration records0 at01:15:06.674160. Independent01:16:42.046271 checking
+finds both original owners absent and no validator-marked descendants.
+Keeper3731474 and its exact eight ranks3731705-3731712 exclusively occupy
+the original eight physical A100s. This does not waive either failed exit,
+complete missing coverage, or create the original independent terminal.
+Observation:
+`PVC/run-preparation/query-failure-restored-observation-20261120T0118.json`.
+
+The sole original waiter retains its fourth01:13:00waiting observation and
+900-second interval; it is not restarted or replaced. The sole Bash monitor
+publishes both journals at01:18:58 from its01:13:54report and returns to
+`sleep900`, retaining generation and exclusive lock. That automated report
+time and the later failed aggregate are distinct dated observations.
+The local adapter suite passes16cases in393.58seconds and five journal
+split-publication/monitor tests pass3.07seconds. Separate archived adapter
+acceptance remains running. Full journal lint reports only the inherited
+500KiB size rule; document-content lint and diff-check pass.
+
+The prepared query actual-LR candidate remains unissued. Its predecessor
+reader requires the complete original terminal, so this failed6/54,2/18
+diagnostic cannot supply its seal or launch authority. Next investigate
+the unrelated-process missing-environment branch with CPU-only reproduction
+against exact issued bytes, preserving all scan attempts, deadlines,
+identity/ownership rules and numerical gates. Any successor must have a
+separate reviewed source/archive and failed-predecessor record; do not reuse
+the failed controller or weaken its acceptance predicates. Wave12 remains
+the latest complete large-window analyzed/private-SwanLab-verified wave,
+and the scientific improvement objective remains open. Both journals are
+archived under the shared lock before this failure milestone.
+
+### Query Adapter Acceptance And Unmarked Churn Study
+
+November 20 01:24, Asia/Shanghai. Separate actual-LR adapter archive
+accepts at01:21:54.065972:16unique passing cases in381.99seconds,
+187authenticated helpers and561inventory entries.
+Receipt:
+`PVC/run-preparation/ns-training-path-query-serialized-actual-lr-adapter-cpu/20261120T0116/receipt.json`.
+Fresh checking from the archived entry and its own flat helper path
+passes at01:23. Numerical/predecessor archives stay separate; the full
+54configuration/162command plan and original full5120schedules are
+unchanged. This is CPU/source acceptance only. The prepared candidate
+has no accepted execution owner, queue, canonical predecessor seal or
+GPU binding. Its complete-original-terminal requirement remains unsatisfied.
+
+The new CPU-only study in `tracking/owned_output_unmarked_churn.py`
+uses the exact issued query handoff and exit-helper bytes. It removes
+an unrelated fake process directory after the process observation but
+before its environment read, then exposes a new unrelated process to
+the next scan. With zero, one or two exits, the original scanner returns
+both marked survivors. Churn continuing through all three complete
+scan attempts returns no partial ownership and produces
+`complete_scan_exhausted`, with `previously_confirmed_marked: false`.
+A present live fake process whose environment file is missing still
+refuses; unavailable environment is not treated as empty or as absence.
+Six new regressions and the five earlier marked-churn cases pass11cases
+in1.12seconds. Source lint passes after an unused import/format correction.
+The retained01:23:06study uses the exact issued query source directory:
+`PVC/run-preparation/unmarked-churn-study-20261120T0124.json`.
+
+This reproduces a refusal mechanism compatible with the failed snapshot,
+not the live processes' identity or causality. No scanner implementation,
+identity proof, ownership policy, three-attempt limit, one-second exit
+deadline, numerical tolerance, compilation or CUDA graph is changed.
+Next investigate why unrelated short-lived helpers are included in the
+complete scan and whether their execution can be isolated without dropping
+any ownership evidence. Any correction requires its own source-bound
+CPU/archive review and a preserved failed-predecessor record before GPU
+use. The original failed controller and validator remain consumed; the
+original read-only waiter stays on its own900-second schedule. The sole
+Bash monitor remains live in `sleep900` after01:18:58publication.
+Wave12 remains the latest complete large-window analyzed and independently
+private-SwanLab-verified wave; no superiority or efficiency claim follows.
+Both journals are archived under the shared lock before this milestone.
+
+November20 01:26 verification increment:16combined journal and marked/
+unmarked-churn regressions pass4.06seconds. Required scoped source and
+document-content lint and diff-check pass; the inherited500KiB journal
+size exception remains explicit. The sole monitor stays live, sleeping900
+seconds after01:18:58publication, and the original waiter retains its
+scheduled observation interval. No new full-budget wave, complete terminal,
+GPU successor or SwanLab import is claimed.
+
+### Stopped Query Waiter And Preserved Failure
+
+November 20 01:41, Asia/Shanghai. The original read-only waiter stops
+`needs_attention` at01:28:01.329405 on its own900-second schedule. Its
+four retained observations remain historical; the final error reports
+original owners exiting without complete cleanup/restoration. It issues
+no canonical terminal. The independent01:30:59.919608 observation verifies
+controller3633332, validator3637693, waiter3638945 and all six completed
+launcher handles absent, no validator-marked descendants, and the same
+restored keeper3731474 with ranks3731705-3731712 exclusively occupying
+the original eight A100s.
+Artifact:
+`PVC/run-preparation/query-and-waiter-stopped-observation-20261120T0132.json`.
+
+The failed query retains6/54commands and2/18decisions, both accepted MuonT
+BF16 lower-LR five/seven-step controls, and recorded execution/cleanup1/1.
+The ten-step continuous command was never spawned: failure occurred in
+the validator's pre-command ownership check. No failed-command execution
+sidecar, training log or ten-step trajectory may be invented to complete
+a predecessor template. The stopped waiter and controller remain consumed.
+The accepted actual-LR adapter still cannot consume a complete original
+terminal, because none exists; it stays unissued.
+
+### Streaming Observation-Order Study
+
+November 20 01:41, Asia/Shanghai. Hypothesis: first materializing every
+process identity delays earlier processes' environment reads enough for
+unrelated short-lived processes to disappear and exhaust the complete scan.
+A separate candidate in `tracking/owned_output_streaming_scan.py` derives
+only the marker scanner's iteration from the exact issued query handoff.
+It interleaves each process identity and environment read. The original
+process enumeration and filters, every complete-scan body statement,
+final marked-process recheck, three attempts and one-second identity-bound
+whole-process exit proof remain unchanged. All issued/accepted scanner
+bytes and numerical/trainer/configuration bytes remain untouched.
+
+In the controlled fake-process-tree comparison, observing a later process
+retires an earlier unrelated process and exposes its replacement. The
+materialized scanner exhausts all three attempts without partial ownership;
+the streaming candidate returns both marked survivors. This tests a
+specific stale-read mechanism, not the live failure's cause or a guarantee
+against all concurrent namespace changes. All36pinned original handoff
+cases plus10ordering/lifecycle cases pass46tests. Marked continuous churn,
+live marker removal, reused PIDs, partial files, persistent unavailable
+environments and surviving threads still refuse. Accepted whole-process
+exit retains newly discovered marked children after a complete rescan.
+The combined scanner/churn suite passes57cases in5.98seconds; five focused
+split-journal/monitor tests pass3.13seconds. Scoped source lint passes.
+Source snapshot:
+`PVC/run-preparation/streaming-scan-study-source-20261120T0141.tar`.
+Test evidence:
+`PVC/run-preparation/test-streaming-and-churn-final-20261120T0140.xml`.
+This is a retained working-source study, not a source-archive acceptance
+receipt, GPU gate, production result, efficiency result or SwanLab import.
+
+Next experiment: prepare a distinct streaming/query diagnostic namespace,
+authenticate its complete source closure and CPU archive, and preserve
+the failed6/54,2/18predecessor with an explicit pre-command-failure reader.
+That reader must require the next command's absence rather than a
+nonexistent spawned-failure sidecar. Fresh independent predecessor and
+issued-source checks are required before any GPU launch. Preserve all
+earlier rejections, accepted controls, failed seals, consumed one-shots,
+unissued queues, numerical gates, compilation and CUDA graphs.
+
+The sole original Bash monitor1588227/start933927668 publishes both
+journals at01:38:23 from the01:34:01report, then returns to `sleep900`.
+No monitor, controller, validator, waiter, uploader or GPU experiment is
+duplicated or restarted. Both journals are archived under the shared lock
+before this milestone. Wave12 remains the latest full-budget wave with
+large shared-token-window analysis and independently verified complete
+private SwanLab histories. Further full-budget experiments, comparison
+and verified uploads remain required; no superiority over MuonT is claimed.
+
+November20 01:48 final verification: all299unique journal/scanner/churn
+cases pass in159.25seconds, with zero failures, errors or skips.
+XML:
+`PVC/run-preparation/test-endeavor-streaming-and-churn-clean-20261120T0145.xml`.
+The first broader run's298passes/1failure remains retained. A generated
+pytest bytecode cache from the initial test invocation made the historical
+scan-exit waiter's exact flat-helper inventory refuse. All180pinned
+helpers and its archive were unchanged. The generated cache is preserved
+outside the accepted helper directory, and the unchanged strict reporter
+authenticates again; no acceptance rule is relaxed. The source snapshot
+matches all six current study/test files and the57-case XML contains57
+unique passing cases. Source and document-content lint, Bash syntax and
+diff-check pass. Full journal lint still reports only the inherited500KiB
+size limit, separately recorded in DETAILS. Both journals are archived
+under the shared lock before this final increment. No new GPU experiment,
+full-budget result, complete terminal or SwanLab import is claimed.
+
+### Streaming Diagnostic Prepared
+
+November 20 02:01, Asia/Shanghai. The distinct
+`ns-training-path-streaming-20261120` candidate was prepared at01:55:47:
+`PVC/candidates/ns-training-path-streaming-20261120T0156/ns-training-path-streaming-preparation.json`.
+It records353source files and210declared helpers. Fresh manifest checking
+matches all353candidate files without drift. The only candidate training
+source change is `experiment/fused_attribution_owner.py`; the handoff
+replacement changes marker-scan identity/environment observation order.
+Trainer/configuration bytes,18cases/54bounded commands, lower LR and the
+original5120-update schedule, numerical readers/tolerances, three scans,
+one-second whole-process exit proof, query-lock boundary, compilation and
+CUDA graphs remain unchanged.
+
+The separate pre-command-failure reader retains6completed commands and
+2accepted MuonT controls without inventing a failed training execution.
+It requires every remaining output directory, log and execution sidecar
+to be absent, including symlinks, and preserves consumed-owner/marker
+checks and older seal checking. All17local predecessor/source cases pass;
+the earlier16pass/1failure fixture-closure result remains retained.
+Test evidence:
+`PVC/run-preparation/test-streaming-diagnostic-closure-20261120T0156.xml`.
+Required lint passes for all four new working files after formatting.
+The earlier299-case journal/scanner/churn result remains separate evidence.
+
+This is preparation and local CPU evidence only. The generated
+archive-local study fixtures have not yet passed the planned201-test
+archived acceptance. Fresh archived-entry checking, an independently
+checked failed-precommand predecessor seal, frozen binding/checking and
+all unchanged GPU gates remain required. Neither this candidate nor the
+accepted actual-LR adapter is launched. Subsequent full-budget waves,
+large shared-token comparisons and independently verified private
+full-history uploads remain pending.
+
+Read-only checking near01:58 finds the original failed controller,
+validator and waiter absent, the exact restored keeper3731474 and
+ranks3731705-3731712 occupying all eight original GPUs, and sole monitor
+1588227/start933927668 live. The monitor publishes both journals at01:57:54
+from its01:53:27report and returns to `sleep900`; no duplicate or restart
+is made. The task controller reports the broader goal paused at this
+status check, so no new CPU acceptance or GPU experiment is started here.
+Both journals are archived under the shared lock before this milestone.
+
+The earlier Wave2-running message is historical: its private SwanLab
+receipt verifies all four histories on November16 at16:47:37, and
+`inner_outer_all_lag` completed in Wave3, whose latest verification receipt
+is November16 at17:50:36. Wave12 remains the latest full-budget analyzed
+and cloud-verified wave, with all four histories verified November18
+at02:04:24. Its fused arm has final C4 delta-0.002462 and late shared-C4
+delta-0.001806 versus MuonT, but steady seconds/MTok are2.304 versus2.112
+and recorded total time is536.9seconds longer. These exploratory seed0
+results do not establish a more efficient, better-performing optimizer.
+
 <!-- BEGIN AUTOMATED RESEARCH STATUS -->
 ## Recurring Experiment Status
 
-Refreshed 2026-11-19 19:30:32, Asia/Shanghai, from the same authenticated
+Refreshed 2026-11-20 13:13:19, Asia/Shanghai, from the same authenticated
 receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).
 Receipt times below are historical observations, not fresh process or GPU checks.
 Only the two latest numbered wave reports and current diagnostic gates appear here.
@@ -10526,24 +12529,27 @@ Independent complete terminal and successor validation remain separately gated. 
 
 CPU/source acceptance at 2026-11-19 17:02:50: 129 passing cases, 173 helpers and 542 inventory entries.
 Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions and exit-drain6/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 17:05:15.
-Transition saved status: `validating`; 19/54 completed commands and 6/18 case decisions.
+Transition saved status: `needs_attention`; 23/54 completed commands and 7/18 case decisions.
 Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 19:31:28: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Controller receipt at 2026-11-19 19:59:40: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `outer_leftdiag_fused_ns_tpu_q7_full_lr_lower/resumed` at 2026-11-19 19:59:21; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
 - `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q10_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q7_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q10_full_lr_lower`: accepted; failed gates: none.
+- `outer_leftdiag_fused_ns_tpu_q5_full_lr_lower`: rejected; failed gates: post_cached_root_all_rank_continuation, scalar_loss_continuation.
 Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
 
 ### NS Transition Independent Terminal Waiter
 
-Saved waiter status `waiting_for_original_owners`; original-owner checks every900seconds.
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
 CPU/source archive:24 passing cases,175 helpers; `run-preparation/ns-training-path-exit-transition-followup-cpu/20261119T1718/receipt.json`.
-Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 19:19:55.
+Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 20:04:58.
 Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
-Independent terminal completion is required; saved observations do not prove current liveness.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
 No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
 
 ### NS Transition Actual-LR Queue
@@ -10553,8 +12559,118 @@ Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-transitio
 54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
 The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
 Saved queue intent `acknowledged` at 2026-11-19 19:04:03; original-owner checks every 900 seconds.
-Saved queue `waiting_for_transition_owners` at 2026-11-19 19:20:04; 0/6 completed phases.
-Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`.
+Saved queue `needs_attention` at 2026-11-19 20:05:59; 0/6 completed phases.
+Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`, command_3282129 `absent`, command_3287673 `absent`, command_3292073 `absent`.
+Preserved queue failure: `RuntimeError: Transition-LR external evidence reader refused evidence (exit 1): rmalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 200, in evidence
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 200, in <genexpr>
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 62, in saved
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 54, in checked
+    .replace("ns-training-path-exit-drain", "ns-training-path-exit-transition")
+           ^^^^^^^^^^^^^^^^^^^
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 46, in file_identity
+    ),
+
+  File "/opt/conda/envs/torch-base/lib/python3.13/pathlib/_abc.py", line 437, in lstat
+    return self.stat(follow_symlinks=False)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/torch-base/lib/python3.13/pathlib/_local.py", line 515, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-exit-transition-20261119-terminal-f607ce7b8fa5bbfb332a3ad9e6084041670f1685a1674db44cbf8230f717ef48.json'
+`.
+Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
+Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
+
+### NS Missing-Environment Scan-Exit Diagnostic
+
+CPU/source acceptance at 2026-11-19 20:56:19: 129 passing cases, 178 helpers and 547 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions; the separate preservation seal is dated 2026-11-19 20:59:40.
+Scan-exit saved status: `needs_attention`; 8/54 completed commands and 2/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 22:04:12: `3403676/942778625`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q10_full_lr_lower/resumed` at 2026-11-19 22:03:52; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+- `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Whole-Process Recheck-Exit Diagnostic
+
+CPU/source acceptance at 2026-11-19 22:42:24: 136 passing cases, 183 helpers and 552 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 22:44:56.
+Recheck-exit saved status: `needs_attention`; 1/54 completed commands and 0/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 23:00:07: `3557212/943407368`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q5_full_lr_lower/interrupted` at 2026-11-19 22:59:49; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Serialized Ownership Diagnostic
+
+CPU/source acceptance at 2026-11-19 23:35:02: 141 passing cases, 189 helpers and 558 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions and recheck1/54commands0/18decisions; the separate preservation seal is dated 2026-11-19 23:37:10.
+Serialized saved status: `needs_attention`; 0/54 completed commands and 0/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and full ownership-inspection serialization; the accepted handoff helper and trainer/configuration bytes are retained. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 23:54:30: `3595881/943762646`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q5_full_lr_lower/continuous` at 2026-11-19 23:54:13; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Query-Serialized Ownership Diagnostic
+
+CPU/source acceptance at 2026-11-20 00:11:29: 142 passing cases, 193 helpers and 562 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions and recheck1/54commands0/18decisions and whole-inspection0/54commands0/18decisions; the separate preservation seal is dated 2026-11-20 00:13:48.
+Query-serialized saved status: `needs_attention`; 6/54 completed commands and 2/18 case decisions.
+The owner adapter and query/marker-scan lock boundary change; source authentication remains outside the unchanged 30-second lock. The handoff helper, trainer/configuration bytes and every ownership statement/order are retained. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-20 01:15:06: `3633332/943964742`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q10_full_lr_lower/continuous` at not recorded; execution exit `not recorded`, cleanup exit `not recorded`, marked-descendant absence `not recorded`. No next-command execution receipt is recorded.
+- `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Query-Serialized Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,195 helpers; `run-preparation/ns-training-path-query-serialized-followup-cpu/20261120T0026/receipt.json`.
+Saved waiter PID/start `3638945/943982783`; observation time 2026-11-20 01:28:01.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Serialized Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,191 helpers; `run-preparation/ns-training-path-serialized-followup-cpu/20261119T2353/receipt.json`.
+Saved waiter PID/start `3598600/943780809`; observation time 2026-11-20 00:09:18.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'absent'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Recheck-Exit Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,185 helpers; `run-preparation/ns-training-path-recheck-exit-followup-cpu/20261119T2253/receipt.json`.
+Saved waiter PID/start `3559219/943421918`; observation time 2026-11-19 23:09:30.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Scan-Exit Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,180 helpers; `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/receipt.json`.
+Saved waiter PID/start `3412036/942807401`; observation time 2026-11-19 22:12:06.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Scan-Exit Actual-LR Queue
+
+Saved queue CPU/source-archive acceptance at 2026-11-19 22:05:07; 47 passing cases and 214 authenticated helpers.
+Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-scan-exit-actual-lr-execution-cpu/20261119T2154/receipt.json`.
+54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
+The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
 Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
 Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
 
@@ -10680,6 +12796,32 @@ shared evaluations. Completion requires full-budget history and worker/
 cleanup receipts; upload completion requires the full-resolution cloud
 verification receipt. Neither a correctness probe nor a synthetic timing
 establishes optimizer quality or whole-training efficiency.
+
+November19 20:18 monitor verification: the original Bash monitor
+publishes both documents20:12:22 and returns to `sleep900`, keeping
+its original generation and exclusive lock. Multiline saved-error
+text exposed two trailing-whitespace lines in those generated blocks.
+`tracking/update_endeavor.py` now strips trailing whitespace only in
+the replacement payload; raw receipts and all surrounding manual
+prose remain unchanged. No running or accepted GPU source is edited.
+The split-document regression passes with11focused cases; the full
+journal/queue-reporting suite passes244cases in66.78seconds.
+Supporting XML:
+`PVC/run-preparation/test-endeavor-multiline-full-journal-20261119T2017.xml`.
+Required scoped source/content lint and `git diff --check` pass,
+with the pre-existing500KiB journal-size exception reported separately
+in DETAILS. The existing monitor loads this renderer on its next cycle;
+no duplicate monitor, uploader or experiment is launched.
+
+November 19 20:39 publication verification: the precision import-closure
+milestone and terminal-status table correction above are manually
+published under the same shared lock. Six split-document, concurrent-edit,
+monitor-retry and multiline regressions pass; fresh archived execution
+binding authenticates all 163 helpers. Source and document-content lint
+pass, with only the existing journal-size rule reported separately in
+DETAILS. The sole original Bash monitor remains in its 900-second sleep;
+new launches, large-window results and verified cloud imports will keep
+their separate dated milestones in this document.
 
 `experiment/deploy.py` now includes `ENDEAVOR.md` in future deployment
 payloads. No remote deployment was run during cleanup; old worker-side files

@@ -24,6 +24,10 @@ with open(os.path.join(HERE, "results", "summary.json")) as handle:
     runs = json.load(handle)
 with open(os.path.join(HERE, "results", "lr_summary.json")) as handle:
     lr = json.load(handle)
+mech_path = os.path.join(HERE, "results", "mechanism_summary.json")
+mech = json.load(open(mech_path)) if os.path.exists(mech_path) else {}
+sys_path = os.path.join(HERE, "results", "systems_summary.json")
+sys_data = json.load(open(sys_path)) if os.path.exists(sys_path) else {}
 
 # Every quantity the analysis computed, at the precisions the prose might use.
 values = set()
@@ -32,9 +36,24 @@ values = set()
 def add(x):
     if not isinstance(x, (int, float)):
         return
-    for places in (2, 3, 4, 5, 6, 7, 8, 9):
+    for places in (1, 2, 3, 4, 5, 6, 7, 8, 9):
         values.add(f"{abs(x):.{places}f}")
         values.add(f"{abs(x):.{places}f}".rstrip("0"))
+
+
+def walk(node):
+    if isinstance(node, dict):
+        for v in node.values():
+            walk(v)
+    elif isinstance(node, list):
+        for v in node:
+            walk(v)
+    else:
+        add(node)
+
+
+walk(mech)
+walk(sys_data)
 
 
 for rec in runs.values():
@@ -49,6 +68,10 @@ for rec in runs.values():
         if rec.get("d_sel_late") is not None and other.get("d_sel_late") is not None:
             add(rec["d_sel_late"] - other["d_sel_late"])
             add(rec["d_c4_late"] - other["d_c4_late"])
+        if rec.get("sel_late") is not None and other.get("sel_late") is not None:
+            add(rec["sel_late"] - other["sel_late"])
+            add(rec["c4_final"] - other["c4_final"])
+add(1.0 / (36608.0 ** 0.5))
 for rec in lr.values():
     for value in rec.values():
         add(value)

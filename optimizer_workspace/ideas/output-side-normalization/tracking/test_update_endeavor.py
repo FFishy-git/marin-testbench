@@ -14,7 +14,15 @@ from pathlib import Path
 
 import ns_training_path_exit_followup_reporting as exit_followup_report
 import ns_training_path_exit_reporting as exit_report
+import ns_training_path_query_serialized_followup_reporting as query_serialized_followup_report
+import ns_training_path_query_serialized_reporting as query_serialized_report
+import ns_training_path_recheck_exit_followup_reporting as recheck_exit_followup_report
+import ns_training_path_recheck_exit_reporting as recheck_exit_report
 import ns_training_path_recovery_reporting as recovery_report
+import ns_training_path_scan_exit_followup_reporting as scan_exit_followup_report
+import ns_training_path_scan_exit_reporting as scan_exit_report
+import ns_training_path_serialized_followup_reporting as serialized_followup_report
+import ns_training_path_serialized_reporting as serialized_report
 import ns_training_path_transition_followup_reporting as transition_followup_report
 import ns_training_path_transition_reporting as transition_report
 import prepare_fused_attribution_validation as attribution_validation_preparation
@@ -2180,6 +2188,166 @@ def test_transition_report_preserves_accepted_launch_and_denies_changed_cpu_rece
     assert "129 passing cases" not in refused
 
 
+def test_scan_exit_report_authenticates_distinct_progress_and_withholds_changed_acceptance(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = scan_exit_report.report_module(live).evidence(live)
+    assert len(saved["cpu"]["helpers_sha256"]) == 178
+    assert len(saved["cpu"]["inventory_sha256"]) == 547
+    assert saved["sealed"]["retained_summary"]["completed_commands"] == 23
+    assert saved["sealed"]["retained_summary"]["case_decisions"] == 7
+    assert saved["progress"]["completed_commands"] <= 54
+    text = "\n".join(scan_exit_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {scan_exit_report.TITLE}" in summary
+    assert "transition23/54commands7/18decisions" in summary
+    target = tmp_path / scan_exit_report.CPU_PATH
+    target.parent.mkdir(parents=True)
+    shutil.copy2(live / scan_exit_report.CPU_PATH, target)
+    record(target, json.loads(target.read_text()) | {"status": "substituted"})
+    refused = "\n".join(scan_exit_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "129 passing cases" not in refused
+
+
+def test_recheck_exit_report_preserves_failed_predecessor_and_refuses_changed_acceptance(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = recheck_exit_report.report_module(live).evidence(live)
+    assert len(saved["cpu"]["helpers_sha256"]) == 183
+    assert len(saved["cpu"]["inventory_sha256"]) == 552
+    assert saved["sealed"]["retained_summary"]["completed_commands"] == 8
+    assert saved["sealed"]["retained_summary"]["case_decisions"] == 2
+    assert saved["progress"]["completed_commands"] <= 54
+    text = "\n".join(recheck_exit_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {recheck_exit_report.TITLE}" in summary
+    assert "scan-exit8/54commands2/18decisions" in summary
+    target = tmp_path / recheck_exit_report.CPU_PATH
+    target.parent.mkdir(parents=True)
+    shutil.copy2(live / recheck_exit_report.CPU_PATH, target)
+    record(target, json.loads(target.read_text()) | {"status": "substituted"})
+    refused = "\n".join(recheck_exit_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "136 passing cases" not in refused
+
+
+def test_recheck_exit_waiter_report_preserves_observation_and_refuses_substituted_intent(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = recheck_exit_followup_report.evidence(live)
+    assert saved["pid"] == 3559219 and saved["start_ticks"] == "943421918"
+    assert saved["status"] in ("waiting_for_original_owners", "terminal_reconstructed", "needs_attention")
+    text = "\n".join(recheck_exit_followup_report.lines(live, lambda value: value))
+    assert "evidence withheld:" not in text.lower()
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {recheck_exit_followup_report.TITLE}" in summary
+    target = tmp_path / recheck_exit_followup_report.preparation.WORK / "intent.json"
+    target.parent.mkdir(parents=True)
+    shutil.copy2(live / recheck_exit_followup_report.preparation.WORK / "intent.json", target)
+    cpu = tmp_path / recheck_exit_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / recheck_exit_followup_report.CPU, cpu)
+    record(target, json.loads(target.read_text()) | {"pid": 999999})
+    refused = "\n".join(recheck_exit_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "waiting_for_original_owners" not in refused
+
+
+def test_serialized_report_retains_cpu_acceptance_and_withholds_changed_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    lines = serialized_report.lines(live, lambda value: value)
+    assert any("141" in line and "passing cases" in line for line in lines)
+    summary = research_summary("\n".join(lines) + "\n" + END, datetime.now(UTC))
+    assert f"### {serialized_report.TITLE}" in summary
+    path = tmp_path / serialized_report.CPU_PATH
+    path.parent.mkdir(parents=True)
+    changed = json.loads((live / serialized_report.CPU_PATH).read_text())
+    changed["exit_code"] = 1
+    path.write_text(json.dumps(changed))
+    assert any("withheld" in line for line in serialized_report.lines(tmp_path, lambda value: value))
+
+
+def test_query_serialized_report_retains_acceptance_and_withholds_changed_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    lines = query_serialized_report.lines(live, lambda value: value)
+    assert any("142" in line and "passing cases" in line for line in lines)
+    summary = research_summary("\n".join(lines) + "\n" + END, datetime.now(UTC))
+    assert f"### {query_serialized_report.TITLE}" in summary
+    path = tmp_path / query_serialized_report.CPU_PATH
+    path.parent.mkdir(parents=True)
+    changed = json.loads((live / query_serialized_report.CPU_PATH).read_text())
+    changed["exit_code"] = 1
+    path.write_text(json.dumps(changed))
+    assert any("withheld" in line for line in query_serialized_report.lines(tmp_path, lambda value: value))
+
+
+def test_serialized_waiter_report_retains_observation_and_refuses_substituted_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = serialized_followup_report.evidence(live)
+    intent_path = live / serialized_followup_report.preparation.WORK / "intent.json"
+    intent = json.loads(intent_path.read_text())
+    assert (saved["pid"], saved["start_ticks"]) == (intent["pid"], intent["start_ticks"])
+    text = "\n".join(serialized_followup_report.lines(live, lambda value: value))
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {serialized_followup_report.TITLE}" in summary
+    target = tmp_path / serialized_followup_report.preparation.WORK / "intent.json"
+    target.parent.mkdir(parents=True)
+    shutil.copy2(intent_path, target)
+    cpu = tmp_path / serialized_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / serialized_followup_report.CPU, cpu)
+    record(target, intent | {"pid": intent["pid"] + 1})
+    refused = "\n".join(serialized_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "waiting_for_original_owners" not in refused
+
+
+def test_query_serialized_waiter_report_retains_observation_and_refuses_substituted_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = query_serialized_followup_report.evidence(live)
+    intent_path = live / query_serialized_followup_report.preparation.WORK / "intent.json"
+    intent = json.loads(intent_path.read_text())
+    assert (saved["pid"], saved["start_ticks"]) == (intent["pid"], intent["start_ticks"])
+    assert saved["observations"] >= 1
+    text = "\n".join(query_serialized_followup_report.lines(live, lambda value: value))
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {query_serialized_followup_report.TITLE}" in summary
+    target = tmp_path / query_serialized_followup_report.preparation.WORK / "intent.json"
+    target.parent.mkdir(parents=True)
+    shutil.copy2(intent_path, target)
+    cpu = tmp_path / query_serialized_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / query_serialized_followup_report.CPU, cpu)
+    record(target, intent | {"pid": intent["pid"] + 1})
+    refused = "\n".join(query_serialized_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "waiting_for_original_owners" not in refused
+
+
+def test_scan_exit_waiter_report_retains_owner_observation_and_denies_changed_receipt(tmp_path):
+    live = Path("/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization")
+    saved = scan_exit_followup_report.evidence(live)
+    assert saved["pid"] == 3412036 and saved["start_ticks"] == "942807401"
+    assert saved["observations"] >= 1
+    assert saved["saved_original_owners"] == {
+        "controller": "live_exact_generation",
+        "validator": "live_exact_generation",
+    }
+    text = "\n".join(scan_exit_followup_report.lines(live, lambda value: value))
+    summary = research_summary(text + "\n" + END, datetime.now(UTC))
+    assert f"### {scan_exit_followup_report.TITLE}" in summary
+    intent = tmp_path / scan_exit_followup_report.preparation.WORK / "intent.json"
+    intent.parent.mkdir(parents=True)
+    shutil.copy2(live / scan_exit_followup_report.preparation.WORK / "intent.json", intent)
+    cpu = tmp_path / scan_exit_followup_report.CPU
+    cpu.parent.mkdir(parents=True)
+    shutil.copy2(live / scan_exit_followup_report.CPU, cpu)
+    record(cpu, json.loads(cpu.read_text()) | {"status": "substituted"})
+    refused = "\n".join(scan_exit_followup_report.lines(tmp_path, lambda value: value))
+    assert "evidence withheld:" in refused.lower()
+    assert "Saved waiter status" not in refused
+
+
 @pytest.mark.parametrize("fault", ("none", "changed_command", "unacknowledged"))
 def test_transition_report_failed_command_retains_partial_coverage(tmp_path, fault):
     command = ["python", "training.py"]
@@ -2791,6 +2959,34 @@ def test_refresh_tracks_unlaunched_owned_binding_then_only_bound_saved_command_p
     assert "binding identity differs" in document.read_text()
     assert "PID `123`" not in document.read_text()
     assert document.read_text().split(START)[0] + document.read_text().split(END)[1].lstrip("\n") == prose
+
+
+def test_split_refresh_strips_error_line_whitespace_without_changing_manual_prose(tmp_path, monkeypatch):
+    research, details = tmp_path / "ENDEAVOR.md", tmp_path / "DETAILS.md"
+    research_prose = f"# Research  \n\n[`DETAILS.md`](DETAILS.md)\n\n{SUMMARY_ANCHOR}\n"
+    details_prose = f"# Receipts  \n\n{ANCHOR}\n"
+    research.write_text(research_prose)
+    details.write_text(details_prose)
+    payload = (
+        f"{START}\n### NS Transition Actual-LR Queue\n"
+        "Preserved queue failure: `RuntimeError: missing terminal\n"
+        "    \n  File original_reader.py, line 46  \nFileNotFoundError: terminal.json`\n"
+        f"{END}"
+    )
+    monkeypatch.setattr("update_endeavor.render", lambda root, now: payload)
+
+    update(details, tmp_path, datetime.now(UTC))
+
+    for document, start, end, manual in (
+        (research, SUMMARY_START, SUMMARY_END, research_prose),
+        (details, START, END, details_prose),
+    ):
+        refreshed = document.read_text()
+        block = refreshed.split(start)[1].split(end)[0]
+        assert "RuntimeError: missing terminal" in block
+        assert "  File original_reader.py, line 46\nFileNotFoundError: terminal.json" in block
+        assert all(line == line.rstrip() for line in block.splitlines())
+        assert refreshed.split(start)[0] + refreshed.split(end)[1].lstrip("\n") == manual
 
 
 def test_refresh_refuses_ambiguous_ledger_without_modifying_document(tmp_path):

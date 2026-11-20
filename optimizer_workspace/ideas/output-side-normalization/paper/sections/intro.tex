@@ -31,79 +31,70 @@ which makes per-update paired differencing exact and is what lets us resolve
 effects of a few thousandths of a nat at all.
 
 \paragraph{What we find.}
-Three results are stable across the evidence we have.
+Four results structure the paper, centered on \emph{width-thresholded output
+normalization} (\mlpdiag{}, dense at width 512 and diagonal at width 2048) and
+its pure-diagonal limit (\alldiag{}).
 
 \begin{enumerate}
 \item \textbf{The output side is a complement, not a substitute.}
-  Added on top of input whitening, the best output geometry improves held-out
+  Added on top of input whitening, \mlpdiag{} improves held-out
   loss by \mlpdiagselmag{} nats and does so in every one of five training
-  windows and on all three seeds we ran. Used \emph{instead} of input whitening,
-  the identical output factors make the optimizer \leftallsel{} nats
-  \emph{worse} than the input-only baseline --- worse than either side alone.
-  Whatever the output moment contributes, it is conditional on the input moment
-  already being there (Section~\ref{sec:complement}).
+  windows and on all three seeds we ran, while \alldiag{} retains two-thirds of
+  that gain with no output eigendecompositions. Used \emph{instead} of input whitening,
+  dense output factors make the optimizer \leftallsel{} nats
+  \emph{worse} than the input-only baseline --- worse than either side alone
+  (Section~\ref{sec:complement}).
 
 \item \textbf{A matched null control absorbs a fifth to a third of the
-  apparent gain.} Adding output-side machinery changes more than the update
-  equation: it changes the numerical path, the communication pattern, and the
-  host scheduling. We ran controls that execute all of that work and then apply
-  identity factors. They are not neutral --- they improve on the baseline by
+  apparent gain.} Adding output-side machinery changes the numerical path, the
+  communication pattern, and the host scheduling. Controls that execute all of
+  that work and apply identity factors improve on the baseline by
   \nullsharedense\% of the dense arm's selection-loss gain and \nullsharemlpcfour\%
-  of the leading arm's C4 gain. The first candidate this project ever favored
-  turned out, once its null was run, to be almost entirely execution path
-  (Section~\ref{sec:null}).
+  of \mlpdiag{}'s C4 gain, leaving $-0.0059$ selection and $-0.0040$ C4 nats of
+  net geometry benefit (Section~\ref{sec:null}).
 
-\item \textbf{Freshness beats richness.} The widest output moments carry 96\% of
-  the eigendecomposition work, and the dense arms cannot refresh their
-  eigenbases faster than once every four updates, logging roughly 32{,}000
-  exact-decomposition fallbacks per run and sitting at a mean basis age near
-  three. Replacing those dense roots with elementwise diagonals --- exact, and
-  recomputed every update --- is both \emph{better} and 17 percentage points
-  cheaper per step. But deleting the same factors outright is worse than
-  diagonalizing them. The moment's scale is worth tracking; its rotation, at
-  the refresh rate we can actually afford, was not paying for itself
-  (Section~\ref{sec:freshness}).
+\item \textbf{Hadamard decorrelation explains why width-thresholding works, and
+  rules out step-size inflation.} Auditing all 352 checkpoint moments across 32
+  layers shows that pre-SwiGLU width-2048 cotangents (\texttt{gate},
+  \texttt{up}) have off-diagonal correlations at the finite-sample floor
+  (median RMS \mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), so exact
+  diagonals capture \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of
+  $\|L - I\|_F^2$ while taming $\mechOutGateDiagMaxMean\times$ coordinate-scale
+  anisotropy; residual-stream width-512 cotangents (\texttt{o}, \texttt{down})
+  are $97\%$ rotational, explaining why \mlpdiag{} beats both \dense{} and
+  \alldiag{}. Simultaneously, instantaneous step norms match \muont{} to
+  \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating updates
+  by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit step-size inflation
+  (Section~\ref{sec:mechanism}).
+
+\item \textbf{Lagged execution closes the latency gap to
+  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over vanilla Muon.}
+  Although the initial runner paid $+20.3\%$ over Muon ($+18.0\%$ over \muont{})
+  for \texttt{inner\_outer\_mlpdiag\_lag}, stage profiling localized that gap to
+  a per-step device-wide barrier, synchronous fallback stalls, 896 custom-op
+  backward wrappers, and SIMT-FP32 matrix products under \texttt{allow\_tf32=False}.
+  Removing those bottlenecks in \texttt{fast\_lag} cuts calibrated eight-A100
+  step overhead over Muon to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+  for \texttt{mlpdiag\_lag} ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$
+  over \muont{}, saving \sysMemSavedGib\,GiB) and
+  $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ even for fully dense
+  \texttt{all\_lag}, crossing the \sysTokenSavingPct\% token-saving break-even
+  line (Section~\ref{sec:systems}).
 \end{enumerate}
 
-\paragraph{What governs those findings.}
-A fourth result is negative, and we think it is the most important thing in the
-paper. Every gain above is measured at the pinned recipe's learning rate, and
-that rate is not the baseline's optimum. In short-schedule screening, the
-baseline's own held-out loss improves by \lrHeadroom{} nats when its learning
-rate alone is tuned --- roughly \lrHeadroomRatio{} times the largest output-side
-gain we measured at the recipe rate.\footnote{The two numbers come from
-different schedules, 320 screening updates against the 5{,}120-update full
-budget, so the ratio is an order-of-magnitude statement and not a like-for-like
-one. Section~\ref{sec:tuning} gives both schedules separately.} Worse, the
-ranking does not transfer: when we carried screening-selected rates to the full
-budget, two of three geometries went from beating the baseline to losing to it
-by about \transferWorst{} nats. And on the same short schedule at the recipe
-rate, every candidate is worse than the baseline, inverting the full-budget
-ordering. No arm has reached any loss target in less wall-clock time than the
-baseline, at any of the thresholds we checked.
-
-So we are not reporting a better optimizer. We are reporting that output-side
-normalization produces a small, replicated, window-stable improvement in
-fixed-token loss whose size is comparable to its own control's artifacts and
-small relative to the baseline's tuning headroom, at a step-time cost of 8--22\%
-and about 1.9\,GiB of additional peak memory. That is a promising direction with
-an unpaid bill, not a result.
-
-\paragraph{Why publish it in this form.}
-Two reasons. First, the controls are the contribution that transfers. The
-matched null and the tuning confound are traps that any preconditioner added to
-a Muon-type optimizer will walk into, and both are cheap to avoid once named. In our
-own history each one overturned a conclusion we had already drawn: the matched
-null showed that the arm we first favored was mostly execution path, and the
-tuning transfer reversed the ranking our screening study had selected.
-Second, stating precisely which experiments remain is more useful than
-deferring publication until they are done. Section~\ref{sec:program} lists
-them, and the list is short: one null at the selected rate, a full-budget
-learning-rate neighborhood for two families, one freshness ablation, and
-mechanistic probes that need no new training runs at all. We deliberately do
-\emph{not} propose the large factorial sweeps that this design invites, and
-Section~\ref{sec:program} explains which of them we think are not worth
-running until the learning-rate question resolves.
+\paragraph{What remains to confirm: the full-budget learning-rate horizon.}
+One empirical gate remains before claiming tuned optimizer superiority. On a
+short 320-update (6\% budget) screening schedule, \muont{} gained \lrHeadroom{}
+nats when its learning rate moved from the recipe's $0.0226$ to $0.064$.
+Carrying those short-schedule optima to the full 5{,}120-update budget,
+however, \emph{degraded \muont{} itself by \waveTwelveMuontSelDiff{} nats}
+relative to $0.0226$, and noisy short-horizon tie-breaking assigned $0.0905$ to
+two diagonal candidates while assigning $0.064$ to a mathematically equivalent
+fused arm, producing \transferWorst{}-nat regressions past the full-budget
+stability cliff (Section~\ref{sec:tuning}). Thus $0.0226$, not $0.064$, lies
+near the full-budget optimum, and Section~\ref{sec:program} specifies the
+compact full-budget sweep around $0.0226$ on \texttt{fast\_lag}
+\texttt{inner\_outer\_mlpdiag\_lag} and \alldiag{} that closes the comparison.
 
 \paragraph{Scope.}
 Everything here is one model size, one token budget, one hardware

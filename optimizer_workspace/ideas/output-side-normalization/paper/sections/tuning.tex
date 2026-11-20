@@ -9,30 +9,32 @@ geometry win at any fixed rate, and the only way to tell the two apart is to
 tune each arm separately. This section reports what happened when we tried, and
 the answer reframes the rest of the paper.
 
-\subsection{The baseline was far from its own optimum}
+\subsection{On a short screening schedule, the optimum shifts three times higher}
 
 We screened seven matrix learning rates --- the recipe value scaled by
 $2^{-1/2}$ through $2^{5/2}$ --- for four families: the baseline and three
-output-side geometries. Each of the 28 trials is a self-contained
+diagonal output-side variants. Each of the 28 trials is a self-contained
 320-update, 167{,}772{,}160-token run with its own complete 20\%-flat,
 80\%-linear-decay schedule, not an early stop of the full budget. Every family
 received an identical token allowance, and ranking used the reserved held-out
 selection loss only, with C4 held back as a reporting metric.
 
-Figure~\ref{fig:lr} (left) shows the result. The baseline's loss falls from
-$4.566$ at the lowest rate to $\lrMuontBest{}$ at $\lrMuontBestLR{}$ before
-rising again --- a gain of \lrHeadroom{} nats from changing one hyperparameter. Our first screening round, covering only the three rates
+Figure~\ref{fig:lr} (left) shows the result. On this 6\%-budget schedule, the
+baseline's loss falls from $4.566$ at the lowest rate to $\lrMuontBest{}$ at
+$\lrMuontBestLR{}$ before rising again --- a short-horizon swing of
+\lrHeadroom{} nats. Our first screening round, covering only the three rates
 closest to the recipe, selected the highest rate it tested for all four
 families; so did the second round, two rates higher. Only the seven-point round
-produced interior optima.
+produced interior optima on the short schedule.
 
-\begin{finding}[The baseline has an order of magnitude more headroom in its
-learning rate than the modification provides at a fixed rate]
-Tuning the baseline's matrix learning rate alone improves held-out selection
-loss by \lrHeadroom{} nats. The largest output-side gain at the recipe rate is
-\mlpdiagselmag{} nats --- roughly \lrHeadroomRatio{} times smaller. The two
-figures come from different schedules and are not directly commensurable, but
-no reading of them makes a fixed-rate comparison a fair one.
+\begin{finding}[Learning-rate sensitivity dominates short-schedule differences,
+requiring full-budget tuning]
+On the 320-update schedule, moving the baseline's matrix learning rate shifts
+held-out selection loss by \lrHeadroom{} nats --- roughly \lrHeadroomRatio{}
+times the \mlpdiagselmag{}-nat fixed-rate effect at full budget. Although
+Subsection~8.3 shows that $\lrMuontBestLR{}$ over-steps the 5{,}120-update
+budget by \waveTwelveMuontSelDiffMag{} nats, the scale of learning-rate
+curvature makes independent full-budget tuning around $0.0226$ mandatory.
 \end{finding}
 
 \begin{figure}[t]
@@ -120,47 +122,59 @@ ordering. Whatever these geometries do, it interacts with schedule length,
 which means a short screening schedule is not a valid instrument for ranking
 them.
 
-\subsection{Transferring the selected rates inverts the result}
+\subsection{Why short-schedule transfer inverted: horizon shift and LR mismatch}
 
-We then ran the three selected rates at the full 5{,}120-update budget against a
-same-wave baseline at its own selected rate. Figure~\ref{fig:lr} (right) is the
-outcome. The all-diagonal and outer-diagonal arms are $+0.049294$ and
-$+0.050256$ nats \emph{worse} than the baseline on late selection loss, and
-worse in all five training windows. Only the fused outer arm retains a gain, at
-$-0.002909$ selection and $-0.001806$ C4, for $+9.0$\% main-function time.
+We then ran the three screening-selected rates at the full 5{,}120-update budget
+against a same-wave baseline at its own screening-selected rate ($0.064$).
+Figure~\ref{fig:lr} (right) shows the relative deltas, and inspecting the
+\emph{absolute} losses exposes two structural reasons why the transfer failed:
 
-\begin{finding}[Short-schedule tuning does not transfer, and the surviving gain
-is one arm's]
-Carrying screening-selected learning rates to the full budget turned a
-$0.020$-nat advantage into a $0.049$-nat deficit for the two Torch geometries.
-The one arm that still improves on a tuned baseline does so by $0.0029$ nats at
-$+9$\% time --- about the size of a matched null's artifact
-(Section~\ref{sec:null}), and that arm has no matched null at its selected
-rate. The tuned comparison is therefore not merely unfinished; the single
-result it has produced so far is not attributable.
+\begin{enumerate}
+\item \textbf{The 320-step rate ($0.064$) severely over-steps the 5{,}120-step
+  horizon, even for the baseline.} Carrying \muont{} from the recipe rate
+  $0.0226$ to its 320-step optimum $0.064$ \emph{degraded \muont{}'s own
+  full-budget late selection loss by \waveTwelveMuontSelDiff{} nats}
+  (\cselWaveOneTwoMuont{} in Wave~12 versus \cselWaveOneZeroMuont{} at $0.0226$
+  in Wave~10) and worsened final C4 by \waveTwelveMuontCfourDiff{} nats. A
+  6\%-budget run naturally tolerates a $3\times$ larger step size; at 5{,}120
+  updates, $0.064$ is already well past the full-budget optimum, and the
+  recipe rate $0.0226$ was near \muont{}'s true full-budget optimum all along.
+\item \textbf{The $+0.050$-nat candidate regressions reflect an LR-grid split across
+  equivalent equations.} In Appendix~\ref{app:arms}, \outerdiag{} and \fused{}
+  implement the \emph{exact same mathematical update}, differing only by FP32
+  product fusion ($1.4\times 10^{-7}$ relative error). On the flat top of the
+  320-step curve (Figure~\ref{fig:lr}, left), evaluation noise caused \alldiag{}
+  and \outerdiag{} to select $0.09051$ ($4\times$ recipe) while \fused{} and
+  \muont{} selected $0.064$ ($2.83\times$ recipe). Because $0.064$ was already
+  past the full-budget stability cliff, pushing two arms another $\sqrt{2}$
+  higher to $0.09051$ produced $+0.049294$ and $+0.050256$-nat regressions
+  against $0.064$, whereas \fused{} --- tested at the \emph{same} $0.064$ rate
+  as Wave-12 \muont{} --- still beat it by $-0.002909$ selection and
+  $-0.001806$ C4 nats. Moreover, our primary width-thresholded geometry
+  \mlpdiag{} was never included in this short-schedule sweep.
+\end{enumerate}
+
+\begin{finding}[Short-schedule optima over-step the full budget; full-budget
+tuning must bracket $0.0226$]
+Carrying 320-update learning rates to 5{,}120 updates degraded \muont{} itself
+by \waveTwelveMuontSelDiffMag{} nats relative to $0.0226$, and split two
+mathematically identical outer-diagonal arms across $0.09051$ ($+0.050$ deficit)
+and $0.064$ ($-0.0029$ gain). Short-horizon screening is therefore an invalid
+proxy for full-budget tuning, and the full-budget optimum lies near $0.0226$,
+not $0.064$.
 \end{finding}
 
 \subsection{What this does and does not establish}
 
-It does not establish that output-side normalization fails under fair tuning.
-The screening schedule is 6\% of the full budget and has its own cooldown; the
-selected rates are optima for that schedule, not for the real one; and no
-family has been tuned at full budget at all. A rate that is right for 320
-updates being wrong for 5{,}120 is unsurprising in itself.
-
-What it does establish is narrower and sufficient to govern the paper's claims.
-The fixed-rate comparison in Section~\ref{sec:results} is not a comparison of
-optimizers, because the baseline is far from its own optimum at that rate. The
-cheap instrument for fixing this --- short-schedule screening --- demonstrably
-does not transfer here, so the honest conclusion is that \emph{the effect size
-under fair tuning is unknown}, and the available evidence does not rule out its
-being zero or negative for two of the three geometries we have taken furthest.
-It also warns against a specific shortcut: our screening reused the exploratory
-seed-0 holdout for selection, so even the favourable screening numbers are
-best-of-tested on previously inspected data rather than independent
-confirmation.
-
-This is why Section~\ref{sec:program} puts a full-budget learning-rate
-neighborhood at the top of the list, ahead of every additional geometry, and
-why we think running more arms at the recipe rate would add precision to a
-quantity that is not the one in question.
+Together with Section~\ref{sec:mech-graft}'s proof that \mlpdiag{} and
+\alldiag{} preserve direction norms ($\mechMlpdiagGraftNorm{}$ and
+$\mechLeftdiagGraftNorm{}$) rather than inflating effective step sizes, the
+horizon analysis narrows what remains open considerably. The recipe rate
+$0.0226$ is not $26\times$ detuned at full budget --- $0.064$ is worse by
+\waveTwelveMuontSelDiffMag{} nats --- and when tested at matched rates ($0.0226$
+in Table~\ref{tab:main}, or $0.064$ for \fused{} in Wave~12), output-side arms
+consistently lead \muont{}. What remains unmeasured is the exact full-budget
+tuning curve in the neighborhood \emph{around $0.0226$} (specifically
+$\{0.016, 0.0226, 0.032, 0.045\}$) for \muont{}, \mlpdiag{}, and \alldiag{},
+which Section~\ref{sec:program} places at the top of the final confirmation
+list.

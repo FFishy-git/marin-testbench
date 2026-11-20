@@ -63,6 +63,14 @@ for fam in ("inner_outer_leftdiag", "outer_leftdiag", "outer_leftdiag_fused"):
     short = lr[f"base/{fam}"]["selection"] - muont_base
     mac(f"shortBase{stem}", f"{short:+.6f}")
 
+# Full-budget horizon shift: MuonT at the 320-step screening rate (0.064, wave 12)
+# versus MuonT at the recipe rate (0.0226, wave 10) on the full 5,120-update budget.
+w12_sel_diff = runs["wave12/muont"]["sel_late"] - runs["wave10/muont"]["sel_late"]
+w12_c4_diff = runs["wave12/muont"]["c4_final"] - runs["wave10/muont"]["c4_final"]
+mac("waveTwelveMuontSelDiff", f"{w12_sel_diff:+.4f}")
+mac("waveTwelveMuontSelDiffMag", f"{abs(w12_sel_diff):.3f}")
+mac("waveTwelveMuontCfourDiff", f"{w12_c4_diff:+.4f}")
+
 with open(os.path.join(HERE, "results", "derived_numbers.tex"), "w") as handle:
     handle.write("\n".join(out) + "\n")
 

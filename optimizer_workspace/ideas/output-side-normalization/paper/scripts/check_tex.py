@@ -28,15 +28,15 @@ label ref eqref pageref cite citep citet bibliography bibliographystyle
 tableofcontents newpage clearpage pagebreak linebreak hfill vfill hspace vspace
 textbf textit texttt textsc textrm emph underline textsuperscript
 mathbb mathbf mathrm mathcal mathsf operatorname text
-frac dfrac tfrac nicefrac sqrt sum prod int lim max min log exp
+frac dfrac tfrac nicefrac sqrt sum prod int lim max min log exp cos sin
 left right big Big bigg Bigg langle rangle lVert rVert lvert rvert
 alpha beta gamma delta epsilon varepsilon zeta eta theta iota kappa lambda mu
 nu xi pi rho sigma tau upsilon phi varphi chi psi omega
 Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega
 in notin subset subseteq cup cap setminus emptyset forall exists neg
-leq geq neq approx equiv sim simeq propto times cdot cdots ldots dots vdots
+leq geq le ge neq approx equiv sim simeq propto times cdot cdots ldots dots vdots
 to mapsto rightarrow leftarrow Rightarrow Leftarrow leftrightarrow
-partial nabla infty pm mp oplus otimes circ star ast
+partial nabla infty pm mp oplus otimes odot circ star ast
 quad qquad enspace thinspace noindent indent par smallskip medskip bigskip
 centering raggedright raggedleft small footnotesize scriptsize tiny
 large Large LARGE huge Huge normalsize

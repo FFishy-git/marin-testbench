@@ -1,49 +1,48 @@
 \section{Conclusion}
 
-We added the output-cotangent second moment to a Muon-type optimizer and
-measured what it does, across \nDistinctRuns{} full-budget training
-trajectories and 28 learning-rate screening trials on one pinned recipe.
+We added output-cotangent second moments to input-whitened MuonT and evaluated
+them across \nDistinctRuns{} full-budget 2.68B-token training trajectories, 28
+short-schedule learning-rate trials, a 32-layer checkpoint mechanism audit, and
+a stage-optimized lagged A100 implementation.
 
-Three things are true of the modification at the recipe's learning rate. It
-helps, by \mlpdiagselmag{} nats of held-out loss for the best geometry, in every
-training window and on all three seeds we ran. It helps only as a complement to
-input-side whitening --- substituting output factors for input factors is worse
-than either alone, and degrading the input side is the most expensive mistake in
-our arm family. And its value is governed by how current the statistic is
-rather than how rich it is: exact diagonal factors recomputed every update beat
-dense spectral factors that cannot be refreshed faster than once every four,
-while deleting the same factors is worse than diagonalizing them.
-
-Two things are true of the comparison. A matched null that performs identical
-work with identity factors recovers a fifth to a third of the apparent gain, so
-the attributable geometry effect is smaller than the headline, and the first arm
-this project favoured was mostly execution path. And the baseline is not tuned:
-its own learning rate is worth an order of magnitude more than the modification
-is at a fixed rate, short-schedule tuning does not transfer to the full budget,
-and at transferred rates two of three geometries lose to the baseline by more
-than they ever won by. No arm reaches any loss target in less wall-clock time
-than the baseline.
-
-We think the direction remains worth pursuing, for a specific reason: the
-geometry effect that survives the matched null is consistent, window-stable, and
-seed-replicated, and the cost objection is attackable in ways the quality
-objection would not be --- the expensive part of the output side turned out to be
-the part worth discarding. But it is not yet a result, and the gap between
-``promising'' and ``established'' here is not many more arms. It is one grafted
-run to separate geometry from step size, one null at the selected rate, a
-full-budget learning-rate neighborhood, one freshness ablation, and a set of
-mechanistic probes that need no training at all --- nine runs, against the 54
-configurations the design invites. We have specified them in
-Section~\ref{sec:program} with decision rules fixed in advance, because the
-effects at stake are close enough to this study's own control artifacts that the
-order of operations determines the answer.
-
-The transferable lesson is narrower than the method and more useful. Adding
-machinery to an optimizer changes its numerics, its communication and its
-scheduling, and those changes are not loss-neutral; a control that runs the
-machinery and discards its output costs one run and told us that a fifth to a
-third of our first effect was not what we thought. Comparing against an
-untuned baseline is the older trap, and it cost us more: a fixed-rate
-comparison was measuring a quantity an order of magnitude smaller than the one
-a practitioner would care about. Neither discipline is expensive. Both were
-decisive here.
+Four findings define the scope and design of output-side normalization in
+Muon-type optimizers:
+\begin{enumerate}
+\item \textbf{Width-thresholded complementarity.} Output moments help on top of
+  input whitening (\mlpdiagsel{} nats held-out selection loss for \mlpdiag{}
+  across all five training windows and all three seeds; $-0.0059$ nats net of
+  matched execution-path null) and fail when substituted for it (\leftallsel{}
+  nats). Pure diagonal output scaling (\alldiag{}) retains two-thirds of that
+  gain with zero eigendecompositions.
+\item \textbf{Architectural covariance alignment and pure step rotation.}
+  Auditing all 352 checkpoint moments shows that pre-SwiGLU width-2048
+  cotangents (\texttt{gate}, \texttt{up}) are Hadamard products whose
+  off-diagonal correlations sit at the finite-sample floor (median RMS
+  \mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), putting
+  \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of $\|L - I\|_F^2$ on the
+  diagonal alongside $\mechOutGateDiagMaxMean\times$ coordinate-scale
+  anisotropy, whereas residual-stream width-512 cotangents (\texttt{o},
+  \texttt{down}) are $97\%$ rotational. Instantaneous step norms match \muont{}
+  to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating
+  updates by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit learning-rate
+  inflation.
+\item \textbf{Lagged execution at $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+  overhead over vanilla Muon.} Removing device-wide per-step synchronization,
+  synchronous fallback stalls, per-linear backward custom-op partitions, and
+  SIMT-FP32 bottlenecks in \texttt{fast\_lag} reduces
+  \texttt{inner\_outer\_mlpdiag\_lag} from $+\sysLegacyMlpVsMuon\%$ to
+  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over Muon
+  ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \muont{}, saving
+  \sysMemSavedGib\,GiB) and brings even fully dense
+  \texttt{inner\_outer\_all\_lag} down to
+  $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over Muon --- crossing the
+  \sysTokenSavingPct\% token-reduction break-even threshold with bitwise-exact
+  24-step continuation parity.
+\item \textbf{Methodological discipline.} Matched execution-path nulls
+  accounted for a fifth to a third of raw fixed-rate gains, and 320-step
+  learning-rate screening selected an over-stepped rate ($0.064$) that
+  regressed full-budget \muont{} itself by \waveTwelveMuontSelDiffMag{} nats
+  relative to the recipe rate ($0.0226$). Both controls are inexpensive, and
+  together they narrow final end-to-end confirmation to the compact full-budget
+  learning-rate curve around $0.0226$ specified in Section~\ref{sec:program}.
+\end{enumerate}

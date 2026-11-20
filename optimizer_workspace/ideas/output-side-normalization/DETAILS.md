@@ -7316,7 +7316,7 @@ No original keeper, controller, validator or monitor was restarted.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-19 19:30:32, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-20 13:13:19, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -8002,24 +8002,27 @@ Independent complete terminal and successor validation remain separately gated. 
 
 CPU/source acceptance at 2026-11-19 17:02:50: 129 passing cases, 173 helpers and 542 inventory entries.
 Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions and exit-drain6/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 17:05:15.
-Transition saved status: `validating`; 19/54 completed commands and 6/18 case decisions.
+Transition saved status: `needs_attention`; 23/54 completed commands and 7/18 case decisions.
 Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 19:31:28: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Controller receipt at 2026-11-19 19:59:40: `3118453/941361276`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `outer_leftdiag_fused_ns_tpu_q7_full_lr_lower/resumed` at 2026-11-19 19:59:21; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
 - `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_tpu_q10_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q5_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q7_full_lr_lower`: accepted; failed gates: none.
 - `muont_ns_f32_q10_full_lr_lower`: accepted; failed gates: none.
+- `outer_leftdiag_fused_ns_tpu_q5_full_lr_lower`: rejected; failed gates: post_cached_root_all_rank_continuation, scalar_loss_continuation.
 Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
 
 ### NS Transition Independent Terminal Waiter
 
-Saved waiter status `waiting_for_original_owners`; original-owner checks every900seconds.
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
 CPU/source archive:24 passing cases,175 helpers; `run-preparation/ns-training-path-exit-transition-followup-cpu/20261119T1718/receipt.json`.
-Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 19:19:55.
+Saved waiter PID/start `3127027/941414079`; observation time 2026-11-19 20:04:58.
 Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
-Independent terminal completion is required; saved observations do not prove current liveness.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
 No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
 
 ### NS Transition Actual-LR Queue
@@ -8029,8 +8032,118 @@ Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-transitio
 54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
 The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
 Saved queue intent `acknowledged` at 2026-11-19 19:04:03; original-owner checks every 900 seconds.
-Saved queue `waiting_for_transition_owners` at 2026-11-19 19:20:04; 0/6 completed phases.
-Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`.
+Saved queue `needs_attention` at 2026-11-19 20:05:59; 0/6 completed phases.
+Saved original-owner states: controller `live_exact_generation`, validator `live_exact_generation`, terminal_waiter `live_exact_generation`, command_3119049 `absent`, command_3123996 `absent`, command_3127140 `absent`, command_3136338 `absent`, command_3141070 `absent`, command_3147037 `absent`, command_3157594 `absent`, command_3167494 `absent`, command_3176064 `absent`, command_3199666 `absent`, command_3206297 `absent`, command_3209606 `absent`, command_3219349 `absent`, command_3236010 `absent`, command_3243312 `absent`, command_3262803 `absent`, command_3267603 `absent`, command_3270631 `absent`, command_3282129 `absent`, command_3287673 `absent`, command_3292073 `absent`.
+Preserved queue failure: `RuntimeError: Transition-LR external evidence reader refused evidence (exit 1): rmalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 200, in evidence
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 200, in <genexpr>
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 62, in saved
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 54, in checked
+    .replace("ns-training-path-exit-drain", "ns-training-path-exit-transition")
+           ^^^^^^^^^^^^^^^^^^^
+  File "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-transition-actual-lr-predecessor-cpu/staged-20261119T1748/tracking/ns_training_path_transition_lr_predecessor.py", line 46, in file_identity
+    ),
+
+  File "/opt/conda/envs/torch-base/lib/python3.13/pathlib/_abc.py", line 437, in lstat
+    return self.stat(follow_symlinks=False)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/torch-base/lib/python3.13/pathlib/_local.py", line 515, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/ns-training-path-exit-transition-20261119-terminal-f607ce7b8fa5bbfb332a3ad9e6084041670f1685a1674db44cbf8230f717ef48.json'
+`.
+Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
+Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
+
+### NS Missing-Environment Scan-Exit Diagnostic
+
+CPU/source acceptance at 2026-11-19 20:56:19: 129 passing cases, 178 helpers and 547 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions; the separate preservation seal is dated 2026-11-19 20:59:40.
+Scan-exit saved status: `needs_attention`; 8/54 completed commands and 2/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 22:04:12: `3403676/942778625`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q10_full_lr_lower/resumed` at 2026-11-19 22:03:52; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+- `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Whole-Process Recheck-Exit Diagnostic
+
+CPU/source acceptance at 2026-11-19 22:42:24: 136 passing cases, 183 helpers and 552 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions; the separate preservation seal is dated 2026-11-19 22:44:56.
+Recheck-exit saved status: `needs_attention`; 1/54 completed commands and 0/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 23:00:07: `3557212/943407368`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q5_full_lr_lower/interrupted` at 2026-11-19 22:59:49; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Serialized Ownership Diagnostic
+
+CPU/source acceptance at 2026-11-19 23:35:02: 141 passing cases, 189 helpers and 558 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions and recheck1/54commands0/18decisions; the separate preservation seal is dated 2026-11-19 23:37:10.
+Serialized saved status: `needs_attention`; 0/54 completed commands and 0/18 case decisions.
+Source/configuration changes are restricted to the owner adapter and full ownership-inspection serialization; the accepted handoff helper and trainer/configuration bytes are retained. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-19 23:54:30: `3595881/943762646`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q5_full_lr_lower/continuous` at 2026-11-19 23:54:13; execution exit `1`, cleanup exit `1`, marked-descendant absence `True`. Excluded from completed trajectory counts.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Query-Serialized Ownership Diagnostic
+
+CPU/source acceptance at 2026-11-20 00:11:29: 142 passing cases, 193 helpers and 562 inventory entries.
+Preserved failures remain original44/54commands14/18decisions, recovery2/54commands0/18decisions exit-drain6/54commands2/18decisions and transition23/54commands7/18decisions and scan-exit8/54commands2/18decisions and recheck1/54commands0/18decisions and whole-inspection0/54commands0/18decisions; the separate preservation seal is dated 2026-11-20 00:13:48.
+Query-serialized saved status: `needs_attention`; 6/54 completed commands and 2/18 case decisions.
+The owner adapter and query/marker-scan lock boundary change; source authentication remains outside the unchanged 30-second lock. The handoff helper, trainer/configuration bytes and every ownership statement/order are retained. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
+Controller receipt at 2026-11-20 01:15:06: `3633332/943964742`. This is a saved observation and does not establish current liveness or GPU occupancy.
+Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
+Next-command receipt: `muont_ns_tpu_q10_full_lr_lower/continuous` at not recorded; execution exit `not recorded`, cleanup exit `not recorded`, marked-descendant absence `not recorded`. No next-command execution receipt is recorded.
+- `muont_ns_tpu_q5_full_lr_lower`: accepted; failed gates: none.
+- `muont_ns_tpu_q7_full_lr_lower`: accepted; failed gates: none.
+Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+
+### NS Query-Serialized Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,195 helpers; `run-preparation/ns-training-path-query-serialized-followup-cpu/20261120T0026/receipt.json`.
+Saved waiter PID/start `3638945/943982783`; observation time 2026-11-20 01:28:01.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Serialized Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,191 helpers; `run-preparation/ns-training-path-serialized-followup-cpu/20261119T2353/receipt.json`.
+Saved waiter PID/start `3598600/943780809`; observation time 2026-11-20 00:09:18.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'absent'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Recheck-Exit Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,185 helpers; `run-preparation/ns-training-path-recheck-exit-followup-cpu/20261119T2253/receipt.json`.
+Saved waiter PID/start `3559219/943421918`; observation time 2026-11-19 23:09:30.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Scan-Exit Independent Terminal Waiter
+
+Saved waiter status `needs_attention`; original-owner checks every900seconds.
+CPU/source archive:24 passing cases,180 helpers; `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/receipt.json`.
+Saved waiter PID/start `3412036/942807401`; observation time 2026-11-19 22:12:06.
+Saved original owner states: `{'controller': 'live_exact_generation', 'validator': 'live_exact_generation'}`.
+Retained waiter error: `RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+No keeper transfer, new GPU command, numerical waiver, production or SwanLab authority.
+
+### NS Scan-Exit Actual-LR Queue
+
+Saved queue CPU/source-archive acceptance at 2026-11-19 22:05:07; 47 passing cases and 214 authenticated helpers.
+Accepted execution-owner parent: `PVC/run-preparation/ns-training-path-scan-exit-actual-lr-execution-cpu/20261119T2154/receipt.json`.
+54 actual-LR configurations and 162 bounded eight-rank commands retain the original 5,120-update schedule.
+The existing original waiter owns its sole canonical terminal; this queue invokes no original terminal.
 Saved receipts do not establish current liveness or rederive tensor arithmetic. Failed phases and consumed claims remain retained.
 Bounded continuation gates supply no production, full-budget quality, efficiency or SwanLab acceptance. Large shared-token comparisons and independently verified private full histories remain required.
 
@@ -23523,3 +23636,2128 @@ env CUDA_VISIBLE_DEVICES= CUBLAS_WORKSPACE_CONFIG=:4096:8 \
 Scoped Ruff/Black checks pass after formatting and binding loop-mode
 defaults in independent references. Manual journals hold the existing
 `.endeavor-update.lock`; no second monitor or GPU task is issued.
+
+The first60-case archive accepts at19:31:36 but independent review
+withholds measurement for the three public-boundary gaps described
+in ENDEAVOR. It remains unchanged and unlaunched. Receipt SHA256
+`022908c3733c6a7fbb85dac26beca57ba720cce8af6d993d025ca76a4c593571`;
+source tar SHA256
+`6b0d0ad639c902d0a7b7ce13d12c8f18c297cb53d2eaa7aa9ce4c5dd51ffa586`.
+Corrected17-case focused XML SHA256
+`a539cb3af4ffbdc71a687d5e6e402c2b1e32da400ddaa802c49cb6fad851f215`.
+
+Reviewed64-case archive accepts at
+`2026-11-19T11:37:53.085349+00:00`,153.41seconds,
+158helpers/526inventory entries. Fresh archived-entry checking
+passes by19:39; independent code re-review clears the corrections.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/receipt.json` | `f43d4f5bd6806c7abcaf066e705c77a67185c415ccdfa0b7f45b776bda6b8c55` |
+| `run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/source.tar` | `08b2a49654f2db64085e445ddd0eefa6e86ee75e74272e8fe93816839e0a0af8` |
+| `run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/tests.xml` | `4b9b7cb726cb0a37c02c10b9faf5467d2af9595dc3cf5f291a6865e37b504422` |
+| `run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/cpu.log` | `3e7f2dcdf0337dbefc093ffb9af04e80c55972d3139e9a089c80b3f0ac67c90e` |
+
+Archived CPU measurement issued19:39, with the same fixed environment
+and archived tracking/site-packages only:
+
+```bash
+/opt/conda/envs/torch-base/bin/python -P \
+  "$PVC/run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/tracking/ns_precision_placement.py" \
+  --phase run \
+  --cpu-receipt "$PVC/run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/receipt.json" \
+  --out "$PVC/run-preparation/ns-precision-placement-saved-pair-20261119T1940"
+```
+
+Measurement complete output and independent retained verification
+remain pending at this entry. Five journal/monitor regression tests
+pass2.01seconds, scoped source/content lint and `git diff --check`
+pass. Scheduled journal publication19:34:05 retains the sole original
+monitor. Manual journaling holds the shared lock; no GPU owner,
+keeper, running source, accepted archive or tolerance is altered.
+
+### November 19 19:43 Precision Placement Result Verification
+
+The exact reviewed archived CPU measurement exits integer-zero at
+`2026-11-19T11:41:16.506428+00:00`. All18schedule outputs are retained.
+The separate foreground `--phase verify` process exits integer-zero,
+publishing at`2026-11-19T11:42:28.635297+00:00`.
+It independently rederives every published comparison and geometry,
+including the full replay reports and six historical homogeneous
+controls.36/36same-input repeats are exact finite; all18C/Rpairs
+remain rejected. Scientific metrics and the proposed CUDA successor
+are in ENDEAVOR, "Precision-Placement CPU Result".
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-precision-placement-saved-pair-20261119T1940/result.json` | `61a51204a451b87645fc0ec62332748bda47187b92a9c5337a0d497576288786` |
+| `run-preparation/ns-precision-placement-saved-pair-20261119T1940/retained-verification.json` | `e8977a1c30a819dbca05ee75e14661c9da5a612e3a34baf85a664ae6799987ba` |
+| `run-preparation/test-precision-placement-journals-20261119T1937.xml` | `59e2a91ad640a51a0e0377a5afcf12a95e3d4915c167e18b622210ebad36a71e` |
+
+Verifier command uses the same fixed hidden-CUDA environment,
+archived tracking/site-packages and archived cwd:
+
+```bash
+/opt/conda/envs/torch-base/bin/python -P \
+  "$PVC/run-preparation/ns-precision-placement-cpu/reviewed-20261119T1935/tracking/ns_precision_placement.py" \
+  --phase verify \
+  --out "$PVC/run-preparation/ns-precision-placement-saved-pair-20261119T1940"
+```
+
+Fresh19:41:46process checks find the original controller3118453,
+validator3118822, terminal waiter3127027, reviewed queue3263097
+and sole monitor1588227 live. Aggregate19:39:18retains21/54commands
+and6/18accepted decisions; the first fused BF16/five case triple is
+complete, comparison pending. Queue state19:35:14remains waiting,
+0/6phases. Monitor last publishes19:34:05; independent nonblocking
+monitor-lock contention exits1, confirming exclusive ownership.
+Manual journaling holds `.endeavor-update.lock`. No production
+wave, new SwanLab history, original terminal invocation, GPU
+successor, keeper action or issued-source edit is made here.
+
+### November 19 19:54 Fused Rejection And Precision CUDA Draft
+
+Scientific interpretation is in ENDEAVOR, "Fused Five-Step Continuation
+Rejection" and "Precision-Placement CUDA Component Draft".
+Aggregate`2026-11-19T11:50:23.322534+00:00` records21/54commands,
+7/18decisions:6accepted MuonT cases and rejected
+`outer_leftdiag_fused_ns_tpu_q5_full_lr_lower`.
+All five gates remain unchanged; failed post-root24and scalar-loss
+predicates retain the exact tensor/loss evidence. The original
+validator owns this comparison; no competing terminal is invoked.
+
+Original owners/controller3118453and validator3118822, waiter3127027,
+queue3263097and monitor1588227verify live at19:47:28. At19:52
+the original monitor's updater3302828 is live after its19:49wake.
+The manual editor waits for and then acquires the existing shared
+`.endeavor-update.lock`; no observation timeout or slow file audit
+triggers restart.
+
+New mutable helpers:
+`ns_precision_placement_maps.py`, its tests,
+`ns_precision_placement_execution.py`, and its tests.
+Execution retention declares120phase files per process,20timed
+compiled calls and50raw event samples per call. It has no standalone
+CUDA entry point or allocation authority. Focused CPU execution
+tests and independent source review are in progress; no accepted
+archive, owner, keeper transfer, GPU command or SwanLab history is
+claimed. Required scoped Ruff/Black checks pass after formatting.
+Accepted parent archives and running GPU source bytes are unchanged.
+
+### November 19 19:58 Precision CUDA Component CPU Acceptance
+
+Accepted at`2026-11-19T11:56:23.748681+00:00`:
+`run-preparation/ns-precision-placement-execution-cpu/20261119T1957/receipt.json`.
+43unique staged cases pass13.27seconds;163helpers/531inventory
+entries retain all158reviewed parent helpers unchanged and add
+only the five declared numerical/preparation/test helpers.
+The fresh archived-origin `--phase check` passes by19:58.
+Independent source review and integrated numerical tests remain
+pending; no CUDA owner/launch is issued.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-precision-placement-execution-cpu/20261119T1957/receipt.json` | `41d28deabb60a01f520b072e11731bed63d2909c9273baa1894382d71a93c9c4` |
+| `run-preparation/ns-precision-placement-execution-cpu/20261119T1957/source.tar` | `0a2573206e5b062af9ef5476fedea66387506c5714cb2a8c89da48dae8f3422d` |
+| `run-preparation/ns-precision-placement-execution-cpu/20261119T1957/tests.xml` | `3b9a26618ce3f0efa485570cc4bc7f512fb06bd7e38d6895e5e7c0201e5d1814` |
+| `run-preparation/ns-precision-placement-execution-cpu/20261119T1957/cpu.log` | `0294104f2c4737fd8ca01727a1e29f7816a62fbc4a4ec87ffebede5bce639ac0` |
+
+Preparation uses fixed hidden CUDA, no bytecode, fault handler,
+offline tools and mutable new tracking plus the unchanged accepted
+parent/site-packages for imports. The exact command:
+
+```bash
+/opt/conda/envs/torch-base/bin/python -P \
+  "$TASK/tracking/prepare_ns_precision_placement_execution.py" \
+  --root "$PVC" \
+  --out "$PVC/run-preparation/ns-precision-placement-execution-cpu/20261119T1957" \
+  --phase cpu
+```
+
+Archived check uses only that output's `tracking` and Torch
+site-packages, with archived cwd and fixed hidden-CUDA environment,
+same`--root/--out`, `--phase check`, and the archived preparer.
+Inherited template SHA256:
+`fc91c17412936ff4394fa34140e1e3227ced84f4f823b30cb24aa209b5750d4e`.
+Map/test SHA256:
+`6bc9b9b3f9500e76a19c4cbf752dea16699f813d0b89ffc37eed5f26b14f229e` /
+`7c656421d505fdfb021a849a11389f9769a547bf150ce24a4673a73c9b0ca667`.
+
+The integrated105-case CPU numerical suite starts19:58with CUDA
+hidden and the existing safety/session guard; result pending.
+Original controller3118453/validator3118822, terminal waiter3127027,
+reviewed queue3263097and sole monitor1588227verify live19:56:59.
+Aggregate19:55:35has22/54commands and7/18decisions; fused BF16/seven
+continuous24is complete without a case decision.
+Queue19:50:25remains waiting0/6phases. Single monitor publishes
+19:52:49; shared update lock guards this manual journal append.
+No original terminal, keeper action, GPU successor or SwanLab
+import is issued.
+
+### November 19 20:06 Transition Partial Failure And Fresh Restoration
+
+Scientific status and interpretation are in ENDEAVOR,
+"Transition Partial Failure And Restoration". The original transition
+aggregate stops `needs_attention` at19:59:22.024293 with23/54
+completed commands and7/18 decisions, retaining six accepted MuonT
+controls and the fused BF16/five-step rejection. The failed next
+command is fused BF16/seven-step `resumed`, not part of that count.
+Its exact execution receipt retains acknowledged PID3313401/start942370137,
+execution/cleanup1/1, empty cleaned generations and marked-descendant
+absence. The traceback identifies pre-training complete marker-scan
+exhaustion; the generic `require_entry` identity error follows nonzero
+exits and does not demonstrate source/log/command substitution.
+
+Controller state19:59:40.500454 records validator/cleanup1/1,
+marked descendants absent and keeper restoration0. Independent
+read-only observation20:06:15.354999 authenticates the binding, saved
+owner/result/command receipts and exact issued ownership helper,
+then checks current process generations and physical GPU occupancy.
+Controller3118453/941361276 and validator3118822/941365079 are absent,
+as are all23completed-command handles and failed command3313401.
+All validator/command markers are absent.
+
+Restored keeper3313700/start942371992 has exact ranks3313868-3313875.
+Ranks3313868-3313872 start942372491; ranks3313873-3313875 start942372492.
+Device indices0-7, UUIDs, nine process generations and eight exclusive
+compute contexts exactly match the saved restoration and original
+binding. All nine controller-marker matches belong only to that
+keeper. Sole Bash monitor1588227/start933927668 remains live.
+Independent nonblocking contention for its monitor lock exits1.
+The recorded observation uses the issued `owned_output_handoff.py`,
+SHA256 `ec894019aa1af6ceadd81da2a4045a868a0fa34dff7c5c6da08a6230868defcb`,
+in a hidden-CUDA foreground reader; no keeper operation, new GPU
+command or terminal reconstruction runs.
+
+The original terminal waiter3127027/start941414079 stops
+`needs_attention`20:04:58.546500 after11immutable observations.
+Its saved error remains
+`RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+The reviewed actual-LR queue3263097/start942039903 stops
+`needs_attention`20:05:59.382386 after4original observations and0/6
+phases. Its external reader refuses absent canonical terminal
+`ns-training-path-exit-transition-20261119-terminal-f607ce7b8fa5bbfb332a3ad9e6084041670f1685a1674db44cbf8230f717ef48.json`.
+Fresh process listing finds both waiters absent. No failed one-shot,
+original owner, terminal or monitor is restarted.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/validation-ns-training-path-exit-transition-20261119-gpu.json` | `e3cf909c5e9fa728389f554640125154efa36633da34dbc8809fbe247a6d00c0` |
+| `run-preparation/ns-training-path-exit-transition-20261119-state.json` | `89544593f96b24a8188138a585d8d14821ed548b4ac6360ddc5bcd27c62c79ce` |
+| `validation/ns_training_path_transition_20261119/outer_leftdiag_fused_ns_tpu_q7_full_lr_lower_resumed.execution.json` | `34de7bc7a30cb84ec616b57918d080c55f311576eb392489b16c2f38e3f8f76e` |
+| `validation/ns_training_path_transition_20261119/outer_leftdiag_fused_ns_tpu_q7_full_lr_lower_resumed.log` | `9becaaf5b84ae61267e1043df435a714fa63d1b18070eb89170a4e02cf783895` |
+| `run-preparation/endeavor-transition-failure-restoration-observation-20261119T2006.json` | `fbdfac0fd043478a8f91fe92f8fec6e98ff274fbaf21839aa826871477ae9761` |
+| `run-preparation/ns-training-path-exit-transition-terminal-followup-20261119/state.json` | `6b43259b415b930889a20a9d9ce6fd960de292abc2343f865d69c7547f7a1159` |
+| `run-preparation/ns-training-path-transition-actual-lr-queue-20261119/state.json` | `7051ca0c7b5ea41a8e41b9d283402b3294909ffa741812e703e6041a6d665cb0` |
+
+Before editing, both journals are archived in
+`PVC/run-preparation/endeavor-before-transition-failure-milestone-20261119T2008.tar`.
+Manual edits hold the existing `.endeavor-update.lock`.
+The saved19:52:49 scheduled publication predates this failure; the
+unchanged monitor will pick it up on its next cycle.
+No new production wave, complete large-window history, efficiency
+result or SwanLab import follows. The overall research goal remains active.
+
+### November 19 20:13 Precision Execution Review And Journal Verification
+
+Scientific interpretation is in ENDEAVOR, "Precision CUDA Review
+Checkpoint". Distinct corrected archive acceptance:
+`run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/receipt.json`,
+time20:02:22.675480. Its46staged cases pass32.67seconds, with163helpers,
+531inventory entries and zero changed parent helpers. The earlier
+43-case archive is preserved. Fresh foreground hidden-CUDA archived
+`prepare_ns_precision_placement_execution.py --phase check` exits zero
+by20:13. The broad numerical XML records107passed/zero errors/zero
+failures159.513seconds; the focused corrected execution XML records
+24passed/zero errors/zero failures14.603seconds.
+
+Independent source review closes mmap-backed output escape and
+omitted/rebound release-owner hasher checks. It retains one P2:
+`ns_precision_placement_execution.py` import discovery skips a local
+sibling that is absent, and the synthetic closure builder repeats
+that gap. No CUDA execution or new exclusive owner is authorized
+until a distinct missing-local-import correction, regression, source
+archive and independent review pass. Accepted receipts and old
+helper bytes remain unchanged.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/receipt.json` | `21d5de0aba051919f313063fca820d49ea86634039b20a74fcf91440529e94cc` |
+| `run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/source.tar` | `39f86977572e0e89a400391448cc8d97e786d96f9e5b55c7bce121e165aa92d3` |
+| `run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/tests.xml` | `eea1428eb0a55ef492f9dc71eaf112f3438d30f015be15ad940b5347c5edc50b` |
+| `run-preparation/ns-precision-placement-execution-cpu/reviewed-20261119T2001/cpu.log` | `e98a367cf3e2c8643c9e520c458be50db5298d6d8db937e9cccb149561f9315c` |
+| `run-preparation/test-ns-precision-placement-execution-integrated-20261119T2000.xml` | `188dafb34897cb0a33859e27e56fb5f8a38820cb8e46d8aab25a84ebf30f7cc2` |
+| `run-preparation/test-ns-precision-placement-execution-reviewed-20261119T2001.xml` | `a6e6ac4b20f3ebdda6df3c71ef28f836d76a654a36d95b928ff8c12eb0a3a22b` |
+| `run-preparation/test-endeavor-transition-failure-journal-safe-20261119T2010.xml` | `86385292d4194b6d8989fbd1f7fc0313019e262f65164e33bca9be9c9edec0cf` |
+
+Corrected mutable/archived execution helper:
+`1c70619d70b9b74e0d3582db4c0e970fd6bdd1066ae22a0ad2e587f1e0b72b6a`.
+Corrected execution test:
+`4829400af9fb850b67ea1794000baf98a28417253881753d689dbaedfc46f06e`.
+Corrected preparer:
+`136243822ad791f22eef15ff41aff4592fe26d9973993e75937a0736d33b8865`.
+
+Nine focused transition-failure/waiter/split-document/monitor tests
+pass16.58seconds. The original root-config invocation fails before
+collection because torch-base lacks `pytest_timeout`; the first
+isolated retry also fails before collection because the guard is
+archive-only. Neither failure is counted as a pass. The successful
+retry uses offline `uv --no-project --with pytest-timeout`, Python3.13,
+mutable tracking plus accepted archive guard and torch-base packages,
+`-c /dev/null`, all seven safety-marker exclusions, hidden CUDA,
+`--timeout=60 --session-timeout=600` and original test sources.
+No training environment package or test source is changed.
+
+Required scoped document pre-commit checks pass except the existing
+500KiB size rule: ENDEAVOR697.6KB and DETAILS1500.9KB at the check.
+The content-only rerun with `--skip large_files` passes; `git diff --check`
+and monitor Bash syntax pass. Manual edits hold the shared update
+lock after the original scheduled updater finishes; no replacement
+monitor or new GPU process is started.
+
+### November 19 20:18 Scheduled Publication And Renderer Regression
+
+The original Bash monitor1588227/start933927668 publishes both
+documents20:12:22 from its20:07:51report observation and returns
+to `sleep900` as child3322779. The automated blocks retain
+transition23/54commands/7decisions, failed resumed command1/1,
+terminal waiter `needs_attention`20:04:58 and actual-LR queue
+`needs_attention`20:05:59/0phases. Manual20:06failure/restoration
+and20:13precision-review entries remain intact.
+
+The saved queue traceback introduces two trailing-whitespace lines
+on publication. The renderer's `replace_block` now removes trailing
+whitespace from replacement payload lines only, leaving saved raw
+errors, indentation and all surrounding manual prose unchanged.
+The split-document regression explicitly preserves manual Markdown
+hard breaks while checking both generated blocks and retained error
+content. Accepted archives, trainer, optimizer, numerical readers,
+keeper processes and monitor script are unchanged.
+
+Eleven focused formatting/transition/waiter/split/monitor/ambiguous-marker
+tests pass16.73seconds; all244journal/transition-queue-reporting tests
+pass66.78seconds. Hidden CUDA, offline isolated Python3.13,
+original safety markers and60second/600second guards remain.
+Required scoped source/content lint passes with the previously
+reportedlarge-file exception, and `git diff --check` passes.
+
+| Artifact or Mutable Helper | SHA256 |
+| --- | --- |
+| `PVC/run-preparation/test-endeavor-multiline-failure-formatting-20261119T2016.xml` | `3cde0eb524a50e0c936f30ea1e65c39dccf6108618d1b406aeada94a111946a5` |
+| `PVC/run-preparation/test-endeavor-multiline-full-journal-20261119T2017.xml` | `18ee1bdb0f3b33706a8435f01958c8af422ec283111eab611530e1b62040a44f` |
+| `tracking/update_endeavor.py` | `15cf17b5f2b56b71f44dff9490c95e77754f9c73b703ad40adb779a49b1eda3c` |
+| `tracking/test_update_endeavor.py` | `571b0483ee5f3a930b394ef9e980fa5a3892380cd2e9da2c35701501b5be3f54` |
+| Unchanged `tracking/monitor_endeavor.sh` | `e2adac73f02ed7349fee9cbc587b59dd5bdfd2f2e2cc264a9cd13934b5213b75` |
+
+Manual milestone publication holds the existing shared update lock.
+No main-owned test/check subprocess remains running. The sole Bash
+monitor and exact restored keeper remain intentional persistent
+processes; no controller, validator, queue or GPU experiment restarts.
+The overall optimizer-research goal is not complete.
+
+### November 19 20:35 Precision Static Import Closure And Archive
+
+Scientific interpretation and the next gated experiment are in ENDEAVOR,
+"Precision Import-Closure Correction". The distinct corrected archive is
+`PVC/run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032`.
+Its directory label is an identity, not the acceptance time:
+the receipt records 20:31:01.747039 Asia/Shanghai. All 49 staged
+cases pass in 32.680 XML seconds, with 163 helpers and 531 inventory
+entries, zero changed CPU-study parent helpers and five declared
+successor helpers. Fresh archived-origin hidden-CUDA `--phase check`
+exits zero by 20:32. Independent inventory comparison verifies all
+158 accepted CPU-study helpers unchanged and only execution, its
+test and preparer differing from the preceding 46-case archive.
+That earlier receipt still hashes to its recorded accepted identity.
+
+The binder now classifies declared external modules explicitly and
+requires every remaining transitive static import, without a sibling
+existence filter. Same-package relative imports require authenticated
+helpers; parent-relative imports are refused. Fresh subprocess
+regressions cover a deferred missing file/hash, a present file with
+missing hash and a missing relative dependency. The valid public
+file-backed reconstruction still passes. This correction does not
+claim dynamic-import or external-dependency authority.
+
+The first pending 49-case run records 45 passes and four failures:
+three generated fixtures wrote literal backslash-newlines and one
+valid reconstruction hit the overly broad relative-import denial.
+Those failures are preserved, not counted as source acceptance.
+The corrected focused 49-case run passes in 23.16 seconds.
+The first broader command selects a nonexistent test file and
+exits 4 before collection; its zero-case XML is not a pass.
+The corrected five-module numerical suite passes 113 cases in
+165.57 seconds (165.481 XML seconds), with zero errors/failures/
+skips. Offline isolated Python 3.13, hidden CUDA, all seven safe
+marker exclusions and 60-second/600-second guards are retained.
+Required source lint passes after the formatter's initial changes;
+`git diff --check` and the unchanged monitor's Bash syntax pass.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/receipt.json` | `457fe63c9dfde5f3524cd56d3debf2b829883609ec8860a81d95cb6a367347dd` |
+| `run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/source.tar` | `9b6a0b52f713b83839a3ecd68e3358cdec486d6216929e66c4f05dda461c6e89` |
+| `run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/tests.xml` | `1a5109969e0fa2fd628034f933ddfe9ede8cd45f4069e73310217482fe8b1cc0` |
+| `run-preparation/ns-precision-placement-execution-cpu/closure-reviewed-20261119T2032/cpu.log` | `08ad133e51c953fdb6cb11686b49cbe18c819784b0ab404d4d2ad04161231894` |
+| `run-preparation/test-ns-precision-placement-missing-transitive-20261119T2023.xml` | `6bdcd266af2cc1068b643b372c597a71e45b8ed422499e8cd5c5649d7627bfae` |
+| `run-preparation/test-ns-precision-placement-missing-transitive-corrected-20261119T2028.xml` | `b57681cb161b0e187496be57d598ddb6e02ae49ba469d370f0d907b097929eb0` |
+| `run-preparation/test-ns-precision-placement-closure-integrated-20261119T2031.xml` | `8fb4a6459b345ccde251cc4fab0146d57ebc95c04e7a323b1d5efc73f22dcae3` |
+| `run-preparation/test-ns-precision-placement-closure-integrated-corrected-20261119T2034.xml` | `b9d7f5095978fae7d384631711f2e9d80e2f36b774f3b7f473740b9780a68f9c` |
+
+| Successor Helper | SHA256 |
+| --- | --- |
+| `ns_precision_placement_execution.py` | `2adc74ec74959d0ba33376bec1e2c899bb7585c479d63f37db2c96178b0fd2f2` |
+| `test_ns_precision_placement_execution.py` | `ac251146910147b6c6b0f35d96807fbdda92a9bfcde6fe185bce00441e581753` |
+| `prepare_ns_precision_placement_execution.py` | `d10b68a13d64ab9d2548896712d45a24e7deb840137beecf010e7eaccf2d20bb` |
+
+The original Bash monitor `1588227/933927668` publishes both
+journals at 20:30:47 after its 20:27:24 read-only report observation
+and resumes `sleep 900` as child 3344373. Independent nonblocking
+contention for its monitor lock exits 1, confirming the existing
+holder; no duplicate monitor is launched. Read-only process/device
+listing retains keeper 3313700 with ranks 3313868-3313875 as the only
+eight compute contexts; failed controller/validator and stopped
+waiters remain absent. The exact restoration receipt at 20:06:15
+remains the source-bound evidence, separate from these later listings.
+
+Before this manual publication both journals are preserved in
+`PVC/run-preparation/endeavor-before-precision-closure-milestone-20261119T2035.tar`;
+edits hold the shared `.endeavor-update.lock`. The current status
+table's stale running row is replaced with the retained terminal
+23/54-command, six-accepted/one-rejected state; historical checkpoints
+remain. No new keeper transfer, precision owner, GPU diagnostic,
+production wave, complete large-window result or SwanLab import is
+issued. A distinct tested ownership successor and fresh preservation/
+freeze are still required; failed one-shot identities are not restarted.
+
+Publication verification at 20:39: six split-document/concurrent-edit/
+monitor-retry/multiline regressions pass in 2.01 seconds. XML:
+`PVC/run-preparation/test-endeavor-precision-closure-publication-20261119T2037.xml`,
+SHA256 `efadb968655b5fb615d82fcb1e6f47a3d573f65845dd1e3ea40416f7c8cbfe1f`.
+A separate fresh process imports the new archived execution entry,
+authenticates its exact receipt hash, and binds all 163 helper
+sources successfully with CUDA hidden. Full document lint reports
+only the inherited 500KiB size rule (ENDEAVOR 707.6KB, DETAILS 1514.4KB
+at that check); all source/content checks pass with `--skip large_files`.
+The preceding journal tar hashes to
+`170c246951a13cb914e088190fd5b9ecaebacdc398638cede9123999876efa9f`.
+No required foreground test/check process remains running.
+
+### November 19 21:00 Scan-Exit CPU Acceptance And Preservation
+
+The source-bound milestone is recorded in ENDEAVOR under
+"Missing-Environment Scan-Exit Successor". The accepted candidate is
+`PVC/candidates/ns-training-path-scan-exit-reviewed-20261119T2058`;
+its distinct archive records acceptance at 20:56:19 with 129 passing
+cases in 18.54 seconds, 178 helpers and 547 inventory entries.
+Fresh hidden-CUDA archived preparer `--phase check` exits zero at
+20:58. Archived `--phase seal` exits zero at 20:59. The preserved
+evidence covers 1,479 files and 1,200 checkpoint payload identities;
+six accepted controls and one fused five-step rejection remain.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-scan-exit-20261119-cpu/reviewed-20261119T2058/receipt.json` | `eec8b5ec97f6531bec4447078ff99b823d20458038574099fe68106b7b7bc599` |
+| `run-preparation/ns-training-path-scan-exit-20261119-cpu/reviewed-20261119T2058/source.tar` | `59a8c679ff99445b9c4a18003d13ee4ad8dfc924c6b692a16d0ce3029a839848` |
+| `run-preparation/ns-training-path-scan-exit-20261119-cpu/reviewed-20261119T2058/tests.xml` | `84c5b4c375551617ff3a0a0db835872a8d0730ec0abf3db195b3386e5403fef5` |
+| `run-preparation/ns-training-path-scan-exit-20261119-cpu/reviewed-20261119T2058/cpu.log` | `5e6ed2ddea3d59e4b4e1f0408f06b198468ffde53ca137eef709f2fa297a56a4` |
+| `run-preparation/ns-training-path-scan-exit-predecessor-seal-20261119.json` | `59012d6f15ef1a3b4fb5cddb8049e8dd18fd63efe3f7348a2a01a923ccc1d42d` |
+
+The six new local helpers remain unchanged during acceptance and
+issuance. Required scoped lint and the prior 84-case local
+ownership/source/preservation suite pass. The first staging archive
+`run-preparation/ns-training-path-scan-exit-20261119-cpu/20261119T2100`
+is retained `needs_attention` despite 129 passes because source
+changed during staging; it is not accepted or issued.
+
+Latest direct process inspection at 20:57 finds original monitor
+`1588227/933927668` and its `sleep 900` child 3372498 live. The latest
+monitor publication is 20:49:09, with saved observation 20:45:49.
+Keeper `3313700/942371992` and ranks 3313868-3313875 remain live;
+the accepted preservation seal separately checks exact generations,
+exclusive eight-A100 occupancy and absent failed owners/markers.
+Independent seal checking and fresh freeze/start are still pending.
+
+Both journals are preserved before this manual edit in
+`PVC/run-preparation/endeavor-before-scan-exit-acceptance-20261119T2101.tar`;
+publication holds the shared `.endeavor-update.lock`. No accepted
+GPU source, numerical contract, tolerance, compilation or CUDA graph
+setting is edited. No full-budget wave, new large-window result,
+verified SwanLab import or optimizer superiority is claimed.
+
+### November 19 21:09 Scan-Exit Freeze And Acknowledged Launch
+
+Independent archived `--phase check-seal` passes with the accepted
+seal digest before freeze. Archived controller `--phase freeze`
+records `frozen_ns_training_path_scan_exit_diagnostic_not_production`
+at 21:02:50; its issued `--phase check` passes at 21:05.
+The first check command selects a nonexistent `helpers/` path and
+exits 2 before execution; the corrected issued path is `tracking/`.
+No one-shot launch identity is consumed by that path error.
+
+Controller `3403676/942778625` acknowledges at 21:07:10; direct
+validator `3405014/942784407` acknowledges at 21:08:36. State records
+node/manager lock descriptors 3/4 and exact predecessor keeper release
+complete. The initial continuous24 command uses the unchanged
+MuonT BF16/five-step lower-LR config. Fresh 21:09 process inspection
+finds both original owners and monitor live, old keeper3313700 absent.
+No completed command, case decision or production result is claimed.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-scan-exit-20261119-binding.json` | `7af74fd70d7ea1fbb68f09209f93ef62e19a86c17d1cb200dde99872a1b27f98` |
+| `run-preparation/source-ns-training-path-scan-exit-20261119.tar` | `ccc4ae7be2ce30218bed1054a764af084457648b5b32757da0452495caed82a4` |
+| `controllers/ns-training-path-scan-exit-20261119/controller.json` | `0020cfa6f52eea4259612d17d080029df07d1151fda088a0655117b4aa97ca22` |
+
+The new scan-exit reporting module binds all four immutable receipts
+by digest and preserves prior failed namespaces. The existing
+`update_endeavor.py` includes its projection in both automated blocks;
+it requires no monitor restart. Five focused regressions pass in
+23.32 seconds with XML
+`PVC/run-preparation/test-endeavor-scan-exit-corrected-20261119T2106.xml`.
+The first local test command lacks the archived timeout-guard path and
+fails before collection; it supplies no pass. The corrected run uses
+the archived guard, 60/600-second limits, CUDA hidden and all seven
+safe-marker exclusions. Source/content lint passes with the existing
+`large_files` exception. The broader journal suite and new distinct
+terminal-waiter source archive are still running.
+
+Both journals are archived before this launch publication in
+`PVC/run-preparation/endeavor-before-scan-exit-launch-20261119T2111.tar`
+under the shared update lock. The original monitor publishes at
+21:07:43 from its 21:04:11 observation and resumes its 900-second loop.
+The failed original waiter/actual-LR queue remain absent and untouched.
+The distinct full18-case/54-command result, terminal reconstruction,
+actual-LR successor and precision CUDA work remain pending.
+
+### November 19 21:19 Scan-Exit Waiter And Journal Verification
+
+The distinct read-only terminal waiter archive accepts 24 cases in
+4.51 seconds at 21:09:11, retains all 178 issued helper bytes and
+adds two new helpers. A fresh archived check passes before start.
+The initial check uses unsupported `--cpu-receipt` and exits 2 in
+argument parsing; the corrected archived `--cpu` check passes without
+consuming any one-shot. Waiter `3412036/942807401` acknowledges at
+21:11:58; observation000000 at 21:12:03 finds controller3403676 and
+direct validator3405014 exact/live, retains 0 completed commands/
+decisions at that saved instant and waits 900 seconds. No terminal
+child, keeper transfer, successor GPU work or production authority.
+
+| Artifact, Relative to `PVC` | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/receipt.json` | `86d6984b2166c079bced8d3b69709c2f07ac37b92dcb9f3e89360f7735f70f0c` |
+| `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/source.tar` | `f2640dbfe36b52a5d8593038d9a923ca986b1f577784797e4ba2f4de9a8e144a` |
+| `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/tests.xml` | `8094b2ec56cb2f6bdb10cc2e1552d5b4106089281b143ea564a6d2f22e50934c` |
+| `run-preparation/ns-training-path-scan-exit-followup-cpu/20261119T2110/cpu.log` | `3fdb5277c05e9edcdffce304141c1bec193eb39a5d44e498b11cc50d7cd1577c` |
+| `run-preparation/ns-training-path-scan-exit-terminal-followup-20261119/intent.json` | `9ddc9c73d53e45779208e90259ab6d391f38484372e75f29c077c148be1ef1c7` |
+| `run-preparation/test-endeavor-scan-exit-full-journal-20261119T2110.xml` | `1893d64c664986c02e3aec33409032e60f11ff02204667d26a65914d32f686ae` |
+| `run-preparation/test-endeavor-scan-exit-waiter-final-20261119T2113.xml` | `7f60ded989dc7e81056356cef1b42c5f0981f6821f794f35d70c152b8d3e390e` |
+
+The waiter runner digest is
+`b8a69286240ba12190f73f2120094b2e11f6bdb1b5e37ef34a5f12d887548840`.
+Its report authenticates accepted source, original binding/acknowledgment,
+exact saved owner generations and all observation identities. The
+shared renderer includes this projection in both automated blocks.
+Earlier stopped waiters and failed actual-LR queue remain preserved.
+
+Aggregate observation at 21:17:00 admits two commands and zero case
+decisions. Initial continuous24 receipt at 21:11:08 has execution/
+cleanup 0/0 and marked descendants absent; interrupted22 is admitted,
+resumed24 active. At 21:16, device listing shows ranks3414689-3414696
+on the eight original A100 UUIDs. This fresh listing is separate
+from saved controller/validator ownership receipts.
+
+The 328-case integrated journal suite passes in 151.63 seconds.
+The final six focused regressions pass in 29.77 seconds. The full
+integrated rerun passes 329 cases in 161.70 seconds by 21:20. Required
+scoped source/content lint, `git diff --check` and monitor Bash syntax
+pass. Full journal lint fails only the inherited 500KiB size rule:
+ENDEAVOR714.6KB, DETAILS1520.7KB at that check. The initial reporter
+formatting failure is corrected mechanically; no issued GPU source
+or accepted archive is changed.
+
+Manual renderer refresh completes at 21:18 with report time21:14:07.
+The saved waiter projection passes; the diagnostic projection refuses
+changed-during-inspection mutable evidence. This refusal supplies no
+counts, source substitution or numerical conclusion. The next original
+900-second monitor cycle retries. The sole original monitor keeps its
+exclusive lock; independent nonblocking lock contention exits1.
+Sleep child3404531 remains under monitor1588227. No restart or
+duplicate monitor/uploader is issued.
+
+Both journals are archived before this milestone under the common
+update lock in
+`PVC/run-preparation/endeavor-before-scan-exit-waiter-milestone-20261119T2119.tar`.
+Earlier journal archive digests:
+`endeavor-before-scan-exit-acceptance-20261119T2101.tar`
+`d0be0ef68bfe2924eb92accf1a1cb8ccc7294e82b26405886e90abfce426b821`;
+`endeavor-before-scan-exit-launch-20261119T2111.tar`
+`f9bc1291deeff5b07a94e97fb77ebfddc40b5e796067008c7cfb910fafd81ebd`.
+Complete diagnostic decisions/terminal, actual-LR successor,
+precision CUDA placement, new full-budget waves, large-window
+comparisons and verified full-history SwanLab uploads remain pending.
+
+Final publication verification, November 19 21:21:
+`PVC/run-preparation/test-endeavor-scan-exit-final-integrated-20261119T2117.xml`
+SHA256 `bb75af73cbbcdfe9a647aeb2643c7d11ac0ed6bb80c87b1d689cef5dab147508`.
+The accepted milestone's preceding journal archive
+`endeavor-before-scan-exit-waiter-milestone-20261119T2119.tar`
+hashes to `c8f15ee085fbb7d7c25b9b1a20ee70ca24a09ea1a8d57125f6c2fd21e2baf294`.
+Before this final publication both journals are archived under the
+shared update lock in
+`PVC/run-preparation/endeavor-before-scan-exit-final-verification-20261119T2121.tar`.
+Fresh process checks retain exact original controller3403676,
+validator3405014, waiter3412036 and sole monitor1588227 live,
+with the original monitor sleep child3404531. The aggregate still
+retains its21:17:00 two-command/zero-decision observation. No required
+foreground command remains running. No goal completion, numerical
+waiver, production result or cloud-verification claim is made.
+
+### November 19 21:35 Scan-Exit Control And Actual-LR Predecessor
+
+Aggregate `run-preparation/validation-ns-training-path-scan-exit-20261119-gpu.json`
+at 21:31:55.747645 records 3/54 completed commands and 1/18 decisions.
+The accepted control is `muont_ns_tpu_q5_full_lr_lower`, matrix LR
+`0.04525483392`, with continuous24/interrupted22/resumed24 on the
+original 5,120-update schedule. All five gates pass. There are 39
+passing scalar-loss comparisons and zero failed tensors at each of
+the three all-rank checkpoints: 2,135 comparisons at update22,
+2,167 at update23 and 2,147 at update24. Update23's saved aggregate
+`within_tolerance: false` reflects the two `cached_root_graph_active`
+scalar differences per rank, not a tensor failure. Its unchanged
+first-resumed diagnostic-only treatment remains explicit. No graph
+or numerical requirement changes.
+
+The new file-only actual-LR reader, preparer and inherited-boundary
+tests retain the pinned transition predecessor source. Its flat
+closure authenticates 193 helpers: all180 waiter sources, four added
+reporter parents, six predecessor/preparer/test parents and three
+new files. The numerical parent remains
+`run-preparation/ns-training-path-actual-lr-component-cpu/20261119T0926/receipt.json`,
+SHA256 `aca115258fca1cfb4adf4bbfe58b6606f1b63b022bf0d10525efcb3d9d7a4251`.
+The source plan preserves the real `owned_output_handoff.py` conflict:
+numerical `b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`,
+execution `09b0a33e370fd683a0b16f18d036226930c56dab46b662f64196dee2d6eb1276`.
+No conflicting helper is replaced or merged.
+
+Local focused tests pass34cases in16.37seconds. The archived CPU
+suite passes34cases, XML session time17.549seconds, and stages
+at21:31:06.227819. Independent archived `--phase accept` publishes
+at21:32:26.112193. Fresh archived `--phase check` passes. The accepted
+directory is
+`run-preparation/ns-training-path-scan-exit-actual-lr-predecessor-cpu/staged-20261119T2132`.
+The initial lint reports formatting failures; the required formatter
+corrects them before staging, and final source lint passes. Staged
+and current new helper hashes are identical; no second archive or
+failed CPU acceptance is needed.
+
+| Artifact, Relative to Accepted Directory | SHA256 |
+| --- | --- |
+| `receipt.json` | `66bb686faee018b44d8c1b3371a5576bb14a912933f034e6048945d132a66f6b` |
+| `staged.json` | `fbd612441e38c0c2e0deda078c4303b631edd2d59226cca99ea59cb7c43167d5` |
+| `source.tar` | `d84572ccba9a6e02b74b0b64673135c1400be867ade50eb25ddfb50c34eda8d5` |
+| `tests.xml` | `bfe2c0be0c3ecee43bd9fc9f207ea348457c7a01a2afc7b87d2798c159f34df7` |
+| `cpu.log` | `41d3fc8791a3a1ef29e8541bf05c3b90c2138510c12114a2add57dce6d53b630` |
+| `tracking/ns_training_path_scan_exit_lr_predecessor.py` | `de1b55a2174406b40d0c78e6441a205c0c0421ae7efc2dbb0576597c0814b3a3` |
+| `tracking/prepare_ns_training_path_scan_exit_lr_predecessor.py` | `a257ae0d5eb176db9d0d249a555b0aef3d2e41c8fdea5fb3fe9c639d33048de3` |
+| `tracking/test_ns_training_path_scan_exit_lr_predecessor.py` | `a90ed86b4a82712607baea92520e57909a7f3b7461d8aa50a0b7462b9e0d271f` |
+
+Read-only readiness at21:33:45.189609 publishes
+`run-preparation/ns-training-path-scan-exit-actual-lr-readiness-20261119T2134.json`,
+SHA256 `0e1a7957060edfd1fdd3f517e8883ac06f62ca7a650f67604e79a7328b83a57b`.
+Status `waiting_for_scan_exit_owners`, readyfalse,276marked processes.
+Controller3403676, validator3405014 and terminal waiter3412036 are
+exact/live; completed command parents3405281,3414606,3421612 are absent.
+The canonical reader seal path remains nonexistent. Observation
+creates no keeper transfer, GPU command or production authority.
+
+The original monitor1588227 publishes at21:26:38, with coherent
+three-command/zero-decision projection from21:22:45. Its direct child
+3443353 is `sleep900`, and a nonblocking independent monitor-lock
+probe exits1, confirming contention. The waiter records observation1
+at21:27:04.472648. Fresh21:35 process checks keep the three original
+owners and sole monitor live. No training child or compute-app
+occupancy is inferred during the bounded-command preparation interval.
+
+Before the manual milestone, both journals are archived under
+`PVC/.endeavor-update.lock` in
+`run-preparation/endeavor-before-scan-exit-lr-predecessor-milestone-20261119T2136.tar`.
+All seven safe marker exclusions and60/600-second test guards are
+retained. The broader inherited handoff/journal suite is still running;
+no pass is inferred. Complete diagnostic/independent terminal,
+actual-LR execution owner/queue, precision CUDA work, new production
+waves, large-window comparisons and verified private full histories
+remain required. The goal stays active.
+
+Final verification, November19 21:38: the broader inherited
+predecessor/journal suite passes422cases in191.77seconds.
+XML `run-preparation/test-ns-scan-exit-lr-predecessor-integrated-20261119T2134.xml`,
+SHA256 `2265ab799824a04eed6f934d252571ece2149ce808c794e6c805a899db9f3a70`.
+Required source/content lint and `git diff --check` pass. Full document
+lint fails only the retained500KiB size rule: ENDEAVOR724.6KB,
+DETAILS1531.8KB at this check. No evidence is removed to satisfy it.
+The preceding milestone archive SHA256 is
+`86b7c54fd20fa24b791a94355232b88d7f50d2e8d4fbf2f1678f458eb10ddcb4`;
+the focused local XML SHA256 is
+`09aea57ffafb4ef6225ddfaf4ec9710041a75e008b0d42865626afa7b29cb45b`.
+Both journals are archived before this final publication under the
+same shared lock:
+`run-preparation/endeavor-before-scan-exit-lr-final-verification-20261119T2138.tar`.
+The accepted CPU reader stays unissued for GPU ownership. The latest
+aggregate remains three commands/one accepted control; complete
+coverage and independent terminal reconstruction remain required.
+
+Latest progress, November19 21:39: aggregate21:36:56.304954 now
+admits4/54commands and1/18decisions. Fourth command
+`muont_ns_tpu_q7_full_lr_lower` continuous24 completes with
+execution/cleanup0/0 and marked descendants absent at21:34:29.425656.
+Log `validation/ns_training_path_scan_exit_20261119/muont_ns_tpu_q7_full_lr_lower_continuous.log`,
+SHA256 `7234d98989b31d21e78c542f883e32e04ded77ee23925f184d9259552fb8336b`.
+No seven-step numerical decision yet. Fresh21:38 process checks
+retain controller3403676, direct validator3405014, waiter3412036
+and monitor1588227 live; direct monitor child3443353 remains
+`sleep900`. Before this update both journals are archived under
+the shared lock:
+`run-preparation/endeavor-before-scan-exit-four-command-update-20261119T2139.tar`.
+No canonical reader seal or successor GPU command is issued.
+
+### November 19 21:55 Scan-Exit Actual-LR Adapter
+
+Candidate
+`PVC/candidates/ns-training-path-scan-exit-actual-lr-adapter-20261119T2144`
+is prepared from the accepted numerical adapter. Independent source
+inspection authenticates185helpers; only inherited
+`owned_output_handoff.py` changes, from numerical
+`b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`
+to accepted scan-exit
+`09b0a33e370fd683a0b16f18d036226930c56dab46b662f64196dee2d6eb1276`.
+The original is retained at
+`fixtures/scan-exit-lr-original-owned_output_handoff.py`.
+All54configs162commands, original5120schedule, numerical readers,
+trainer/NS compiler boundary, unchanged tolerances, compilation and
+cached-root graphs are preserved. Only the candidate owner adapter
+changes among numerical candidate files.
+
+The accepted missing-environment handler digest is
+`06c18d6387607339ceaa320b8ae4a156c172f0054b93fb32c5e2b67b1feb7dde`.
+The first local run loaded an incorrect copied pin and retains16
+fixture errors in203.66seconds; no candidate acceptance follows.
+Corrected local tests pass16cases in354.68seconds, and the CPU
+archive passes16cases in359.15seconds. Archive receipt publishes
+at21:53:00.730671 and fresh archived `--phase check` passes.
+Accepted directory:
+`run-preparation/ns-training-path-scan-exit-actual-lr-adapter-cpu/20261119T2146`.
+Inventory:185helpers559entries.
+
+| Artifact, Relative to Accepted Directory | SHA256 |
+| --- | --- |
+| `receipt.json` | `b0fc9541f22c8bf41da079a3369a1c722890882812aa676399eef5092f5b80a6` |
+| `source.tar` | `9a09fb9285621ead99a62f2b81a2558816113d0a3cc9bd0f3893389fcc54e7b9` |
+| `tests.xml` | `496ea8fd08c671a42ec6ff9b6b04119aba6298a2a84c0548fc0ac0c873bb2bf6` |
+| `cpu.log` | `1a31235c62e5bf8a204a35aecbda3c4d31e3357a5533f06c20a86209a72d2d36` |
+| Candidate preparation JSON | `2c84a298524908a8c030cf3fa34fcef1f390b815a782caa5968bb0b04d0add05` |
+
+New adapter sources:
+parent `ac474672b7107cf1c73069587724ef9a1abbcb3c98ace2a49bce86bb4b09ad92`;
+contract `4f0e92241f4776d2bb2178fc2cdefcea52185c9194b93112e599cada5ca6bf60`;
+validation `c0e220117cd75685e534d9061b4808fef56b6de769434545fbb49978d963694a`;
+source `846ee0d6e9158383269838557a1956d54de7a58d0ae28d328742f193d4badf6c`;
+tests `4e954f8f6dd724bbd0db361cf5a8bed412d5cdd861ac8bd60283ca1e4ffdfc02`.
+The closure preserves five transition derivation parents plus
+accepted missing-environment/exit handlers. No accepted source is
+edited or merged into the independent terminal archive.
+
+| Local Verification XML, Relative to `run-preparation` | SHA256 |
+| --- | --- |
+| `test-ns-scan-exit-lr-adapter-first-20261119T2143.xml` | `62b61c56ad14b4155caf66a4909f4817b6e3c865c2947fbaf807fed819287a7b` |
+| `test-ns-scan-exit-lr-adapter-corrected-20261119T2144.xml` | `4ed8c76089e798aec343073ad50a71a672502d5923d3776056cbb515e1524ab6` |
+| `test-ns-scan-exit-lr-lifecycle-20261119T2150.xml` | `79e4ffbd49bfa87cd4bb25755fdd3673630721284a0042fa9b5a06f626e2b125` |
+| `test-ns-scan-exit-lr-lifecycle-corrected-20261119T2152.xml` | `146cb56bb23cb8b8075fdccbeedd92c6a81943290100a16927c0ce191cc4a755` |
+
+The new distinct execution-owner/controller/support/tests are
+implemented and now pin the accepted adapter receipt. CPU archive
+`run-preparation/ns-training-path-scan-exit-actual-lr-execution-cpu/20261119T2154`
+is running; no accepted execution receipt, frozen GPU binding or
+launch is inferred. The separate queue remains unbound to execution
+acceptance. First lifecycle run:86passes, five missing-execution-parent
+fixture errors and one stale-sealer-filename failure. After the filename
+correction,87selected lifecycle cases pass in9.02seconds; five full
+archive tests are explicitly deferred until their required parent
+receipt exists. No queued one-shot is consumed.
+
+Current scan-exit aggregate at21:44:38.911028 retains6/54commands,
+1/18decisions. The seven-step continuous/interrupted/resumed commands
+are admitted; independent case reconstruction is pending. Both original
+owners and waiter3412036 are live21:54. Its third observation is
+21:42:05.323772. Sole Bash monitor1588227 publishes21:45:38 with
+21:41:40report time and resumes `sleep900` child3478925. No GPU
+occupancy is inferred solely from those live CPU owner handles.
+
+Both journals are archived before this milestone under the common
+update lock:
+`run-preparation/endeavor-before-scan-exit-lr-adapter-milestone-20261119T2155.tar`.
+Required source lint passes after mechanical formatting, retaining
+all numerical tolerances and60/600-second test guards and seven safe
+marker exclusions. Goal remains active; complete diagnostic and
+independent terminal, accepted actual-LR execution/queue, precision
+CUDA placement, full-budget waves, large-window comparisons and
+verified private full-resolution SwanLab histories remain required.
+
+### November 19 22:05 Scan-Exit Execution Acceptance And Queue
+
+Execution CPU/archive receipt publishes at 21:59:22.017804, status
+`ns_training_path_scan_exit_actual_lr_execution_owner_cpu_archive_verified_gpu_unissued`.
+All 53 archived cases pass in 258.40 seconds; helper count 203 and
+inventory count 577. Local execution-source tests passed eight cases
+in 249.09 seconds. Fresh independent checking from the archived tracking
+directory completes at 22:01. The accepted adapter, numerical candidate
+and all 54 configurations/162 commands remain byte-identical.
+
+Accepted directory:
+`PVC/run-preparation/ns-training-path-scan-exit-actual-lr-execution-cpu/20261119T2154`.
+
+| Artifact, Relative to Accepted Directory | SHA256 |
+| --- | --- |
+| `receipt.json` | `34f40a430563fecda50c8490b16f32602a53c43b61a4ad0ce7afe72e08a25bdc` |
+| `source.tar` | `6ad7542ce1893cbaf0090c779226091002e632f6dd90e5a4690a6fccd5e2d439` |
+| `tests.xml` | `67dac9de847bd57298d5eba4d24a95746b42cafae75d938d51f8ef1c3366b752` |
+| `cpu.log` | `7dd1cf24f598f4cd2866092fd374e8ec582ca87dbdcbc5da081a6984a8dff058` |
+
+The distinct queue now pins this accepted receipt. All 47 local cases
+pass in 38.06 seconds, including the five full-archive cases previously
+deselected pending execution acceptance. XML:
+`run-preparation/test-ns-scan-exit-lr-queue-all-20261119T2202.xml`.
+Separate queue CPU/archive preparation is running toward
+`run-preparation/ns-training-path-scan-exit-actual-lr-queue-cpu/20261119T2202`.
+Expected helper count 214 remains unconfirmed until its receipt closes.
+No accepted queue, acknowledged intent, freeze, canonical seal or successor
+GPU command is inferred. Consumed predecessor queues remain untouched.
+
+The saved scan-exit aggregate at 22:03:52.795541 records 8/54 commands,
+2/18 decisions. Both lower-LR BF16 five-step and seven-step controls pass
+all five gates, each with 39 passing scalar-loss comparisons. Seven-step
+tensor counts at updates22/23/24 are 2,123/2,161/2,163, with zero failures.
+The 16 graph-state scalar differences at update23 keep their unchanged
+first-resumed diagnostic-only treatment. The ten-step continuous24 and
+interrupted22 commands are admitted; resumed trajectory and case decision
+remain pending. No full-budget quality or whole-training efficiency claim.
+
+Fresh 22:04 process checks retain controller3403676/start942778625,
+direct validator3405014/start942784407 and waiter3412036/start942807401.
+Sole original Bash monitor1588227/start933927668 publishes22:04:32
+from22:00:40report time and returns to `sleep900` child3517934.
+Queue reporting is now imported by the document renderer and included in
+both blocks. Required lint first exposed the undefined import; corrected
+scoped source/content lint passes. An offline UV dependency-resolution
+attempt could not find cached PyYAML; the existing interpreter successfully
+runs the same required `infra/pre-commit.py` entry point.
+
+The new saved-queue split-publication regression initially passes its
+publication/refusal assertions but fails a fixture-state comparison:
+the fixture's nested observation timestamp is added after serialization.
+Its original XML is retained:
+`run-preparation/test-endeavor-scan-exit-lr-reporting-split-20261119T2205.xml`.
+The correction checks the saved state bytes before/after publication.
+The original ten reporting cases pass; no new pass is inferred before
+rerunning. The integrated journal/queue-reporting suite remains running.
+
+Both journals are archived before this milestone under
+`PVC/.endeavor-update.lock`:
+`run-preparation/endeavor-before-scan-exit-lr-execution-milestone-20261119T2205.tar`.
+No accepted GPU source or archive is modified. Complete diagnostic and
+independent terminal, queue acceptance/launch, actual-LR gates, precision
+CUDA work, full-budget experiments, large-window comparisons and verified
+private full histories remain required; the goal is active.
+
+### November 19 22:15 Scan-Exit Failure And Queue Acceptance
+
+Queue CPU/archive accepts at22:05:07.421352 with47passing cases,
+214helpers588inventory entries. CPU stdout time38.14seconds;
+XML session time38.045seconds. Fresh archived `--phase check`
+passes. No queue `--phase start` is invoked: the original complete
+54-command18-decision terminal is unavailable after execution failure.
+No intent digest exists; the reporter's `INTENT_PIN` staysNone.
+Its `CPU_PIN` now binds the accepted receipt. Accepted directory:
+`run-preparation/ns-training-path-scan-exit-actual-lr-queue-cpu/20261119T2202`.
+
+| Artifact, Relative to Accepted Directory | SHA256 |
+| --- | --- |
+| `receipt.json` | `8142d861674a5ac95003e25a60da86e478934aa7f2a431bf132538b5c2d117fa` |
+| `source.tar` | `df5c9d6f34d49848221eb13f594d84b3cbdab0f754816b39691a16ffbbf91527` |
+| `tests.xml` | `d6141be607d972aa0e8e03e68e5adc85c2471aea9dd0a63507b445ec14e430f2` |
+| `cpu.log` | `13273f490fc6c16f9e2a948855e22cbfc67faeea03de6efe6f31cc3762beb89b` |
+
+Queue local source SHA256
+`142b338ab50f3a22758db039f905bdbc86d1f0337988c3a425a25a89ea0833aa`;
+reporter `c22c306d4d453e57c2b949891d71b4bcb2a3488b74740660b387ecdbade9cce9`;
+reporting tests `adbc54a6750a7bfcacde98b3e1faa6251ce3e13bb315c76bbe35f058f6da0861`.
+Integrated suite before new regression passes266cases96.22seconds;
+final suite passes267cases93.94seconds. Corrected focused reporting
+passes11cases2.30seconds. Required source/content lint and
+`git diff --check` pass. All seven safe exclusions and60/600-second
+guards remain unchanged.
+
+| Local XML, Relative to `run-preparation` | SHA256 |
+| --- | --- |
+| `test-ns-scan-exit-lr-queue-all-20261119T2202.xml` | `997f4e02f65cdfc79a7a50094a2fbb58f702e9f51fb340e7d853bdac68d9bd9f` |
+| `test-endeavor-scan-exit-lr-queue-integrated-20261119T2204.xml` | `dcb67cb03ed4aae85ff37d67cbbeac10560f1bf016a1cc7a6037d6d98c8190ee` |
+| `test-endeavor-scan-exit-lr-reporting-split-20261119T2205.xml` | `ea6eb35494520d58ce28c48925ebd9f31bd677a28e3221a2d332001ef03fdc67` |
+| `test-endeavor-scan-exit-lr-reporting-split-corrected-20261119T2207.xml` | `f3d240d33f5d347f8b6e9b4ccf63cb69697a502f6d55f02f23c25697b2d318e6` |
+| `test-endeavor-scan-exit-lr-queue-final-integrated-20261119T2212.xml` | `ba16dfecd17387b7189040f9ff8ff9025493d55051b076db9a596c2cc88a700d` |
+
+Failed next command:
+`muont_ns_tpu_q10_full_lr_lower/resumed` at22:03:52.756198.
+Launcher3516637/start943115987 acknowledges as direct validator child.
+Rank5/3516732 refuses before training in the original owner check.
+Execution/cleanup exits1/1; marked descendants absentTrue. Failed
+command is excluded from8completed trajectories and supplies no
+ten-step numerical decision. The aggregate retains only2accepted
+MuonT control decisions and statusneeds_attention.
+
+Ownership error `complete_scan_exhausted` retains marked child3517243,
+parent/group/session3516734, start943118652, statusR, command3args64bytes,
+SHA256 `037bd3aa50e2bd803ba3fa9ed566d2e9399a097b44f9b256bea5a771f8d1ffeb`.
+Failure monotonic9431186827647307; later sample9431186827703082 finds
+stat/cmdlineFileNotFoundError. Attribution-only receipt explicitly
+grants no coherent identity, causal, ownership or launch authority.
+The accepted scan's `current is None` and terminal recheck branches
+still only markunstable. A new CPU reproduction and separately owned
+complete-process-proof recheck successor are planned, not implemented
+or issued in this milestone. Accepted handoff source remains
+`09b0a33e370fd683a0b16f18d036226930c56dab46b662f64196dee2d6eb1276`.
+
+Controller3403676 stopsneeds_attention22:04:12.220996:
+validator exit1, cleanup1, marked absentTrue, keeper_restore0.
+Independent waiter3412036 stopsneeds_attention22:12:06.996182:
+`Training-path original owners exited without complete cleanup/restoration`.
+Its saved fourth observation remains21:57:06 and is historical.
+No canonical terminal or original successor seal is issued.
+No failed controller, waiter or consumed predecessor queue is restarted.
+
+Read-only verification22:12:53.510906 authenticates all original
+controller/validator/waiter handles, failed launcher/ranks and retained
+marked child absent; validator marker scan empty. Exact keeper3517296/
+943119106 and ranks3517445-3517452 exclusively occupy the original
+eight physical GPU UUIDs. Rank ticks943119595 for3517445/46,
+943119596 for3517447-51,943119597 for3517452.
+Observation:
+`run-preparation/endeavor-scan-exit-failure-restoration-observation-20261119T2213.json`,
+SHA256 `abceb5f9f538619419c550226cc43fc1f7af76d3c12097d01efbe30a5c4cae2f`.
+Current restoration does not change failed cleanup exits or incomplete
+54/18coverage.
+
+| Failed Evidence, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-scan-exit-20261119-state.json` | `1e5553c5be5f9e74cfc5b95bd25b21001eae82572d19ef040657255cd69a1c94` |
+| `run-preparation/validation-ns-training-path-scan-exit-20261119-gpu.json` | `b08076ccab68d23dcae34cd1f135c750d9586664b56d5bd6c490974b6a17cb37` |
+| `validation/ns_training_path_scan_exit_20261119/muont_ns_tpu_q10_full_lr_lower_resumed.execution.json` | `1e5bbaa373579f7b86a91f8173cdb81e8467c28cedcab0f5414633bbf8ea24a1` |
+| `validation/ns_training_path_scan_exit_20261119/muont_ns_tpu_q10_full_lr_lower_resumed.log` | `28d768197c1090eadefaa843cf9622d3c267c7a0fe82ffdfb93efc3f0c1bc95d` |
+| `controllers/ns-training-path-scan-exit-20261119/controller.log` | `2bdce3fbd962151e95cde9ae849ff5ff170c8af4b58c12d4880e2d953bd7576d` |
+| `controllers/ns-training-path-scan-exit-20261119/validator.log` | `40ef15a525dd38254de0391a3c09e169c4527118054921c91daf37547445c4c3` |
+| `run-preparation/ns-training-path-scan-exit-terminal-followup-20261119/state.json` | `a83799e14d82f694d4c0f363b5ee13c8531b3ad91f15a60501b968c437d10b86` |
+| `run-preparation/ns-training-path-scan-exit-terminal-followup-20261119/followup.log` | `4a527b743157518270053d775c2f8b965e2a8e39c89e69b53e9e068b23efd09e` |
+
+The extra manual renderer PID3522912 stalls22:11-22:15 in
+FUSE `fuse_send_open`, holding the update lock. It receivesSIGTERM
+and exits143 with no new publication. Original monitor1588227 is
+untouched; it retains sleep900child3517934 and its22:04:32publication.
+Next cycle retries the saved diagnostic/queue projections. Manual
+milestones stay outside the automated blocks.
+
+Both journals are archived under the shared lock before this update:
+`run-preparation/endeavor-before-scan-exit-failure-and-queue-acceptance-20261119T2215.tar`.
+Earlier22:05archive SHA256
+`5171ac147b6e703a363f45503984a04dcecc9828be9a980cdb607706ec2f7940`.
+New ownership validation, actual-LR and precision CUDA gates, full-budget
+waves, large-window comparisons and verified private full-history uploads
+remain open. Wave12 is still latest full-budget analyzed/cloud-verified;
+no optimizer-superiority or goal-completion claim.
+
+Final publication verification, November19 22:18: required scoped
+source/content lint passes, `git diff --check` and Bash monitor syntax
+pass. Full journal lint fails only the inherited500KiB rule:
+ENDEAVOR736.3KB, DETAILS1548.9KB at that check. A separate
+`infra/pre-commit.py --skip large_files` check passes every remaining
+selected check; no rule or source exclusion is changed. The accepted
+queue's four new source files still match its accepted archive hashes;
+no queue installation or predecessor seal exists. Independent nonblocking
+monitor-lock acquisition exits1; original monitor1588227 retains its
+sleep900child3517934 and exclusive lock. All required foreground commands
+are finished; the extra stalled refresh exited143.
+
+The preceding22:15journal archive SHA256 is
+`d6a8aba0e480fe57236af2f92d8f09a578accc5fa12ea16f93b363af21d7597b`.
+Before this verification both documents are archived under the shared
+update lock:
+`run-preparation/endeavor-before-scan-exit-final-publication-20261119T2218.tar`.
+New experiments, accepted launches, failures, large-window comparisons
+and verified private full-history imports continue to receive their dated
+milestones in ENDEAVOR. The goal remains active.
+
+### November 19 22:32 Recheck-Exit Preparation
+
+The separate ownership-only successor is documented in ENDEAVOR under
+"Recheck-Exit Successor Preparation". All 55 local cases pass in
+15.52 seconds with hidden CUDA, offline uv, all seven safe-marker
+exclusions and the existing 60/600-second guards. XML:
+`run-preparation/test-recheck-exit-full-local-20261119T2235.xml`,
+SHA256 `55dd259970910470eb22579ce5ebdd5561f29cbbf6f1f3562df2597b12c8c9c6`.
+The filename label is ahead of execution; the pass is observed before
+22:32. Earlier collection failures and the 53-pass/2-failure fake-clock
+run are retained at their distinct paths. No failure is counted as
+acceptance. The parent preparer source-context collision is fixed only
+in the new preparer by extracting its pinned runtime definition before
+executing the inherited implementation. The clock wrapper forwards
+keyword arguments; no production deadline or expectation is weakened.
+
+Candidate preparation completes with
+`ns_training_path_recheck_exit_candidate_prepared_gpu_unissued`:
+`candidates/ns-training-path-recheck-exit-reviewed-20261119T2232`.
+The separate CPU target is
+`run-preparation/ns-training-path-recheck-exit-20261119-cpu/reviewed-20261119T2232/receipt.json`.
+Expected coverage is 136 cases: 45 lifecycle, 36 inherited handoff,
+41 recheck/exit and 14 preservation. CPU acceptance, independent
+archived checking, predecessor seal and GPU issuance remain pending.
+Required scoped source lint passes. The earlier online lint attempt
+fails fetching Ruff and its remaining Black fetch is explicitly stopped;
+the successful run uses existing offline tools through the same
+required `infra/pre-commit.py` entry point.
+
+The original Bash monitor `1588227/933927668` is live. Its latest
+publication is 22:23:08 from the 22:19:34 report; child3534793 is
+`sleep 900` at direct inspection. No monitor is restarted or duplicated.
+Both journals are archived under the shared update lock before this
+milestone:
+`run-preparation/endeavor-before-recheck-exit-preparation-20261119T2232.tar`,
+SHA256 `16697552a2060377dc952a0a07e65282201ae1de6931911500505b67bbc69c87`.
+The lock is released after publication. Accepted archives, consumed
+one-shots, checkpoint payloads, numerical readers/tolerances and issued
+GPU sources remain unchanged. No full-budget result, new cloud import,
+optimizer superiority or goal completion is claimed.
+
+### November 19 22:43 Recheck-Exit CPU Acceptance
+
+The accepted separate candidate is
+`candidates/ns-training-path-recheck-exit-final-reviewed-20261119T2241`.
+Archive acceptance publishes at22:42:24.940261 with136passing cases
+in21.68seconds,183helpers and552inventory entries.
+Fresh archived preparer `--phase check` passes by22:43 with its own
+tracking directory as cwd/PYTHONPATH and the fixed hidden-CUDA
+environment. No mutable helper is imported into that acceptance check.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-recheck-exit-20261119-cpu/closure-reviewed-20261119T2241/receipt.json` | `5d085c3b8df3750ae7a4b488cc87cdf6b2ec6a4e275767bfc441e4858bce007f` |
+| `run-preparation/ns-training-path-recheck-exit-20261119-cpu/closure-reviewed-20261119T2241/source.tar` | `b8608f25ccd4cdcff8f4aff871677389c4a2bba4506ae42d17ac40f5bc465987` |
+| `run-preparation/ns-training-path-recheck-exit-20261119-cpu/closure-reviewed-20261119T2241/tests.xml` | `9517c5e49b64f3a777119623c45a7f9b4f9a25490067ed0d78b32430bf9f283b` |
+| `run-preparation/ns-training-path-recheck-exit-20261119-cpu/closure-reviewed-20261119T2241/cpu.log` | `b660c902e85d30edf3e1fefc43a3a0520f123dacc10981f24f7822e909a1d55f` |
+
+Both failed CPU archives remain at their original paths:
+`ns-training-path-recheck-exit-20261119-cpu/reviewed-20261119T2232`
+and `ns-training-path-recheck-exit-20261119-cpu/fixture-reviewed-20261119T2237`,
+each135passed/1failed. Original accepted/issued parent sources remain
+unchanged. Only the new source builder derives the stronger inherited
+zombie fixture; no numerical, timeout or ownership expectation is
+weakened. The separate source-contract assertion now checks only
+helpers actually present in the older numerical archive and separately
+pins the adapted test hash. Its fresh14-case suite passes9.53seconds.
+
+Five split-journal/monitor regressions pass2.62seconds:
+`run-preparation/test-endeavor-recheck-preparation-20261119T2234.xml`.
+Required scoped source/content lint passes; full journal lint fails
+only the inherited500KiB limit at740.0KB/1553.5KB before this append.
+The separate `--skip large_files` content check passes. No rule changes.
+Original monitor1588227/start933927668 publishes22:41:49 from the
+22:38:10report and resumes `sleep900` as3550134.
+
+Before this milestone, both journals are archived under the common
+update lock:
+`run-preparation/endeavor-before-recheck-exit-acceptance-20261119T2244.tar`.
+The archive filename is a preparation label; publication follows the
+22:43acceptance check. Separate failed-predecessor seal and GPU
+issuance remain pending. Wave12 remains latest full-budget
+large-window analyzed/cloud-verified; the goal stays active.
+
+### November 19 22:50 Recheck-Exit Seal And Freeze
+
+Archived `--phase seal` publishes22:44:56.378874; fresh independent
+archived `--phase check-seal` passes before freeze. The seal authenticates
+2,321evidence files and1,328checkpoint payload identities. Its retained
+summary is8/54commands,2/18decisions, accepted MuonT BF16five/seven-step
+lower-LR controls with no rejected completed case. It retains the failed
+ten-step resumed command, four-observation waiter, accepted unissued
+actual-LR queue and all older failures. Exact owners/markers are absent;
+restored keeper3517296 and ranks3517445-3517452 exclusively occupy the
+original eight physical A100s.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-recheck-exit-predecessor-seal-20261119.json` | `10c189fc543b9d9e1ec4d8d28bf590700948ed108dbd02e8bfd1174fe66193b6` |
+| `run-preparation/ns-training-path-recheck-exit-20261119-binding.json` | `ae7757c3010f88724a036d1b9f0d8b5c11b3abb53b97ca2300090f1973d1456f` |
+| `run-preparation/source-ns-training-path-recheck-exit-20261119.tar` | `e6bce471412924b48981ea4301f05e19a9899a83bdb0c59cb8549c744b8d6b05` |
+
+Freeze completes before22:49 with
+`frozen_ns_training_path_recheck_exit_diagnostic_not_production`.
+Fresh issued-controller `--phase check` passes by22:49:34 using the
+issued `controllers/ns-training-path-recheck-exit-20261119/tracking`
+directory as cwd/PYTHONPATH. One-shot `--phase start` is running;
+no acknowledgment or validator execution is established yet.
+
+`tracking/ns_training_path_recheck_exit_reporting.py` binds CPU/seal/
+binding receipts and the distinct namespace to the proven saved-receipt
+projection. `update_endeavor.py` includes its status in both journal
+blocks, without restarting the original Bash monitor. Six focused
+reporting/split-journal cases pass22.12seconds:
+`run-preparation/test-endeavor-recheck-reporting-20261119T2247.xml`.
+The fresh frozen-binding report case passes24.72seconds:
+`run-preparation/test-endeavor-recheck-frozen-report-20261119T2250.xml`.
+Required reporting source lint and `git diff --check` pass.
+
+Both journals are archived before this locked publication:
+`run-preparation/endeavor-before-recheck-exit-freeze-start-20261119T2250.tar`.
+The prior acceptance archive SHA256 is
+`5a6cedd076305c9dcbbdf8cb6a9c5fda3c3633f1c084931a4717ade2d970f569`.
+GPU ownership transfer, full diagnostic/independent terminal,
+actual-LR and precision CUDA validation, full-budget comparisons and
+verified SwanLab histories remain separate pending outcomes.
+
+### November 19 22:55 Recheck-Exit Launch And Waiter
+
+The issued controller acknowledges22:51:58.134856:
+3557212/start943407368, fresh marker and frozen parent proof.
+Validator3558375/start943415476 acknowledges22:53:19 as its direct
+child. State records `validating`, exact predecessor keeper release
+attempted/complete and held node/manager descriptors. Independent
+22:53:55process inspection finds both original generations live and
+old keeper3517296 absent. The first BF16/five-step MuonT lower-LR
+continuous command is underway. No completed command or numerical
+decision is inferred from launch.
+
+The separate terminal-waiter CPU archive passes24cases/4.59seconds,
+185helpers; fresh archived `--phase check --cpu` passes before start.
+It acknowledges22:54:23.626220 as3559219/start943421918.
+First observation22:54:29 finds both exact owners live,
+0/54completed commands and0/18decisions. Its fixed interval is900.
+It owns only the original generation's independent terminal after
+complete coverage and clean restoration; no new GPU/keeper authority.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `controllers/ns-training-path-recheck-exit-20261119/controller.json` | `9502a4d1d2ce65f0ff7e23f1c9bccf62572cd5430b100d76150cad46ceebb607` |
+| `run-preparation/ns-training-path-recheck-exit-followup-cpu/20261119T2253/receipt.json` | `33528ba3d167f4d59b34d3586cc135fde0adc07e404bd369f61947eac2784ebf` |
+| `run-preparation/ns-training-path-recheck-exit-followup-cpu/20261119T2253/tracking/ns_training_path_recheck_exit_followup.py` | `063d62973d32efe745776f48407b06266107514ba95b1ba0ac21172082a6de88` |
+| `run-preparation/ns-training-path-recheck-exit-terminal-followup-20261119/intent.json` | `84ae50084083fa775b37023824016336473d27e1b3c66b6a42938d808a81e6ac` |
+
+Both reporting projections are included in the existing renderer.
+The launched diagnostic/split-journal rerun passes6cases/24.19seconds:
+`run-preparation/test-endeavor-recheck-launched-report-20261119T2254.xml`.
+Additional waiter projection tests are running at this checkpoint.
+Required preparer/reporting source lint passed before waiter projection
+addition. Both journals are archived under the common update lock:
+`run-preparation/endeavor-before-recheck-exit-launch-waiter-20261119T2255.tar`.
+The original Bash monitor is retained without restart. Wave12 remains
+the latest full-budget analyzed and privately cloud-verified result;
+the goal remains active and no superiority is claimed.
+
+### November 19 23:02 Recheck-Exit Failure And Publication
+
+The recheck-exit diagnostic fails22:59:49.652923, retaining1/54
+completed commands and0/18decisions. The sole completed command is
+BF16/five-step MuonT lower-LR continuous24. Interrupted22 fails
+before training in rank5's `complete_scan_exhausted` after three scans.
+Previously marked helpers3564679/start943454355 and3564689/
+start943454358 have retained parent/group/session3564280 and3564274
+respectively. Both commands hash to
+`037bd3aa50e2bd803ba3fa9ed566d2e9399a097b44f9b256bea5a771f8d1ffeb`.
+Delayed post-failure stat/cmdline reads are absent; failure-attribution
+evidence explicitly denies coherent-identity or causal authority.
+
+Failed launcher3564192/start943451345 has parent3558375 and its own
+group/session. Execution and cleanup exits are1/1, marked descendants
+absent. The interrupted command is excluded from completed trajectories.
+Controller terminal/restoration time23:00:07.535614; exits1/1,
+keeper_restore0. Independent archived-handoff observation at23:00:38
+verifies controller3557212 and validator3558375 absent, empty validator
+marker set, and `same_keeper=True` for restored keeper3564728 and
+ranks3564875-3564882, with exactly eight original A100 contexts.
+No canonical complete terminal or numerical case acceptance exists.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/validation-ns-training-path-recheck-exit-20261119-gpu.json` | `1e3081d43464f066939f1aa2a0b26bc874913f9f67583a55eea5643928ff58d0` |
+| `validation/ns_training_path_recheck_exit_20261119/muont_ns_tpu_q5_full_lr_lower_interrupted.execution.json` | `4ab5c13013d587a385f9957716eb6f945273b06c85773b7cfd34cb588f27690a` |
+| `validation/ns_training_path_recheck_exit_20261119/muont_ns_tpu_q5_full_lr_lower_interrupted.log` | `0da08ee82c2985017a42a1439971517317f7070561d3443fc862c235cf68c37e` |
+| `run-preparation/test-endeavor-recheck-integrated-journal-20261119T2257.xml` | `82443b3431d3da2ec90e4bca980bed400a0c3f2be7bc759d6fabf5d904264e48` |
+
+Seven focused reporting/split-journal tests pass31.38seconds:
+`run-preparation/test-endeavor-recheck-waiter-context-20261119T2256.xml`.
+The earlier waiter projection invocation fails collection because the
+inherited runtime overwrote its file context. Only the new projection
+now extracts the pinned runtime definition before execution; accepted
+and running sources remain unchanged. Required scoped source lint passes.
+The integrated suite passes284executions/125.35seconds with264distinct
+classname/name identities, no failure/error/skip. Duplicate identities
+come from inherited tests collected across supplied report modules;
+this is a regression run, not an archive-acceptance receipt. The
+separate136-case CPU acceptance requires136unique testcase identities.
+
+Original monitor1588227/start933927668 publishes23:00:58 from the
+22:56:51authenticated report and resumes `sleep900` as3565409.
+Both journals include the failed recheck-exit status1/54,0/18 and
+the waiter projection. Its saved22:54:29live-owner observation is
+historical; waiter3559219 remains live at23:01 and retains its original
+900-second schedule. No monitor/waiter restart occurs.
+Before this failure interpretation both journals are archived under
+the shared update lock:
+`run-preparation/endeavor-before-recheck-exit-failure-20261119T2302.tar`.
+Full journal lint fails only the inherited500KiB rule at745.8KB/
+1561.1KB before this append; all scoped source/content checks pass.
+No numerical tolerance, deadline, scan-attempt, compiler or CUDA-graph
+waiver is introduced. The next helper-churn investigation is planned
+only; no new accepted candidate or launch is claimed.
+
+### November 19 23:13 Helper-Churn Study And Stopped Waiter
+
+The original recheck-exit terminal waiter3559219/start943421918 stops
+`needs_attention` at23:09:30.195049 after its original900-second loop.
+It retains one successful historical owner observation at22:54:29.
+Its saved error is `RuntimeError: Training-path original owners exited
+without complete cleanup/restoration`. No canonical terminal command,
+replacement waiter or consumed-owner restart is issued.
+
+A fresh issued-helper read-only inspection completes at23:11:03.
+Controller3557212, validator3558375 and waiter3559219 are absent.
+The exact contract validator marker has no processes. `same_keeper=True`
+compares keeper3564728/start943454719 and ranks3564875-3564882 against
+the controller's recorded restored generation. Eight exact rank contexts
+exclusively occupy the same eight physical A100s. Observation:
+`run-preparation/recheck-exit-waiter-stopped-observation-20261119T2314.json`.
+The `T2314` filename is a label; its embedded observation time is23:11:03.
+An earlier unretained read used an incorrectly suffixed marker name;
+only this contract-derived-marker observation supports descendant absence.
+
+The new CPU fake-process-tree study authenticates all six issued
+ownership helper hashes before loading unchanged `owned_output_handoff.py`.
+The study itself imports no Torch and mutates only its temporary fake
+process directory. Zero/one/two exits return all surviving/new marked
+processes. Three/four requested exits refuse at `complete_scan_exhausted`
+after exactly three exits; no partial set is returned. The stable fake
+process901 and unscanned replacement904 remain at refusal. Five tests
+pass0.69seconds under offline uv, hidden CUDA, all seven safe-marker
+exclusions and the accepted60/600-second timeout guard. This is CPU
+mechanism evidence, not successor archive acceptance or live causality.
+
+| Artifact | SHA256 |
+| --- | --- |
+| Local `tracking/owned_output_helper_churn.py` | `75bb95fbea5272edf98b8f5f419c977e4f4f5aa1a6f165dc98ea4e779505bb6f` |
+| Local `tracking/test_owned_output_helper_churn.py` | `f5ceb2421febad7fcfa5f64233e0e94d893f6a9686639806891bdea19bd9c3e5` |
+| `run-preparation/owned-output-helper-churn-20261119T2309.json` | `bf078c5eb7dbbd0f3ab467c98af5edb164dabd67cf8bb91ac57fd53962a4de65` |
+| `run-preparation/test-owned-output-helper-churn-20261119T2310.xml` | `735cf36bbac1a446c3e6b69b337f5cacda1250367cb381d7a73f1a8f32d858c1` |
+| `run-preparation/ns-training-path-recheck-exit-terminal-followup-20261119/state.json` | `0df698ee770a4be94a3ce64dae200f8a80942635738aee240f236c5ee86426aa` |
+| `run-preparation/recheck-exit-waiter-stopped-observation-20261119T2314.json` | `dc6cd0ad998d8149f9f37b1ba5befd956befef814921081769ee5e3009c4cbff` |
+
+The first pytest command selected the fixed Torch interpreter outside
+uv's dependency environment and could not load `pytest_timeout`.
+The corrected dependency-environment invocation passes all five cases.
+The first journal-suite attempt selected Python3.12 against Torch3.13
+extensions and fails collection; its XML remains at
+`run-preparation/test-endeavor-helper-churn-update-20261119T2312.xml`.
+The corrected journal invocation explicitly selects Torch's Python3.13
+through uv and retains the original timeouts and exclusions.
+Required source/README lint passes after import formatting.
+
+Before journal edits, both journals and the new study/README bytes are
+archived under `.endeavor-update.lock` at
+`run-preparation/endeavor-before-helper-churn-waiter-locked-20261119T2313.tar`.
+The first archive attempt lacked descriptor9 and held no lock; its
+unlocked archive is preserved but is not the publication's archive receipt.
+The successful lock is released immediately after manual publication.
+Original monitor1588227/start933927668 retains fd9 for its separate
+exclusive `monitor.lock`, unchanged command and900-second sleep.
+No GPU, numerical, production or SwanLab authority is added.
+
+November19 23:22 verification: all five study tests pass0.60seconds
+with uv explicitly selecting Torch's Python3.13 interpreter.
+Seven focused recheck/split-document/900-second-monitor regressions
+pass29.36seconds. A separate fresh CPU process using the accepted
+archived ownership-helper directory completes23:16:18; its six source
+hashes and all five trial records exactly match the issued-helper
+study. This repeat verifies archived/issued agreement and does not
+accept a successor or explain the live failure.
+
+| Final Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/test-owned-output-helper-churn-py313-20261119T2314.xml` | `562931c23e2a9238f82f673b7f76863db3d93fcd6cf4966186233f39ca6862e3` |
+| `run-preparation/test-endeavor-helper-churn-update-20261119T2314.xml` | `b0ea5aa8a168ef8f587f43e72afebfd0c04df7aa05a3c342ca601d095d28d48a` |
+| `run-preparation/owned-output-helper-churn-archived-repeat-20261119T2316.json` | `197a604681ce8000354cfe43e50bea4023feb1169dad528086611b2d9a8f1a94` |
+| `run-preparation/endeavor-before-helper-churn-waiter-locked-20261119T2313.tar` | `fcf2a90f60c08f5f946bbfb070e16577ac031acaf70bec51d138573ba4557809` |
+
+The manual split-aware receipt refresh completes by23:18:27 and
+projects the stopped waiter into both automated blocks. A byte check
+with only the bounded automated blocks removed verifies manual prose
+unchanged in both journals. The original monitor's scheduled updater
+3574990 follows behind the same shared lock, completes by23:22 and
+releases it before this verification append. No monitor was duplicated
+or restarted. Final pre-edit archive:
+`run-preparation/endeavor-before-helper-churn-final-verification-20261119T2320.tar`.
+Scoped source/README and all journal-content lint pass; full required
+lint fails only the inherited500KiB rule at755.4KB ENDEAVOR and1570.5KB
+DETAILS before this append. Bash syntax and `git diff --check` pass.
+Wave12 remains latest full-budget analyzed and privately cloud-verified;
+the actual-LR queue remains accepted but unissued.
+
+### November 19 23:46 Serialized Ownership Acceptance
+
+Both retained unstable command digests in the failed recheck-exit
+interrupted log are
+`037bd3aa50e2bd803ba3fa9ed566d2e9399a097b44f9b256bea5a771f8d1ffeb`.
+The exact compact-JSON argv digest matches the unchanged rank reader's
+compute-occupancy NVIDIA query, with three arguments/64 argument bytes.
+Retained parents are ranks3564280 and3564274. This is evidence for
+the concurrency hypothesis, not live causal attribution. The source
+reader runs the query before its complete marked-process scan.
+The prior startup/import barrier is superseded; its exploratory XML
+remains, while its two unaccepted source files were deleted before any
+archive acceptance or GPU launch.
+
+New local sources are `ns_training_owner_serialization.py`,
+`test_ns_training_owner_serialization.py`,
+`ns_training_path_serialized_{source,predecessor,reporting}.py`,
+`prepare_ns_training_path_serialized.py` and
+`test_ns_training_path_serialized.py`. The owner transformation wraps
+the complete existing function body without removing or modifying its
+AST statements. The canonical30-second lock uses direct regular-file,
+`O_NOFOLLOW`, inode, nonblocking flock and timeout checks.
+The trainer, configs, numerical-reader hashes, existing tolerances,
+18cases54commands, three scans, one-second exit proof, compilation and
+CUDA graphs remain unchanged. The CPU fake-tree NVIDIA-query study
+retains all eight stable ranks after quiescence; it supplies no GPU or
+numerical acceptance.
+
+The local19-case suite passes10.62seconds. The first17-pass/two-failure
+run exposed missing `QUEUE`/`queue_structure` inherited aliases; explicit
+parent aliases fix the preparation issue. Both XMLs remain.
+Separate archived CPU acceptance passes141unique cases22.54seconds,
+189helpers558inventory entries at23:35:02.240053.
+Candidate:
+`candidates/ns-training-path-serialized-reviewed-20261119T2340`.
+Archive:
+`run-preparation/ns-training-path-serialized-20261119-cpu/reviewed-20261119T2340`.
+Fresh archived `--phase check` passes.
+Separate predecessor seal passes23:37:10.591936 with2535evidence files/
+1352checkpoint identities, preserving all failed one-shots and the
+accepted unissued actual-LR queue. Fresh independent archived
+`--phase check-seal` passes again before freeze. The first resumed
+check command omitted the required `PYTHONFAULTHANDLER=1` and was refused
+before checking; the corrected command includes all five fixed
+environment values. No gate was changed.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-serialized-20261119-cpu/reviewed-20261119T2340/receipt.json` | `293daf7c2a91b5ba2e2081646521f44bd85092d7f89b2a1f1b256a8b4a1aeda2` |
+| Same archive `source.tar` | `983ff8cdcaad6407056f0eaeb8660d2c1681fddfa84dac9d51e91ca6c4e06e24` |
+| Same archive `tests.xml` | `b0542ab6cc02fdfa818468e06ea655bae1a82105ac80009bdc2b93948bf585cb` |
+| Same archive `cpu.log` | `3d22b12dc53286bd515f4dbc404d6cbdb94d557c1f75e34b8b2ee90f72e4b998` |
+| `run-preparation/ns-training-path-serialized-predecessor-seal-20261119.json` | `dd3d333dfbe00686d8a25da358ae783c11cc0163a679c750338076b5c9a0bdfe` |
+| `run-preparation/test-ns-training-serialized-local-fixed-20261119T2334.xml` | `c6471faadc891e8b82d5b0f7a1969205bb2f53a5004cb18fde67e5e0a2535da1` |
+| `run-preparation/test-ns-training-serialized-local-20261119T2335.xml` | `b05659600ce1f5cd3be53bb1a3d62ac6cbf20e31bd703584ac959df286ae7beb` |
+| `run-preparation/test-ns-training-startup-barrier-20261119T2331.xml` | `cf1b99a1a5e79d725981cd69a7feccde6f8b80888664bb7dd6b00c6ba33beb66` |
+| `run-preparation/test-endeavor-serialized-report-20261119T2341.xml` | `8824207e42193dd07dff4b7467a2e0e10658989dfaf1cb3f069c1a5e366f4483` |
+
+The six focused serialized-report/split-refresh/document-monitor tests
+pass13.23seconds; required scoped source lint passes. Reporter
+binding/intent pins remain unset until verified issuance. Both journal
+files are archived under `.endeavor-update.lock` before this milestone:
+`run-preparation/endeavor-before-serialized-milestone-20261119T2346.tar`.
+Original monitor1588227/start933927668 publishes23:40:59 from its
+23:37:05report and returns to `sleep900` as3590870. The monitor retains
+its exclusive fd9 lock and original generation. The top-level legacy
+`monitor-endeavor.log` is not this active monitor's log; the live log is
+`run-preparation/monitor-endeavor/monitor.log`.
+At this publication freeze is in progress; no acknowledged successor
+controller, validator, new waiter, full-budget result or SwanLab import
+is claimed. Wave12 remains latest complete analyzed/cloud-verified;
+optimizer superiority remains unestablished.
+
+### November 20 00:00 Serialized Launch And Failed Lock Wait
+
+Freeze publishes November19 23:46:29.500773; fresh issued-controller
+checking passes before distinct one-shot start. Controller3595881/
+start943762646 acknowledges23:51:10.909188. Validator3597661/
+start943773234 acknowledges23:52:56.786134 as its original direct
+child after exact keeper release. Issued binding, CPU/source acceptance
+and failed-predecessor seal are distinct; mutable checkout helper
+changes are not deployed into the accepted or running source.
+
+The first continuous launcher3598105/start943776777 is acknowledged
+under the original validator. Its MuonT BF16/five-step lower-LR command
+fails before training23:54:13.067576. The retained rank trace raises
+`Owner inspection lock deadline exhausted` at the new bounded lock;
+five such tracebacks appear before elastic cleanup. No training
+metric/checkpoint or numerical case decision is produced. The command
+receipt records integer execution/cleanup exits1/1 and marked-descendant
+absence. Validator generic `require_entry` rejection is not evidence
+of source substitution. The aggregate preserves0/54commands0/18decisions.
+Controller records `needs_attention`, exits1/1, keeper_restore0
+at23:54:30.344889. No numerical reader, timeout, tolerance, three-scan
+budget, one-second exit proof, compilation or CUDA graph is waived.
+
+Separate waiter CPU acceptance23:52:31 accepts24unique cases4.67seconds
+and191helpers. Fresh archived-entry checking passes with its native
+`--cpu` flag; an earlier `--cpu-receipt` attempt was a CLI usage refusal
+and did not execute acceptance or claim a generation.
+Waiter3598600/start943780809 acknowledges23:54:12.540696 and retains
+its first23:54:17.747226 owner observation. The saved observation is
+historical; its original900-second interval remains, without restart.
+The original terminal verifier must not be invoked on failed partial
+coverage. The accepted unissued actual-LR queue is unchanged.
+
+Independent read-only23:56:15.525336 observation uses issued helper
+bytes: controller/validator are absent, validator markers are empty,
+and `same_keeper=True` binds restored keeper3598689/start943781037
+and ranks3598829-3598836 to the controller's recorded restoration.
+Those eight rank contexts exclusively occupy the original physical
+A100 UUIDs. This does not repair nonzero cleanup/execution or authorize
+complete-terminal publication. The read-only receipt is preserved.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-serialized-20261119-binding.json` | `5789abe0b6c47fd910917cba35e00b2b2d519e66c867dab2214418327bbddc68` |
+| `run-preparation/source-ns-training-path-serialized-20261119.tar` | `d7d3d70714d6919dc96a0cf112bea2a320bfdc2b74d80cadc0470d6108144f8f` |
+| `controllers/ns-training-path-serialized-20261119/controller.json` | `e782a7fcdc67c137c64c4d65799eb45b56c4800f969d0f1cb0640ed52295bef1` |
+| `run-preparation/ns-training-path-serialized-20261119-state.json` | `b9d3f34834e757d1b4e1d03879a8f1fae4eaed2f511fff4f91a919434d010e39` |
+| `run-preparation/validation-ns-training-path-serialized-20261119-gpu.json` | `2ab91be805a1671762ec1796b7fd56330ba110f4815fa4ce2f152b0332b692c2` |
+| `validation/ns_training_path_serialized_20261119/muont_ns_tpu_q5_full_lr_lower_continuous.log` | `48b1425c6912c7d38aaa79c7291341ead7399b31b7a8b0a989fcd02e7f8c0ac8` |
+| Same failed command `execution.json` | `324f94c3eccbac0d716b96faf81a92daf2c81b765ab2f8eef6c85aeafc712472` |
+| `run-preparation/serialized-failure-restored-observation-20261119T2356.json` | `ab7c5b4acaf5b25c76c61b8fd19ada2b0d6b69a3bd4560af54653d7cf95a964b` |
+| `run-preparation/ns-training-path-serialized-followup-cpu/20261119T2353/receipt.json` | `632f9296c004585213712462828068aabde2013ed97a3d3555ecde9c62e726ff` |
+| Same waiter archive `source.tar` | `2200dc75913663c642567433d8eb7acaf4e6f147282605d28d1762847afe538d` |
+| Same waiter archive `tests.xml` | `38b4c85adece054887a1da0f14de9f255cc10cfac846a5eb4d16add5a7ff9358` |
+| Same waiter archive `cpu.log` | `479082e5badf4a794748efa194d3ffdea2c19387ce7fee7e66a278edc861baa1` |
+| Same waiter archive `tracking/ns_training_path_serialized_followup.py` | `1b284f406151344dbb4246617d7ef22d9917e450f2f4dd94a6e032bc4d4b5f3a` |
+| `run-preparation/ns-training-path-serialized-terminal-followup-20261119/intent.json` | `7c4115103b9e07596480936a3da39aa9113aa8d179374cffbe9dce2de8b860ad` |
+| `run-preparation/test-endeavor-serialized-issued-20261119T2352.xml` | `12f8435ac583a77b0dbebff36ea529567a6ece90f6d702c67c64ef1432bf9a22` |
+| `run-preparation/test-endeavor-serialized-waiter-20261119T2357.xml` | `7c67b90627a7b5e64cadf7f5af1ff43245cda896f4cc8dc0459f4edfc797019b` |
+| `run-preparation/endeavor-before-serialized-milestone-20261119T2346.tar` | `bfa1d44fc5aee3b0ced601593174b1394cb1e6a6162584d4904eb49e5138edd3` |
+
+Seven focused journal/waiter/monitor cases pass18.35seconds; the
+full affected suite passes259cases140.90seconds with original hidden
+CUDA/offline/all-seven-exclusions/60-test600-session guards.
+Integrated XML:
+`run-preparation/test-endeavor-serialized-integrated-20261119T2358.xml`.
+Reporter binding/intent/CPU/runner pins authenticate the new generation.
+Its projection now describes full-inspection serialization while
+retaining the accepted handoff helper and trainer/configuration bytes.
+Scoped required source lint passes after mechanical import/line
+formatting; journal content checks pass. Full journal lint fails only
+the inherited500KiB rule.
+
+Before final manual publication, both journals are archived under
+`.endeavor-update.lock` at
+`run-preparation/endeavor-before-serialized-failure-20261119T2358.tar`.
+The filename labels the requested archive time; it acquires the lock
+only after original updater3599669 completes November20 00:00:10.
+That sole original monitor1588227/start933927668 projects its
+November19 23:56:01authenticated report into both automated blocks,
+then returns to900-second sleep. No monitor/uploader is duplicated.
+Whole-inspection serialization is rejected within the current30-second
+wait. A smaller query/marker critical section and slow-source CPU
+contention fixture are proposed only. A GPU successor must separately
+preserve this failed evidence and wait for original consumed waiter/
+owner absence. Wave12 remains latest complete analyzed/cloud-verified;
+no optimizer-superiority or new loss claim follows.
+
+November20 00:03 final verification: all259 affected CPU tests pass;
+their integrated XML SHA256 is
+`db11b570d591ecb5de70838c31b89367b2f6735be576a361e83e6e33d693eba9`.
+The final failure-publication archive SHA256 is
+`97eb5e77545d71e186ddcc4795d9a59f3090bfd1f81a1de9311caff874564d5c`.
+Both automated blocks include the receipt-pinned serialized failure
+0/54commands0/18decisions and separate waiter observation. That saved
+23:54:17 observation records controller live and validator absent;
+it must not be described as both original owners live. The waiter remains
+the same acknowledged3598600/start943780809 generation on its original
+900-second schedule. Original monitor1588227/start933927668 returns
+to `sleep900` as3603227 after00:00:10publication. Its original exclusive
+lock and command are unchanged.
+Required source lint, all journal-content checks, Bash syntax and
+`git diff --check` pass. Full journal lint fails only inherited size:
+ENDEAVOR770.3KB/DETAILS1585.3KB before this final append.
+Both journals are archived under the shared update lock at
+`run-preparation/endeavor-before-serialized-final-verification-20261120T0003.tar`
+before this verification entry. No new accepted GPU source, terminal
+claim, restarted one-shot, production wave or SwanLab import is added.
+
+### November20 00:13 Query-Serialization Acceptance
+
+Original whole-inspection waiter3598600/start943780809 stops
+`needs_attention` at00:09:18.673294 on its original900-second interval.
+Its consumed generation is absent; no terminal child/claim or restart
+exists. Read-only issued-helper observation00:10:16.677535 verifies
+original controller/validator/waiter absence, empty validator marker
+set and `same_keeper=True` for exact restored keeper3598689 with eight
+rank contexts on the original A100 UUIDs. Observation:
+`run-preparation/query-serialized-stopped-predecessor-observation-20261120T0010.json`.
+
+New source/predecessor/preparer/test modules use the distinct
+`ns_training_path_query_serialized` namespace. Ownership statement order
+is AST-identical after flattening the new lock boundary. Only source/
+binding authentication and original acknowledgment wait are outside;
+hostname query through final original-generation recheck remain inside.
+Same lock helper SHA preserves30seconds, direct regular file/O_NOFOLLOW/
+inode checks, no scan-attempt or exit-proof extension. All18cases54commands,
+lower LR/full5120schedule, trainer/configuration, numerical readers/
+tolerances, compilation and cached-root graphs remain unchanged.
+
+The boundary regression uses events/futures at the authenticated-source
+boundary and a separate real flock descriptor; one blocked source
+read cannot stop another rank's verified inspection. Queries and marker
+scan refuse acquiring that descriptor, proving exclusive serialization.
+Both return identical state/binding after release. No sleep or CUDA
+work appears in the fixture. Complete142unique archived cases pass
+22.45seconds,193helpers562inventory entries at00:11:29.251949.
+Fresh archived-entry `--phase check` passes. The separate archived
+predecessor reader reconstructs0/54commands0/18decisions, terminal
+waiter failure and accepted unissued actual-LR queue; exact consumed-owner/
+marker absence passes. Separate sealing is in progress, not yet claimed.
+
+Final candidate:
+`candidates/ns-training-path-query-serialized-final-reviewed-20261120T0012`.
+CPU archive:
+`run-preparation/ns-training-path-query-serialized-20261120-cpu/reviewed-20261120T0012`.
+An initial preparation had duplicated a parent preparer in the helper
+tuple and was refused before a candidate existed. Name deduplication
+fixes packaging. First successful candidate
+`candidates/ns-training-path-query-serialized-reviewed-20261120T0012`
+is retained; final preparation pins terminal waiter state/log hashes.
+No accepted source is edited after archive acceptance.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| Query CPU archive `receipt.json` | `dee0f1f2794237af02cfc0ac0f966a8a30a08f55a489d6ac7ef05291aebf3dc8` |
+| Query CPU archive `source.tar` | `77995c74bd3628d817312af30feade55307c09ecd2e99ac2b163add322949100` |
+| Query CPU archive `tests.xml` | `dd807ab2d72cfa0820eba7ae3cbeec4894f8f140829578ab3c4f8fa1df7c58d5` |
+| Query CPU archive `cpu.log` | `c187a4592c6ca6d0d9a04f2fd8e27f606c9b6e6d1b623a6515d9c78479794df8` |
+| `run-preparation/query-serialized-stopped-predecessor-observation-20261120T0010.json` | `35b0e100e663660278d3b02c73049ef23b1089b9c1a3e53daead05933e8e7de6` |
+| `run-preparation/ns-training-path-serialized-terminal-followup-20261119/state.json` | `ba1fac09df0442cd69a695a4673bc30164234381f018ff4c478a0c82478992de` |
+| Same original waiter `followup.log` | `61254590d435003dc37d2dfa02b47aad51b7669393b46f831e7f12322663b961` |
+| Original serialized `controllers/.../controller.log` | `5fb245284f4524bc196b3273822985f0b3c089b1b9a667db9bde763a1e667d0b` |
+| Original serialized `controllers/.../validator.log` | `4fff906e45ff5a83545678dd0f19343171f49233ab1f7184893ace7cd4f1fe05` |
+
+Local source SHA256:
+`ns_training_path_query_serialized_source.py`
+`3d9cf67b00855e3c2dc4fe6017a0bc93b5eb1c6d2f3a9676e7d0ee581cce3de2`;
+predecessor
+`d9954df17ea9aaa918e579877c01a6690802b49b7465b582eb1c2baa4118cf3d`;
+preparer
+`59594e2b7ea37aab31ff08ec5f121702d3b8b1479e7dd843b5a9b5ef309ad4d4`;
+test
+`0d986fda98808d4f8e8fd8dee7a9e50cbcd300b68379d63566fbcaaf94bb5ad1`.
+Required scoped source lint and `git diff --check` pass.
+Both journals archived under `.endeavor-update.lock` at
+`run-preparation/endeavor-before-query-serialization-acceptance-20261120T0013.tar`
+before this milestone. Original monitor1588227/start933927668 is
+live and alone, last completed publication00:00:10, still on its
+900-second sleep. No issued binding/GPU controller/validator or new
+waiter exists yet; no numerical, efficiency or cloud result follows.
+
+### November20 00:23 Query-Serialization Seal And Issuance
+
+The separate predecessor seal passes00:13:48.340691 with2746evidence
+files and1352checkpoint identities. Fresh archived `--phase check-seal`
+passes. Freeze publishes00:18:47.938866; fresh issued-controller
+`--phase check` passes before the distinct one-shot start. At00:23
+start preflight is ongoing: no acknowledgment, keeper transfer,
+validator or new GPU training command is yet recorded.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-query-serialized-predecessor-seal-20261120.json` | `ca766ffc6298c7bb9284a7d514c44b875d0a80bfb53f9029f7794eae64388373` |
+| `run-preparation/ns-training-path-query-serialized-20261120-binding.json` | `8e6760d8a0a679e057ad7434df2e969925f055c57912e271b42ff45fa1cfe24e` |
+| `run-preparation/source-ns-training-path-query-serialized-20261120.tar` | `a64d07b32e383e062ad4985f89a337f3d14b8a2e12bcd1d099cc9d346b7d1c82` |
+
+Issued helper path:
+`controllers/ns-training-path-query-serialized-20261120/tracking`.
+The final candidate, CPU archive, all142unique acceptance cases,
+193helper bytes and unchanged numerical/ownership gates retain their
+accepted identities. No frozen source is manually edited.
+
+First full journal regression XML
+`run-preparation/test-endeavor-query-serialized-full-20261120T0017.xml`
+preserves240passes/one failure in145.23seconds. Freeze published its
+binding while the new reporter's binding pin was unset, causing a
+correct evidence refusal. The separate mutable reporter now pins the
+verified binding; two focused tests pass14.42seconds:
+`run-preparation/test-endeavor-query-binding-pinned-20261120T0022.xml`.
+Complete rerun
+`run-preparation/test-endeavor-query-binding-full-20261120T0024.xml`
+is in progress. Required scoped source lint passes.
+
+Original monitor1588227/start933927668 completes publication00:19:23
+from the00:15:13 report and resumes its original900-second sleep.
+The source, generation and exclusive fd9 lock remain unchanged.
+Both journals are archived under `.endeavor-update.lock` before this
+manual milestone:
+`run-preparation/endeavor-before-query-serialization-issued-20261120T0023.tar`.
+Wave12 remains latest complete large-window analyzed and privately
+SwanLab-verified wave. No new numerical result, full-budget optimizer
+efficiency, complete terminal or cloud import is established.
+
+### November20 00:30 Query Launch And Waiter
+
+Controller3633332/start943964742 acknowledges00:24:51.867094.
+Original direct validator3637693/start943978129 acknowledges
+00:27:05.736020 after exact keeper release. First launcher3638399
+executes MuonT BF16/five-step lower-LR continuous24/boundary22 with
+the original full5120schedule. Its log reaches22 by00:30; aggregate
+completed counts remain0/54commands0/18decisions pending clean
+execution receipts. Issued work literal remains
+`validation/ns_training_path_query_serialized_20261119`; no accepted
+source is changed to rename it.
+
+Separate waiter archive accepts24unique cases5.02seconds at
+00:26:45.437056 with195helpers, retaining every193issued helper byte.
+Fresh archived `--phase check --cpu` passes. Distinct waiter3638945/
+start943982783 acknowledges00:27:52.277328; its first00:27:57.918722
+observation verifies both exact original generations live and
+0/54commands0/18decisions. Interval900 and all canonical-terminal
+predicates remain unchanged. No failed original one-shot is restarted.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `controllers/ns-training-path-query-serialized-20261120/controller.json` | `43e810371a8441b56f75c740ffc8ec126473acaaf360873647dd9d9aaffef3fe` |
+| `run-preparation/ns-training-path-query-serialized-followup-cpu/20261120T0026/receipt.json` | `65e5133be24ea2d2ab1fbb4155c7c25d1c34d9ddc06ce08020694bde6d362e4d` |
+| Same waiter archive `source.tar` | `03f66f373f345edb23196aab8254239e4b552a5a1a3855312b4af8a32b54bf6f` |
+| Same waiter archive `tests.xml` | `500f1299e5be2a3cc798db0eb6aa5c665eb16a38654d83d7e451918774c7a26d` |
+| Same waiter archive `cpu.log` | `09c12282fa6d3ee872a60cc89510db2e24f2ad416744dbe524531f4a0b761a5a` |
+| Same waiter archive `tracking/ns_training_path_query_serialized_followup.py` | `58365100058d55822eedcf35439b7ed9e4d6d1ccb51f90f3e63e9c01ef73ea7f` |
+| `run-preparation/ns-training-path-query-serialized-terminal-followup-20261120/intent.json` | `3679f0cbca16b619995e76b70950951348db6ff4bb9592f435ccbc329f391666` |
+| `run-preparation/test-endeavor-query-binding-full-20261120T0024.xml` | `ec8eed265e16333504730df45799c6be872ec391671f6459c0dbd7410f0cfd94` |
+| `run-preparation/endeavor-before-query-serialization-issued-20261120T0023.tar` | `93d2d38aa25cd93bf0fb6792fc6f1e3e48644226373aca78ce50004db16dd01c` |
+
+Complete journal regression passes241cases147.82seconds. Six
+acknowledged-report/split-document/monitor cases pass15.64seconds:
+`run-preparation/test-endeavor-query-acknowledged-20261120T0026.xml`.
+The first new waiter suite preserves6passes/one failure18.38seconds:
+`run-preparation/test-endeavor-query-waiter-20261120T0029.xml`.
+The saved-waiter projection authenticates correctly, but the research
+summary omitted its title; the separate reporter allowlist is corrected.
+Fresh regression is in progress. No numerical or ownership gate changes.
+Source lint reports only the newly long import formatting before
+the required formatter rerun. Journal-content lint and diff-check pass.
+
+Both journals are archived under `.endeavor-update.lock` before this
+launch milestone:
+`run-preparation/endeavor-before-query-launch-waiter-20261120T0030.tar`.
+The original monitor remains1588227/start933927668 on900seconds.
+No full-budget successor, optimizer-quality/efficiency conclusion,
+complete terminal or SwanLab import is claimed.
+
+### November20 00:39 First Commands And Publication Verification
+
+First continuous24-update execution finishes00:30:14.275132 with
+integer execution/cleanup0/0 and marked-descendant absence.
+Interrupted22-update execution finishes00:35:15.292437 with the same
+clean exits. Aggregate00:36:07.601060 admits2/54commands0/18decisions.
+Resumed log reaches24updates; trajectory reconstruction and case
+comparison remain pending. No tolerance, scan deadline, ownership,
+compilation or graph change follows. Complete diagnostic terminal,
+actual-LR/precision gates and genuine full-budget successor remain open.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q5_full_lr_lower_continuous.execution.json` | `6e229d18c8f619860857b1c219d6cd811db82289e61810d3e4ceb1c032f1f3c7` |
+| Same command `.log` | `9731862fa170b48af7d826be36fe70eb06c91c745a1a8562ce4bce0000099f84` |
+| `validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q5_full_lr_lower_interrupted.execution.json` | `99cf9e0f63a6634f487cf36798e80c22daf489921403da2c58e21907ffd46444` |
+| Same command `.log` | `f4d428e0766bd5080c28f6a6eeadcc663c997c7356ecd5b044a554b83471f691` |
+| `run-preparation/test-endeavor-query-waiter-fixed-20261120T0030.xml` | `5c9c90cce72097c0d2835f51f47c42bba601aea2d9fdcf116ed98d00eed99c88` |
+| `run-preparation/test-endeavor-query-waiter-integrated-20261120T0032.xml` | `4fe70242281dd1a68276cb9b978426f9df6454f951d44b198ba68eb8e6791665` |
+| `run-preparation/endeavor-before-query-launch-waiter-20261120T0030.tar` | `b8e1ca23497c4df4b308587d4f10317d00c01454dfcd5428db97d0d9bf70b8f0` |
+
+Full integrated242cases pass164.70seconds, independently verified as
+242unique identities with zero failure/error/skip. Seven focused
+reporter/split-document/monitor cases pass20.53seconds. Required source
+lint, journal-content lint, Bash syntax and diff-check pass. Full journal
+lint fails only inherited500KiB size: ENDEAVOR780.8KB/DETAILS1596.6KB
+before this append. No historical evidence is removed.
+Mutable reporter hashes:
+query `94d7fc2cc18b1ad3f37d8a2db05a7b3016ee82c4a8468993ddac28393db28652`;
+waiter `94834daece8593048422baed7074cf98de2fa67f72b22f845058aab4f4dc03fa`.
+Waiter preparer:
+`6271909c194e30a00b8937d1d99d1cab26901810aa21a0934ddde6bdb24682aa`.
+No accepted GPU helper/source archive is edited.
+
+Original monitor1588227/start933927668 starts its next scheduled
+updater3652222 at00:34:25 and completes both journals00:39:11.
+It retains the original exclusive fd9 lock and900-second interval.
+Its source remains
+`e2adac73f02ed7349fee9cbc587b59dd5bdfd2f2e2cc264a9cd13934b5213b75`.
+Manual lock acquisition first waits30seconds and exits without an
+archive or edit; a subsequent queued acquisition waits for the original
+publisher, then archives both journals before this append:
+`run-preparation/endeavor-before-query-first-command-verification-20261120T0036.tar`.
+No monitor/updater/uploader/controller is duplicated. The read-only
+waiter remains its sole acknowledged generation and900-second schedule.
+No complete terminal, full-budget quality/efficiency or SwanLab result
+is added; Wave12 remains latest analyzed/private-cloud-verified wave.
+
+November20 00:41 retained progress: first resumed24-update command
+finishes00:38:20.014263 with execution/cleanup0/0 and marked-descendant
+absence. Aggregate00:40:46.417751 admits3/54commands0/18decisions;
+numerical case reconstruction remains pending. Its execution receipt
+SHA256 is `9743b3ff3d63b8226c30661f63ef6a4ab3ac610c5ef7fabc12a66cf02a6f092c`;
+log SHA256 is `e6d773fff0db27df82041f0d231c80a38a420795d2087491699dc7ac1f5e1a66`.
+Both live under `validation/ns_training_path_query_serialized_20261119`
+as `muont_ns_tpu_q5_full_lr_lower_resumed.execution.json` and `.log`.
+The00:39automated2/54observation stays historical until the original
+next scheduled update. No duplicate publisher or terminal claim.
+Prior locked journal archive
+`run-preparation/endeavor-before-query-first-command-verification-20261120T0036.tar`
+SHA256 `c32ec07cf39f41eaf2e8478286240aeb5efe9145d4ca01862e636d43422593b5`.
+Both journals are again archived under `.endeavor-update.lock` before
+this progress increment:
+`run-preparation/endeavor-before-query-three-command-update-20261120T0041.tar`.
+
+### November20 00:59 Query First Acceptance And Actual-LR Reader
+
+Original validator records MuonT BF16/five-step lower-LR acceptance at
+00:50:57.442848. Configuration
+`experiment/configs/muont_ns_tpu_q5_full_lr_lower_0p5m_seed0.json`
+SHA256 `d3c516c1c2a0510d4befe82d819351e1416561be27870b8df26c2355cfbfe854`,
+matrixLR0.04525483392 and the issued final00:12candidate are unchanged.
+All five gates pass; checkpoints22/24 have zero failed tensors/scalars;
+39/39loss checks pass. Checkpoint23 retains16diagnostic-only graph-state
+scalar differences and zero failed tensors. No tolerance changes.
+Seven-step continuous24 finishes00:53:40.787797 with integer execution/
+cleanup0/0 and marked-descendant absence. Aggregate00:56:09.173383
+retains4/54commands1/18decisions; seven-step interrupted remains active.
+Third original waiter observation00:57:59.476307 stays waiting on its
+original900-second interval. No duplicate terminal/replay is invoked.
+
+The distinct file-only query actual-LR predecessor accepts at
+00:55:08.098908 with39unique cases18.76seconds and211helpers. Staging
+at00:53:59.476722 remains independently separate from acceptance;
+fresh archived `--phase check --cpu-receipt` passes. An initial archived
+invocation omits its required flat `PYTHONPATH` and refuses import before
+any acceptance publication; the correctly archived-path invocation
+then accepts. No archive is edited. Observation00:57:24.601748 returns
+`ready: false`, exact controller3633332/start943964742, validator3637693/
+start943978129, waiter3638945/start943982783 live and marked descendants
+present. No actual-LR predecessor seal, transfer or launch exists.
+
+The predecessor derives the pinned original isolated exit reader and
+directly authenticates each retained ancestor seal. The current query
+seal itself contains only whole-inspection0/0, recheck1/0, recovery2/0
+and original44/14 summaries. Scan-exit8/2, transition23/7 and exit-drain6/2
+remain in separately hash-bound ancestor seals already in its evidence
+inventory. No flattened summary keys are invented or required. Numerical
+and execution closures remain unmerged; source planning preserves
+`owned_output_handoff.py` numericalSHA
+`b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`
+versus executionSHA
+`7c653b0a08e3159599ef00ba4767ef3291b7d581744581d000ca14c3a6ad4e24`.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-query-serialized-actual-lr-predecessor-cpu/staged-20261120T0053/receipt.json` | `06533d588b4681413028cdfe7c8830c02adc1ae6572beab6e59bfe2b52684006` |
+| Same archive `staged.json` | `68b4fdb7d0c0177660a2a31bf14d618e72a04c84c8eba7404c71e4b357c0ac59` |
+| Same archive `source.tar` | `c02300967abb52e70f1bdb14576327f2ae9d19cd03893f27dc3db1d48d6278c7` |
+| Same archive `tests.xml` | `a3954aa5059ff49a6ea5ffde8de8910d314aadb0be870f14c649fbf6fb93345a` |
+| Same archive `cpu.log` | `729f89691bacaf45f163afaca286eb600a5e468299c8528ba391a31103c161ca` |
+| Same archive `tracking/ns_training_path_query_serialized_lr_predecessor.py` | `198c5d5d5cd4c26f89d9f72cb135997bfedf887e577a53d5ed1f095e33d496c8` |
+| Same archive `tracking/prepare_ns_training_path_query_serialized_lr_predecessor.py` | `9af1f97bb28827adf1fbda0a3c25bdc68595be23cb69ca0386045522a8720a54` |
+| Same archive `tracking/test_ns_training_path_query_serialized_lr_predecessor.py` | `d754050405f0761801bdda00dd78a3069b3743440731d7a4ffff10aab4546e08` |
+| `run-preparation/query-serialized-actual-lr-predecessor-observation-20261120T0057.json` | `2577d3c93060c7bc979ee034bc0f23283e193daf28ef859ea4270a6a9ce30b19` |
+| `validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q7_full_lr_lower_continuous.execution.json` | `88732fbc3ecbe3c6544fb121f4d1efd8ad2c10b5a670d90446e60b8229175bef` |
+| Same command `.log` | `6fccfa9866f245cd7162c0510db1e77c26d85d65ebf17458f86e9d1a8fcc07be` |
+| `run-preparation/test-query-lr-predecessor-integrated-20261120T0055.xml` | `10c64d414b794d70aa223f212cfa2cdd1d41721f05a976061ed3252d5717369d` |
+| `run-preparation/test-endeavor-query-lr-checkpoint-20261120T0054.xml` | `40c0dcf355eb4f5ff5b07659e79b7f4caad8e1a23458e7cf468a55e99666df83` |
+
+Local initial fixture suite retains26passes13failures11.29seconds,
+XML `test-query-lr-predecessor-initial-20261120T0052.xml`
+SHA `b6e971e26f2d0604f9f3e3dc430edd580c65d3e9ae054c5e6fbe50c91b0529c9`.
+Waiter-path/module-alias correction retains34passes5failures12.74seconds,
+XML `test-query-lr-predecessor-fixture-fixed-20261120T0053.xml`
+SHA `7cc4c673097d8ae2cd23d444d1f605b0ef24ee001b198914bd76259335315246`.
+Correct independently constructed failed-summary fixtures then pass39cases
+16.95seconds, XML `test-query-lr-predecessor-lineage-fixed-20261120T0054.xml`
+SHA `6851aa785db7cde30174bba097a555b72988ae8910321b422bb9a877b9e1f4e9`.
+All three XML paths are under `run-preparation`. The integrated four-reader
+suite passes132executions54.32seconds,46distinct inherited XML identities;
+the separate acceptance verifies39unique identities and zero failure/
+error/skip. Seven focused journal/split/monitor tests pass18.90seconds.
+Required scoped source lint and diff-check pass. No numerical, scan,
+deadline, ownership, compilation or CUDA-graph gate changes.
+
+Original monitor1588227/start933927668 publishes00:58:51 from the
+00:54:14 report and resumes900-second sleep3697574. Its sourceSHA remains
+`e2adac73f02ed7349fee9cbc587b59dd5bdfd2f2e2cc264a9cd13934b5213b75`.
+Queued journal acquisition waits for that publisher, archives both files,
+then exits without editing because plain stdin is closed:
+`run-preparation/endeavor-before-query-lr-predecessor-milestone-20261120T0056.tar`.
+A new PTY-held acquisition archives both files before this append:
+`run-preparation/endeavor-before-query-lr-predecessor-update-20261120T0059.tar`.
+The prior00:41journal archiveSHA is
+`801d6d4eaf7735833a5825c2dc9031c82cba217e4ea324c6fc40924d9c5de352`.
+No monitor, uploader, controller or waiter is duplicated.
+Wave12 remains latest full-budget analyzed/private-cloud-verified.
+Distinct actual-LR adapter/owner/queue, full-budget waves and scientific
+quality/efficiency conclusions remain future work; the goal stays active.
+
+November20 01:02 progress/publication increment: seven-step interrupted22
+finishes00:58:38.852132 with integer execution/cleanup0/0 and marked
+descendants absent. Aggregate00:59:29.342790 admits5/54commands1/18decisions,
+`validating`, noerror. Resumed validation/decision remain pending.
+Execution receipt
+`validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q7_full_lr_lower_interrupted.execution.json`
+SHA `978d6bbca4d5cbcb2e537e0e5db6ec6cb82dc21fc993c6cda0419b19204084c0`;
+same command `.log`
+SHA `b4fcf6b6724dad903b18e86929765b2ac2ad624353d13cab4261d35e4aa3e7d2`.
+Source/content lint, Bash syntax and diff-check pass; full document lint
+reports only inherited500KiB rule, ENDEAVOR791.4KB/DETAILS1608.7KB.
+Both00:56/00:59predecessor milestone archives haveSHA
+`a949851682c851a540002131404cbc9ed8bac2365b322fa507520be46969d350`.
+Journals are again archived under `.endeavor-update.lock` before this
+increment:
+`run-preparation/endeavor-before-query-five-command-update-20261120T0102.tar`.
+Original monitor/controller/validator/waiter retain their generations;
+no duplicate publisher, canonical terminal or successor launch is issued.
+
+### November 20 01:15 Query Actual-LR Adapter Prepared
+
+Distinct preparation completes01:12:32.873523 in
+`candidates/ns-training-path-query-serialized-actual-lr-adapter-20261120T0113`.
+Its preparation record is
+`ns-training-path-query-serialized-actual-lr-20261120-preparation.json`,
+status `ns_training_path_query_serialized_actual_lr_adapter_prepared_execution_owner_unissued`.
+Exactly187helpers are planned. The accepted numerical parent remains
+`run-preparation/ns-training-path-actual-lr-adapter-cpu/20261119T1020/receipt.json`,
+SHA `82c1ad5b154041485d80333954260e7b8b2b67aca7feedaf3868ca3e87dee5f1`.
+The independently accepted211helper predecessor remains external.
+The only changed candidate source is `experiment/fused_attribution_owner.py`.
+All54configurations/162commands and1,358,954,496planned bounded tokens
+retain the original full5120schedules, three actual LRs, three families,
+BF16/FP32 and5/7/10iterations. No GPU binding or production wave is issued.
+
+Declared handoff transform retains numericalSHA
+`b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`
+and query executionSHA
+`7c653b0a08e3159599ef00ba4767ef3291b7d581744581d000ca14c3a6ad4e24`;
+original fixture
+`fixtures/query-serialized-lr-original-owned_output_handoff.py`.
+Static closure includes pinned exit-drain/transition/missing-environment/
+recheck helpers and unchanged inspection serialization helper.
+Numerical/predecessor archives are unmerged, and accepted parents are not edited.
+The initial16-case local CPU suite completion is observed shortly after
+this checkpoint. XML
+`run-preparation/test-query-lr-adapter-initial-20261120T0109.xml` records
+start01:06:52.723551 and393.475seconds elapsed, implying completion near
+01:13:26; earlier tool-session polling prose lagged the completed artifact.
+Source lint passes after formatting; no archived CPU acceptance is claimed.
+
+| Working Source, Under Tracking | SHA256 |
+| --- | --- |
+| `ns_training_path_query_serialized_lr_parent.py` | `7e30f2bbfba13fdd687912095163275238e165c272f748fa39c34118bb84549f` |
+| `ns_training_path_query_serialized_lr_contract.py` | `18fa1512ba0b1aa30e30d7338e89ab19f88cdefcf82aeaa6d2c673df149c9b16` |
+| `ns_training_path_query_serialized_lr_validation.py` | `886fdfd3976691cf9c435b6dd53145d833a663b996cac43508f6a5c4d1cd2a7f` |
+| `ns_training_path_query_serialized_lr_source.py` | `6ecc10fab519a32ac8909a13b14fa0234fcadac001ece57fb5db1b6286528c7d` |
+| `test_ns_training_path_query_serialized_lr_source.py` | `4e450c914991f605a14d9ecd8834963189b845810a0c82d11e9909a1dc05e9a7` |
+
+Seven-step MuonT lower-LR resumed24 finishes01:01:43.026252 with integer
+execution/cleanup0/0 and marked descendants absent.
+Receipt `validation/ns_training_path_query_serialized_20261119/muont_ns_tpu_q7_full_lr_lower_resumed.execution.json`
+SHA `7365fdde6d6d394911cfb7113f5b48ece569d376330a61e6dcfdd30553997584`;
+same command logSHA
+`6529c7e4205df9012566f4c1fafcbc203bea4aa5a981ecef3326bb9efcf5c064`.
+Aggregate01:04:16.598908 retains6/54commands1/18decisions, `validating`,
+no error; seven-step numerical decision remains pending.
+At01:08live process checking retains controller3633332/start943964742,
+validator3637693/start943978129 and waiter3638945/start943982783.
+Monitor1588227/start933927668 remains live, fd9 targets its exclusive
+`run-preparation/monitor-endeavor/monitor.lock`; child3697574 retains
+`sleep900` after00:58:51publication. No duplicate monitor/replay/owner/waiter.
+Both journals are archived under `.endeavor-update.lock` before this entry:
+`run-preparation/endeavor-before-query-lr-adapter-prepared-20261120T0115.tar`.
+Separate execution-owner/queue acceptance and full-budget successors remain
+pending. Wave12 remains latest analyzed/private-SwanLab-verified full wave;
+the scientific objective stays active.
+
+### November 20 01:19 Query Pre-Command Scan Failure
+
+Failure aggregate01:14:48.607372 retains6/54commands2/18decisions,
+status `needs_attention`. Both MuonT BF16 lower-LR five/seven-step cases
+remain accepted under all five original gates; each has39/39loss checks.
+Seven-step configSHA
+`138d37889cc168cc83347b8d36f2cd02ef22eae461c6a7810e23ecc07e510e3b`.
+Checkpoint22/24 failed tensors/scalars0/0; checkpoint23 failed tensors0,
+diagnostic-only graph-state differences16. No numerical-policy changes.
+The next ten-step continuous command is not spawned; the traceback is
+validator `execute` line86, owner `require_gpu_owner`, `require_controller`
+line184, then `marker_processes`/`complete_scan_exhausted`.
+
+Retained unstable PIDs3730921,3730943,3730947,3730948,3730949,3730952 are
+all `previously_confirmed_marked: false`. Parent groups3730085/3730092
+are also absent at01:17. Command hashes and delayed absent-file samples
+are retained in the aggregate and log; none establish causal attribution.
+Recorded controller execution/cleanup1/1 and keeper_restore0 at
+01:15:06.674160 remain unchanged. Read-only01:16:42.046271 inspection
+finds controller3633332 and validator3637693 absent, marker scanempty,
+same_keepertrue for3731474/start944264652 and ranks3731705-3731712.
+The original waiter3638945/start943982783 remains live after fourth
+01:13:00observation,6/54commands1/18decisions, interval900.
+No complete canonical terminal is issued; no original one-shot is restarted.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/validation-ns-training-path-query-serialized-20261120-gpu.json` | `83d3083f314c3f9d7e173d69e0a93af243b1669eb6a923105a9aeecd8bf891a3` |
+| `run-preparation/ns-training-path-query-serialized-20261120-state.json` | `e7529dcdf00438ca777f3f74b4607345290f5e20b014ff2050db734c2417fcf7` |
+| `controllers/ns-training-path-query-serialized-20261120/validator.log` | `699de40330dc96c3eba2753343f79eae6534458b8299903052c9818c80d7ce72` |
+| `controllers/ns-training-path-query-serialized-20261120/controller.log` | `182c0398a352b281800780381b3475384c7c4da87a93c3caacbe8c50576052ef` |
+| `run-preparation/query-failure-restored-observation-20261120T0118.json` | `10a40f5ca08e6078fef2b95bd96491b97a545996b83bd47f84ff9c8afdadab71` |
+| `run-preparation/test-query-lr-adapter-initial-20261120T0109.xml` | `79ca267b2582b24d534842d15cbea743d6d67ee4dae5307733acffe4158508ba` |
+| `run-preparation/test-endeavor-query-lr-adapter-prepared-20261120T0116.xml` | `6a45d9d2348789d9371c124e317d4f842d05ce12a36f514a67e4680184e868c1` |
+| `run-preparation/endeavor-before-query-lr-adapter-prepared-20261120T0115.tar` | `4c18f50aec6ee1131ae1b8847ebdbf5dc9a6d6da702a55a57fe7547ab5e5543f` |
+
+Local adapter suite16passes393.58seconds; five journal regressions pass
+3.07seconds. Separate archived adapter CPU acceptance is running under
+`run-preparation/ns-training-path-query-serialized-actual-lr-adapter-cpu/20261120T0116`.
+Required source lint passes. Full journal lint reports inherited500KiB
+size limits only, ENDEAVOR796.0KB/DETAILS1613.4KB before this append;
+`--skip large_files` passes content checks, Bash syntax and diff-check pass.
+The original monitor1588227 publishes01:18:58 from01:13:54report and
+returns to900-second sleep. The queued manual journal acquisition waits
+for that publisher, archives both files under the shared lock, then
+holds the PTY through this edit:
+`run-preparation/endeavor-before-query-scan-failure-20261120T0118.tar`.
+Query actual-LR canonical sealing, execution owner/queue, all GPU
+successors and full-budget results remain unissued/pending.
+
+### November 20 01:24 Adapter Accepted And Unmarked Churn Reproduced
+
+Adapter receipt accepts01:21:54.065972 with16unique cases381.99seconds,
+187helpers561inventory entries, integer exit0 and no error. Fresh
+archived-entry `--phase check --cpu-receipt` passes at01:23 with
+`PYTHONPATH` containing only that archive's tracking directory.
+Candidate remains
+`candidates/ns-training-path-query-serialized-actual-lr-adapter-20261120T0113`.
+All54configurations162commands and original schedules remain unchanged;
+the distinct execution owner/queue are not prepared or accepted.
+No complete original terminal, canonical predecessor seal or GPU binding.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/ns-training-path-query-serialized-actual-lr-adapter-cpu/20261120T0116/receipt.json` | `ceaa024b343ff0e8e1adf5866cd156846c0dc1837736e1da9fd2c89c6083b6af` |
+| Same archive `source.tar` | `06681b857ae78beb767ebee87816a2fc8307eecf51393ef6628f9dc6dc3a1d1d` |
+| Same archive `tests.xml` | `0234a2fd660e8c2c85dac5a88245c6e51a37b404ea612095c0741b1120dfd143` |
+| Same archive `cpu.log` | `4dc542a0aab83423c3ce7472d4a88071b994bf3b3ec64e2cc2fb56e10ad7028f` |
+| Candidate `ns-training-path-query-serialized-actual-lr-20261120-preparation.json` | `d1551d30de2f698a676a94fd1769e524fd4347ac6490936dd903ee575133b702` |
+| `run-preparation/unmarked-churn-study-20261120T0124.json` | `6784a60834a5be390d5036166ec92474b4f5b90f99b3d4923e95aec6ea00ae3c` |
+| `run-preparation/test-unmarked-churn-20261120T0123.xml` | `62b23b2935909da8a1c1205e3502021ab36d3f7f9e05a5c8c30da1ec0f496f09` |
+
+New working studySHA
+`3d595aea8254d16c456c01ea8ce2838d1c877334c440bb3ac7aa91eb35164b8c`;
+new testSHA
+`ac16b9e5d46f6e2d9570b1d5642cf16ba0be0a27a47c513103db97d22a2316f3`.
+Six new regressions and five inherited marked-helper churn cases pass11
+in1.12seconds. Required source lint passes after removing one unused
+import and formatting one assertion. Mechanical formatting changes no
+test behavior. The command
+`owned_output_unmarked_churn.py --source PVC/controllers/ns-training-path-query-serialized-20261120/tracking --out PVC/run-preparation/unmarked-churn-study-20261120T0124.json`
+records01:23:06.858798 after authenticating all six exact issued helper
+digests. Zero/one/two unmarked exits return both marked survivors;
+three/four requested exits exhaust the unchanged three scans, return
+no partial result and retain unmarked952/previously_confirmedfalse.
+A present live process with missing environment still refuses.
+This is CPU mechanism evidence, not live cause, GPU or launch authority.
+
+Source snapshot preserves both new and earlier CPU study/test files:
+`run-preparation/unmarked-churn-study-source-20261120T0124.tar`.
+Both journals archived under the shared lock before acceptance/study entry:
+`run-preparation/endeavor-before-query-lr-acceptance-and-unmarked-study-20261120T0124.tar`.
+Monitor1588227/start933927668 remains live with sleep3737210/900seconds
+after01:18:58publication. Original waiter3638945/start943982783 remains
+live pending its original next900-second observation; no duplicate/restart.
+Original query failed6/54commands2/18decisions and restoration evidence
+are preserved. Wave12 remains latest full-budget analyzed/private-cloud
+verified, and scientific/full-budget successors remain open.
+
+November20 01:26 final verification:16combined journal and marked/unmarked
+churn tests pass4.06seconds,237unselected journal cases. XML
+`run-preparation/test-endeavor-and-unmarked-study-final-20261120T0126.xml`
+SHA `a82141d9cad22b9c1715249d96563d1cd042d9b603624142eb2731cbe42dcfe3`.
+Required scoped source lint and document-content lint pass with the
+explicit inherited `--skip large_files` exception; diff-check passes.
+Unmarked-study source snapshotSHA
+`0e752f5c94da1bcce4ad666a85fb5e6e29390ffee9a8f32770e69c6d16110aa1`.
+Both journals archived under shared lock before this final increment:
+`run-preparation/endeavor-before-query-lr-final-verification-20261120T0126.tar`.
+No monitor/controller/validator/waiter restart or duplicate, numerical
+waiver, complete terminal, GPU launch, production or private upload.
+
+### November 20 01:41 Stopped Query Waiter And Streaming Study
+
+Original waiter3638945/start943982783 stops `needs_attention` at
+01:28:01.329405 on its original900-second schedule. Four observations
+remain retained; no canonical terminal is issued. Error:
+`RuntimeError: Training-path original owners exited without complete cleanup/restoration`.
+The independent01:30:59.919608 observation authenticates the unchanged
+failed aggregate/binding/state and new stopped-waiter state. Controller,
+validator, waiter and six completed launcher handles are absent; marker
+scanempty, same_keepertrue for3731474/start944264652 with exact
+ranks3731705-3731712 on the original eight physical A100s.
+Recorded execution/cleanup1/1 and6/54commands2/18decisions are not waived.
+The next ten-step continuous command was not spawned and supplies no
+execution sidecar or training trajectory.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `run-preparation/query-and-waiter-stopped-observation-20261120T0132.json` | `34bdb242d4697be517920517bfa81f0d2dddf774bf98ad743a8bfb386ee0286f` |
+| `run-preparation/ns-training-path-query-serialized-terminal-followup-20261120/state.json` | `964c69e153290f17ab939963ca18de9ca5192c8e57f31a6a2eb0f73151382559` |
+| Same waiter `intent.json` | `3679f0cbca16b619995e76b70950951348db6ff4bb9592f435ccbc329f391666` |
+| `run-preparation/test-streaming-scan-initial-20261120T0135.xml` | `7deb70c6f747b591e431e2af309f186a0b88dcc59d76f372cc3fc0389e87db46` |
+| `run-preparation/test-streaming-and-churn-final-20261120T0140.xml` | `3954502d665ceb46c931e69b34cdc12303e410b3b6fcc9bcc2dd82d104890973` |
+| `run-preparation/test-endeavor-streaming-milestone-20261120T0140.xml` | `96f730d6c1e7fda67d2701ec71ea83bc6696f604c2d3548ecd00df75f01f26a8` |
+| `run-preparation/streaming-scan-study-source-20261120T0141.tar` | `fb31805dd3443754da3a6e137af15e40f096b064b1389aa7463439cffd785b57` |
+| `run-preparation/endeavor-before-stopped-query-and-streaming-study-20261120T0141.tar` | `c792e749100cd97b33a0021c5b28be012c7c2d43f9b0ca912b8e884a5f27b94e` |
+
+Working derivationSHA
+`3e1c24781b564f3a4e4af5608d803394c1952c38068b2d4d38f0f6917def4ed8`;
+working testSHA
+`526e5f476e35a11ff920bfc4ece71c0f2ceb543b3160be56129fccb2679cda36`.
+Pinned handoffSHA remains
+`7c653b0a08e3159599ef00ba4767ef3291b7d581744581d000ca14c3a6ad4e24`;
+pinned inherited36-case testSHA remains
+`78616824a05786c33bd904244400505ffbada4c52325e031ae8e715a26608aad`.
+Only marker-loop `live_processes().items()` becomes `scan_processes()`;
+AST regression proves all other original statements unchanged and the
+iterator keeps the original namespace/identity/terminal filters.
+Initial40setup errors from selecting the iterator's docstring as its loop
+remain retained in XML. Selecting its actual `ast.For` corrects the
+derivation without removing the guard. Corrected40cases pass3.65seconds;
+broadened46scanner cases pass4.22seconds. Six additional lifecycle cases
+exercise absent/terminal-absent, surviving-thread, partial-file, PID-reuse
+and present-unmarked/missing-environment behavior at filesystem boundaries.
+Final57scanner/churn cases pass5.98seconds; five focused journal cases
+pass3.13seconds,237unselected. Required source lint passes after formatting.
+CPU commands hide CUDA and use cached offline uv `--with pytest-timeout`,
+the original guard/deadlines and all seven safe-marker exclusions.
+
+The snapshot retains six working study/test files. It is not an accepted
+GPU/source closure and does not edit older archives. The full299-case
+journal/scanner/churn run is in progress at this milestone:
+`run-preparation/test-endeavor-streaming-and-churn-integrated-20261120T0141.xml`.
+Any distinct successor must separately archive/check its closure and
+preserve this failed pre-command predecessor without fictional sidecars.
+No complete original terminal, actual-LR execution owner/queue, predecessor
+seal or GPU binding is supplied by the study.
+
+Fresh01:38:39process inspection finds sole monitor1588227 live, failed
+controller/validator/waiter absent; generation remains933927668.
+Monitor publishes01:38:23 from01:34:01report then sleeps900 via3767996.
+Direct GPU query near01:39 confirms the same eight keeper ranks; this is
+read-only occupancy, not a clean terminal. Both journals archived under
+`.endeavor-update.lock` and held through this manual edit, then released.
+Wave12 remains latest full-budget analyzed/private-cloud-verified wave.
+No numerical waiver, consumed-owner restart, duplicate monitor, complete
+terminal, new GPU launch, full-budget result, efficiency or upload claim.
+
+November20 01:48 final integrated verification:299unique cases pass
+159.25seconds, zero failed/error/skipped cases, using CUDA-hidden offline
+uv and `PYTHONDONTWRITEBYTECODE=1`. XML
+`run-preparation/test-endeavor-streaming-and-churn-clean-20261120T0145.xml`
+SHA `1cb928d89eda39846176ae4d8718a7f357bdf05eca86d7f4e6649159c798c31f`.
+The first full run retains298passes/1failure154.78seconds in
+`run-preparation/test-endeavor-streaming-and-churn-integrated-20261120T0141.xml`,
+SHA `c35f866731c6e58a59147591d84ed8697a7ce22002efe1d284aff46b3629fbd6`.
+Its scan-exit waiter reporter correctly refuses an extra `__pycache__`
+directory generated by the initial test invocation without bytecode
+suppression. All180pinned helper digests, receipt digest
+`86d6984b2166c079bced8d3b69709c2f07ac37b92dcb9f3e89360f7735f70f0c`
+and archive bytes remain unchanged. The generated directory is moved,
+not deleted, to
+`run-preparation/generated-test-cache-retained-20261120T0145/__pycache__`.
+Retained bytecodeSHA
+`660a6d4a939f569f5ec69f4bd59fc824e77a5cc8a1bdc57437a903f52ffdb9c4`.
+Unchanged strict flat inventory and saved waiter authentication pass
+again. No predicate is widened and no pinned helper/archive is rewritten.
+
+The six-file working study snapshot is freshly compared byte-for-byte
+with the checkout; all members match. Final57scanner/churn testcase
+identities are unique with no failures/errors, and final integrated299
+identities are unique with no failures/errors/skips. Required lint
+passes for source and journal content with explicit `--skip large_files`.
+Unskipped journal lint fails only the inherited500KiB size rule:
+ENDEAVOR808.7KB and DETAILS1625.4KB before this increment. Bash syntax and
+diff-check pass. The monitor remains1588227/start933927668, sleeping900
+after01:38:23publication; failed controller/validator/waiter remain absent.
+Both journals archived under shared lock before this final increment:
+`run-preparation/endeavor-before-streaming-study-final-verification-20261120T0148.tar`.
+Wave12 remains latest analyzed/private-cloud-verified full-budget wave.
+Distinct streaming source/archive acceptance, correct failed-precommand
+predecessor, issued binding/checks and any GPU/full-budget successors
+remain pending. No task-completion, optimizer superiority or upload claim.
+
+### November 20 02:01 Streaming Candidate Prepared Status
+
+Preparation status `ns_training_path_streaming_candidate_prepared_gpu_unissued`
+at01:55:47.330965, namespace `ns-training-path-streaming-20261120`.
+Candidate `candidates/ns-training-path-streaming-20261120T0156` records
+353source files and210declared helpers. Fresh manifest hashing matches
+all353files, with no symlinks or drift. Only candidate source change:
+`experiment/fused_attribution_owner.py`. Declared handoff replacement
+beforeSHA `b359c02fd184f1afa7c32f3a4fbab8693ea41f7c4a7225f38cd17d7ab52b43f6`;
+afterSHA `5bcad14b8ce07ba5840d5547aca91bea361ee2660b9a7411cead7610bde9df7d`.
+Four new working files are the streaming predecessor/source/preparer
+and their17-case test module. Required scoped source lint passes after
+formatting. No accepted historical helper, archive or numerical source
+is rewritten.
+
+| Artifact, Relative to PVC | SHA256 |
+| --- | --- |
+| `candidates/ns-training-path-streaming-20261120T0156/ns-training-path-streaming-preparation.json` | `b5740f2eac37c49a4c89c08943e908df1c5835b3df449c12616cdf1e372522e5` |
+| `run-preparation/test-streaming-diagnostic-closure-20261120T0156.xml` | `25f314cab0d0e51333ac2315fc99fe43e4bdb542167903c282150abc8b23d55f` |
+| `run-preparation/test-streaming-diagnostic-initial-20261120T0154.xml` | `53cdccc949a24769311bb405fd0be75ae26ce81f990593ee726e095895e36e70` |
+| `run-preparation/monitor-rational-continuation/20261119T175326237889.json` | `1cf4dba1c0e31660f79a254ecb5c4bd6c2a9e9c2d6998663db8260a091264108` |
+| `run-preparation/analysis-wave12.json` | `2aca074cf61880f9eebf2e45f2d0341a318ce4ba76da8cd9b84385153204c7fc` |
+| `run-preparation/swanlab-upload-wave12.json` | `ffe7655c6fe34e64ce17ac6f3225c5e7e49110a851e698688237c215a623117c` |
+| `run-preparation/endeavor-before-streaming-prepared-status-20261120T0201.tar` | `6a05a861fe2c75c4c3ee1ec38f18947889628330ab8b130dc4e280448dac22a4` |
+
+The17-case XML has17unique passing identities, zero failures/errors/skips
+and suite time11.798seconds. Its initial retained XML has16passes and
+1fixture-closure failure, suite time10.547seconds. The fixed preparation
+adds original query-generated helpers and flat authenticated original
+scanner/test fixtures to the declared closure; those generated
+archive-local fixtures have not yet been exercised in archived acceptance.
+Planned archive tests:45GPU-owner,36handoff,41recheck,5serialization,
+46streaming,6unmarked-churn,5marked-churn and17predecessor/source,
+total201. Fixed planned receipt:
+`run-preparation/ns-training-path-streaming-20261120-cpu/20261120T0205/receipt.json`.
+No such acceptance receipt, preservation seal, frozen binding or streaming
+GPU launch exists at this check.
+
+The predecessor retains the failed6/54commands,2/18accepted MuonT
+controls and ten-step pre-command refusal. `failed_command` remains absent;
+structured pre-command failure records `spawn_status:not_spawned` and
+no execution receipt. Every unexecuted directory/log/sidecar must remain
+absent, including symlinks. The original query/controller cleanup exits
+remain1/1; restored-keeper exit0 does not replace missing coverage.
+
+Near01:58, `ps` and a direct GPU query find failed owners3633332/3637693/
+3638945 absent and keeper3731474/ranks3731705-3731712 live on the eight
+original physical GPUs. Fresh `/proc` identity checks verify keeper
+start944264652 and monitor1588227/start933927668. Monitor child3779848
+exits after successful01:57:54publication from01:53:27report; the same
+Bash process returns to its900-second sleep with its original lock.
+The task controller reports the broader goal `paused`, contrary to the
+handoff's older active description. No new acceptance, GPU launch,
+uploader or monitor is started; no existing process is stopped or restarted.
+Both journals are archived while holding `.endeavor-update.lock` through
+this manual edit, then released.
+
+Wave2's latest saved verification is November16 16:47:37.172066;
+Wave3's is November16 17:50:36.503125 and includes `inner_outer_all_lag`.
+Wave12's four verified histories remain the latest full-budget result,
+November18 02:04:24.538063. All four analysis comparisons are
+final-eligible at2684354560common tokens with five536870912-token windows.
+No new full-budget result, verified cloud import, measured efficiency
+gain, optimizer superiority or goal completion is claimed.

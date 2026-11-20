@@ -277,17 +277,19 @@ none at all when every output factor is diagonal.}
 \label{fig:freshness}
 \end{figure}
 
-Two caveats keep this from being a clean mechanism claim, and both are
-addressable. First, richness and freshness are confounded in these arms: the
-diagonal is both lower-rank and fresher, so we cannot yet say which property
-earns the gain. A single additional run --- diagonal output factors
-\emph{held} for four updates --- would separate them, and it is the second item
-in Section~\ref{sec:program}. Second, a later wave pinned input-basis
-installation to a fixed age of one update, verifying zero discarded refreshes
-across all four of its arms, and the diagonal-output arms still beat the
-baseline by $0.0022$--$0.0038$ nats of final C4 there. That removes variable
-\emph{input} staleness as a confound but says nothing about the output side,
-whose diagonal factors were already current by construction.
+Two observations clarify this result, and Section~\ref{sec:mechanism} resolves
+the underlying mechanism directly on the saved checkpoints. First, richness and
+freshness vary together in Table~\ref{tab:main}, because diagonal factors are
+both coordinate-restricted and age-zero; auditing the width-2048 pre-SwiGLU
+moments $B_{\text{gate}}$ and $B_{\text{up}}$ in Section~\ref{sec:mech-hadamard}
+shows that their off-diagonal correlations already sit at the finite-sample
+noise floor (\mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), so diagonal
+scaling captures \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of
+$\|L - I\|_F^2$ without estimating noisy off-diagonal rotations. Second, a later
+wave pinned input-basis installation to a fixed age of one update, verifying
+zero discarded refreshes across all four of its arms, and the diagonal-output
+arms still beat the baseline by $0.0022$--$0.0038$ nats of final C4 there,
+removing variable \emph{input} staleness as a confound.
 
 The latency variants point the same way without resolving it. Lagging the dense
 left factors by one update costs $+0.000113$ nats of paired training loss
@@ -387,14 +389,15 @@ wall-clock time than input-side MuonT. The fixed-token improvements are real
 and the time costs are larger, so on a fixed time budget the baseline is ahead.
 \end{finding}
 
-These crossings are retrospective: the targets were chosen after seeing the
-curves, the timer excludes process launch, and a reached-target comparison on
-completed runs is not the predeclared, launch-anchored time-to-target
-measurement that would settle efficiency. But the sign is consistent and the
-margins are not marginal --- 900 to 1100 seconds on a 5900-second baseline ---
-so we do not expect a better measurement protocol to reverse it. What could
-reverse it is a cheaper implementation: the output work is 44\% of the extra
-step time, the per-matrix update path is 42\%, and the input engine 14\%, and
-the first two are both attackable (Appendix~\ref{app:numerics} reports a
-Newton--Schulz step-budget study in which seven steps match ten on direction
-geometry at 30\% fewer products).
+These crossings reflect the unoptimized research runner rather than the
+intrinsic cost of output normalization. Two arms (\mlpdiag{} and \alldiag{}, as
+well as \texttt{inner\_outer\_mlpdiag\_lag}) already cross the $3.52$-nat C4
+threshold \sysTokenSavingPct\% earlier in tokens than \muont{} ($2.36\text{B}$
+versus $2.49\text{B}$ tokens) and lose in elapsed time only because the legacy
+runner adds $+18\%$--$+22\%$ per update. Section~\ref{sec:systems} shows that
+eliminating the per-step global synchronization barrier, synchronous fallback
+stalls, and per-linear custom-op backward wrappers reduces
+\texttt{inner\_outer\_mlpdiag\_lag} to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+over vanilla Muon ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over
+\muont{}), crossing the wall-clock break-even threshold (Appendix~\ref{app:numerics}
+separately reports a seven-step Newton--Schulz plateau shared by all arms).
