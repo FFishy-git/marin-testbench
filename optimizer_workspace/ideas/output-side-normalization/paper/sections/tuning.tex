@@ -44,25 +44,25 @@ mandatory.
 \begin{tikzpicture}
 \begin{groupplot}[
   paperplot,
-  group style={group size=3 by 1, horizontal sep=1.45cm},
-  height=5.5cm,
+  group style={group size=3 by 1, horizontal sep=1.95cm},
+  height=5.7cm,
 ]
 \nextgroupplot[
   width=5.45cm,
-  title={(a) 320-step screening ($0.17\text{B}$ tok.)},
+  title={(a) 320-step screen ($0.17\text{B}$)},
   xlabel={Matrix learning rate $\eta$},
   ylabel={Final selection loss (nats)},
   xmode=log, log basis x=2,
-  xmin=0.014, xmax=0.145, ymin=4.20, ymax=4.62,
+  xmin=0.014, xmax=0.145, ymin=4.20, ymax=4.64,
   xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784,0.128},
   xticklabels={.016,.023,.032,.045,.064,.091,.128},
   xticklabel style={font=\tiny, rotate=38, anchor=east},
   legend style={at={(0.97,0.96)}, anchor=north east, font=\tiny, inner sep=2pt},
   every axis plot/.append style={line width=0.95pt, mark size=1.7pt},
 ]
-\fill[famNull!10] (axis cs:0.056,4.20) rectangle (axis cs:0.102,4.62);
-\node[font=\tiny, text=famNull!90!black, align=center, anchor=north]
-  at (axis cs:0.076,4.605) {short-horizon\\ flat top};
+\fill[famNull!10] (axis cs:0.056,4.20) rectangle (axis cs:0.102,4.64);
+\node[font=\tiny, text=famNull!90!black, align=center, anchor=south]
+  at (axis cs:0.077,4.205) {short-horizon\\ flat top};
 \addplot[color=famRef, mark=oplus*] table[x=lr, y=muont] {figs/lr_sweep.dat};
 \addlegendentry{\taxid{MuonT} ($.064$)}
 \addplot[color=famOD, mark=diamond*] table[x=lr, y=inner_outer_leftdiag] {figs/lr_sweep.dat};
@@ -72,30 +72,30 @@ mandatory.
 \addplot[color=famWT, mark=square*] table[x=lr, y=outer_leftdiag_fused] {figs/lr_sweep.dat};
 \addlegendentry{\taxid{OD-Outer-F} ($.064$)}
 \draw[pagemuted!80, densely dotted, line width=0.75pt]
-  (axis cs:0.02262741696,4.20) -- (axis cs:0.02262741696,4.62);
+  (axis cs:0.02262741696,4.20) -- (axis cs:0.02262741696,4.64);
 \node[font=\tiny, text=pagemuted!95!black, rotate=90, anchor=south east]
-  at (axis cs:0.02262741696,4.60) {recipe $.0226$};
+  at (axis cs:0.02262741696,4.62) {recipe $.0226$};
 
 \nextgroupplot[
   width=5.55cm,
   unbounded coords=discard,
-  title={(b) 5{,}120-step horizon shift ($2.68\text{B}$ tok.)},
+  title={(b) 5{,}120-step shift ($2.68\text{B}$)},
   xlabel={Matrix learning rate $\eta$},
   ylabel={Full-budget late selection (nats)},
   xmode=log, log basis x=2,
-  xmin=0.014, xmax=0.112, ymin=3.348, ymax=3.552,
+  xmin=0.014, xmax=0.115, ymin=3.348, ymax=3.575,
   scaled y ticks=false,
-  ytick={3.36,3.40,3.44,3.48,3.52},
+  ytick={3.36,3.40,3.44,3.48,3.52,3.56},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
   xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784},
   xticklabels={.016,.023,.032,.045,.064,.091},
   xticklabel style={font=\tiny, rotate=38, anchor=east},
-  legend style={at={(0.03,0.96)}, anchor=north west, font=\tiny, inner sep=2pt},
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny, inner sep=2pt},
   every axis plot/.append style={line width=0.95pt, mark size=1.9pt},
 ]
-\fill[famWT!8] (axis cs:0.0155,3.348) rectangle (axis cs:0.046,3.552);
-\node[font=\tiny, text=famWT, align=center, anchor=north]
-  at (axis cs:0.027,3.545) {Item 1 sweep\\ basin};
+\fill[famWT!8] (axis cs:0.0155,3.348) rectangle (axis cs:0.046,3.575);
+\node[font=\tiny, text=famWT, align=center, anchor=south]
+  at (axis cs:0.031,3.351) {Item 1 sweep basin};
 \addplot[color=famRef, line width=1.1pt, mark=oplus*] table[x=lr, y=muont] {figs/lr_horizon.dat};
 \addlegendentry{\taxid{MuonT}}
 \addplot[only marks, color=famWT, mark=star, mark size=2.9pt, line width=0.85pt]
@@ -110,15 +110,15 @@ mandatory.
 \addlegendentry{\taxid{OD-Outer}}
 \draw[famRef!65, dashed, line width=0.55pt] (axis cs:0.02262741696,3.375445) -- (axis cs:0.066,3.375445);
 \draw[-Latex, famAbl, line width=0.95pt] (axis cs:0.064,3.377) -- (axis cs:0.064,3.471);
-\node[font=\tiny, text=famAbl!95!black, align=right, anchor=east, inner sep=1pt]
-  at (axis cs:0.061,3.424) {\textbf{$+0.1001$}\\ over-step};
-\node[font=\tiny, text=famAbl!95!black, anchor=east, inner sep=1pt]
-  at (axis cs:0.086,3.532) {$3.525$ cliff};
+\node[font=\tiny, text=famAbl!95!black, align=left, anchor=west, inner sep=1pt]
+  at (axis cs:0.066,3.418) {\textbf{$+0.1001$}\\ over-step};
+\node[font=\tiny, text=famAbl!95!black, anchor=south east, inner sep=1pt]
+  at (axis cs:0.108,3.533) {$3.525$ cliff};
 
 \nextgroupplot[
-  width=4.35cm,
+  width=4.65cm,
   ybar,
-  title={(c) Wave-12 $\Delta$ vs.\ \taxid{MuonT}@$.064$},
+  title={(c) Wave-12 $\Delta$ vs.\ $.064$},
   ylabel={$\Delta$ Late selection (nats)},
   symbolic x coords={OD-Outer-F,OD-All,OD-Outer},
   xtick=data,
@@ -128,7 +128,7 @@ mandatory.
     {\shortstack{\taxid{OD-Outer}\\ {\tiny$\eta=.091$}}}
   },
   xticklabel style={font=\tiny},
-  ymin=-0.016, ymax=0.064,
+  ymin=-0.019, ymax=0.066,
   enlarge x limits=0.28,
   scaled y ticks=false,
   ytick={-0.01,0,0.01,0.02,0.03,0.04,0.05,0.06},
@@ -137,9 +137,9 @@ mandatory.
 \input{figs/transfer_bars}
 \draw[pagemuted!80, line width=0.55pt] (axis cs:OD-Outer-F,0) -- (axis cs:OD-Outer,0);
 \node[font=\tiny, text=famOD!95!black, align=center, anchor=south]
-  at (axis cs:OD-Outer-F,0.004) {matched\\ $\eta=.064$};
+  at (axis cs:OD-Outer-F,0.005) {matched\\ $\eta=.064$};
 \node[font=\tiny, text=famAbl!95!black, align=center, anchor=north]
-  at (axis cs:OD-All,-0.002) {grid-split\\ $\eta=.0905$};
+  at (axis cs:OD-Outer,-0.002) {grid-split\\ $\eta=.0905$};
 \end{groupplot}
 \end{tikzpicture}%
 }

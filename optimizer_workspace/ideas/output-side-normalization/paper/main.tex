@@ -193,10 +193,10 @@ normalization} (\taxid{WT-MLP} / \mlpdiag{}, dense at $d=512$ and exact diagonal
 at $d=2048$) and its pure-diagonal limit (\taxid{OD-All} / \alldiag{}) across
 \nDistinctRuns{} full-budget trajectories on a pinned 265M-parameter transformer
 (2.68B tokens, eight A100s per run). Output moments help \emph{on top of} input
-whitening (\mlpdiagsel{} nats held-out loss across all five windows and all
+whitening ($\mlpdiagsel{}$ nats held-out loss across all five windows and all
 three seeds, $-0.0059$ nats net of a matched execution-path null absorbing
 \nullsharedense--\nullsharemlpcfour\% of raw gains) and fail when substituted
-for it (\taxid{Abl-OutOnly} / \leftall{}, \leftallsel{} nats), while matching
+for it (\taxid{Abl-OutOnly} / \leftall{}, $\leftallsel{}$ nats), while matching
 MuonT's instantaneous step norm to \mechMlpdiagGraftNorm{}
 ($\mechMlpdiagGraftNormPct\%$) at a $\mechMlpdiagGraftDeg^\circ$ directional
 rotation. Eliminating synchronization, backward-wrapper, and SIMT-FP32

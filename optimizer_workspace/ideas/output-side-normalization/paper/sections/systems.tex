@@ -100,11 +100,12 @@ and calibrated against the exact Wave~0, Wave~3, Wave~4, and Wave~10 eight-rank
 steady-step baselines.}
 \label{tab:systems}
 \scriptsize\setlength{\tabcolsep}{3.5pt}
-\input{results/table_systems}
+\resizebox{\textwidth}{!}{\input{results/table_systems}}
 \end{table}
 
 \begin{figure}[t]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}
 \begin{axis}[
   paperplot,
@@ -112,7 +113,7 @@ steady-step baselines.}
   xbar stacked, bar width=9.5pt,
   title={Calibrated 8-A100 steady-step latency breakdown above vanilla \taxid{Muon}},
   xlabel={Extra step latency above \taxid{Muon} (ms/update; $1{,}074$\,ms base)},
-  xmin=0, xmax=415,
+  xmin=0, xmax=450,
   ytick={0,1,2,3,4,5},
   yticklabels={
     {\taxid{MuonT} ($+2.0\%$)},
@@ -123,7 +124,7 @@ steady-step baselines.}
     {\textbf{\taxid{WT-MLP-Lag}} \texttt{fast\_lag} ($\mathbf{+3.8\%}$)}
   },
   legend columns=4,
-  legend style={at={(0.5,-0.22)}, anchor=north, column sep=6pt},
+  legend style={at={(0.5,-0.28)}, anchor=north, column sep=6pt},
 ]
 \addplot[fill=famRef!35, draw=famRef!70] table[y=idx, x=input_base_ms] {figs/systems_bars.dat};
 \addlegendentry{Input \taxid{MuonT} base}
@@ -140,7 +141,8 @@ steady-step baselines.}
 \node[font=\tiny, text=famDT!95!black, anchor=west] at (axis cs:58,4) {$\mathbf{+55}$\,\textbf{ms} ($+3.1\%$ vs.\ \taxid{MuonT})};
 \node[font=\tiny, text=famWT, anchor=west] at (axis cs:44,5) {$\mathbf{+41}$\,\textbf{ms} ($+1.8\%$ vs.\ \taxid{MuonT})};
 \end{axis}
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Decomposition of per-update latency above vanilla \taxid{Muon}
 ($1.074$\,s). Eliminating the per-step global CUDA barrier, synchronous fallback
 stalls, and per-linear custom-op graph partitions reduces \taxid{WT-MLP-Lag}

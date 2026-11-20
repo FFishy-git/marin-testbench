@@ -27,7 +27,7 @@ shifts from Section~\ref{sec:systems}. Shaded rows mark the Pareto-optimal
 family.}
 \label{tab:main}
 \scriptsize\setlength{\tabcolsep}{3.0pt}
-\input{results/table_main}
+\resizebox{\textwidth}{!}{\input{results/table_main}}
 \end{table}
 
 \begin{figure}[t]
@@ -36,11 +36,11 @@ family.}
 \begin{tikzpicture}
 \begin{groupplot}[
   paperplot,
-  group style={group size=2 by 1, horizontal sep=2.35cm},
-  height=7.5cm,
+  group style={group size=2 by 1, horizontal sep=2.55cm},
+  height=7.6cm,
 ]
 \nextgroupplot[
-  width=7.25cm,
+  width=7.85cm,
   title={(a) Cost--quality Pareto plane \& \texttt{fast\_lag} shift},
   xlabel={Step-time overhead versus \taxid{MuonT} (\%)},
   ylabel={$\Delta$ Held-out selection loss (nats)},
@@ -54,14 +54,14 @@ family.}
 \input{figs/plane_plots}
 
 \nextgroupplot[
-  width=6.95cm,
+  width=7.45cm,
   title={(b) Multi-metric causal attribution},
   xlabel={$\Delta$ Loss versus \taxid{MuonT} (nats; left is better)},
   xmin=-0.0078, xmax=0.0118,
   ymin=-0.65, ymax=12.65,
   scaled x ticks=false,
   xtick={-0.006,-0.003,0,0.003,0.006,0.009},
-  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3, font=\tiny},
   ytick={0,1,2,3,4,5,6,7,8,9,10,11,12},
   yticklabels={
     {\taxid{Abl-BothDiag}},
@@ -365,15 +365,16 @@ Figure~\ref{fig:seeds} shows the spread against the null level.
 \begin{tikzpicture}
 \begin{axis}[
   paperplot,
-  width=0.76\textwidth, height=4.6cm,
-  title={Cross-seed replication of \taxid{WT-MLP} (\mlpdiag{}) on fixed Paloma C4},
+  width=0.80\textwidth, height=5.0cm,
+  title={Cross-seed replication of \taxid{WT-MLP} on fixed Paloma C4},
   xlabel={Seed}, ylabel={$\Delta$ C4 versus seed-matched \taxid{MuonT} (nats)},
   xtick={0,1,2}, xticklabels={Seed 0 (selection), Seed 1, Seed 2},
-  xmin=-0.45, xmax=2.45, ymin=-0.0074, ymax=0.0012,
+  xmin=-0.45, xmax=2.45, ymin=-0.0074, ymax=0.0028,
   scaled y ticks=false,
+  ytick={-0.006,-0.004,-0.002,0,0.002},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
   legend columns=2,
-  legend style={at={(0.98,0.96)}, anchor=north east, column sep=6pt},
+  legend style={at={(0.98,0.97)}, anchor=north east, column sep=6pt},
 ]
 \fill[famWT!5] (axis cs:-0.45,-0.0074) rectangle (axis cs:2.45,-0.002043);
 \addplot[only marks, mark=*, mark size=2.6pt, color=famWT]
@@ -513,12 +514,12 @@ block matrices at updates 2{,}500 and 5{,}120 rules this out directly:
 \begin{axis}[
   paperplot,
   ybar=1.6pt, bar width=7.2pt,
-  width=0.76\textwidth, height=4.9cm,
+  width=0.80\textwidth, height=5.2cm,
   unbounded coords=discard,
   title={Instantaneous update rotation at matched Frobenius step norm (update 2{,}500)},
   xlabel={Block projection ($m\times n$)},
   ylabel={Step rotation vs.\ $D_{\text{in}}$ (deg)},
-  ymin=0, ymax=31.5,
+  ymin=0, ymax=37.0,
   xmin=-0.55, xmax=6.55,
   xtick={0,1,2,3,4,5,6},
   xticklabels={\texttt{gate},\texttt{up},\texttt{q},\texttt{k},\texttt{v},\texttt{o},\texttt{down}},

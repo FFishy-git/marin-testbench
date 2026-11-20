@@ -81,7 +81,7 @@ is the $32$-layer mean $250$-update top-$16$ Grassmann subspace drift between
 updates $2{,}250$ and $2{,}500$ (Section~\ref{sec:mot-drift}).}
 \label{tab:motivation}
 \scriptsize\setlength{\tabcolsep}{3.6pt}
-\input{results/table_motivation}
+\resizebox{\textwidth}{!}{\input{results/table_motivation}}
 \end{table}
 
 Table~\ref{tab:motivation} and Figure~\ref{fig:motivation} (top row and
@@ -211,10 +211,11 @@ that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
 \nextgroupplot[
   xlabel={Tokens processed (billions)},
   ylabel={$\mathrm{DiagAniso}(\tilde M)$ (\%)},
-  xmin=0.05, xmax=2.75, ymin=-2, ymax=94,
+  xmin=0.05, xmax=2.75, ymin=-3, ymax=122,
+  ytick={0,25,50,75,100},
   title={(b) Anisotropic diagonal share over training},
-  legend columns=2,
-  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny, column sep=3pt},
+  legend columns=3,
+  legend style={at={(0.5,0.98)}, anchor=north, font=\tiny, column sep=2.5pt},
   every axis plot/.append style={line width=0.9pt, mark size=1.4pt},
 ]
 \addplot[color=famOD, mark=*] table[x=tokens, y=da_gate] {figs/motivation_traj.dat};
@@ -234,7 +235,7 @@ that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
   xlabel={Tokens processed (billions)},
   ylabel={Off-diagonal $\rho_{\mathrm{rms}}$ (log scale)},
   ymode=log,
-  xmin=0.05, xmax=2.75, ymin=0.0034, ymax=0.36,
+  xmin=0.05, xmax=2.75, ymin=0.0022, ymax=0.45,
   title={(c) Correlation RMS vs.\ $N_t^{-1/2}$ floor},
   legend columns=3,
   legend style={at={(0.5,0.56)}, anchor=center, font=\tiny, column sep=2pt},
@@ -254,7 +255,7 @@ that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
 \addlegendentry{\texttt{out:gate}}
 \draw[checkgreen!85!black, dashed, line width=0.8pt] (axis cs:0.05,0.005226) -- (axis cs:2.75,0.005226);
 \node[font=\tiny, text=checkgreen!80!black, anchor=north west]
-  at (axis cs:0.08,0.00525) {$N_t^{-1/2}=0.0052$};
+  at (axis cs:0.08,0.0049) {$N_t^{-1/2}=0.0052$};
 
 \nextgroupplot[
   xlabel={Tokens processed (billions)},

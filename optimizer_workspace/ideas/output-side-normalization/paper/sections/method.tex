@@ -164,6 +164,7 @@ $(R,\hat R)$; $\fDiag$ exact age-zero elementwise diagonal; $\fOuterFull /
 ($L=\hat L=I$). Shaded rows mark the cost--quality Pareto family.}
 \label{tab:arms}
 \scriptsize\setlength{\tabcolsep}{3.5pt}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llcl@{}}
 \toprule
 Taxonomic ID & Code identifier & $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\tau}$ & Hypothesis / role in study \\
@@ -197,7 +198,8 @@ Taxonomic ID & Code identifier & $\opcfg{R_{512}}{R_{2048}}{L_{512}}{L_{2048}}{\
 \taxid{Abl-OutOnly} & \leftall{} & \tcfg{\fNone}{\fNone}{\fFull}{\fFull}{0} & \textbf{Broad substitution}: removes all right-input whitening \\
 \taxid{Abl-BothDiag} & \bothdiag{} & \tcfg{\fDiag}{\fDiag}{\fDiag}{\fDiag}{0} & \textbf{Input degradation}: diagonalizes both input and output sides \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \subsection{Two controls that the design forces}

@@ -1,0 +1,80 @@
+\begin{thebibliography}{10}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anil et~al.(2020)Anil, Gupta, Koren, Regan, and
+  Singer]{anil2020scalable}
+Rohan Anil, Vineet Gupta, Tomer Koren, Kevin Regan, and Yoram Singer.
+\newblock Scalable second order optimization for deep learning.
+\newblock \emph{arXiv preprint arXiv:2002.09018}, 2020.
+
+\bibitem[Choi et~al.(2019)Choi, Shallue, Nado, Lee, Maddison, and
+  Dahl]{choi2019empirical}
+Dami Choi, Christopher~J. Shallue, Zachary Nado, Jaehoon Lee, Chris~J.
+  Maddison, and George~E. Dahl.
+\newblock On empirical comparisons of optimizers for deep learning.
+\newblock \emph{arXiv preprint arXiv:1910.05446}, 2019.
+
+\bibitem[Gupta et~al.(2018)Gupta, Koren, and Singer]{gupta2018shampoo}
+Vineet Gupta, Tomer Koren, and Yoram Singer.
+\newblock Shampoo: Preconditioned stochastic tensor optimization.
+\newblock In \emph{Proceedings of the 35th International Conference on Machine
+  Learning (ICML)}, pages 1842--1850, 2018.
+
+\bibitem[Henry et~al.(2019)Henry, Tang, and Heinecke]{henry2019leveraging}
+Greg Henry, Ping Tak~Peter Tang, and Alexander Heinecke.
+\newblock Leveraging the bfloat16 artificial intelligence datatype for
+  higher-precision computations.
+\newblock \emph{arXiv preprint arXiv:1904.06376}, 2019.
+\newblock Cited as related literature; full text not inspected.
+
+\bibitem[Jordan et~al.(2024)Jordan, Jin, Boza, You, Cesista, Newhouse, and
+  Bernstein]{jordan2024muon}
+Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You, Franz Cesista, Laker
+  Newhouse, and Jeremy Bernstein.
+\newblock Muon: An optimizer for hidden layers in neural networks.
+\newblock \url{https://kellerjordan.github.io/posts/muon/}, 2024.
+\newblock Blog post.
+
+\bibitem[Kaddour et~al.(2023)Kaddour, Key, Nawrot, Minervini, and
+  Kusner]{kaddour2023nodata}
+Jean Kaddour, Oscar Key, Piotr Nawrot, Pasquale Minervini, and Matt~J. Kusner.
+\newblock No train no gain: Revisiting efficient training algorithms for
+  transformer-based language models.
+\newblock In \emph{Advances in Neural Information Processing Systems 36
+  (NeurIPS)}, 2023.
+
+\bibitem[Kunstner et~al.(2019)Kunstner, Hennig, and
+  Balles]{kunstner2019limitations}
+Frederik Kunstner, Philipp Hennig, and Lukas Balles.
+\newblock Limitations of the empirical fisher approximation for natural
+  gradient descent.
+\newblock In \emph{Advances in Neural Information Processing Systems 32
+  (NeurIPS)}, 2019.
+
+\bibitem[Martens and Grosse(2015)]{martens2015kfac}
+James Martens and Roger Grosse.
+\newblock Optimizing neural networks with kronecker-factored approximate
+  curvature.
+\newblock In \emph{Proceedings of the 32nd International Conference on Machine
+  Learning (ICML)}, pages 2408--2417, 2015.
+
+\bibitem[Schmidt et~al.(2021)Schmidt, Schneider, and
+  Hennig]{schmidt2021crowded}
+Robin~M. Schmidt, Frank Schneider, and Philipp Hennig.
+\newblock Descending through a crowded valley --- benchmarking deep learning
+  optimizers.
+\newblock In \emph{Proceedings of the 38th International Conference on Machine
+  Learning (ICML)}, pages 9367--9376, 2021.
+
+\bibitem[Vyas et~al.(2024)Vyas, Morwani, Zhao, Shapira, Brandfonbrener, Janson,
+  and Kakade]{vyas2024soap}
+Nikhil Vyas, Depen Morwani, Rosie Zhao, Itai Shapira, David Brandfonbrener,
+  Lucas Janson, and Sham Kakade.
+\newblock {SOAP}: Improving and stabilizing shampoo using adam.
+\newblock \emph{arXiv preprint arXiv:2409.11321}, 2024.
+
+\end{thebibliography}

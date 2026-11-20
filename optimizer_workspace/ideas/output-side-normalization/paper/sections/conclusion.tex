@@ -25,11 +25,11 @@ Muon-type optimizers:
   eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
   inputs.
 \item \textbf{Width-thresholded complementarity and pure step rotation.}
-  Output moments help on top of input whitening (\mlpdiagsel{} nats held-out
+  Output moments help on top of input whitening ($\mlpdiagsel{}$ nats held-out
   selection loss for \taxid{WT-MLP} / \mlpdiag{} across all five training
   windows and all three seeds; $-0.0059$ nats net of matched execution-path
   null \taxid{Null-WT}) and fail when substituted for it (\taxid{Abl-OutOnly} /
-  \leftall{}, \leftallsel{} nats), while pure diagonal output scaling
+  \leftall{}, $\leftallsel{}$ nats), while pure diagonal output scaling
   (\taxid{OD-All} / \alldiag{}) retains two-thirds of that gain with zero
   eigendecompositions. Instantaneous step norms match \taxid{MuonT} to
   \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating updates
