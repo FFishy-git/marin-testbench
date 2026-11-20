@@ -2,12 +2,12 @@
   "baselines_8gpu": {
     "muon_step_s": 1.073973,
     "muont_step_s": 1.095141,
-    "wave10_null_step_s": 1.195000,
+    "wave10_null_step_s": 1.195,
     "legacy_mlpdiag_lag_step_s": 1.291745,
-    "legacy_all_lag_step_s": 1.438000,
+    "legacy_all_lag_step_s": 1.438,
     "muon_mem_gib": 18.971,
     "muont_mem_gib": 20.531,
-    "wave10_null_mem_gib": 22.390,
+    "wave10_null_mem_gib": 22.39,
     "legacy_mlpdiag_lag_mem_gib": 22.676,
     "legacy_all_lag_mem_gib": 24.486
   },
@@ -61,7 +61,7 @@
     "fast_mlpdiag_lag_s_hi": 1.118,
     "fast_mlpdiag_lag_s_mid": 1.115,
     "fast_mlpdiag_lag_vs_muon_pct_lo": 3.63,
-    "fast_mlpdiag_lag_vs_muon_pct_hi": 4.10,
+    "fast_mlpdiag_lag_vs_muon_pct_hi": 4.1,
     "fast_mlpdiag_lag_vs_muon_pct_mid": 3.82,
     "fast_mlpdiag_lag_vs_muont_pct_lo": 1.63,
     "fast_mlpdiag_lag_vs_muont_pct_hi": 2.09,
@@ -70,7 +70,7 @@
     "fast_all_lag_s_hi": 1.132,
     "fast_all_lag_s_mid": 1.129,
     "fast_all_lag_vs_muon_pct_lo": 4.84,
-    "fast_all_lag_vs_muon_pct_hi": 5.40,
+    "fast_all_lag_vs_muon_pct_hi": 5.4,
     "fast_all_lag_vs_muon_pct_mid": 5.12,
     "fast_all_lag_vs_muont_pct_lo": 2.82,
     "fast_all_lag_vs_muont_pct_hi": 3.37,
@@ -94,7 +94,7 @@
     "fast_all_8gpu_est_gib": 24.55
   },
   "parity": {
-    "cpu_unit_tests": 42,
+    "cpu_unit_tests": 43,
     "gpu_nccl_checks": 11,
     "pre_ns_max_rel_err": 4.05e-06,
     "post_ns_max_rel_err": 4.16e-06,
@@ -106,6 +106,252 @@
     "tokens_c4_352_cand_b": 2.36,
     "tokens_c4_352_muont_b": 2.49,
     "token_saving_c4_352_pct": 5.26,
-    "projected_wallclock_ratio_c4_352": 0.965
+    "projected_wallclock_ratio_c4_352": 0.965,
+    "cont_sym_nolag_tensors": 65,
+    "cont_sym_lag_tensors": 91
+  },
+  "executed_8gpu_wave_sym_fastlag": {
+    "muont": {
+      "step_s": 1.0986456228420138,
+      "vs_muon_pct": 2.297309849068463,
+      "e2e_s": 5891.278528412804,
+      "e2e_vs_muon_pct": 0.026578875581506622,
+      "peak_gib": 20.530576705932617,
+      "in_fb": 13,
+      "out_fb": 0,
+      "crossings": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 4619.611826101318,
+          "c4": 3.5874704695441655
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4751,
+          "tokens_b": 2.490892288,
+          "seconds": 5468.388396682218,
+          "c4": 3.486937627565194
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 5754.386831384152,
+          "c4": 3.4583696801458026
+        }
+      }
+    },
+    "wt_sym": {
+      "step_s": 1.2344825435429811,
+      "vs_muon_pct": 14.945384239010684,
+      "vs_muont_pct": 12.364034214197272,
+      "vs_w0_muont_pct": 12.723631006173552,
+      "e2e_s": 6593.88180671446,
+      "e2e_vs_muon_pct": 11.955908289619055,
+      "e2e_vs_muont_pct": 11.92615957492249,
+      "peak_gib": 20.734525203704834,
+      "extra_gib_vs_muont": 0.2039484977722168,
+      "in_fb": 0,
+      "out_fb": 22860,
+      "crossings": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 5187.67661796324,
+          "c4": 3.5851436340380345
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4501,
+          "tokens_b": 2.359820288,
+          "seconds": 5822.649372197688,
+          "c4": 3.519274107928959
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 6446.062927050516,
+          "c4": 3.455536447592996
+        }
+      }
+    },
+    "wt_sym_lag": {
+      "step_s": 1.1408235086128116,
+      "vs_muon_pct": 6.224585541764105,
+      "vs_muont_pct": 3.839080126828387,
+      "vs_w0_muont_pct": 4.171394646830362,
+      "e2e_s": 6179.281675647944,
+      "e2e_vs_muon_pct": 4.9165139523894785,
+      "e2e_vs_muont_pct": 4.888635732399038,
+      "e2e_vs_w0_muont_pct": 3.252187300796816,
+      "step_saved_vs_nolag_ms": 93.65903493016958,
+      "e2e_saved_vs_nolag_s": 414.60013106651604,
+      "step_saved_vs_mlplag_ms": 21.03622630238533,
+      "e2e_saved_vs_mlplag_s": 120.98847982287407,
+      "mem_saved_vs_mlplag_gib": 0.7792220115661621,
+      "extra_gib_vs_muont": 0.2831606864929199,
+      "peak_gib": 20.813737392425537,
+      "in_fb": 4,
+      "out_fb": 21762,
+      "crossings": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 4869.562366612256,
+          "c4": 3.585336775616999
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4501,
+          "tokens_b": 2.359820288,
+          "seconds": 5458.921111082658,
+          "c4": 3.519192780662073
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 6040.336845887825,
+          "c4": 3.4554260624207243
+        }
+      }
+    },
+    "wt_mlp_lag": {
+      "step_s": 1.161859734915197,
+      "vs_muon_pct": 8.183314831144518,
+      "vs_muont_pct": 5.753821865658426,
+      "vs_w0_muont_pct": 6.0922641025189295,
+      "e2e_s": 6300.270155470818,
+      "e2e_vs_muon_pct": 6.970747793426346,
+      "e2e_vs_muont_pct": 6.942323726259181,
+      "step_saved_vs_wave4_ms": 129.88548912107944,
+      "e2e_saved_vs_wave4_s": 685.3852598648518,
+      "mem_saved_vs_wave4_gib": 1.0828776359558105,
+      "peak_gib": 21.5929594039917,
+      "in_fb": 67,
+      "out_fb": 19991,
+      "crossings": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 4966.356832252815,
+          "c4": 3.5843749489433625
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4501,
+          "tokens_b": 2.359820288,
+          "seconds": 5564.6017565615475,
+          "c4": 3.518790431172738
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 6157.239426441491,
+          "c4": 3.455821624132471
+        }
+      }
+    },
+    "ref_crossings": {
+      "wave0_muon": {
+        "3.59": {
+          "censored": false,
+          "step": 4251,
+          "tokens_b": 2.228748288,
+          "seconds": 4880.002076204866,
+          "c4": 3.560880143215975
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4751,
+          "tokens_b": 2.490892288,
+          "seconds": 5466.9875873383135,
+          "c4": 3.4963875887081675
+        },
+        "3.46": {
+          "censored": true,
+          "step": null,
+          "tokens_b": 2.68435456,
+          "seconds": 5889.713108893484,
+          "c4": 3.461811238144785
+        }
+      },
+      "wave0_muont": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 4721.3466011323035,
+          "c4": 3.5882261498731625
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4751,
+          "tokens_b": 2.490892288,
+          "seconds": 5566.311140941456,
+          "c4": 3.4890495163461694
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 5848.180321151391,
+          "c4": 3.459675191374933
+        }
+      },
+      "wave2_wt_mlp": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 5624.381984287873,
+          "c4": 3.5821190906822755
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4501,
+          "tokens_b": 2.359820288,
+          "seconds": 6309.140199907124,
+          "c4": 3.5174647845406026
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 6981.745591279119,
+          "c4": 3.453505461397694
+        }
+      },
+      "wave4_wt_mlp_lag": {
+        "3.59": {
+          "censored": false,
+          "step": 4001,
+          "tokens_b": 2.097676288,
+          "seconds": 5500.617201024666,
+          "c4": 3.5831490728560618
+        },
+        "3.52": {
+          "censored": false,
+          "step": 4501,
+          "tokens_b": 2.359820288,
+          "seconds": 6164.369736839086,
+          "c4": 3.5183066706046473
+        },
+        "3.46": {
+          "censored": false,
+          "step": 5001,
+          "tokens_b": 2.621964288,
+          "seconds": 6824.184636039659,
+          "c4": 3.4552359833074635
+        }
+      }
+    }
   }
 }
