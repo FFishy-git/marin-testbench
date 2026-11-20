@@ -2,26 +2,28 @@
 \label{sec:systems}
 
 At the algorithmic level, lagged output normalization should add very little
-wall-clock cost. Vanilla input-side \muont{} computes three width-512 and one
-width-2048 dense moments per layer plus three right matrix products per update,
-yet runs only $+\sysMuontVsMuon\%$ ($+21.2$\,ms/step) slower than plain Muon
-because forward row capture uses three fused Triton launches and input root
-refinement overlaps the backward pass. By contrast, \mlpdiag{} adds five
-width-512 dense moments and \emph{zero} width-2048 dense moments per layer ---
-less nominal $O(d^2 + d^3)$ moment and eigendecomposition work than \muont{}'s
-own input side --- and one-update lag (\texttt{inner\_outer\_mlpdiag\_lag},
-Section~\ref{sec:method-controls}) makes roughly $900$\,ms of the next step's
+wall-clock cost. Vanilla input-side \taxid{MuonT} (\muont{}) computes three
+width-512 and one width-2048 dense moments per layer plus three right matrix
+products per update, yet runs only $+\sysMuontVsMuon\%$ ($+21.2$\,ms/step)
+slower than plain \taxid{Muon} because forward row capture uses three fused
+Triton launches and input root refinement overlaps the backward pass. By
+contrast, \taxid{WT-MLP} (\mlpdiag{}) adds five width-512 dense moments and
+\emph{zero} width-2048 dense moments per layer --- less nominal $O(d^2 + d^3)$
+moment and eigendecomposition work than \taxid{MuonT}'s own input side --- and
+one-update lag (\taxid{WT-MLP-Lag} / \mlpdiaglag{},
+Figure~\ref{fig:method_arch}b) makes roughly $900$\,ms of the next step's
 forward and backward pass available to hide output statistics and root work
 while costing less than $0.001$ nats of held-out loss.
 
-Why, then, did Wave~4's \texttt{inner\_outer\_mlpdiag\_lag} run $+\sysLegacyMlpVsMuon\%$
-slower than Muon ($+18.0\%$ over \muont{}), and Wave~3's
-\texttt{inner\_outer\_all\_lag} run $+\sysLegacyAllVsMuon\%$ slower? Stage-level
-profiling alongside Wave~10's matched null (\texttt{null\_leftdiag\_upstream\_fused},
-which still cost $+\sysWaveTenNullVsMuon\%$ over Muon with \emph{zero} dense
-output roots) localized the gap to three implementation bottlenecks rather than
-intrinsic arithmetic cost, and eliminating them brings both lagged geometries
-inside a $3.6\%$--$5.4\%$ steady-step budget over Muon.
+Why, then, did Wave~4's \taxid{WT-MLP-Lag} run $+\sysLegacyMlpVsMuon\%$ slower
+than \taxid{Muon} ($+18.0\%$ over \taxid{MuonT}), and Wave~3's
+\taxid{DT-All-Lag} (\denselag{}) run $+\sysLegacyAllVsMuon\%$ slower?
+Stage-level profiling alongside Wave~10's matched null (\taxid{Null-OD} /
+\nullod{}, which still cost $+\sysWaveTenNullVsMuon\%$ over \taxid{Muon} with
+\emph{zero} dense output roots) localized the gap to three implementation
+bottlenecks rather than intrinsic arithmetic cost, and eliminating them brings
+both lagged geometries inside a $3.6\%$--$5.4\%$ steady-step budget over
+\taxid{Muon}.
 
 \subsection{Root-cause decomposition and three-pillar redesign}
 \label{sec:systems-pillars}
@@ -105,44 +107,48 @@ steady-step baselines.}
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.86\textwidth, height=5.8cm,
-  xbar stacked, bar width=10pt,
-  xlabel={Extra step latency above vanilla Muon (ms/update, $1{,}074$\,ms base)},
-  xmin=0, xmax=395,
+  paperplot,
+  width=0.84\textwidth, height=5.8cm,
+  xbar stacked, bar width=9.5pt,
+  title={Calibrated 8-A100 steady-step latency breakdown above vanilla \taxid{Muon}},
+  xlabel={Extra step latency above \taxid{Muon} (ms/update; $1{,}074$\,ms base)},
+  xmin=0, xmax=415,
   ytick={0,1,2,3,4,5},
   yticklabels={
-    {MuonT ($+2.0\%$)},
-    {Legacy \texttt{all\_lag} ($+33.9\%$)},
-    {Legacy \texttt{mlpdiag\_lag} ($+20.3\%$)},
-    {Wave-10 \texttt{null} ($+11.3\%$)},
-    {\textbf{Fast \texttt{all\_lag}} ($\mathbf{+5.1\%}$)},
-    {\textbf{Fast \texttt{mlpdiag\_lag}} ($\mathbf{+3.8\%}$)}
+    {\taxid{MuonT} ($+2.0\%$)},
+    {\taxid{DT-All-Lag} legacy ($+33.9\%$)},
+    {\taxid{WT-MLP-Lag} legacy ($+20.3\%$)},
+    {\taxid{Null-OD} Wave 10 ($+11.3\%$)},
+    {\textbf{\taxid{DT-All-Lag}} \texttt{fast\_lag} ($\mathbf{+5.1\%}$)},
+    {\textbf{\taxid{WT-MLP-Lag}} \texttt{fast\_lag} ($\mathbf{+3.8\%}$)}
   },
-  yticklabel style={font=\scriptsize},
-  label style={font=\small}, tick label style={font=\footnotesize},
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
   legend columns=4,
-  legend style={at={(0.5,-0.22)}, anchor=north, font=\scriptsize,
-                draw=gray!40, fill=white, column sep=6pt},
+  legend style={at={(0.5,-0.22)}, anchor=north, column sep=6pt},
 ]
-\addplot[fill=gray!45, draw=gray!70] table[y=idx, x=input_base_ms] {figs/systems_bars.dat};
-\addlegendentry{Input MuonT base}
-\addplot[fill=laOrangeLine!75, draw=laOrangeLine!95] table[y=idx, x=capture_ms] {figs/systems_bars.dat};
+\addplot[fill=famRef!35, draw=famRef!70] table[y=idx, x=input_base_ms] {figs/systems_bars.dat};
+\addlegendentry{Input \taxid{MuonT} base}
+\addplot[fill=famNull!75, draw=famNull!95] table[y=idx, x=capture_ms] {figs/systems_bars.dat};
 \addlegendentry{Bwd capture}
-\addplot[fill=laPurpleLine!75, draw=laPurpleLine!95] table[y=idx, x=update_ms] {figs/systems_bars.dat};
-\addlegendentry{Update GEMMs}
-\addplot[fill=laBlueLine!75, draw=laBlueLine!95] table[y=idx, x=roots_ms] {figs/systems_bars.dat};
-\addlegendentry{Output roots/RS}
+\addplot[fill=famOD!75, draw=famOD!95] table[y=idx, x=update_ms] {figs/systems_bars.dat};
+\addlegendentry{Ozaki / update GEMMs}
+\addplot[fill=famWT!78, draw=famWT!95] table[y=idx, x=roots_ms] {figs/systems_bars.dat};
+\addlegendentry{Exposed async roots / RS}
+\node[font=\tiny, text=famRef, anchor=west] at (axis cs:24,0) {$+21.2$\,ms};
+\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:366,1) {$+364$\,ms};
+\node[font=\tiny, text=famAbl!90!black, anchor=west] at (axis cs:221,2) {$+218$\,ms};
+\node[font=\tiny, text=famNull!90!black, anchor=west] at (axis cs:120,3) {$+121$\,ms};
+\node[font=\tiny, text=famDT!95!black, anchor=west] at (axis cs:58,4) {$\mathbf{+55}$\,\textbf{ms} ($+3.1\%$ vs.\ \taxid{MuonT})};
+\node[font=\tiny, text=famWT, anchor=west] at (axis cs:44,5) {$\mathbf{+41}$\,\textbf{ms} ($+1.8\%$ vs.\ \taxid{MuonT})};
 \end{axis}
 \end{tikzpicture}
-\caption{Decomposition of per-update latency above vanilla Muon ($1.074$\,s).
-Eliminating the per-step global CUDA barrier, synchronous fallback stalls, and
-per-linear custom-op graph partitions reduces \texttt{inner\_outer\_mlpdiag\_lag}
-from $+\sysLegacyMlpVsMuon\%$ ($+218$\,ms) to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
-($+39$--$44$\,ms, or $+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ above
-\muont{}), and brings even fully dense \texttt{inner\_outer\_all\_lag} down to
-$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over Muon.}
+\caption{Decomposition of per-update latency above vanilla \taxid{Muon}
+($1.074$\,s). Eliminating the per-step global CUDA barrier, synchronous fallback
+stalls, and per-linear custom-op graph partitions reduces \taxid{WT-MLP-Lag}
+(\mlpdiaglag{}) from $+\sysLegacyMlpVsMuon\%$ ($+218$\,ms) to
+$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ ($+39$--$44$\,ms, or
+$+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ above \taxid{MuonT}), and
+brings even fully dense \taxid{DT-All-Lag} (\denselag{}) down to
+$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over \taxid{Muon}.}
 \label{fig:systems}
 \end{figure}
 

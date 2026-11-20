@@ -31,70 +31,76 @@ which makes per-update paired differencing exact and is what lets us resolve
 effects of a few thousandths of a nat at all.
 
 \paragraph{What we find.}
-Four results structure the paper, centered on \emph{width-thresholded output
-normalization} (\mlpdiag{}, dense at width 512 and diagonal at width 2048) and
-its pure-diagonal limit (\alldiag{}).
+Three main findings structure the paper, centered on \emph{width-thresholded
+output normalization} (\taxid{WT-MLP} / \mlpdiag{}, dense at width 512 and
+diagonal at width 2048), its one-step-lagged counterpart (\taxid{WT-MLP-Lag} /
+\mlpdiaglag{}), and its pure-diagonal limit (\taxid{OD-All} / \alldiag{}).
 
 \begin{enumerate}
-\item \textbf{The output side is a complement, not a substitute.}
-  Added on top of input whitening, \mlpdiag{} improves held-out
+\item \textbf{Hadamard decorrelation and cotangent drift dictate a
+  width-thresholded, lagged design before any candidate is trained.}
+  Auditing all 352 input and cotangent EMA moments across 32 layers and eight
+  checkpoints ($0.13\text{B}$--$2.68\text{B}$ tokens) of a baseline
+  \taxid{MuonT} (\muont{}) trajectory shows that pre-SwiGLU width-2048
+  cotangents (\texttt{gate}, \texttt{up}) have off-diagonal correlations pinned
+  to the single-step sampling floor (median RMS \motOutGateCorrRmsMed{} and
+  \motOutUpCorrRmsMed{}), putting \motOutGateDiagAnisoMedPct\% and
+  \motOutUpDiagAnisoMedPct\% of centered moment anisotropy on the diagonal
+  (\motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$),
+  whereas residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are
+  $>99\%$ rotational and cotangent eigenspaces drift
+  $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed inputs,
+  triggering $\motFbOutTotal{}$ exact eigendecomposition fallbacks across eight
+  GPUs versus $\motFbInTotal{}$ on inputs (Section~\ref{sec:motivation}).
+
+\item \textbf{The output side is a complement, not a substitute --- and acts by
+  pure directional rotation rather than step-size inflation.}
+  Added on top of input whitening, \taxid{WT-MLP} (\mlpdiag{}) improves held-out
   loss by \mlpdiagselmag{} nats and does so in every one of five training
-  windows and on all three seeds we ran, while \alldiag{} retains two-thirds of
-  that gain with no output eigendecompositions. Used \emph{instead} of input whitening,
-  dense output factors make the optimizer \leftallsel{} nats
-  \emph{worse} than the input-only baseline --- worse than either side alone
-  (Section~\ref{sec:complement}).
-
-\item \textbf{A matched null control absorbs a fifth to a third of the
-  apparent gain.} Adding output-side machinery changes the numerical path, the
-  communication pattern, and the host scheduling. Controls that execute all of
-  that work and apply identity factors improve on the baseline by
-  \nullsharedense\% of the dense arm's selection-loss gain and \nullsharemlpcfour\%
-  of \mlpdiag{}'s C4 gain, leaving $-0.0059$ selection and $-0.0040$ C4 nats of
-  net geometry benefit (Section~\ref{sec:null}).
-
-\item \textbf{Hadamard decorrelation explains why width-thresholding works, and
-  rules out step-size inflation.} Auditing all 352 checkpoint moments across 32
-  layers shows that pre-SwiGLU width-2048 cotangents (\texttt{gate},
-  \texttt{up}) have off-diagonal correlations at the finite-sample floor
-  (median RMS \mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), so exact
-  diagonals capture \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of
-  $\|L - I\|_F^2$ while taming $\mechOutGateDiagMaxMean\times$ coordinate-scale
-  anisotropy; residual-stream width-512 cotangents (\texttt{o}, \texttt{down})
-  are $97\%$ rotational, explaining why \mlpdiag{} beats both \dense{} and
-  \alldiag{}. Simultaneously, instantaneous step norms match \muont{} to
-  \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating updates
-  by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit step-size inflation
-  (Section~\ref{sec:mechanism}).
+  windows and on all three seeds we ran, while \taxid{OD-All} (\alldiag{})
+  retains two-thirds of that gain with no output eigendecompositions; used
+  \emph{instead} of input whitening (\taxid{Abl-OutOnly} / \leftall{}), dense
+  output factors make the optimizer \leftallsel{} nats \emph{worse} than the
+  input-only baseline (Section~\ref{sec:complement}). Matched execution-path
+  nulls (\taxid{Null-Dense}, \taxid{Null-WT}) that run the full output pipeline
+  with identity factors absorb \nullsharedense\% of the dense arm's selection
+  gain and \nullsharemlpcfour\% of \taxid{WT-MLP}'s C4 gain, leaving $-0.0059$
+  selection and $-0.0040$ C4 nats of net geometry benefit
+  (Section~\ref{sec:null}), while instantaneous step norms match \taxid{MuonT}
+  to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) at a
+  $\mechMlpdiagGraftDeg^\circ$ update rotation, ruling out implicit step-size
+  inflation (Section~\ref{sec:mech-graft}).
 
 \item \textbf{Lagged execution closes the latency gap to
   $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over vanilla Muon.}
-  Although the initial runner paid $+20.3\%$ over Muon ($+18.0\%$ over \muont{})
-  for \texttt{inner\_outer\_mlpdiag\_lag}, stage profiling localized that gap to
-  a per-step device-wide barrier, synchronous fallback stalls, 896 custom-op
-  backward wrappers, and SIMT-FP32 matrix products under \texttt{allow\_tf32=False}.
-  Removing those bottlenecks in \texttt{fast\_lag} cuts calibrated eight-A100
-  step overhead over Muon to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
-  for \texttt{mlpdiag\_lag} ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$
-  over \muont{}, saving \sysMemSavedGib\,GiB) and
-  $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ even for fully dense
-  \texttt{all\_lag}, crossing the \sysTokenSavingPct\% token-saving break-even
-  line (Section~\ref{sec:systems}).
+  Although the initial runner paid $+20.3\%$ over Muon ($+18.0\%$ over
+  \taxid{MuonT}) for \taxid{WT-MLP-Lag} (\mlpdiaglag{}), stage profiling
+  localized that gap to a per-step device-wide barrier, synchronous fallback
+  stalls, 896 custom-op backward wrappers, and SIMT-FP32 matrix products under
+  \texttt{allow\_tf32=False}. Removing those bottlenecks in \texttt{fast\_lag}
+  cuts calibrated eight-A100 step overhead over Muon to
+  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ for \taxid{WT-MLP-Lag}
+  ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \taxid{MuonT}, saving
+  \sysMemSavedGib\,GiB) and $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$
+  even for fully dense \taxid{DT-All-Lag} (\denselag{}), crossing the
+  \sysTokenSavingPct\% token-saving break-even line
+  (Section~\ref{sec:systems}).
 \end{enumerate}
 
 \paragraph{What remains to confirm: the full-budget learning-rate horizon.}
 One empirical gate remains before claiming tuned optimizer superiority. On a
-short 320-update (6\% budget) screening schedule, \muont{} gained \lrHeadroom{}
-nats when its learning rate moved from the recipe's $0.0226$ to $0.064$.
-Carrying those short-schedule optima to the full 5{,}120-update budget,
-however, \emph{degraded \muont{} itself by \waveTwelveMuontSelDiff{} nats}
+short 320-update (6\% budget) screening schedule, \taxid{MuonT} gained
+\lrHeadroom{} nats when its learning rate moved from the recipe's $0.0226$ to
+$0.064$. Carrying those short-schedule optima to the full 5{,}120-update budget,
+however, \emph{degraded \taxid{MuonT} itself by \waveTwelveMuontSelDiff{} nats}
 relative to $0.0226$, and noisy short-horizon tie-breaking assigned $0.0905$ to
-two diagonal candidates while assigning $0.064$ to a mathematically equivalent
-fused arm, producing \transferWorst{}-nat regressions past the full-budget
-stability cliff (Section~\ref{sec:tuning}). Thus $0.0226$, not $0.064$, lies
-near the full-budget optimum, and Section~\ref{sec:program} specifies the
-compact full-budget sweep around $0.0226$ on \texttt{fast\_lag}
-\texttt{inner\_outer\_mlpdiag\_lag} and \alldiag{} that closes the comparison.
+two diagonal candidates (\taxid{OD-All}, \outerdiag{}) while assigning $0.064$ to
+a mathematically equivalent fused arm (\fused{}), producing \transferWorst{}-nat
+regressions past the full-budget stability cliff (Section~\ref{sec:tuning}).
+Thus $0.0226$, not $0.064$, lies near the full-budget optimum, and
+Section~\ref{sec:program} specifies the compact full-budget sweep around
+$0.0226$ on \texttt{fast\_lag} \taxid{WT-MLP-Lag} and \taxid{OD-All} that closes
+the comparison.
 
 \paragraph{Scope.}
 Everything here is one model size, one token budget, one hardware

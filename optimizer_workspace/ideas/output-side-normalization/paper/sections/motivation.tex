@@ -1,0 +1,408 @@
+\section{Motivating analysis: covariance structure of inputs and cotangents}
+\label{sec:motivation}
+
+Before choosing which factors of \eqref{eq:family} to form or approximate, we
+ask a prior empirical question on the baseline \muont{} trajectory itself:
+\emph{what do the input second moments $C_t=\mathbb E[xx^{\Tr}]$ and the unused
+output-cotangent second moments $B_t=\mathbb E[\delta\delta^{\Tr}]$ actually
+look like across a transformer during training, and how fast do their
+eigenspaces move?}
+
+In a standard Llama-style block with seven linear projections
+($q,k,v,o,\text{gate},\text{up},\text{down}$), shared consumed activations yield
+four input moments per layer (\texttt{in:attn} for $q,k,v$, \texttt{in:o}, and
+\texttt{in:mlp} for $\text{gate},\text{up}$ at hidden width $d=512$;
+\texttt{in:down} post-SwiGLU at expansion width $d=2048$, for $128$ matrices
+across $32$ layers), whereas distinct backward paths yield seven output moments
+per layer (\texttt{out:q}, \texttt{out:k}, \texttt{out:v}, \texttt{out:o}, and
+\texttt{out:down} at $d=512$; \texttt{out:gate} and \texttt{out:up} pre-SwiGLU
+at $d=2048$, for $224$ matrices). Setting $L=\hat L=I$ while running the pooled
+capture and cached-root machinery (\nullall{}, detailed in
+Section~\ref{sec:method-controls}) executes pure input-side \muont{} updates
+while recording all $352$ FP32 EMA moments ($\beta=0.938$, $N_t=36{,}608$
+sampled tokens per update) and their cached eigenbases every $250$ updates
+across the full $2.68\text{B}$-token ($5{,}120$-update) trajectory, completely
+unconfounded by output preconditioning.
+
+\subsection{Both sides are ill-conditioned, but their anisotropy lives in different coordinates}
+\label{sec:mot-aniso}
+
+For each symmetric PSD moment $M\in\mathbb R^{d\times d}$ across all $32$
+layers, let $\tilde M = (d/\tr M)\,M$ denote its unit-mean-diagonal
+normalization ($\frac{1}{d}\sum_{i=1}^d \tilde M_{ii}=1$) with eigenvalues
+$\lambda_1,\dots,\lambda_d \ge 0$, and let
+$\mathrm{Corr}_{ij} = M_{ij}/\sqrt{M_{ii}M_{jj}}$ denote its correlation matrix.
+To separate spectral ill-conditioning from coordinate alignment, we evaluate six
+complementary quantities:
+\begin{enumerate}
+\item \textbf{Effective rank share:}
+  $\mathrm{erank}(M)/d = \frac{1}{d}\exp\!\bigl(-\sum_{i=1}^d p_i\log p_i\bigr)$
+  with $p_i = \lambda_i / \sum_j \lambda_j$, measuring overall spectral
+  concentration ($100\%$ for $I_d$).
+\item \textbf{Coordinate scale spread:}
+  $\mathrm{CV}_{\diag}(M) = \sqrt{\frac{1}{d}\sum_{i=1}^d (\tilde M_{ii}-1)^2}$,
+  the coefficient of variation of per-neuron second moments.
+\item \textbf{Off-diagonal correlation RMS:}
+  $\rho_{\mathrm{rms}}(M) = \sqrt{\frac{1}{d(d-1)}\sum_{i\neq j}\mathrm{Corr}_{ij}^2}$,
+  benchmarked against the single-update finite-sample correlation floor
+  $N_t^{-1/2} = \motNoiseFloorCorrRms{}$ at $N_t=36{,}608$.
+\item \textbf{Raw diagonal energy share:}
+  $\mathrm{DiagE}(M) = \sum_{i=1}^d M_{ii}^2 / \sum_{i,j} M_{ij}^2$.
+\item \textbf{Centered anisotropic diagonal share:} because even an isotropic
+  matrix $\tilde M = I_d$ has $\mathrm{DiagE}(I_d)=100\%$ despite zero
+  anisotropy, we subtract $I_d$ and invoke the exact Pythagorean decomposition
+  $\|\tilde M - I_d\|_F^2 = \|\diag(\tilde M)-\mathbf 1\|_2^2 + \sum_{i\neq j}\tilde M_{ij}^2$
+  to define
+  \begin{equation}
+  \label{eq:diaganiso}
+  \mathrm{DiagAniso}(\tilde M)
+  = \frac{\sum_{i=1}^d (\tilde M_{ii}-1)^2}{\sum_{i=1}^d (\tilde M_{ii}-1)^2 + \sum_{i\neq j}\tilde M_{ij}^2},
+  \end{equation}
+  the exact fraction of total departure from isotropy carried by coordinate
+  variances rather than off-diagonal coupling.
+\item \textbf{Diagonal root whitening fidelity:} with $A = \tilde M + \epsilon I_d$
+  ($\epsilon = 10^{-3}$), $L = A^{-1/2}$, and
+  $L_{\diag} = \Diag((\diag(\tilde M)+\epsilon\mathbf 1)^{-1/2})$,
+  $R^2(A^{-1/2}) = 1 - \|L - L_{\diag}\|_F^2 / \|L - I_d\|_F^2$ measures how
+  much of the spectral inverse square root's action is captured by elementwise
+  diagonal scaling.
+\end{enumerate}
+
+\begin{table}[t]
+\centering
+\caption{Motivating covariance and subspace-drift audit of baseline input-side
+\muont{} (\nullall{}, $L=\hat L=I$, $352$ FP32 EMA matrices across all $32$
+layers). Columns $1$--$6$ report $32$-layer medians at mid-training (update
+$2{,}500$, $1.31\text{B}$ tokens) so boundary layers $\text{L0}$--$\text{L3}$ do
+not distort bulk summaries; $32$-layer means and $8$-checkpoint trajectory
+averages ($0.13\text{B}$--$2.68\text{B}$ tokens) are reported in the text and
+plotted in Figure~\ref{fig:motivation}. The final column ($\mathrm{Drift}_{16}$)
+is the $32$-layer mean $250$-update top-$16$ Grassmann subspace drift between
+updates $2{,}250$ and $2{,}500$ (Section~\ref{sec:mot-drift}).}
+\label{tab:motivation}
+\scriptsize\setlength{\tabcolsep}{3.6pt}
+\input{results/table_motivation}
+\end{table}
+
+Table~\ref{tab:motivation} and Figure~\ref{fig:motivation} (top row and
+bottom-left) expose three distinct covariance regimes that persist across the
+entire $2.68\text{B}$-token training run:
+
+\begin{itemize}
+\item \textbf{Width-2048 pre-SwiGLU cotangents (\texttt{out:gate},
+  \texttt{out:up}) are coordinate-anisotropic and off-diagonally decorrelated.}
+  Across the $32$ layers at update $2{,}500$, $B_{\text{gate}}$ and
+  $B_{\text{up}}$ concentrate \motOutGateDiagEMedPct\% and
+  \motOutUpDiagEMedPct\% of $\|B\|_F^2$ on their diagonal ($32$-layer means
+  \motOutGateDiagEMeanPct\% and \motOutUpDiagEMeanPct\%). Their median
+  off-diagonal correlation RMS is \motOutGateCorrRmsMed{} and
+  \motOutUpCorrRmsMed{} (bulk Layers $4$--$31$ means:
+  \motOutGateBulkCorrRmsMean{} and \motOutUpBulkCorrRmsMean{}; $8$-checkpoint
+  trajectory medians: \motOutGateTrajCorrRmsMed{} and
+  \motOutUpTrajCorrRmsMed{}), sitting directly on the single-update sampling
+  noise floor $N_t^{-1/2} = \motNoiseFloorCorrRms{}$ from $0.13\text{B}$ to
+  $2.68\text{B}$ tokens (Figure~\ref{fig:motivation}, bottom-left). Crucially,
+  after subtracting $I_d$, \motOutGateDiagAnisoMedPct\% and
+  \motOutUpDiagAnisoMedPct\% of $\|\tilde B - I_d\|_F^2$ still resides on the
+  diagonal (bulk medians \motOutGateBulkDiagAnisoMedPct\% and
+  \motOutUpBulkDiagAnisoMedPct\%; $32$-layer means \motOutGateDiagAnisoMeanPct\%
+  and \motOutUpDiagAnisoMeanPct\%), because individual MLP channels exhibit
+  large variance spread: mean $\mathrm{CV}_{\diag}$ is \motOutGateDiagCvMean{}
+  and \motOutUpDiagCvMean{} (growing from \motOutGateEarlyCvMean{} at update
+  $250$ to a peak of \motOutGatePeakCvMean{} at update $3{,}500$), with
+  max-to-mean channel ratios averaging $\motOutGateDiagMaxMean\times$ and
+  $\motOutUpDiagMaxMean\times$ and reaching $\motOutGateDiagMaxPeak\times$ and
+  $\motOutUpDiagMaxPeak\times$ in boundary blocks. Consequently, exact diagonal
+  roots $L_{\diag}$ align with dense $L=A^{-1/2}$ at median cosine
+  \motOutGateCosLMed{} and \motOutUpCosLMed{} and explain
+  \motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L-I_d\|_F^2$
+  (means \motOutGateExpVarLMeanPct\% and \motOutUpExpVarLMeanPct\%; trajectory
+  averages \motOutGateTrajExpVarLMedPct\% and \motOutUpTrajExpVarLMedPct\%),
+  whereas omitting preconditioning ($L=I_d$) incurs more than double the
+  relative error (\motOutGateDropErrLMean{} and \motOutUpDropErrLMean{} versus
+  \motOutGateRelErrLMean{} and \motOutUpRelErrLMean{}).
+
+\item \textbf{Width-512 residual-stream cotangents (\texttt{out:o},
+  \texttt{out:down}) are $>99\%$ rotational.} Because \texttt{o} and
+  \texttt{down} add directly into the shared residual stream, their per-channel
+  cotangent variances are nearly uniform ($\mathrm{CV}_{\diag} = \motOutODiagCvMed{}$
+  and $\motOutDownDiagCvMed{}$ median, $\motOutODiagCvMean{}$ and
+  $\motOutDownDiagCvMean{}$ mean). Although raw $\mathrm{DiagE}$ appears high
+  (\motOutODiagEMedPct\% and \motOutDownDiagEMedPct\%) due to a large isotropic
+  floor ($\mathrm{erank}/d = \motOutOErankMedPct\%$ and
+  $\motOutDownErankMedPct\%$), subtracting $I_d$ collapses
+  $\mathrm{DiagAniso}$ to \motOutODiagAnisoMedPct\% and
+  \motOutDownDiagAnisoMedPct\% across the entire trajectory
+  (Figure~\ref{fig:motivation}, top-right), and $L_{\diag}$ explains only
+  \motOutOExpVarLMedPct\% and \motOutDownExpVarLMedPct\% of $\|L-I_d\|_F^2$
+  (means \motOutOExpVarLMeanPct\% and \motOutDownExpVarLMeanPct\%). Attention
+  cotangents sit between these extremes: \texttt{out:q} and \texttt{out:k} carry
+  substantial head/RoPE coordinate spread ($R^2 = \motOutQExpVarLMedPct\%$ and
+  $\motOutKExpVarLMedPct\%$), while \texttt{out:v} is predominantly rotational
+  ($R^2 = \motOutVExpVarLMedPct\%$).
+
+\item \textbf{Right-input moments ($C_t$) are strongly coupled off-diagonal,
+  including at width 2048.} Preceded by RMSNorm or attention mixing, width-$512$
+  inputs (\texttt{in:attn}, \texttt{in:o}, \texttt{in:mlp}) have low effective
+  rank ($\motInAttnErankMedPct\%$--$\motInMlpErankMedPct\%$), strong
+  cross-channel correlations ($\rho_{\mathrm{rms}} = \motInMlpCorrRmsMed{}$--$\motInOCorrRmsMed{}$,
+  $30\times$--$40\times$ above \texttt{out:gate}), and only
+  $\motInMlpDiagAnisoMedPct\%$--$\motInODiagAnisoMedPct\%$ centered diagonal
+  anisotropy ($98\%$--$99\%$ off-diagonal). Even at width $2048$, post-SwiGLU
+  \texttt{in:down} behaves quite differently from pre-SwiGLU \texttt{out:gate}
+  and \texttt{out:up}: despite massive neuron scale spread (mean
+  $\mathrm{CV}_{\diag}$ growing from \motInDownEarlyCvMean{} to
+  \motInDownFinalCvMean{}), its $\mathrm{erank}/d$ is only
+  \motInDownErankMedPct\%, $\rho_{\mathrm{rms}}$ is \motInDownCorrRmsMed{}
+  ($6.8\times$ \texttt{out:gate}'s RMS, or $46\times$ higher correlation energy
+  per coordinate), and $56.6\%$ of $\|\tilde C_{\text{down}}-I_d\|_F^2$ lies off
+  the diagonal ($\mathrm{DiagAniso} = \motInDownDiagAnisoMedPct\%$).
+\end{itemize}
+
+\begin{finding}[Hadamard decorrelation explains the pre- versus post-SwiGLU split at width 2048]
+In a SwiGLU MLP $y = W_{\text{down}}(\operatorname{SiLU}(g)\odot u)$ with
+$g=W_{\text{gate}}x$ and $u=W_{\text{up}}x$, the pre-activation cotangents are
+elementwise Hadamard products
+$\delta_{\text{up}} = (\delta_{\text{down}}W_{\text{down}})\odot \operatorname{SiLU}(g)$
+and $\delta_{\text{gate}} = (\delta_{\text{down}}W_{\text{down}})\odot (u\odot \operatorname{SiLU}'(g))$
+between a zero-mean backward residual vector and a forward gate vector. Under
+Schur multiplication of weakly dependent covariances
+($\Sigma_{ij} \approx \Sigma^{\text{bwd}}_{ij}\Sigma^{\text{fwd}}_{ij}$), small
+off-diagonal correlations multiply toward zero ($|\rho_{ij}^{\text{bwd}}\rho_{ij}^{\text{fwd}}| < |\rho_{ij}|$)
+down to the $N_t^{-1/2}$ sampling floor, whereas diagonal variances multiply
+together and compound neuron scale anisotropy. By contrast, the forward
+post-SwiGLU input $x_{\text{down}} = \operatorname{SiLU}(g)\odot u$ has strictly
+positive channel means from one-sided $\operatorname{SiLU}$, adding a dense
+outer-product mean term $\mu\mu^{\Tr}$ to $\mathbb E[x_{\text{down}}x_{\text{down}}^{\Tr}]$
+that keeps $C_{\text{down}}$ strongly correlated off-diagonal.
+\end{finding}
+
+\begin{figure}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{groupplot}[
+  paperplot,
+  group style={group size=2 by 2, horizontal sep=1.65cm, vertical sep=1.70cm},
+  width=7.1cm, height=4.8cm,
+]
+\nextgroupplot[
+  ybar=0.8pt, bar width=2.4pt,
+  ylabel={Share / fidelity (\%)},
+  ymin=0, ymax=108,
+  xmin=-0.6, xmax=10.6,
+  xtick={0,1,2,3,4,5,6,7,8,9,10},
+  xticklabels={\texttt{in:at},\texttt{in:o},\texttt{in:mlp},\texttt{in:dn},\texttt{q},\texttt{k},\texttt{v},\texttt{o},\texttt{down},\texttt{gate},\texttt{up}},
+  xticklabel style={rotate=36, anchor=east, font=\tiny},
+  title={(a) Diagonal energy, anisotropy \& root $R^2$},
+  legend columns=3,
+  legend style={at={(0.5,0.98)}, anchor=north, font=\tiny, column sep=3pt},
+]
+\addplot[fill=famSlate!45, draw=famSlate!80]
+  table[x=idx, y=diag_energy_med_pct] {figs/motivation_bars.dat};
+\addlegendentry{$\mathrm{DiagE}$}
+\addplot[fill=famNull!78, draw=famNull!95]
+  table[x=idx, y=diag_aniso_med_pct] {figs/motivation_bars.dat};
+\addlegendentry{$\mathrm{DiagAniso}$}
+\addplot[fill=famWT!78, draw=famWT!95]
+  table[x=idx, y=exp_var_L_med_pct] {figs/motivation_bars.dat};
+\addlegendentry{$R^2(A^{-1/2})$}
+
+\nextgroupplot[
+  xlabel={Tokens processed (billions)},
+  ylabel={$\mathrm{DiagAniso}(\tilde M)$ (\%)},
+  xmin=0.05, xmax=2.75, ymin=-2, ymax=94,
+  title={(b) Anisotropic diagonal share over training},
+  legend columns=2,
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny, column sep=3pt},
+  every axis plot/.append style={line width=0.9pt, mark size=1.4pt},
+]
+\addplot[color=famOD, mark=*] table[x=tokens, y=da_gate] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:gate}}
+\addplot[color=famOD!70, densely dashed, mark=o] table[x=tokens, y=da_up] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:up}}
+\addplot[color=famNull, mark=triangle*] table[x=tokens, y=da_in_down] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{in:down}}
+\addplot[color=famWT, mark=square*] table[x=tokens, y=da_out_qk] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:q,k}}
+\addplot[color=famRef!75, densely dotted, mark=diamond*] table[x=tokens, y=da_in_d512] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{in:512}}
+\addplot[color=famAbl, mark=x] table[x=tokens, y=da_out_odown] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:o,down}}
+
+\nextgroupplot[
+  xlabel={Tokens processed (billions)},
+  ylabel={Off-diagonal $\rho_{\mathrm{rms}}$ (log scale)},
+  ymode=log,
+  xmin=0.05, xmax=2.75, ymin=0.0034, ymax=0.36,
+  title={(c) Correlation RMS vs.\ $N_t^{-1/2}$ floor},
+  legend columns=3,
+  legend style={at={(0.5,0.56)}, anchor=center, font=\tiny, column sep=2pt},
+  every axis plot/.append style={line width=0.9pt, mark size=1.4pt},
+]
+\addplot[color=famRef!75, densely dotted, mark=diamond*] table[x=tokens, y=rho_in_d512] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{in:512}}
+\addplot[color=famWT, mark=square*] table[x=tokens, y=rho_out_qk] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:q,k}}
+\addplot[color=famNull, mark=triangle*] table[x=tokens, y=rho_in_down] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{in:down}}
+\addplot[color=famAbl, mark=x] table[x=tokens, y=rho_out_odown] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:o,down}}
+\addplot[color=famOD!70, densely dashed, mark=o] table[x=tokens, y=rho_up] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:up}}
+\addplot[color=famOD, mark=*] table[x=tokens, y=rho_gate] {figs/motivation_traj.dat};
+\addlegendentry{\texttt{out:gate}}
+\draw[checkgreen!85!black, dashed, line width=0.8pt] (axis cs:0.05,0.005226) -- (axis cs:2.75,0.005226);
+\node[font=\tiny, text=checkgreen!80!black, anchor=north west]
+  at (axis cs:0.08,0.00525) {$N_t^{-1/2}=0.0052$};
+
+\nextgroupplot[
+  xlabel={Tokens processed (billions)},
+  ylabel={8-GPU exact \texttt{eigh} fallbacks ($\times 10^3$)},
+  xmin=0.05, xmax=2.75, ymin=-4, ymax=118,
+  title={(d) Cumulative exact fallbacks ($B_t$ vs.\ $C_t$)},
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny},
+  every axis plot/.append style={line width=1.05pt, mark size=1.6pt},
+]
+\addplot[color=famAbl, mark=*] table[x=tokens, y=out_fb_k] {figs/motivation_traj.dat};
+\addlegendentry{Left cotangents $B_t$ ($\motFbOutTotal$)}
+\addplot[color=famWT, mark=square*] table[x=tokens, y=in_fb_k] {figs/motivation_traj.dat};
+\addlegendentry{Right inputs $C_t$ ($\motFbInTotal$)}
+\node[font=\tiny, text=pageink!85, anchor=west, align=left]
+  at (axis cs:0.15,66) {After $0.13\text{B}$ tok.:\\$\motFbOutPostWarmup$ vs.\ $\motFbInPostWarmup$ ($\motFbRatioPostWarmup\times$)};
+\end{groupplot}
+\end{tikzpicture}%
+}
+\caption{Full-trajectory covariance and temporal-stability audit of baseline
+\taxid{MuonT} (\nullall{}, eight checkpoints from $0.13\text{B}$ to $2.68\text{B}$
+tokens across all $32$ layers). \textbf{(a)} Subtracting $I_d$ separates
+genuinely diagonal moments (\texttt{out:gate}, \texttt{out:up}) from isotropic
+but rotation-dominated residual moments (\texttt{out:o}, \texttt{out:down}),
+matching $R^2(A^{-1/2})$. \textbf{(b)} The architectural split in
+$\mathrm{DiagAniso}(\tilde M)$ holds throughout training. \textbf{(c)}
+Pre-SwiGLU \texttt{out:gate} and \texttt{out:up} hug the single-step sampling
+floor $N_t^{-1/2}=0.0052$ across the entire run, whereas width-$512$ inputs sit
+$35\times$ higher. \textbf{(d)} Rapid cotangent subspace rotation triggers
+$\motFbOutTotal$ exact \texttt{cuSOLVER eigh} fallbacks across the eight GPUs
+versus $\motFbInTotal$ on inputs (only $\motFbInPostWarmup$ input fallbacks
+after $0.13\text{B}$ tokens).}
+\label{fig:motivation}
+\end{figure}
+
+\subsection{Temporal drift of cotangent eigenspaces}
+\label{sec:mot-drift}
+
+Spatial covariance structure is only half of the design problem; the second half
+is temporal stability. Preconditioned \muont{} avoids per-update
+eigendecompositions by expressing each current moment $\tilde M_t$ in a cached
+orthonormal eigenbasis $X_{t-\tau}$ refreshed asynchronously on host worker
+threads every four updates, refining $(X_{t-\tau}^{\Tr}\tilde M_t X_{t-\tau} + \epsilon I_d)^{-1/4}$
+via two coupled fixed-point iterations (up to three repair rounds when the
+estimated error exceeds tolerance, falling back to synchronous GPU
+\texttt{cuSOLVER eigh} when repair fails; Section~\ref{sec:method}). That scheme
+was engineered for forward activations $x_t$, which are stabilized by RMSNorm.
+Backward cotangents $\delta_t$ enjoy no such normalization and depend on
+changing downstream weights and token-level loss residuals.
+
+To quantify how fast the two sides rotate along the \muont{} trajectory, we
+measure the top-$k$ Grassmann subspace drift between consecutive checkpoints
+$\Delta t = 250$ updates apart,
+\begin{equation}
+\label{eq:grassmann}
+\mathrm{Drift}_k(t_1, t_2)
+= 1 - \frac{1}{k}\bigl\|V_{1:k}(t_1)^{\Tr} V_{1:k}(t_2)\bigr\|_F^2 \in [0, 1],
+\end{equation}
+where $V_{1:k}(t)\in\mathbb R^{d\times k}$ spans the $k$ principal eigenvectors
+of $\tilde M_t$. Across all $32$ layers between updates $2{,}250$ and $2{,}500$
+(last column of Table~\ref{tab:motivation}), RMSNormed input subspaces barely
+move: $\mathrm{Drift}_{16}$ is \motInAttnDriftTopSixteenMean{} on
+\texttt{in:attn} and \motInMlpDriftTopSixteenMean{} on \texttt{in:mlp}
+($\mathrm{Drift}_{32} = \motInAttnDriftTopThirtyTwoMean{}$ and
+$\motInMlpDriftTopThirtyTwoMean{}$), and \motInODriftTopSixteenMean{}--\motInDownDriftTopSixteenMean{}
+on \texttt{in:o} and \texttt{in:down}. Left-cotangent subspaces rotate
+$5\times$ to $\motDriftRatioOutVVsInAttn\times$ faster:
+$\mathrm{Drift}_{16}$ reaches \motOutQDriftTopSixteenMean{} and
+\motOutKDriftTopSixteenMean{} on \texttt{out:q} and \texttt{out:k},
+\motOutUpDriftTopSixteenMean{} and \motOutGateDriftTopSixteenMean{} on
+\texttt{out:up} and \texttt{out:gate} ($\motDriftRatioOutUpVsInAttn\times$ and
+$\motDriftRatioOutGateVsInAttn\times$ \texttt{in:attn}), and
+\motOutVDriftTopSixteenMean{} on \texttt{out:v} ($\mathrm{Drift}_{32} = \motOutVDriftTopThirtyTwoMean{}$).
+The same gap holds in early training (updates $250\to 500$:
+\motOutGateEarlyDriftTopSixteen{} on \texttt{out:gate} versus
+\motInAttnEarlyDriftTopSixteen{} on \texttt{in:attn}) and late training (updates
+$4{,}250\to 4{,}500$: \motOutVLateDriftTopSixteen{} on \texttt{out:v} versus
+\motInAttnLateDriftTopSixteen{} on \texttt{in:attn}). Even over the $1$--$4$
+update age of the saved cached bases $X_{t-\tau}$ inside the update-$2{,}500$
+checkpoint, short-horizon top-$16$ drift is $24\times$--$36\times$ larger on
+\texttt{out:v} and \texttt{out:gate} (\motOutVShortDriftTopSixteen{} and
+\motOutGateShortDriftTopSixteen{}) than on \texttt{in:attn} and \texttt{in:mlp}
+(\motInAttnShortDriftTopSixteen{} and \motInMlpShortDriftTopSixteen{}).
+
+Evaluating the two-iteration fixed-point root solver directly on the saved
+cached bases $X_{t-\tau}^{\Tr}\tilde M_t X_{t-\tau}$ at update $2{,}500$ shows
+the immediate numerical consequence. On the input side, the median ratio of
+estimated root error to acceptance tolerance is
+\motInAttnCachedEstOverTolMed{}--\motInOCachedEstOverTolMed{}, comfortably below
+$1.0$. On the output side, \texttt{out:k} sits at median ratio
+\motOutKCachedEstOverTolMed{} and \texttt{out:v} at
+\motOutVCachedEstOverTolMed{}, while each rank's two host worker threads must
+simultaneously service $28$ output moments including eight width-$2048$
+eigendecompositions. Figure~\ref{fig:motivation}(d) shows the resulting
+run-wide divergence across all eight GPUs: over $5{,}120$ updates, dense input
+moments incur $\motExtraInTotal{}$ repair rounds and only $\motFbInTotal{}$
+exact \texttt{eigh} fallbacks ($\motFbInPctStatStep\%$ of evaluations), whereas
+dense output moments trigger $\motExtraOutTotal{}$ repair rounds and
+$\motFbOutTotal{}$ exact fallbacks ($\motFbOutPerUpdate{}$ per update globally,
+$\motFbOutPctStatStep\%$ of all $1.14\times 10^6$ output evaluations ---
+$\motFbRatioTotal\times$ more fallbacks, or $\motFbRatioPerStat\times$ per
+statistic, and $\motFbRankZeroOut{}$ versus $\motFbRankZeroIn{}$ on Rank~0).
+After the initial $250$-update ($0.13\text{B}$-token) transient, all eight GPUs
+record just $\motFbInPostWarmup{}$ input fallbacks over the remaining $4{,}870$
+updates against $\motFbOutPostWarmup{}$ output fallbacks --- a
+$\motFbRatioPostWarmup\times$ raw ($\motFbRatioPostWarmupPerStat\times$
+per-statistic) gap. Because backward cotangents become available only at the end
+of the last microbatch's backward pass, executing these output repairs and
+\texttt{cuSOLVER eigh} fallbacks synchronously stalls the optimizer step
+directly on the critical path.
+
+\subsection{Three design consequences}
+\label{sec:mot-consequences}
+
+Taken together, the spatial decomposition in Table~\ref{tab:motivation} and the
+temporal drift in Figure~\ref{fig:motivation}(d) dictate three concrete design
+choices before any candidate optimizer is trained:
+
+\begin{enumerate}
+\item \textbf{Keep dense input whitening ($R,\hat R$) intact.} Between $94\%$
+  and $99\%$ of width-$512$ input anisotropy --- and $57\%$ of post-SwiGLU
+  \texttt{in:down}'s --- lies off the coordinate diagonal. Dropping or
+  diagonalizing the input side forfeits the primary domain conditioning of the
+  finite polynomial map $\Nten$; output-cotangent normalization should be added
+  \emph{on top of} dense input whitening rather than substituted for it.
+\item \textbf{Threshold output richness by width (\taxid{WT-MLP} / \mlpdiag{}),
+  with pure diagonals (\taxid{OD-All} / \alldiag{}) as the
+  zero-eigendecomposition limit.} The two width-$2048$ pre-SwiGLU cotangents
+  (\texttt{out:gate}, \texttt{out:up}) account for $96.2\%$ of output $O(d^3)$
+  eigendecomposition work and $86.5\%$ of $O(d^2)$ Gram work, yet Hadamard
+  decorrelation pins their off-diagonal correlations to the $N_t^{-1/2}$
+  sampling floor while leaving strong per-neuron scale spread. Replacing their
+  dense spectral roots with exact, age-zero elementwise diagonals captures
+  $\approx 76\%$--$82\%$ of $\|L-I_d\|_F^2$ on baseline trajectories without
+  fitting $2.1\times 10^6$ noisy off-diagonals per matrix or clogging host
+  worker threads. Conversely, width-$512$ residual-stream cotangents
+  (\texttt{out:o}, \texttt{out:down}) are $>99\%$ rotational ($R^2 =
+  \motOutOExpVarLMedPct\%$), motivating dense spectral roots at width $512$
+  (\taxid{WT-MLP}), while diagonalizing all seven outputs (\taxid{OD-All})
+  defines an eigendecomposition-free speed bound via \texttt{gate},
+  \texttt{up}, \texttt{q}, and \texttt{k}.
+\item \textbf{Lag output factors by one update on an asynchronous side stream
+  (\taxid{WT-MLP-Lag} / \mlpdiaglag{}).} Diagonalizing width-$2048$ outputs
+  eliminates the largest host bottlenecks, but fast subspace drift on width-$512$
+  cotangents (\texttt{out:v}, \texttt{out:k}) still triggers frequent iterative
+  repairs and exact \texttt{eigh} fallbacks. Applying factors
+  $(L^{(t-1)},\hat L^{(t-1)})$ built from the previous update's cotangents --- a
+  staleness of one-sixteenth of the $\beta=0.938$ EMA window --- moves output
+  Gram reduction, root refinement, and fallback resolution off the synchronous
+  post-backward critical path and overlaps them with the next update's forward
+  and backward pass.
+\end{enumerate}

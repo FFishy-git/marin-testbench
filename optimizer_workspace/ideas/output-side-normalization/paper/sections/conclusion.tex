@@ -1,43 +1,50 @@
 \section{Conclusion}
 
-We added output-cotangent second moments to input-whitened MuonT and evaluated
-them across \nDistinctRuns{} full-budget 2.68B-token training trajectories, 28
-short-schedule learning-rate trials, a 32-layer checkpoint mechanism audit, and
-a stage-optimized lagged A100 implementation.
+We audited input and output-cotangent second moments across a baseline \muont{}
+trajectory, derived a width-thresholded, one-step-lagged output normalization
+scheme, and evaluated it across \nDistinctRuns{} full-budget 2.68B-token
+training trajectories, 28 short-schedule learning-rate trials, a post-training
+step-geometry audit, and a stage-optimized A100 implementation.
 
 Four findings define the scope and design of output-side normalization in
 Muon-type optimizers:
 \begin{enumerate}
-\item \textbf{Width-thresholded complementarity.} Output moments help on top of
-  input whitening (\mlpdiagsel{} nats held-out selection loss for \mlpdiag{}
-  across all five training windows and all three seeds; $-0.0059$ nats net of
-  matched execution-path null) and fail when substituted for it (\leftallsel{}
-  nats). Pure diagonal output scaling (\alldiag{}) retains two-thirds of that
-  gain with zero eigendecompositions.
-\item \textbf{Architectural covariance alignment and pure step rotation.}
-  Auditing all 352 checkpoint moments shows that pre-SwiGLU width-2048
-  cotangents (\texttt{gate}, \texttt{up}) are Hadamard products whose
-  off-diagonal correlations sit at the finite-sample floor (median RMS
-  \mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), putting
-  \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of $\|L - I\|_F^2$ on the
-  diagonal alongside $\mechOutGateDiagMaxMean\times$ coordinate-scale
-  anisotropy, whereas residual-stream width-512 cotangents (\texttt{o},
-  \texttt{down}) are $97\%$ rotational. Instantaneous step norms match \muont{}
-  to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating
-  updates by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit learning-rate
-  inflation.
+\item \textbf{Architectural covariance split and cotangent drift.}
+  Across all 32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$
+  tokens) of baseline \muont{}, pre-SwiGLU width-2048 cotangents
+  (\texttt{gate}, \texttt{up}) are Hadamard products whose off-diagonal
+  correlations hug the single-step sampling floor (median RMS
+  \motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
+  \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered moment
+  anisotropy on the diagonal (\motOutGateExpVarLMedPct\% and
+  \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$, rising to \mechOutGateExpVarLPct\%
+  and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
+  residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
+  rotational and cotangent eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$
+  faster than RMSNormed inputs, triggering $\motFbOutTotal{}$ exact
+  eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
+  inputs.
+\item \textbf{Width-thresholded complementarity and pure step rotation.}
+  Output moments help on top of input whitening (\mlpdiagsel{} nats held-out
+  selection loss for \taxid{WT-MLP} / \mlpdiag{} across all five training
+  windows and all three seeds; $-0.0059$ nats net of matched execution-path
+  null \taxid{Null-WT}) and fail when substituted for it (\taxid{Abl-OutOnly} /
+  \leftall{}, \leftallsel{} nats), while pure diagonal output scaling
+  (\taxid{OD-All} / \alldiag{}) retains two-thirds of that gain with zero
+  eigendecompositions. Instantaneous step norms match \taxid{MuonT} to
+  \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) while rotating updates
+  by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit learning-rate inflation.
 \item \textbf{Lagged execution at $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
   overhead over vanilla Muon.} Removing device-wide per-step synchronization,
   synchronous fallback stalls, per-linear backward custom-op partitions, and
-  SIMT-FP32 bottlenecks in \texttt{fast\_lag} reduces
-  \texttt{inner\_outer\_mlpdiag\_lag} from $+\sysLegacyMlpVsMuon\%$ to
-  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over Muon
-  ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \muont{}, saving
-  \sysMemSavedGib\,GiB) and brings even fully dense
-  \texttt{inner\_outer\_all\_lag} down to
-  $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over Muon --- crossing the
-  \sysTokenSavingPct\% token-reduction break-even threshold with bitwise-exact
-  24-step continuation parity.
+  SIMT-FP32 bottlenecks in \texttt{fast\_lag} reduces \taxid{WT-MLP-Lag}
+  (\mlpdiaglag{}) from $+\sysLegacyMlpVsMuon\%$ to
+  $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$ over \taxid{Muon}
+  ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over \taxid{MuonT},
+  saving \sysMemSavedGib\,GiB) and brings even fully dense \taxid{DT-All-Lag}
+  (\denselag{}) down to $+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ over
+  \taxid{Muon} --- crossing the \sysTokenSavingPct\% token-reduction break-even
+  threshold with bitwise-exact 24-step continuation parity.
 \item \textbf{Methodological discipline.} Matched execution-path nulls
   accounted for a fifth to a third of raw fixed-rate gains, and 320-step
   learning-rate screening selected an over-stepped rate ($0.064$) that

@@ -61,19 +61,54 @@
 \input{results/lr_numbers}
 \input{results/derived_numbers}
 \input{results/evidence_numbers}
+\input{results/motivation_numbers}
 \input{results/mechanism_numbers}
 \input{results/systems_numbers}
 
 % Notation. The two sides of a linear layer's update: the input (activation)
 % second moment and the output (cotangent) second moment.
+\usetikzlibrary{arrows.meta, calc, fit, backgrounds, decorations.pathreplacing, shapes.geometric}
 \usepgfplotslibrary{groupplots}
-% Figure line colours: blue for arms that add output factors to the input-side
-% baseline, orange for the matched null controls whose factors are the
-% identity, purple for the cheap diagonal variants, red for arms that remove or
-% degrade the input side.
-\definecolor{laBlueLine}{HTML}{5C81AD}
-\definecolor{laOrangeLine}{HTML}{C18C54}
-\definecolor{laPurpleLine}{HTML}{9684B0}
+
+% Unified colorblind-safe taxonomic palette (harmonized with paperstyle.sty):
+%   I.   Ref  (Charcoal)     -- Baselines: Muon, MuonT
+%   II.  WT   (Royal Navy)   -- Width-Thresholded Two-Sided (Proposed Core Family)
+%   III. OD   (Deep Teal)    -- Pure-Diagonal Output (Zero-Eigendecomposition Limit)
+%   IV.  DT   (Steel Blue)   -- Dense Two-Sided Ceiling
+%   V.   Null (Warm Ochre)   -- Matched Execution-Path Nulls (Identity Factors)
+%   VI.  Abl  (Coral/Crimson)-- Structural & Input-Degradation Ablations
+\definecolor{famRef}{HTML}{24313A}
+\definecolor{famWT}{HTML}{1B4F9C}
+\definecolor{famOD}{HTML}{0E7470}
+\definecolor{famDT}{HTML}{537EA8}
+\definecolor{famNull}{HTML}{B97720}
+\definecolor{famAbl}{HTML}{C0392B}
+\definecolor{famSlate}{HTML}{52606D}
+\definecolor{famMuted}{HTML}{8A949C}
+
+% Legacy aliases preserved for full backward compatibility across generated plots.
+\definecolor{laBlueLine}{HTML}{1B4F9C}
+\definecolor{laOrangeLine}{HTML}{B97720}
+\definecolor{laPurpleLine}{HTML}{0E7470}
+
+% Unified manuscript pgfplots typography and axis grammar.
+\pgfplotsset{
+  paperplot/.style={
+    grid=major,
+    major grid style={draw=pagerule!55, line width=0.35pt},
+    axis line style={draw=pagemuted!70, line width=0.5pt},
+    tick style={draw=pagemuted!70, line width=0.45pt},
+    tick align=outside,
+    title style={font=\pagesfsb\footnotesize\color{pageink}, yshift=1pt},
+    label style={font=\pagesf\footnotesize\color{pageink}},
+    tick label style={font=\scriptsize\color{pageink!88}},
+    legend style={font=\scriptsize\color{pageink}, draw=pagerule, fill=white,
+                  fill opacity=0.94, text opacity=1, rounded corners=1.5pt,
+                  inner sep=2.5pt},
+    legend cell align=left,
+  }
+}
+
 \newcommand{\Nten}{\mathcal{N}_{10}}
 \newcommand{\unitrms}{\operatorname{unitRMS}}
 \newcommand{\tr}{\operatorname{tr}}
@@ -86,16 +121,41 @@
 \definecolor{crossred}{HTML}{C0392B}
 \newcommand{\yesmark}{\textcolor{checkgreen}{\ding{51}}}
 \newcommand{\nomark}{\textcolor{crossred}{\ding{55}}}
-% Arm names appear often enough in running text to deserve one spelling each.
+
+% Formal 5-slot operator signature A(R_512, R_2048 | L_512, L_2048 | \tau)
+% and crisp visual factor badges.
+\newcommand{\opcfg}[5]{\mathcal{A}\!\left(#1,\,#2\;\middle|\;#3,\,#4\;\middle|\;#5\right)}
+\newcommand{\tcfg}[5]{$(#1,#2\mid #3,#4\mid #5)$}
+\newcommand{\fFull}{\textcolor{famWT}{\bullet}}
+\newcommand{\fDiag}{\textcolor{famOD}{\oplus}}
+\newcommand{\fOuter}{\textcolor{famSlate}{\triangleright}}
+\newcommand{\fOuterFull}{\textcolor{famSlate}{\triangleright_{\!\textcolor{famWT}{\bullet}}}}
+\newcommand{\fOuterDiag}{\textcolor{famSlate}{\triangleright_{\!\textcolor{famOD}{\oplus}}}}
+\newcommand{\fNone}{\textcolor{famMuted}{\text{---}}}
+\newcommand{\fNull}{\textcolor{famNull}{\varnothing}}
+\newcommand{\fNullFull}{\textcolor{famNull}{\varnothing_{\!\textcolor{famWT}{\bullet}}}}
+\newcommand{\fNullDiag}{\textcolor{famNull}{\varnothing_{\!\textcolor{famOD}{\oplus}}}}
+\newcommand{\taxid}[1]{{\pagesfsb #1}}
+\newcommand{\fambadge}[2]{{\textcolor{#1}{\pagesfsb\scriptsize #2}}}
+
+% Implementation identifiers paired with structured taxonomic IDs.
 \newcommand{\muont}{\texttt{muont}}
 \newcommand{\dense}{\texttt{inner\_outer\_all}}
+\newcommand{\denselag}{\texttt{inner\_outer\_all\_lag}}
 \newcommand{\mlpdiag}{\texttt{inner\_outer\_mlpdiag}}
+\newcommand{\mlpdiaglag}{\texttt{inner\_outer\_mlpdiag\_lag}}
 \newcommand{\alldiag}{\texttt{inner\_outer\_leftdiag}}
 \newcommand{\outerdiag}{\texttt{outer\_leftdiag}}
 \newcommand{\fused}{\texttt{outer\_leftdiag\_fused}}
 \newcommand{\nullall}{\texttt{null\_all}}
 \newcommand{\nullmlp}{\texttt{null\_mlpdiag}}
+\newcommand{\nullod}{\texttt{null\_leftdiag\_upstream\_fused}}
 \newcommand{\leftall}{\texttt{left\_all}}
+\newcommand{\noexp}{\texttt{inner\_outer\_hidden}}
+\newcommand{\outerall}{\texttt{outer\_left\_all}}
+\newcommand{\outerdown}{\texttt{outer\_left\_down}}
+\newcommand{\downhybrid}{\texttt{down\_hybrid}}
+\newcommand{\bothdiag}{\texttt{inner\_outer\_all\_diag}}
 
 \title{Width-Thresholded Output-Cotangent Normalization in Muon-Type Optimizers}
 \papershorttitle{Output-Side Normalization}
@@ -113,48 +173,53 @@
 Muon-type optimizers orthogonalize the momentum of each weight matrix and, in
 their preconditioned variants, whiten it against the second moment of the
 layer's \emph{inputs}. The second moment of the layer's \emph{output cotangents}
-is equally available and is not used. Across \nDistinctRuns{} full-budget
-training trajectories on a pinned 265M-parameter transformer (2.68B tokens,
-eight A100s per run), we study \emph{width-thresholded output normalization}
-(\mlpdiag{}), which applies dense spectral output factors at hidden width
-($d=512$) and switches to exact elementwise diagonals at MLP-expansion width
-($d=2048$), alongside its pure-diagonal limit (\alldiag{}). Four results emerge.
-First, output moments help \emph{on top of} input whitening (\mlpdiagsel{} nats
-held-out loss across all five training windows and all three seeds, and
-$-0.0059$ nats net of a matched execution-path null that absorbs \nullsharedense--\nullsharemlpcfour\%
-of raw gains), whereas substituting output for input whitening regresses by
-\leftallsel{} nats. Second, checkpoint audits of all 352 EMA moments across 32
-layers explain \emph{why} width-thresholding matches or beats full dense roots:
-pre-SwiGLU cotangents are Hadamard products whose off-diagonal correlations sit
-at the finite-sample floor (median RMS \mechOutGateCorrRmsMed{} and
-\mechOutUpCorrRmsMed{}), putting \mechOutGateExpVarLPct\% and
-\mechOutUpExpVarLPct\% of $\|L - I\|_F^2$ on the diagonal despite
-$\mechOutGateDiagMaxMean\times$ coordinate-scale anisotropy, whereas
-residual-stream width-512 cotangents are $97\%$ rotational; instantaneous step
-norms match input-side MuonT to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$)
-while rotating updates by $\mechMlpdiagGraftDeg^\circ$, ruling out implicit
-step-size inflation. Third, eliminating synchronization, backward-wrapper, and
-SIMT-FP32 bottlenecks in a one-step-lagged runner (\texttt{fast\_lag}) cuts
-calibrated eight-A100 steady-step overhead over vanilla Muon from
-$+\sysLegacyMlpVsMuon\%$ to $+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
+is equally available and is not used. Auditing all 352 input and cotangent EMA
+moments across 32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$
+tokens) of a pure baseline MuonT trajectory reveals why naive two-sided dense
+whitening is mismatched to a transformer: pre-SwiGLU width-2048 cotangents
+(\texttt{gate}, \texttt{up}) are Hadamard products whose off-diagonal
+correlations sit on the single-update sampling floor (median RMS
+\motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
+\motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered moment
+anisotropy on the diagonal (\motOutGateExpVarLMedPct\% and
+\motOutUpExpVarLMedPct\% of $\|L-I\|_F^2$, rising to \mechOutGateExpVarLPct\%
+and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
+residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
+rotational and cotangent eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$
+faster than RMSNormed inputs, triggering $\motFbOutTotal{}$ exact
+eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
+inputs. Guided by this structure, we evaluate \emph{width-thresholded output
+normalization} (\taxid{WT-MLP} / \mlpdiag{}, dense at $d=512$ and exact diagonal
+at $d=2048$) and its pure-diagonal limit (\taxid{OD-All} / \alldiag{}) across
+\nDistinctRuns{} full-budget trajectories on a pinned 265M-parameter transformer
+(2.68B tokens, eight A100s per run). Output moments help \emph{on top of} input
+whitening (\mlpdiagsel{} nats held-out loss across all five windows and all
+three seeds, $-0.0059$ nats net of a matched execution-path null absorbing
+\nullsharedense--\nullsharemlpcfour\% of raw gains) and fail when substituted
+for it (\taxid{Abl-OutOnly} / \leftall{}, \leftallsel{} nats), while matching
+MuonT's instantaneous step norm to \mechMlpdiagGraftNorm{}
+($\mechMlpdiagGraftNormPct\%$) at a $\mechMlpdiagGraftDeg^\circ$ directional
+rotation. Eliminating synchronization, backward-wrapper, and SIMT-FP32
+bottlenecks in a one-step-lagged runner (\texttt{fast\_lag}) cuts calibrated
+eight-A100 step overhead over vanilla Muon from $+\sysLegacyMlpVsMuon\%$ to
+$+\sysFastMlpVsMuonLo\%$--$\sysFastMlpVsMuonHi\%$
 ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over MuonT, saving
-\sysMemSavedGib\,GiB) for \texttt{mlpdiag\_lag} and
-$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ even for dense
-\texttt{all\_lag}, crossing the \sysTokenSavingPct\% token-saving wall-clock
-break-even threshold. Fourth, short-schedule ($320$-step) learning-rate
-screening fails to transfer because its selected rate ($0.064$) regresses
-full-budget MuonT itself by \waveTwelveMuontSelDiff{} nats relative to the
-recipe rate ($0.0226$), focusing remaining confirmation on a compact full-budget
-neighborhood around $0.0226$.
+\sysMemSavedGib\,GiB) for \taxid{WT-MLP-Lag} (\mlpdiaglag{}) and
+$+\sysFastAllVsMuonLo\%$--$\sysFastAllVsMuonHi\%$ for dense \taxid{DT-All-Lag}
+(\denselag{}), crossing the \sysTokenSavingPct\% token-saving break-even line.
+Finally, 320-step learning-rate screening fails to transfer because its selected
+rate ($0.064$) regresses full-budget MuonT itself by \waveTwelveMuontSelDiff{}
+nats relative to the recipe rate ($0.0226$), focusing remaining confirmation on
+a compact full-budget sweep around $0.0226$.
 \end{abstract}
 \suppressfloats[t]
 
 \input{sections/intro}
 \input{sections/background}
+\input{sections/motivation}
 \input{sections/method}
 \input{sections/protocol}
 \input{sections/results}
-\input{sections/mechanism}
 \input{sections/systems}
 \input{sections/tuning}
 \input{sections/program}

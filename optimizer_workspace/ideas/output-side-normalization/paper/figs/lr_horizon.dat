@@ -1,0 +1,4 @@
+lr muont wt_mlp od_all od_outer_fused od_outer_unfused
+0.022627417 3.375445 3.370344 3.372426 3.372193 nan
+0.064000000 3.475512 nan nan 3.472603 nan
+0.090509668 nan nan 3.524806 nan 3.525768

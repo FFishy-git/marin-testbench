@@ -31,24 +31,27 @@ mathbb mathbf mathrm mathcal mathsf operatorname text
 frac dfrac tfrac nicefrac sqrt sum prod int lim max min log exp cos sin
 left right big Big bigg Bigg langle rangle lVert rVert lvert rvert
 alpha beta gamma delta epsilon varepsilon zeta eta theta iota kappa lambda mu
-nu xi pi rho sigma tau upsilon phi varphi chi psi omega
+nu xi pi rho sigma tau upsilon phi varphi chi psi omega ell
 Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega
 in notin subset subseteq cup cap setminus emptyset forall exists neg
 leq geq le ge neq approx equiv sim simeq propto times cdot cdots ldots dots vdots
 to mapsto rightarrow leftarrow Rightarrow Leftarrow leftrightarrow
+longleftarrow longrightarrow xrightarrow xleftarrow uparrow downarrow updownarrow
 partial nabla infty pm mp oplus otimes odot circ star ast
+bullet triangleright triangleleft varnothing mid dagger ddagger S
 quad qquad enspace thinspace noindent indent par smallskip medskip bigskip
 centering raggedright raggedleft small footnotesize scriptsize tiny
 large Large LARGE huge Huge normalsize
 toprule midrule bottomrule addlinespace cmidrule multicolumn multirow
-caption captionsetup includegraphics graphicspath
+rowcolor cellcolor arrayrulecolor
+caption captionsetup includegraphics graphicspath resizebox scalebox rotatebox
 color textcolor definecolor colorlet providecolor
 item itemize enumerate description
 setlength renewcommand topfraction hypersetup urlstyle url href nolinkurl
 interfootnotelinepenalty suppressfloats FloatBarrier
-tikz draw node fill path coordinate addplot addlegendentry nextgroupplot
-pgfplotsset usepgfplotslibrary usetikzlibrary pgfplotspointmeta
-thisrow ding phantom vcenter hbox overset underbrace boxed
+tikz draw filldraw node fill path clip foreach coordinate addplot addlegendentry nextgroupplot
+pgfplotsset usepgfplotslibrary usetikzlibrary pgfplotspointmeta pgfmathprintnumber
+thisrow ding phantom vphantom hphantom smash raisebox rule shortstack vcenter hbox overset underbrace boxed
 ifdefined pdfoutput pdftexversion fi else ifx global
 patchcmd l@section addvspace p@ plus minus
 RNum braRNum eqi brai spn stle enc dec pre heaviside hermite highlight addref

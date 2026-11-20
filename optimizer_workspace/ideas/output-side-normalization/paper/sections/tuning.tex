@@ -19,7 +19,7 @@ diagonal output-side variants. Each of the 28 trials is a self-contained
 received an identical token allowance, and ranking used the reserved held-out
 selection loss only, with C4 held back as a reporting metric.
 
-Figure~\ref{fig:lr} (left) shows the result. On this 6\%-budget schedule, the
+Figure~\ref{fig:lr}(a) shows the result. On this 6\%-budget schedule, the
 baseline's loss falls from $4.566$ at the lowest rate to $\lrMuontBest{}$ at
 $\lrMuontBestLR{}$ before rising again --- a short-horizon swing of
 \lrHeadroom{} nats. Our first screening round, covering only the three rates
@@ -29,87 +29,146 @@ produced interior optima on the short schedule.
 
 \begin{finding}[Learning-rate sensitivity dominates short-schedule differences,
 requiring full-budget tuning]
-On the 320-update schedule, moving the baseline's matrix learning rate shifts
+On the 320-update schedule, moving \taxid{MuonT}'s matrix learning rate shifts
 held-out selection loss by \lrHeadroom{} nats --- roughly \lrHeadroomRatio{}
 times the \mlpdiagselmag{}-nat fixed-rate effect at full budget. Although
-Subsection~8.3 shows that $\lrMuontBestLR{}$ over-steps the 5{,}120-update
-budget by \waveTwelveMuontSelDiffMag{} nats, the scale of learning-rate
-curvature makes independent full-budget tuning around $0.0226$ mandatory.
+Section~\ref{sec:tuning-why} shows that $\lrMuontBestLR{}$ over-steps the
+5{,}120-update budget by \waveTwelveMuontSelDiffMag{} nats, the scale of
+learning-rate curvature makes independent full-budget tuning around $0.0226$
+mandatory.
 \end{finding}
 
 \begin{figure}[t]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}
 \begin{groupplot}[
-  group style={group size=2 by 1, horizontal sep=1.7cm},
-  width=0.46\textwidth, height=6.2cm,
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
-  label style={font=\small}, tick label style={font=\footnotesize},
-  every axis plot/.append style={line width=1pt, mark size=1.9pt},
+  paperplot,
+  group style={group size=3 by 1, horizontal sep=1.45cm},
+  height=5.5cm,
 ]
 \nextgroupplot[
-  xlabel={Matrix learning rate},
-  ylabel={Final held-out selection loss},
+  width=5.45cm,
+  title={(a) 320-step screening ($0.17\text{B}$ tok.)},
+  xlabel={Matrix learning rate $\eta$},
+  ylabel={Final selection loss (nats)},
   xmode=log, log basis x=2,
   xmin=0.014, xmax=0.145, ymin=4.20, ymax=4.62,
   xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784,0.128},
   xticklabels={.016,.023,.032,.045,.064,.091,.128},
-  xticklabel style={font=\tiny, rotate=40, anchor=east},
-  legend style={at={(0.97,0.95)}, anchor=north east, font=\scriptsize,
-                draw=gray!40, fill=white, fill opacity=0.92, text opacity=1},
-  legend cell align=left,
-  title={320-update screening}, title style={font=\small},
+  xticklabel style={font=\tiny, rotate=38, anchor=east},
+  legend style={at={(0.97,0.96)}, anchor=north east, font=\tiny, inner sep=2pt},
+  every axis plot/.append style={line width=0.95pt, mark size=1.7pt},
 ]
-\addplot[color=black, mark=triangle*] table[x=lr, y=muont] {figs/lr_sweep.dat};
-\addlegendentry{MuonT (baseline)}
-\addplot[color=laPurpleLine, mark=*] table[x=lr, y=inner_outer_leftdiag] {figs/lr_sweep.dat};
-\addlegendentry{all diagonal}
-\addplot[color=laBlueLine, mark=square*] table[x=lr, y=outer_leftdiag] {figs/lr_sweep.dat};
-\addlegendentry{outer diagonal}
-\addplot[color=laOrangeLine, mark=diamond*] table[x=lr, y=outer_leftdiag_fused] {figs/lr_sweep.dat};
-\addlegendentry{fused outer}
-\draw[gray!55, dotted, line width=0.8pt]
-  (axis cs:0.02262741696,4.21) -- (axis cs:0.02262741696,4.60);
-\node[font=\tiny, text=gray!60!black, rotate=90, anchor=south east]
-  at (axis cs:0.02262741696,4.595) {recipe rate};
+\fill[famNull!10] (axis cs:0.056,4.20) rectangle (axis cs:0.102,4.62);
+\node[font=\tiny, text=famNull!90!black, align=center, anchor=north]
+  at (axis cs:0.076,4.605) {short-horizon\\ flat top};
+\addplot[color=famRef, mark=oplus*] table[x=lr, y=muont] {figs/lr_sweep.dat};
+\addlegendentry{\taxid{MuonT} ($.064$)}
+\addplot[color=famOD, mark=diamond*] table[x=lr, y=inner_outer_leftdiag] {figs/lr_sweep.dat};
+\addlegendentry{\taxid{OD-All} ($.091$)}
+\addplot[color=famAbl, mark=triangle*] table[x=lr, y=outer_leftdiag] {figs/lr_sweep.dat};
+\addlegendentry{\taxid{OD-Outer} ($.091$)}
+\addplot[color=famWT, mark=square*] table[x=lr, y=outer_leftdiag_fused] {figs/lr_sweep.dat};
+\addlegendentry{\taxid{OD-Outer-F} ($.064$)}
+\draw[pagemuted!80, densely dotted, line width=0.75pt]
+  (axis cs:0.02262741696,4.20) -- (axis cs:0.02262741696,4.62);
+\node[font=\tiny, text=pagemuted!95!black, rotate=90, anchor=south east]
+  at (axis cs:0.02262741696,4.60) {recipe $.0226$};
+
 \nextgroupplot[
-  ybar, bar width=16pt,
-  symbolic x coords={all diagonal,outer diagonal,fused outer},
-  xtick=data, xticklabel style={font=\scriptsize, rotate=20, anchor=east},
-  ylabel={$\Delta$ selection vs baseline},
-  ymin=-0.016, ymax=0.068,
+  width=5.55cm,
+  unbounded coords=discard,
+  title={(b) 5{,}120-step horizon shift ($2.68\text{B}$ tok.)},
+  xlabel={Matrix learning rate $\eta$},
+  ylabel={Full-budget late selection (nats)},
+  xmode=log, log basis x=2,
+  xmin=0.014, xmax=0.112, ymin=3.348, ymax=3.552,
   scaled y ticks=false,
+  ytick={3.36,3.40,3.44,3.48,3.52},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
-  nodes near coords={\pgfmathprintnumber[fixed, precision=3, print sign]{\pgfplotspointmeta}},
-  every node near coord/.append style={font=\tiny},
-  nodes near coords align={vertical},
-  title={5120-update transfer}, title style={font=\small},
+  xtick={0.016,0.02262741696,0.032,0.04525483392,0.064,0.09050966784},
+  xticklabels={.016,.023,.032,.045,.064,.091},
+  xticklabel style={font=\tiny, rotate=38, anchor=east},
+  legend style={at={(0.03,0.96)}, anchor=north west, font=\tiny, inner sep=2pt},
+  every axis plot/.append style={line width=0.95pt, mark size=1.9pt},
+]
+\fill[famWT!8] (axis cs:0.0155,3.348) rectangle (axis cs:0.046,3.552);
+\node[font=\tiny, text=famWT, align=center, anchor=north]
+  at (axis cs:0.027,3.545) {Item 1 sweep\\ basin};
+\addplot[color=famRef, line width=1.1pt, mark=oplus*] table[x=lr, y=muont] {figs/lr_horizon.dat};
+\addlegendentry{\taxid{MuonT}}
+\addplot[only marks, color=famWT, mark=star, mark size=2.9pt, line width=0.85pt]
+  table[x=lr, y=wt_mlp] {figs/lr_horizon.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP}} ($3.370$)}
+\addplot[color=famWT, densely dashed, mark=square*] table[x=lr, y=od_outer_fused] {figs/lr_horizon.dat};
+\addlegendentry{\taxid{OD-Outer-F}}
+\addplot[color=famOD, densely dotted, mark=diamond*] table[x=lr, y=od_all] {figs/lr_horizon.dat};
+\addlegendentry{\taxid{OD-All}}
+\addplot[only marks, color=famAbl, mark=triangle*, mark size=2.3pt]
+  table[x=lr, y=od_outer_unfused] {figs/lr_horizon.dat};
+\addlegendentry{\taxid{OD-Outer}}
+\draw[famRef!65, dashed, line width=0.55pt] (axis cs:0.02262741696,3.375445) -- (axis cs:0.066,3.375445);
+\draw[-Latex, famAbl, line width=0.95pt] (axis cs:0.064,3.377) -- (axis cs:0.064,3.471);
+\node[font=\tiny, text=famAbl!95!black, align=right, anchor=east, inner sep=1pt]
+  at (axis cs:0.061,3.424) {\textbf{$+0.1001$}\\ over-step};
+\node[font=\tiny, text=famAbl!95!black, anchor=east, inner sep=1pt]
+  at (axis cs:0.086,3.532) {$3.525$ cliff};
+
+\nextgroupplot[
+  width=4.35cm,
+  ybar,
+  title={(c) Wave-12 $\Delta$ vs.\ \taxid{MuonT}@$.064$},
+  ylabel={$\Delta$ Late selection (nats)},
+  symbolic x coords={OD-Outer-F,OD-All,OD-Outer},
+  xtick=data,
+  xticklabels={
+    {\shortstack{\taxid{OD-Outer-F}\\ {\tiny$\eta=.064$}}},
+    {\shortstack{\taxid{OD-All}\\ {\tiny$\eta=.091$}}},
+    {\shortstack{\taxid{OD-Outer}\\ {\tiny$\eta=.091$}}}
+  },
+  xticklabel style={font=\tiny},
+  ymin=-0.016, ymax=0.064,
+  enlarge x limits=0.28,
+  scaled y ticks=false,
+  ytick={-0.01,0,0.01,0.02,0.03,0.04,0.05,0.06},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2},
 ]
 \input{figs/transfer_bars}
-\draw[gray!60] (axis cs:all diagonal,0) -- (axis cs:fused outer,0);
+\draw[pagemuted!80, line width=0.55pt] (axis cs:OD-Outer-F,0) -- (axis cs:OD-Outer,0);
+\node[font=\tiny, text=famOD!95!black, align=center, anchor=south]
+  at (axis cs:OD-Outer-F,0.004) {matched\\ $\eta=.064$};
+\node[font=\tiny, text=famAbl!95!black, align=center, anchor=north]
+  at (axis cs:OD-All,-0.002) {grid-split\\ $\eta=.0905$};
 \end{groupplot}
-\end{tikzpicture}
-\caption{The tuning confound in two panels. \textbf{Left:} held-out selection
-loss against matrix learning rate on the 320-update screening schedule. All
-four families improve steeply well past the recipe rate (dotted line) before
-turning over; the baseline alone gains \lrHeadroom{} nats. Our first two
-screening rounds both selected the top of the grid they tested, which is how a
-tuning study tells you it has not found an optimum. \textbf{Right:} what
-happened when the interior screening optima were carried to the full
-5{,}120-update budget. Two of three geometries went from beating the baseline
-to losing by about $0.05$ nats --- an order of magnitude larger, and opposite in
-sign, to every effect in Section~\ref{sec:results}. Short-schedule learning-rate
-selection does not transfer.}
+\end{tikzpicture}%
+}
+\caption{Three-panel anatomy of the short-horizon tuning confound.
+\textbf{(a)} On the 320-update ($6\%$-budget) screening schedule, all four
+families improve steeply past the recipe rate ($0.0226$) onto a flat plateau at
+$0.064$--$0.0905$, where evaluation noise split two mathematically equivalent
+outer-diagonal arms across $0.064$ (\taxid{OD-Outer-F} / \fused{}) and $0.0905$
+(\taxid{OD-Outer} / \outerdiag{}, plus \taxid{OD-All}).
+\textbf{(b)} At the full 5{,}120-update ($2.68\text{B}$-token) horizon, carrying
+\taxid{MuonT} from $0.0226$ ($3.3754$) to $0.064$ ($3.4755$) \emph{degrades the
+baseline itself by $+0.1001$ nats}, while pushing \taxid{OD-All} and
+\taxid{OD-Outer} to $0.0905$ crosses the full-budget stability cliff ($3.525$);
+the true optimal basin (shaded blue) brackets $0.0226$, where \taxid{WT-MLP}
+reaches $3.3703$.
+\textbf{(c)} Resulting Wave-12 relative deltas against \taxid{MuonT}@$0.064$: at
+matched $\eta=0.064$, \taxid{OD-Outer-F} still beats \taxid{MuonT} by $-0.0029$,
+whereas the $+0.049$ and $+0.050$ deficits reflect comparing $\eta=0.0905$
+against $\eta=0.064$ past the full-budget cliff.}
 \label{fig:lr}
 \end{figure}
 
 \subsection{At their own best rates, the geometries still led --- on that schedule}
 
 At the interior optima the output-side arms retained an advantage over the
-independently tuned baseline: $-0.019633$ for all-diagonal and $-0.014299$ for
-outer-diagonal, both at $\lrBestLROuterLeftdiag{}$, and $-0.009946$ for fused
-outer at $\lrBestLROuterLeftdiagFused{}$. Taken alone, this is the paper's most
+independently tuned baseline: $-0.019633$ for \taxid{OD-All} (\alldiag{}) and
+$-0.014299$ for \taxid{OD-Outer} (\outerdiag{}), both at
+$\lrBestLROuterLeftdiag{}$, and $-0.009946$ for \taxid{OD-Outer-F} (\fused{}) at
+$\lrBestLROuterLeftdiagFused{}$. Taken alone, this is the paper's most
 favourable evidence --- larger gains than anything in Table~\ref{tab:main}, and
 obtained after giving the baseline its own best rate.
 
@@ -123,35 +182,39 @@ which means a short screening schedule is not a valid instrument for ranking
 them.
 
 \subsection{Why short-schedule transfer inverted: horizon shift and LR mismatch}
+\label{sec:tuning-why}
 
 We then ran the three screening-selected rates at the full 5{,}120-update budget
 against a same-wave baseline at its own screening-selected rate ($0.064$).
-Figure~\ref{fig:lr} (right) shows the relative deltas, and inspecting the
-\emph{absolute} losses exposes two structural reasons why the transfer failed:
+Figure~\ref{fig:lr}(b)--(c) plots both the absolute full-budget losses and the
+relative Wave-12 deltas, exposing two structural reasons why transfer failed:
 
 \begin{enumerate}
 \item \textbf{The 320-step rate ($0.064$) severely over-steps the 5{,}120-step
-  horizon, even for the baseline.} Carrying \muont{} from the recipe rate
-  $0.0226$ to its 320-step optimum $0.064$ \emph{degraded \muont{}'s own
+  horizon, even for the baseline.} Carrying \taxid{MuonT} from the recipe rate
+  $0.0226$ to its 320-step optimum $0.064$ \emph{degraded \taxid{MuonT}'s own
   full-budget late selection loss by \waveTwelveMuontSelDiff{} nats}
   (\cselWaveOneTwoMuont{} in Wave~12 versus \cselWaveOneZeroMuont{} at $0.0226$
-  in Wave~10) and worsened final C4 by \waveTwelveMuontCfourDiff{} nats. A
-  6\%-budget run naturally tolerates a $3\times$ larger step size; at 5{,}120
-  updates, $0.064$ is already well past the full-budget optimum, and the
-  recipe rate $0.0226$ was near \muont{}'s true full-budget optimum all along.
+  in Wave~10; Figure~\ref{fig:lr}b) and worsened final C4 by
+  \waveTwelveMuontCfourDiff{} nats. A 6\%-budget run naturally tolerates a
+  $3\times$ larger step size; at 5{,}120 updates, $0.064$ is already well past
+  the full-budget optimum, and the recipe rate $0.0226$ was near
+  \taxid{MuonT}'s true full-budget optimum all along.
 \item \textbf{The $+0.050$-nat candidate regressions reflect an LR-grid split across
-  equivalent equations.} In Appendix~\ref{app:arms}, \outerdiag{} and \fused{}
-  implement the \emph{exact same mathematical update}, differing only by FP32
-  product fusion ($1.4\times 10^{-7}$ relative error). On the flat top of the
-  320-step curve (Figure~\ref{fig:lr}, left), evaluation noise caused \alldiag{}
-  and \outerdiag{} to select $0.09051$ ($4\times$ recipe) while \fused{} and
-  \muont{} selected $0.064$ ($2.83\times$ recipe). Because $0.064$ was already
-  past the full-budget stability cliff, pushing two arms another $\sqrt{2}$
-  higher to $0.09051$ produced $+0.049294$ and $+0.050256$-nat regressions
-  against $0.064$, whereas \fused{} --- tested at the \emph{same} $0.064$ rate
-  as Wave-12 \muont{} --- still beat it by $-0.002909$ selection and
-  $-0.001806$ C4 nats. Moreover, our primary width-thresholded geometry
-  \mlpdiag{} was never included in this short-schedule sweep.
+  equivalent equations.} In Appendix~\ref{app:arms}, \taxid{OD-Outer}
+  (\outerdiag{}) and \taxid{OD-Outer-F} (\fused{}) implement the \emph{exact
+  same mathematical update}, differing only by FP32 product fusion
+  ($1.4\times 10^{-7}$ relative error). On the flat top of the 320-step curve
+  (Figure~\ref{fig:lr}a), evaluation noise caused \taxid{OD-All} and
+  \taxid{OD-Outer} to select $0.09051$ ($4\times$ recipe) while
+  \taxid{OD-Outer-F} and \taxid{MuonT} selected $0.064$ ($2.83\times$ recipe).
+  Because $0.064$ was already past the full-budget stability cliff, pushing two
+  arms another $\sqrt{2}$ higher to $0.09051$ produced $+0.049294$ and
+  $+0.050256$-nat regressions against $0.064$ (Figure~\ref{fig:lr}c), whereas
+  \taxid{OD-Outer-F} --- tested at the \emph{same} $0.064$ rate as Wave-12
+  \taxid{MuonT} --- still beat it by $-0.002909$ selection and $-0.001806$ C4
+  nats. Moreover, our primary width-thresholded geometry \taxid{WT-MLP}
+  (\mlpdiag{}) was never included in this short-schedule sweep.
 \end{enumerate}
 
 \begin{finding}[Short-schedule optima over-step the full budget; full-budget

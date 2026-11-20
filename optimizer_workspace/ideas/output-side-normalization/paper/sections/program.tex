@@ -1,8 +1,8 @@
 \section{Final confirmation program}
 \label{sec:program}
 
-Sections~\ref{sec:mechanism} and~\ref{sec:systems} resolved three questions that
-previously blocked a focused confirmation campaign:
+Sections~\ref{sec:motivation}, \ref{sec:mech-graft}, and~\ref{sec:systems}
+resolved three questions that previously blocked a focused confirmation campaign:
 \begin{enumerate}
 \item \textbf{Step-size versus direction (settled offline):} Checkpoint
   direction-norm audits across all 224 matrices show that \mlpdiag{} and
@@ -11,10 +11,13 @@ previously blocked a focused confirmation campaign:
   $\mechMlpdiagGraftDeg^\circ$ and $\mechLeftdiagGraftDeg^\circ$
   (Section~\ref{sec:mech-graft}).
 \item \textbf{Why width-thresholding beats dense roots (settled offline):}
-  Pre-SwiGLU Hadamard decorrelation leaves \mechOutGateExpVarLPct\% and
-  \mechOutUpExpVarLPct\% of $\|L - I\|_F^2$ on the diagonal of width-2048
-  expansion moments, whereas residual-stream width-512 moments are $97\%$
-  rotational (Section~\ref{sec:mech-hadamard}).
+  Pre-SwiGLU Hadamard decorrelation puts \motOutGateDiagAnisoMedPct\% and
+  \motOutUpDiagAnisoMedPct\% of centered moment anisotropy (\motOutGateExpVarLMedPct\%
+  and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$ on \nullall{}, rising to
+  \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% on \dense{}) on the
+  diagonal of width-2048 expansion moments, whereas residual-stream width-512
+  moments are $>99\%$ rotational on baseline trajectories ($97\%$ on \dense{};
+  Section~\ref{sec:mot-aniso}).
 \item \textbf{Step-time overhead (settled in \texttt{fast\_lag}):} Fixing
   per-step global synchronization, synchronous fallback stalls, and backward
   wrapper overhead reduces \texttt{inner\_outer\_mlpdiag\_lag} to
@@ -46,22 +49,22 @@ Experiment & What it decides & Runs \\
 \midrule
 \textbf{1. Full-budget learning-rate curve around $0.0226$.} Sweep
 $\eta \in \{0.016, 0.0226, 0.032, 0.045\}$ at the full 5{,}120 updates for
-\muont{} and \texttt{fast\_lag} \texttt{inner\_outer\_mlpdiag\_lag} (plus
-\alldiag{} at $\{0.016, 0.032\}$ reusing $0.0226$). &
+\taxid{MuonT} and \texttt{fast\_lag} \taxid{WT-MLP-Lag} (\mlpdiaglag{}, plus
+\taxid{OD-All} at $\{0.016, 0.032\}$ reusing $0.0226$). &
 Effect size and token-crossing margin under fair full-budget tuning in the
 actual optimal basin, avoiding Wave~12's $0.064 / 0.0905$ over-stepping cliff
 and measuring uncontended eight-A100 \texttt{fast\_lag} wall-clock simultaneously. & 8 \\
 \addlinespace
 \textbf{2. Same-wave matched null at the winning full-budget rate.} Execute
-\texttt{fast\_lag} \nullmlp{} at the rate selected in Item~1. &
+\texttt{fast\_lag} \taxid{Null-WT} (\nullmlp{}) at the rate selected in Item~1. &
 Exact same-source, same-rate causal attribution of geometry minus execution
 path. & 1 \\
 \addlinespace
 \textbf{3. Live norm-grafted trajectory check} and \textbf{4-step held-diagonal
 freshness ablation} at the Item~1 rate. &
 Trajectory-level confirmation of the offline checkpoint audits in
-Section~\ref{sec:mechanism} (separating residual four-step staleness from
-coordinate alignment). & 2 \\
+Sections~\ref{sec:motivation} and~\ref{sec:mech-graft} (separating residual
+four-step staleness from coordinate alignment). & 2 \\
 \addlinespace
 \textbf{4. Fresh paired-seed confirmation} on seeds 3/4/5, reserved from
 exploration, with predeclared launch-anchored time-to-target. &
@@ -90,16 +93,17 @@ budget on uncontended eight-GPU nodes.
 
 \subsection{Remaining offline curvature check}
 
-While Table~\ref{tab:mechanism} settled covariance structure and direction
-norms, one theoretical probe remains available at zero training cost: testing
-whether $B \otimes C$ acts as a Kronecker curvature model here. On a reserved
-token pool, form fresh empirical moments $\widehat C = N^{-1}\sum_j x_j x_j^{\Tr}$
-and $\widehat B = N^{-1}\sum_j \delta_j \delta_j^{\Tr}$ and compare the true
+While Table~\ref{tab:motivation} and Section~\ref{sec:mech-graft} settled
+covariance structure and direction norms, one theoretical probe remains available
+at zero training cost: testing whether $B \otimes C$ acts as a Kronecker
+curvature model here. On a reserved token pool, form fresh empirical moments
+$\widehat C = N^{-1}\sum_j x_j x_j^{\Tr}$ and
+$\widehat B = N^{-1}\sum_j \delta_j \delta_j^{\Tr}$ and compare the true
 empirical quadratic $N^{-1}\sum_j (\delta_j^{\Tr} D x_j)^2$ against the factored
 trace $\tr(\widehat B D \widehat C D^{\Tr})$ across unit-Frobenius directions
 $D$. Agreement in directional rankings would license a curvature interpretation;
 disagreement would localize cross-token coupling without altering the
-coordinate-alignment mechanism established in Section~\ref{sec:mech-hadamard}.
+coordinate-alignment mechanism established in Section~\ref{sec:mot-aniso}.
 
 \subsection{What we would not run}
 \label{sec:nonprogram}

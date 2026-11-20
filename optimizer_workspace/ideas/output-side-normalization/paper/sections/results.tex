@@ -1,60 +1,104 @@
 \section{Results}
 \label{sec:results}
 
-Table~\ref{tab:main} is the study's core measurement: every seed-0 arm against
-the seed-matched baseline, on the held-out selection metric, the external C4
-set, and the dense paired training statistic, with its step-time and memory
-cost. Figure~\ref{fig:plane} plots the same arms in the plane that matters for
-deciding whether any of this is worth doing.
+Table~\ref{tab:main} reports the core seed-0 comparison across all six taxonomic
+families against the seed-matched \taxid{MuonT} baseline, separating raw
+held-out selection deltas from \textbf{net-of-null geometry deltas} alongside
+external C4, paired final-window training deltas, and legacy-to-\texttt{fast\_lag}
+step-time and memory profiles. Figure~\ref{fig:plane} pairs the resulting
+cost--quality Pareto frontier with a multi-metric causal attribution plot across
+all candidates and input-degradation controls.
 
 \begin{table}[t]
 \centering
-\caption{Seed-0 arms against the seed-matched input-side baseline, 0.5M-token
-batch, full 2.68B-token budget. Deltas are means over the 11 held-out
-evaluations in the second half of the budget; negative is better. $\Delta$ train
-is the mean per-update paired difference over the final 536{,}870{,}912 tokens,
-with its autocorrelation-inflated standard error. Step overhead is the median
-over updates 2049--4096. Rows are ordered by selection delta. The two
-\textbf{null} rows execute the candidate path and apply identity factors: they
-are the reference any geometry claim must beat, not the baseline.}
+\caption{Master seed-0 comparison across the six taxonomic families of
+Table~\ref{tab:arms} ($0.5\text{M}$-token batch, full $2.68\text{B}$-token
+budget; negative deltas are better). Held-out deltas average the 11 evaluations
+in the second half of training; $\Delta\text{Train}\pm\text{SE}$ is the
+autocorrelation-inflated paired per-update difference over the final
+$536{,}870{,}912$ tokens. \textbf{Net $\Delta$Sel} subtracts each family's
+matched execution-path null (\taxid{Null-WT} for width-$512$-dense arms;
+\taxid{Null-Dense} for full-dense arms and conservative ${}^{\S}$ bounds where
+$-0.0039$ holds against \taxid{Null-WT}; same-wave \taxid{Null-OD} for
+Wave-10 upstream-product ${}^{\dagger}$ rows, where legacy-product \fused{} is
+$-0.0033$ raw at $+8.8\%$ step). \textbf{Step \%} reports steady-step overhead
+over \taxid{MuonT}, with $\text{legacy}\to\texttt{fast\_lag}$ calibrated A100
+shifts from Section~\ref{sec:systems}. Shaded rows mark the Pareto-optimal
+family.}
 \label{tab:main}
-\footnotesize\setlength{\tabcolsep}{3pt}
+\scriptsize\setlength{\tabcolsep}{3.0pt}
 \input{results/table_main}
 \end{table}
 
 \begin{figure}[t]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}
-\begin{axis}[
-  width=0.88\textwidth, height=8.4cm,
-  xlabel={Median step-time overhead versus input-side MuonT (\%)},
-  ylabel={$\Delta$ held-out selection loss (nats)},
-  xmin=-6, xmax=52, ymin=-0.0088, ymax=0.021,
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
-  every axis plot/.append style={mark size=2.1pt},
+\begin{groupplot}[
+  paperplot,
+  group style={group size=2 by 1, horizontal sep=2.35cm},
+  height=7.5cm,
+]
+\nextgroupplot[
+  width=7.25cm,
+  title={(a) Cost--quality Pareto plane \& \texttt{fast\_lag} shift},
+  xlabel={Step-time overhead versus \taxid{MuonT} (\%)},
+  ylabel={$\Delta$ Held-out selection loss (nats)},
+  xmin=-5.5, xmax=44.5, ymin=-0.0082, ymax=0.0108,
   scaled y ticks=false,
+  ytick={-0.008,-0.006,-0.004,-0.002,0,0.002,0.004,0.006,0.008,0.010},
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
-  legend columns=3,
-  legend style={at={(0.5,-0.17)}, anchor=north,
-                font=\footnotesize, draw=gray!40, fill=white, column sep=8pt},
-  label style={font=\small}, tick label style={font=\footnotesize},
+  legend columns=2,
+  legend style={at={(0.5,-0.17)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
 ]
 \input{figs/plane_plots}
-\draw[gray!55, dashed] (axis cs:-6,0) -- (axis cs:50,0);
-\draw[laOrangeLine!70, dashed] (axis cs:-6,-0.001286) -- (axis cs:50,-0.001286);
-\node[font=\tiny, text=laOrangeLine!80!black, anchor=west]
-  at (axis cs:-5.5,-0.00205) {null level};
-\end{axis}
-\end{tikzpicture}
-\caption{Cost and quality for the seed-0 arms. Down and to the left is better.
-The dashed orange line is what a matched null achieves with \emph{identity}
-factors, i.e.\ with no output geometry at all: it is the real zero for this
-plot, and four of the eleven candidates do not clearly clear it. The cheapest
-candidate that does, \alldiag{} at $+10.4$\% step time, retains about
-two-thirds of the leading arm's gain for less than half its overhead. Nothing
-appears in the lower-left quadrant, because no arm on this path is cheaper than
-the baseline.}
+
+\nextgroupplot[
+  width=6.95cm,
+  title={(b) Multi-metric causal attribution},
+  xlabel={$\Delta$ Loss versus \taxid{MuonT} (nats; left is better)},
+  xmin=-0.0078, xmax=0.0118,
+  ymin=-0.65, ymax=12.65,
+  scaled x ticks=false,
+  xtick={-0.006,-0.003,0,0.003,0.006,0.009},
+  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  ytick={0,1,2,3,4,5,6,7,8,9,10,11,12},
+  yticklabels={
+    {\taxid{Abl-BothDiag}},
+    {\taxid{Abl-OutOnly}},
+    {\taxid{Muon}},
+    {\taxid{Abl-DownSwap}},
+    {\taxid{Abl-DownOnly}},
+    {\taxid{OD-Outer}$^{\dagger}$},
+    {\taxid{Abl-No2048}},
+    {\taxid{Abl-OuterDense}},
+    {\textbf{\taxid{OD-All}}},
+    {\taxid{DT-All}},
+    {\taxid{DT-All-Lag}},
+    {\textbf{\taxid{WT-MLP-Lag}}},
+    {\textbf{\taxid{WT-MLP}}}
+  },
+  yticklabel style={font=\tiny},
+  legend columns=2,
+  legend style={at={(0.5,-0.17)}, anchor=north, font=\tiny, column sep=4pt, row sep=0.5pt},
+]
+\input{figs/attribution_plots}
+\end{groupplot}
+\end{tikzpicture}%
+}
+\caption{Master cost--quality and causal-attribution summary across all
+taxonomic families. \textbf{(a)} Step-time overhead versus held-out selection
+delta (down and left is better; \taxid{Abl-BothDiag} at $+0.0180$ sits off-scale
+above the arrow). The shaded region below the dashed ochre line ($-0.0013$)
+marks net-of-null improvement; dashed arrows and starred points show the
+calibrated \texttt{fast\_lag} shift moving \taxid{WT-MLP-Lag} from $+18.0\%$ to
+$+1.8\%$ and \taxid{DT-All-Lag} from $+25.6\%$ to $+3.1\%$ over \taxid{MuonT}
+(Section~\ref{sec:systems}). \textbf{(b)} Decomposition of raw selection deltas
+into matched-null execution-path share (ochre) plus net geometry gain (family
+fill) across positive two-sided candidates (above dashed divider) versus
+input-removal/degradation controls (below divider), overlaid with external
+$\Delta\text{C4}$ diamonds and paired final-window $\Delta\text{Train}\pm
+2\,\text{SE}$.}
 \label{fig:plane}
 \end{figure}
 
@@ -63,19 +107,20 @@ the baseline.}
 
 The comparison that carries this claim is between two arms applying
 \emph{identical} output factors to all 224 matrices, differing only in whether
-the input factors stay. \dense{} keeps them and improves selection loss by
-$0.005782$ nats; \leftall{} removes them and is $0.008707$ nats \emph{worse}
-than the baseline. The swing between the two is 0.0145 nats, far larger than
-either arm's distance from the baseline.
+the input factors stay. \taxid{DT-All} (\dense{}) keeps them and improves
+selection loss by $0.005782$ nats; \taxid{Abl-OutOnly} (\leftall{}) removes them
+and is $0.008707$ nats \emph{worse} than the baseline. The swing between the two
+is 0.0145 nats, far larger than either arm's distance from the baseline.
 
 \begin{finding}[The two sides are not interchangeable]
 The same output-side factors help by $0.0058$ nats when added to input
-whitening and hurt by $0.0087$ nats when substituted for it. The arm that
-drops input factors loses more than the arm that adds output factors gains, so
-the output moment is not a cheaper restatement of the input moment's
-information. On the narrow down-projection-only arms the same pattern holds:
-adding an outer output factor gives $-0.001370$, while replacing the
-down-projection input factors with output ones gives $+0.002512$.
+whitening (\taxid{DT-All}) and hurt by $0.0087$ nats when substituted for it
+(\taxid{Abl-OutOnly}). The arm that drops input factors loses more than the arm
+that adds output factors gains, so the output moment is not a cheaper
+restatement of the input moment's information. On the narrow
+down-projection-only arms the same pattern holds: adding an outer output factor
+(\taxid{Abl-DownOnly}) gives $-0.001370$, while replacing the down-projection
+input factors with output ones (\taxid{Abl-DownSwap}) gives $+0.002512$.
 \end{finding}
 
 This asymmetry has a plausible structural reading that our data supports but
@@ -84,12 +129,12 @@ which is what the orthogonalization in \eqref{eq:ns} then acts on; the output
 moment rescales the \emph{codomain} after the fact. Removing the first leaves
 $\Nten$ operating on an unconditioned matrix, and no amount of output-side
 rescaling recovers that. Consistent with this, the fully diagonal arm
-\texttt{inner\_outer\_all\_diag} --- the only arm that degrades the \emph{input}
-side as well --- is the worst arm in the study at $+0.018011$, worse than plain
-Muon, despite applying output factors in the same places as the leading arm.
-Whatever value the output side has here, it is conditional on a well-conditioned
-input side, and cheapening the input side is a much more expensive mistake than
-cheapening the output side.
+\taxid{Abl-BothDiag} (\bothdiag{}) --- the only arm that degrades the
+\emph{input} side as well --- is the worst arm in the study at $+0.018011$,
+worse than plain \taxid{Muon}, despite applying output factors in the same
+places as the leading arm. Whatever value the output side has here, it is
+conditional on a well-conditioned input side, and cheapening the input side is a
+much more expensive mistake than cheapening the output side.
 
 Figure~\ref{fig:traindelta} shows these orderings are not artifacts of the
 evaluation window. The paired training-loss differences separate within the
@@ -99,50 +144,45 @@ first 200M tokens and keep their sign for the remaining 2.5B.
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.88\textwidth, height=7.4cm,
+  paperplot,
+  width=0.88\textwidth, height=6.8cm,
+  title={Paired per-update training-loss trajectories across taxonomic families},
   xlabel={Tokens processed (billions)}, ylabel={Paired $\Delta$ training loss (nats)},
   xmin=0, xmax=2.69, ymin=-0.020, ymax=0.016,
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
   scaled y ticks=false,
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
   legend columns=2,
-  legend style={at={(0.5,-0.19)}, anchor=north,
-                font=\scriptsize, draw=gray!40, fill=white, column sep=6pt,
-                row sep=1pt},
-  legend cell align=left,
-  label style={font=\small}, tick label style={font=\footnotesize},
-  every axis plot/.append style={line width=0.9pt},
+  legend style={at={(0.5,-0.19)}, anchor=north, font=\scriptsize, column sep=8pt, row sep=1pt},
+  every axis plot/.append style={line width=0.95pt},
 ]
-\addplot[color=laBlueLine] table[x=tokens, y=inner_outer_mlpdiag] {figs/train_delta.dat};
-\addlegendentry{mlpdiag (leading)}
-\addplot[color=laBlueLine!55, densely dashed] table[x=tokens, y=inner_outer_all] {figs/train_delta.dat};
-\addlegendentry{dense, both widths}
-\addplot[color=laPurpleLine] table[x=tokens, y=inner_outer_leftdiag] {figs/train_delta.dat};
-\addlegendentry{all diagonal}
-\addplot[color=laOrangeLine] table[x=tokens, y=null_all] {figs/train_delta.dat};
-\addlegendentry{null (dense)}
-\addplot[color=laOrangeLine!60, densely dotted] table[x=tokens, y=null_mlpdiag] {figs/train_delta.dat};
-\addlegendentry{null (mlpdiag)}
-\addplot[color=crossred] table[x=tokens, y=left_all] {figs/train_delta.dat};
-\addlegendentry{output only}
-\addplot[color=crossred!60, densely dashed] table[x=tokens, y=inner_outer_all_diag] {figs/train_delta.dat};
-\addlegendentry{both sides diagonal}
-\addplot[color=black!45, dash dot] table[x=tokens, y=muon] {figs/train_delta.dat};
-\addlegendentry{Muon}
-\draw[gray!60, dashed] (axis cs:0,0) -- (axis cs:2.69,0);
+\fill[famWT!5] (axis cs:0,-0.020) rectangle (axis cs:2.69,0);
+\addplot[color=famWT, line width=1.15pt] table[x=tokens, y=inner_outer_mlpdiag] {figs/train_delta.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP}} (\mlpdiag{})}
+\addplot[color=famDT, densely dashed] table[x=tokens, y=inner_outer_all] {figs/train_delta.dat};
+\addlegendentry{\taxid{DT-All} (\dense{})}
+\addplot[color=famOD, line width=1.05pt] table[x=tokens, y=inner_outer_leftdiag] {figs/train_delta.dat};
+\addlegendentry{\textbf{\taxid{OD-All}} (\alldiag{})}
+\addplot[color=famNull] table[x=tokens, y=null_all] {figs/train_delta.dat};
+\addlegendentry{\taxid{Null-Dense} (\nullall{})}
+\addplot[color=famNull!75, densely dotted, line width=1.05pt] table[x=tokens, y=null_mlpdiag] {figs/train_delta.dat};
+\addlegendentry{\taxid{Null-WT} (\nullmlp{})}
+\addplot[color=famAbl] table[x=tokens, y=left_all] {figs/train_delta.dat};
+\addlegendentry{\taxid{Abl-OutOnly} (\leftall{})}
+\addplot[color=famAbl!70, densely dashed] table[x=tokens, y=inner_outer_all_diag] {figs/train_delta.dat};
+\addlegendentry{\taxid{Abl-BothDiag} (\bothdiag{})}
+\addplot[color=famRef!70, dash dot] table[x=tokens, y=muon] {figs/train_delta.dat};
+\addlegendentry{\taxid{Muon} (\texttt{muon})}
+\draw[pagemuted!80, dashed, line width=0.6pt] (axis cs:0,0) -- (axis cs:2.69,0);
 \end{axis}
 \end{tikzpicture}
-\caption{Paired per-update training-loss difference against the seed-matched
-baseline, averaged in 64-update blocks. Because arms consume identical tokens
-in identical order, these differences are exact pairings and resolve effects
-two orders of magnitude below the sparse evaluations' noise. The orderings
-established in the first 200M tokens persist to the end of the budget. Note
-that the matched nulls (orange) end below zero despite applying no output
-factors at all: that offset is execution path, not geometry, and it is the
-quantity Section~\ref{sec:null} subtracts. Their shape differs from the
-candidates' --- they start slightly above zero and drift down, while the
-candidates open far below it and relax upward.}
+\caption{Paired per-update training-loss difference against seed-matched
+\taxid{MuonT}, averaged in 64-update blocks. Exact token pairing resolves
+effects two orders of magnitude below sparse evaluation noise. Two-sided
+geometries (\taxid{WT-MLP}, \taxid{DT-All}, \taxid{OD-All}) separate below zero
+within the first $0.2\text{B}$ tokens and sustain a steady negative offset,
+whereas matched nulls (\taxid{Null-Dense}, \taxid{Null-WT}, ochre) start slightly
+positive and drift gradually downward --- an execution-path signature subtracted
+in Table~\ref{tab:main} and Section~\ref{sec:null}.}
 \label{fig:traindelta}
 \end{figure}
 
@@ -154,22 +194,24 @@ pooled moments, \verb|reduce_scatter|, root computation, host refresh,
 scheduling --- and then apply identity factors. If output geometry were the only
 thing the candidates changed, the nulls would land on the baseline. They do not.
 
-\nullall{} improves selection loss by $0.001286$ and C4 by $0.002298$ nats over
-the baseline while applying no output factors at all. That is \nullsharedense\%
-of the dense arm's selection gain and 36\% of its C4 gain. \nullmlp{} improves
-C4 by $0.002043$, which is \nullsharemlpcfour\% of the leading arm's C4 gain. The
-honest attribution to geometry is therefore candidate minus null:
-$-0.004496$ selection and $-0.004081$ C4 for the dense arm, and $-0.005935$
-selection and $-0.004035$ C4 for the leading arm.
+\taxid{Null-Dense} (\nullall{}) improves selection loss by $0.001286$ and C4 by
+$0.002298$ nats over the baseline while applying no output factors at all. That
+is \nullsharedense\% of \taxid{DT-All}'s selection gain and 36\% of its C4
+gain. \taxid{Null-WT} (\nullmlp{}) improves C4 by $0.002043$, which is
+\nullsharemlpcfour\% of \taxid{WT-MLP}'s C4 gain. The honest attribution to
+geometry is therefore candidate minus null: $-0.004496$ selection and
+$-0.004081$ C4 for \taxid{DT-All}, and $-0.005935$ selection and $-0.004035$ C4
+for \taxid{WT-MLP}.
 
 \begin{finding}[The control is not neutral, and it changes a conclusion]
 Running the candidate's code path with identity factors recovers 22--36\% of
 the apparent improvement. This is not a small correction to an effect of
 0.006 nats. It is large enough to have inverted this project's first
-conclusion: the arm favored after the first wave, \texttt{outer\_left\_down},
-improved selection loss by $0.001370$, which is \emph{within} the null
-level later measured at $0.001286$. Its apparent advantage was substantially
-execution path, and nothing in the first wave could have revealed that.
+conclusion: the arm favored after the first wave, \taxid{Abl-DownOnly}
+(\outerdown{}), improved selection loss by $0.001370$, which is \emph{within}
+the null level later measured at $0.001286$. Its apparent advantage was
+substantially execution path, and nothing in the first wave could have revealed
+that.
 \end{finding}
 
 We do not fully know what the null's gain \emph{is}. The candidate path differs
@@ -182,19 +224,19 @@ the candidates have different temporal shapes. Both nulls begin the run
 \emph{worse} than the baseline ($+0.001717$ and $+0.001220$ nats in the first
 536M-token window) and drift to a small advantage by the final window, whereas
 the candidates open with a large advantage that decays toward a stable offset
-(the dense arm goes from $-0.015940$ to $-0.004975$; see
+(\taxid{DT-All} goes from $-0.015940$ to $-0.004975$; see
 Table~\ref{tab:windows}). A path artifact that accumulates and a geometry
 effect that front-loads are at least distinguishable in shape, which is weak
-evidence that they have different origins. And a third null, run in a later
-systems wave with upstream arithmetic, independently shows the same end-of-run
-effect at $-0.002010$ selection, so this is a property of adding the machinery
-rather than a one-run artifact.
+evidence that they have different origins. And a third null, \taxid{Null-OD}
+(\nullod{}), run in a later systems wave with upstream arithmetic, independently
+shows the same end-of-run effect at $-0.002010$ selection, so this is a property
+of adding the machinery rather than a one-run artifact.
 
-One limitation is ours to own: \nullmlp{} ran in a different wave from
-\mlpdiag{}, so their difference also spans a change in host scheduling and
-source revision. The dense pair is same-wave and is the cleaner measurement.
-Closing this is the first item in Section~\ref{sec:program}, and it costs one
-run.
+One limitation is ours to own: \taxid{Null-WT} ran in a different wave from
+\taxid{WT-MLP}, so their difference also spans a change in host scheduling and
+source revision. The \taxid{DT-All} / \taxid{Null-Dense} pair is same-wave and
+is the cleaner measurement. Closing this is the first attribution item in
+Section~\ref{sec:program}, and it costs one run.
 
 \subsection{Freshness beats richness}
 \label{sec:freshness}
@@ -204,12 +246,13 @@ eigendecomposition work (Section~\ref{sec:method-cost}), so the obvious economy
 is to attack them. What we did not expect is that attacking them \emph{improves}
 the loss.
 
-\mlpdiag{} replaces exactly those two dense roots with elementwise diagonals and
-beats the fully dense arm on selection loss ($-0.006584$ against $-0.005782$)
-while costing 17 percentage points less per step. The two arms that retain dense
-width-2048 roots, \dense{} and \texttt{outer\_left\_all}, are the two slowest
+\taxid{WT-MLP} (\mlpdiag{}) replaces exactly those two dense roots with
+elementwise diagonals and beats \taxid{DT-All} (\dense{}) on selection loss
+($-0.006584$ against $-0.005782$) while costing 17 percentage points less per
+step on the legacy runner. The two arms that retain dense width-2048 roots,
+\taxid{DT-All} and \taxid{Abl-OuterDense} (\outerall{}), are the two slowest
 arms in the study. Meanwhile dropping those factors entirely, in
-\texttt{inner\_outer\_hidden}, reaches only $-0.003068$ --- worse than
+\taxid{Abl-No2048} (\noexp{}), reaches only $-0.003068$ --- worse than
 diagonalizing them.
 
 \begin{finding}[Scale is worth tracking; rotation at this refresh rate is not]
@@ -224,72 +267,79 @@ Figure~\ref{fig:freshness} is the direct evidence, taken from the runs' own
 counters rather than inferred. The dense-output arms sit at a mean maximum basis
 age near three updates against a nominal four-update refresh cadence, and
 accumulate roughly 32{,}000 exact-eigendecomposition fallbacks over a run, about
-six of 224 statistics per update. The fully diagonal arm logs an age of zero and
-\emph{no} fallbacks, because elementwise powers of the current moment need no
-basis at all. The dense roots are thus routinely approximations of a moment
-that has already moved, while the EMA's own averaging window is only about 16
-updates, so a three-update-old basis is a meaningful fraction of the statistic's
-memory.
+six of 224 statistics per update. The pure-diagonal arm (\taxid{OD-All}) logs an
+age of zero and \emph{no} fallbacks, because elementwise powers of the current
+moment need no basis at all. The dense roots are thus routinely approximations
+of a moment that has already moved, while the EMA's own averaging window is only
+about 16 updates, so a three-update-old basis is a meaningful fraction of the
+statistic's memory.
 
 \begin{figure}[t]
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}
 \begin{groupplot}[
-  group style={group size=2 by 1, horizontal sep=1.5cm},
-  width=0.47\textwidth, height=5.4cm,
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
-  label style={font=\small}, tick label style={font=\footnotesize},
-  legend style={font=\scriptsize, draw=gray!40, fill=white,
-                fill opacity=0.92, text opacity=1},
-  every axis plot/.append style={line width=0.9pt},
+  paperplot,
+  group style={group size=2 by 1, horizontal sep=1.7cm},
+  width=7.1cm, height=5.2cm,
+  every axis plot/.append style={line width=0.95pt},
 ]
-\nextgroupplot[xlabel={Tokens (billions)}, ylabel={Max output basis age (updates)},
-  xmin=0, xmax=2.69, ymin=-0.2, ymax=5,
-  legend style={at={(0.98,0.04)}, anchor=south east}]
-\addplot[color=laBlueLine!55] table[x=tokens, y=inner_outer_all_age] {figs/freshness.dat};
-\addlegendentry{dense output}
-\addplot[color=laBlueLine] table[x=tokens, y=inner_outer_mlpdiag_age] {figs/freshness.dat};
-\addlegendentry{dense at 512 only}
-\addplot[color=laPurpleLine] table[x=tokens, y=inner_outer_leftdiag_age] {figs/freshness.dat};
-\addlegendentry{all diagonal}
+\nextgroupplot[
+  title={(a) Max output eigenbasis age in use},
+  xlabel={Tokens processed (billions)}, ylabel={Max output basis age (updates)},
+  xmin=0, xmax=2.69, ymin=-0.2, ymax=5.1,
+  legend style={at={(0.97,0.06)}, anchor=south east},
+]
+\addplot[color=famDT, densely dashed] table[x=tokens, y=inner_outer_all_age] {figs/freshness.dat};
+\addlegendentry{\taxid{DT-All} (\dense{})}
+\addplot[color=famWT, line width=1.1pt] table[x=tokens, y=inner_outer_mlpdiag_age] {figs/freshness.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP}} (\mlpdiag{})}
+\addplot[color=famOD, line width=1.1pt] table[x=tokens, y=inner_outer_leftdiag_age] {figs/freshness.dat};
+\addlegendentry{\textbf{\taxid{OD-All}} (\alldiag{})}
 
-\nextgroupplot[xlabel={Tokens (billions)}, ylabel={Cumulative exact fallbacks},
-  xmin=0, xmax=2.69, ymin=0, ymax=34000,
+\nextgroupplot[
+  title={(b) Cumulative Rank-0 exact \texttt{eigh} fallbacks},
+  xlabel={Tokens processed (billions)}, ylabel={Cumulative exact fallbacks},
+  xmin=0, xmax=2.69, ymin=0, ymax=34500,
   scaled y ticks=false, yticklabel style={/pgf/number format/fixed},
-  legend style={at={(0.03,0.97)}, anchor=north west}]
-\addplot[color=laBlueLine!55] table[x=tokens, y=inner_outer_all_fb] {figs/freshness.dat};
-\addlegendentry{dense output}
-\addplot[color=laBlueLine] table[x=tokens, y=inner_outer_mlpdiag_fb] {figs/freshness.dat};
-\addlegendentry{dense at 512 only}
-\addplot[color=laPurpleLine] table[x=tokens, y=inner_outer_leftdiag_fb] {figs/freshness.dat};
-\addlegendentry{all diagonal}
+  legend style={at={(0.03,0.96)}, anchor=north west},
+]
+\addplot[color=famDT, densely dashed] table[x=tokens, y=inner_outer_all_fb] {figs/freshness.dat};
+\addlegendentry{\taxid{DT-All} ($31{,}759$)}
+\addplot[color=famWT, line width=1.1pt] table[x=tokens, y=inner_outer_mlpdiag_fb] {figs/freshness.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP}} ($\motFbRankZeroMlpdiagOut$)}
+\addplot[color=famOD, line width=1.1pt] table[x=tokens, y=inner_outer_leftdiag_fb] {figs/freshness.dat};
+\addlegendentry{\textbf{\taxid{OD-All}} ($0$)}
 \end{groupplot}
-\end{tikzpicture}
-\caption{Why the cheap approximation wins. Left: the maximum age of an output
-eigenbasis in use, averaged over 64-update blocks. Dense-output arms hold bases
-about three updates old against a four-update refresh target, while the
-diagonal arm recomputes exactly every update and logs age zero. Right:
-cumulative exact-eigendecomposition fallbacks, which occur when the cached
-basis cannot be repaired within tolerance --- roughly 32{,}000 per run with
-dense output factors, 20{,}000 when only the width-512 roots stay dense, and
-none at all when every output factor is diagonal.}
+\end{tikzpicture}%
+}
+\caption{Why width-thresholded and diagonal approximations outperform full dense
+roots. \textbf{(a)} Maximum age of an output eigenbasis in use (64-update block
+means): \taxid{DT-All} and \taxid{WT-MLP} hold cached bases $\approx 3$ updates
+old against a 4-update host refresh target, whereas \taxid{OD-All} recomputes
+exact diagonal powers at age zero. \textbf{(b)} Cumulative Rank-0 exact
+\texttt{cuSOLVER eigh} fallbacks: diagonalizing width-$2048$ outputs in
+\taxid{WT-MLP} cuts fallbacks by \motFbMlpdiagDropPct\%, and \taxid{OD-All}
+eliminates them completely.}
 \label{fig:freshness}
 \end{figure}
 
-Two observations clarify this result, and Section~\ref{sec:mechanism} resolves
-the underlying mechanism directly on the saved checkpoints. First, richness and
-freshness vary together in Table~\ref{tab:main}, because diagonal factors are
-both coordinate-restricted and age-zero; auditing the width-2048 pre-SwiGLU
-moments $B_{\text{gate}}$ and $B_{\text{up}}$ in Section~\ref{sec:mech-hadamard}
-shows that their off-diagonal correlations already sit at the finite-sample
-noise floor (\mechOutGateCorrRmsMed{} and \mechOutUpCorrRmsMed{}), so diagonal
-scaling captures \mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% of
-$\|L - I\|_F^2$ without estimating noisy off-diagonal rotations. Second, a later
-wave pinned input-basis installation to a fixed age of one update, verifying
-zero discarded refreshes across all four of its arms, and the diagonal-output
-arms still beat the baseline by $0.0022$--$0.0038$ nats of final C4 there,
-removing variable \emph{input} staleness as a confound.
+Two observations clarify this result in light of Section~\ref{sec:motivation}.
+First, richness and freshness vary together in Table~\ref{tab:main}, because
+diagonal factors are both coordinate-restricted and age-zero. As established on
+the baseline trajectory in Section~\ref{sec:mot-aniso}, the width-2048
+pre-SwiGLU moments $B_{\text{gate}}$ and $B_{\text{up}}$ already sit at the
+single-update correlation noise floor (\motOutGateCorrRmsMed{} and
+\motOutUpCorrRmsMed{}), so exact diagonal scaling captures
+\motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$
+(\mechOutGateExpVarLPct\% and \mechOutUpExpVarLPct\% under active two-sided
+preconditioning; Section~\ref{sec:mech-graft}) while cutting Rank-0 exact
+\texttt{eigh} fallbacks by \motFbMlpdiagDropPct\% (from $\motFbRankZeroOut$ to
+$\motFbRankZeroMlpdiagOut$). Second, a later wave pinned input-basis
+installation to a fixed age of one update, verifying zero discarded refreshes
+across all four of its arms, and the diagonal-output arms still beat the
+baseline by $0.0022$--$0.0038$ nats of final C4 there, removing variable
+\emph{input} staleness as a confound.
 
 The latency variants point the same way without resolving it. Lagging the dense
 left factors by one update costs $+0.000113$ nats of paired training loss
@@ -314,37 +364,34 @@ Figure~\ref{fig:seeds} shows the spread against the null level.
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=0.78\textwidth, height=4.6cm,
-  xlabel={Seed}, ylabel={$\Delta$ C4 (nats)},
-  xtick={0,1,2}, xticklabels={0 (selection seed), 1, 2},
-  xmin=-0.5, xmax=2.5, ymin=-0.0075, ymax=0.0012,
-  grid=major, grid style={gray!18},
-  axis line style={gray!55}, tick align=outside,
+  paperplot,
+  width=0.76\textwidth, height=4.6cm,
+  title={Cross-seed replication of \taxid{WT-MLP} (\mlpdiag{}) on fixed Paloma C4},
+  xlabel={Seed}, ylabel={$\Delta$ C4 versus seed-matched \taxid{MuonT} (nats)},
+  xtick={0,1,2}, xticklabels={Seed 0 (selection), Seed 1, Seed 2},
+  xmin=-0.45, xmax=2.45, ymin=-0.0074, ymax=0.0012,
   scaled y ticks=false,
   yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
-  label style={font=\small}, tick label style={font=\footnotesize},
   legend columns=2,
-  legend style={at={(0.99,0.97)}, anchor=north east, font=\scriptsize,
-                draw=gray!40, fill=white, column sep=6pt},
+  legend style={at={(0.98,0.96)}, anchor=north east, column sep=6pt},
 ]
-\addplot[only marks, mark=*, mark size=2.6pt, color=laBlueLine]
+\fill[famWT!5] (axis cs:-0.45,-0.0074) rectangle (axis cs:2.45,-0.002043);
+\addplot[only marks, mark=*, mark size=2.6pt, color=famWT]
   table[x expr=\thisrow{seed}, y=dc4_final] {figs/seeds.dat};
-\addlegendentry{final C4}
-\addplot[only marks, mark=square*, mark size=2.3pt, color=laPurpleLine]
+\addlegendentry{\taxid{WT-MLP} final C4}
+\addplot[only marks, mark=diamond*, mark size=2.6pt, color=famOD]
   table[x expr=\thisrow{seed}, y=dc4_late] {figs/seeds.dat};
-\addlegendentry{late-11 mean C4}
-\draw[gray!60, dashed] (axis cs:-0.5,0) -- (axis cs:2.5,0);
-\draw[laOrangeLine!75, dashed] (axis cs:-0.5,-0.002043) -- (axis cs:2.5,-0.002043);
-\node[font=\tiny, text=laOrangeLine!80!black, anchor=west]
-  at (axis cs:-0.45,-0.00255) {matched-null C4 level};
+\addlegendentry{\taxid{WT-MLP} late-11 mean C4}
+\draw[pagemuted!75, dashed, line width=0.55pt] (axis cs:-0.45,0) -- (axis cs:2.45,0);
+\draw[famNull!85, densely dashed, line width=0.7pt] (axis cs:-0.45,-0.002043) -- (axis cs:2.45,-0.002043);
+\node[font=\tiny, text=famNull!90!black, anchor=west]
+  at (axis cs:-0.40,-0.00255) {\taxid{Null-WT} C4 floor ($-0.0020$)};
 \end{axis}
 \end{tikzpicture}
-\caption{The leading geometry on three seeds, measured on the fixed C4 set.
-The effect is negative on every seed but varies by nearly a factor of two, and
-seed 0 --- the largest --- is also the seed on which the geometry was selected.
-The orange line is the matched null's C4 gain: on seeds 1 and 2 the candidate's
-margin over that control is roughly 0.002 nats, which is the honest size of the
-replicated geometry effect.}
+\caption{Cross-seed replication of \taxid{WT-MLP} (\mlpdiag{}) on the fixed
+external C4 set. The delta is negative on every seed ($-0.0061$, $-0.0042$, and
+$-0.0040$ late-11 mean C4), clearing the \taxid{Null-WT} C4 floor ($-0.0020$,
+dashed ochre) by roughly $0.002$ nats on the two fresh seeds.}
 \label{fig:seeds}
 \end{figure}
 
@@ -401,3 +448,103 @@ stalls, and per-linear custom-op backward wrappers reduces
 over vanilla Muon ($+\sysFastMlpVsMuontLo\%$--$\sysFastMlpVsMuontHi\%$ over
 \muont{}), crossing the wall-clock break-even threshold (Appendix~\ref{app:numerics}
 separately reports a seven-step Newton--Schulz plateau shared by all arms).
+
+\subsection{Step-norm invariance and directional rotation}
+\label{sec:mech-graft}
+
+Two post-training checkpoint audits close potential confounds in the fixed-rate
+comparisons above. First, because $\Nten$ is a finite polynomial map rather than
+an exact polar factor, multiplying on the left by a unit-RMS factor $\hat L$
+does not algebraically preserve $\|D\|_F$; if $\|D\|_F$ systematically exceeded
+$\|D_{\text{in}}\|_F = \|\Nten(UR)\hat R\|_F$, output-side normalization at a
+fixed learning rate could act as an implicit learning-rate increase. Evaluating
+both directions under exact BF16-operand \texttt{tpu} arithmetic across all 224
+block matrices at updates 2{,}500 and 5{,}120 rules this out directly:
+\begin{enumerate}
+\item \textbf{Matched or slightly smaller direction norms:} Evaluated on the
+  identical pre-update state $(U,R,\hat R)$, the instantaneous norm-grafting
+  ratio $\|D\|_F / \|D_{\text{in}}\|_F$ is $\mechMlpdiagGraftNorm$
+  ($\mechMlpdiagGraftNormPct\%$) for \mlpdiag{}, $\mechLeftdiagGraftNorm$
+  ($\mechLeftdiagGraftNormPct\%$) for \alldiag{}, and $\mechDenseGraftNorm$
+  ($\mechDenseGraftNormPct\%$) for \dense{} at update 2{,}500, and
+  $\mechMlpdiagEndGraftNorm$ at update 5{,}120, with every projection kind in
+  $[0.975, 0.996]$. Realized cross-trajectory direction norms against \muont{}
+  are likewise $\mechMlpdiagRealDirNorm$ (\mlpdiag{}) and
+  $\mechLeftdiagRealDirNorm$ (\alldiag{}).
+\item \textbf{Nontrivial angular reorientation matching covariance structure:}
+  At that nearly identical norm, \mlpdiag{} rotates the update direction by a
+  mean of $\mechMlpdiagGraftDeg^\circ$ ($\cos = \mechMlpdiagGraftCos$, spanning
+  $17.0^\circ$--$26.1^\circ$ across all seven projections; Figure~\ref{fig:stepgeom}).
+  In \alldiag{}, rotation on \texttt{gate}, \texttt{up}, \texttt{q}, and
+  \texttt{k} closely tracks \mlpdiag{}, whereas rotation on residual-stream
+  \texttt{o} and \texttt{down} collapses to $\mechLeftdiagOutODeg^\circ$ and
+  $\mechLeftdiagOutDownDeg^\circ$ versus $\mechMlpdiagOutODeg^\circ$ and
+  $\mechMlpdiagOutDownDeg^\circ$ in \mlpdiag{} --- directly reflecting
+  Table~\ref{tab:motivation}'s $\motOutOExpVarLMedPct\%$ diagonal root fidelity
+  on those two projections and explaining how \mlpdiag{} earns its margin over
+  \alldiag{}.
+\item \textbf{Corroborating weight-norm trajectory and covariance stability:}
+  Under fixed input-shaped decay $\lambda W\hat R^2$, an inflated effective step
+  size would expand equilibrium weight norms $\|W\|_F$; instead, total block
+  weight norm at update 5{,}120 is $\mechMlpdiagWeightDiffEndPct\%$
+  \emph{smaller} than \muont{} in \mlpdiag{} and $\mechDenseWeightDiffEndPct\%$
+  smaller in \dense{}, while \nullmlp{} tracks \muont{} to
+  $\mechNullMlpWeightDiffEndPct\%$. Cross-checking all 352 moments on the active
+  \dense{} checkpoint at update 2{,}500 confirms that every covariance regime of
+  Section~\ref{sec:motivation} persists under active two-sided preconditioning:
+  $B_{\text{gate}}$ and $B_{\text{up}}$ remain pinned to the sampling floor
+  (median $\rho_{\mathrm{rms}} = \mechOutGateCorrRmsMed{}$ and
+  $\mechOutUpCorrRmsMed{}$) while neuron scale spread deepens to
+  $\mathrm{CV}_{\diag} = \mechOutGateDiagCv{}$ and $\mechOutUpDiagCv{}$
+  ($\mechOutGateDiagMaxMean\times$ max-to-mean), raising diagonal root fidelity
+  $R^2(L)$ to $\mechOutGateExpVarLPct\%$ and $\mechOutUpExpVarLPct\%$ (medians
+  $\mechOutGateExpVarLMedPct\%$ and $\mechOutUpExpVarLMedPct\%$), whereas
+  \texttt{out:o} and \texttt{out:down} stay rotational ($R^2(L) =
+  \mechOutOExpVarLPct\%$ and $\mechOutDownExpVarLPct\%$) and counterfactual
+  post-$\Nten$ updates $D_{\diag}$ align with $D_{\text{dense}}$ on
+  \texttt{gate} and \texttt{up} at cosines $\mechCfGateCosDiagDense{}$ and
+  $\mechCfUpCosDiagDense{}$ (medians $\mechCfGateCosDiagDenseMed{}$ and
+  $\mechCfUpCosDiagDenseMed{}$).
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  paperplot,
+  ybar=1.6pt, bar width=7.2pt,
+  width=0.76\textwidth, height=4.9cm,
+  unbounded coords=discard,
+  title={Instantaneous update rotation at matched Frobenius step norm (update 2{,}500)},
+  xlabel={Block projection ($m\times n$)},
+  ylabel={Step rotation vs.\ $D_{\text{in}}$ (deg)},
+  ymin=0, ymax=31.5,
+  xmin=-0.55, xmax=6.55,
+  xtick={0,1,2,3,4,5,6},
+  xticklabels={\texttt{gate},\texttt{up},\texttt{q},\texttt{k},\texttt{v},\texttt{o},\texttt{down}},
+  legend columns=2,
+  legend style={at={(0.98,0.97)}, anchor=north east, column sep=6pt},
+]
+\addplot[fill=famWT!78, draw=famWT!95]
+  table[x=idx, y=graft_deg_mlpdiag] {figs/mechanism_bars.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP}} (norm ratio $\mechMlpdiagGraftNorm$)}
+\addplot[fill=famOD!75, draw=famOD!95]
+  table[x=idx, y=graft_deg_leftdiag] {figs/mechanism_bars.dat};
+\addlegendentry{\textbf{\taxid{OD-All}} (norm ratio $\mechLeftdiagGraftNorm$)}
+\draw[famWT, densely dashed, line width=0.85pt]
+  (axis cs:-0.55,\mechMlpdiagGraftDeg) -- (axis cs:6.55,\mechMlpdiagGraftDeg);
+\node[font=\tiny, text=famWT!95!black, anchor=south west]
+  at (axis cs:4.50,\mechMlpdiagGraftDeg) {\taxid{WT-MLP} mean $\mechMlpdiagGraftDeg^\circ$};
+\end{axis}
+\end{tikzpicture}
+\caption{Instantaneous angular rotation between two-sided update directions
+$D=\hat L\Nten(LUR)\hat R$ and input-only $D_{\text{in}}=\Nten(UR)\hat R$ on
+identical pre-update states $(U,R,\hat R)$ across all 32 layers at update
+2{,}500. Both \taxid{WT-MLP} (\mlpdiag{}) and \taxid{OD-All} (\alldiag{})
+preserve Frobenius step norms to within $1.5\%$ while rotating updates
+substantially; diagonalizing width-$512$ residual projections (\texttt{o},
+\texttt{down}) in \taxid{OD-All} loses nearly all rotational action on those
+two matrices ($\mechLeftdiagOutODeg^\circ$ and $\mechLeftdiagOutDownDeg^\circ$),
+matching Section~\ref{sec:mot-aniso}.}
+\label{fig:stepgeom}
+\end{figure}
