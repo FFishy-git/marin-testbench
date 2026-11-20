@@ -1,0 +1,288 @@
+"""Deterministically integrate the 4-node 8xA100 wave_sym_fastlag results.
+
+Reads paper/results/sym_wave_raw.json (seeding it once from scratch if absent)
+and updates the local paper data & macro artifacts without touching $PVC:
+  - results/summary.json          (33 historical + 4 wave_sym_fastlag = 37 distinct runs)
+  - results/run_numbers.tex       (per-run LaTeX macros for all 37 runs)
+  - results/evidence_numbers.tex  (45 completed run dirs, 37 distinct trajectories, 19 arms)
+  - results/systems_summary.json  (adds executed_8gpu_wave_sym_fastlag & updated parity)
+
+Run from paper/:
+    python -I scripts/integrate_sym_wave.py
+"""
+
+import json
+import os
+import shutil
+
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_PATH = os.path.join(HERE, "results", "sym_wave_raw.json")
+SCRATCH_FALLBACK = (
+    "/root/.gemini/antigravity-cli/brain/"
+    "f197fc22-55b7-4ffd-9eba-272d4e72d387/scratch/sym_fast_lag/wave_sym_results.json"
+)
+
+DIGIT_WORDS = str.maketrans({
+    d: w for d, w in zip(
+        "0123456789",
+        ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"],
+    )
+})
+
+
+def tex_name(run, field):
+    stem = "".join(
+        part.capitalize()
+        for part in run.replace("/", "-").replace("_", "-").split("-")
+    )
+    return "\\" + field + stem.translate(DIGIT_WORDS)
+
+
+def fmt(value, places=6, percent=False, signed=False):
+    if value is None:
+        return "n/a"
+    if percent:
+        return f"{value:+.2f}" if signed else f"{value:.2f}"
+    return f"{value:+.{places}f}" if signed else f"{value:.{places}f}"
+
+
+def main():
+    if not os.path.exists(RAW_PATH):
+        if not os.path.exists(SCRATCH_FALLBACK):
+            raise FileNotFoundError(f"Missing {RAW_PATH}")
+        shutil.copyfile(SCRATCH_FALLBACK, RAW_PATH)
+        print(f"seeded {RAW_PATH}")
+
+    with open(RAW_PATH) as handle:
+        sym_raw = json.load(handle)
+
+    summary_path = os.path.join(HERE, "results", "summary.json")
+    with open(summary_path) as handle:
+        summary = json.load(handle)
+
+    sym_runs = sym_raw["runs"]
+    base_key = "wave_sym_fastlag/muont"
+    new_specs = [
+        (base_key, "MuonT, fast_lag wave", "baseline"),
+        (
+            "wave_sym_fastlag/inner_outer_sym_mlpdiag",
+            "symmetric MLP width-thresholded (no lag)",
+            "wave_sym_fastlag",
+        ),
+        (
+            "wave_sym_fastlag/inner_outer_sym_mlpdiag_lag",
+            "symmetric MLP width-thresholded, fast_lag",
+            "wave_sym_fastlag",
+        ),
+        (
+            "wave_sym_fastlag/inner_outer_mlpdiag_lag",
+            "mlpdiag, fast_lag",
+            "wave_sym_fastlag",
+        ),
+    ]
+
+    for run_key, label, group in new_specs:
+        src = sym_runs[run_key]
+        rel = src["vs_same_wave_muont"]
+        is_base = run_key == base_key
+        rec = {
+            "base": base_key,
+            "c4_final": src["c4_final"],
+            "c4_late": src["c4_late"],
+            "d_c4_final": 0.0 if is_base else rel["d_c4_final"],
+            "d_c4_late": 0.0 if is_base else rel["d_c4_late"],
+            "d_sel_final": 0.0 if is_base else rel["d_sel_final"],
+            "d_sel_late": 0.0 if is_base else rel["d_sel_late"],
+            "d_sel_late4": 0.0 if is_base else rel["d_sel_late4"],
+            "d_train": 0.0 if is_base else rel["d_train"],
+            "d_train_rho": 0.0 if is_base else rel["d_train_rho"],
+            "d_train_se": 0.0 if is_base else rel["d_train_se"],
+            "e2e_overhead": 0.0 if is_base else rel["e2e_overhead_pct"],
+            "end_to_end": src["end_to_end_seconds"],
+            "group": group,
+            "input_age_max": src["input_max_basis_age"],
+            "input_fallbacks": src["input_fallbacks"],
+            "label": label,
+            "output_age_max": src["output_max_basis_age"],
+            "output_fallbacks": src["output_fallbacks"],
+            "output_host_total": src["output_host_total_seconds"],
+            "peak_gib": src["peak_gib"],
+            "run": run_key,
+            "seed": 0,
+            "sel_final": src["sel_final"],
+            "sel_late": src["sel_late"],
+            "sel_late4": src["sel_late4"],
+            "step_median": src["step_median"],
+            "step_overhead": 0.0 if is_base else rel["step_overhead_pct"],
+            "updates": src["updates"],
+            "windows": [0.0] * 5 if is_base else list(rel["windows"]),
+        }
+        summary[run_key] = rec
+
+    with open(summary_path, "w") as handle:
+        json.dump(summary, handle, indent=1, sort_keys=True)
+    print(f"updated results/summary.json ({len(summary)} distinct run records)")
+
+    # Emit results/run_numbers.tex in stable order (historical waves then wave_sym_fastlag).
+    ordered_keys = [k for k in summary if not k.startswith("wave_sym_fastlag/")] + [
+        k for k, _, _ in new_specs
+    ]
+    lines = [
+        "% Generated by scripts/integrate_sym_wave.py from results/summary.json. Do not edit.\n"
+    ]
+    for run in ordered_keys:
+        rec = summary[run]
+        lines.append(f"% {run}")
+        lines.append(f"\\newcommand{{{tex_name(run, 'csel')}}}{{{fmt(rec['sel_late'])}}}")
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdsel')}}}{{{fmt(rec['d_sel_late'], signed=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdselfinal')}}}{{{fmt(rec['d_sel_final'], signed=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdcfour')}}}{{{fmt(rec['d_c4_late'], signed=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdcfourfinal')}}}{{{fmt(rec['d_c4_final'], signed=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cstep')}}}{{{fmt(rec['step_median'], places=3)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'coverhead')}}}{{{fmt(rec['step_overhead'], percent=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cetoe')}}}{{{fmt(rec['e2e_overhead'], percent=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cmem')}}}{{{fmt(rec['peak_gib'], places=2)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdtrain')}}}{{{fmt(rec['d_train'], signed=True)}}}"
+        )
+        lines.append(
+            f"\\newcommand{{{tex_name(run, 'cdtrainse')}}}{{{fmt(rec['d_train_se'])}}}"
+        )
+        lines.append(f"\\newcommand{{{tex_name(run, 'cfb')}}}{{{rec['output_fallbacks']}}}")
+    with open(os.path.join(HERE, "results", "run_numbers.tex"), "w") as handle:
+        handle.write("\n".join(lines) + "\n")
+    print("updated results/run_numbers.tex")
+
+    # Emit results/evidence_numbers.tex: 41 + 4 = 45 completed dirs, 33 + 4 = 37 distinct trajectories.
+    ev_lines = [
+        "% Generated by scripts/integrate_sym_wave.py. Do not edit.",
+        r"\newcommand{\nRunDirs}{45}",
+        r"\newcommand{\nDistinctRuns}{37}",
+        r"\newcommand{\nDuplicateGroups}{5}",
+        r"\newcommand{\nDuplicateDirs}{13}",
+        r"\newcommand{\nOptimizerArms}{19}",
+    ]
+    with open(os.path.join(HERE, "results", "evidence_numbers.tex"), "w") as handle:
+        handle.write("\n".join(ev_lines) + "\n")
+    print("updated results/evidence_numbers.tex")
+
+    # Enrich results/systems_summary.json with executed 8xA100 wave_sym_fastlag metrics.
+    sys_path = os.path.join(HERE, "results", "systems_summary.json")
+    with open(sys_path) as handle:
+        sys_data = json.load(handle)
+
+    r_muont = sym_runs["wave_sym_fastlag/muont"]
+    r_sym = sym_runs["wave_sym_fastlag/inner_outer_sym_mlpdiag"]
+    r_sym_lag = sym_runs["wave_sym_fastlag/inner_outer_sym_mlpdiag_lag"]
+    r_mlp_lag = sym_runs["wave_sym_fastlag/inner_outer_mlpdiag_lag"]
+    r_w4_mlp_lag = sym_runs["wave4/inner_outer_mlpdiag_lag"]
+    h2h = sym_raw["head_to_head"]
+
+    def crossing_map(run_obj):
+        out = {}
+        for item in run_obj["c4_crossings"]:
+            t_key = f"{item['target']:.2f}"
+            out[t_key] = {
+                "censored": item["censored"],
+                "step": item.get("crossing_step"),
+                "tokens_b": (item.get("crossing_tokens") or item.get("observed_tokens")) / 1e9,
+                "seconds": item["recorded_main_seconds"],
+                "c4": item.get("crossing_c4") or item.get("last_evaluation_c4"),
+            }
+        return out
+
+    sys_data["parity"]["cpu_unit_tests"] = 43
+    sys_data["parity"]["cont_sym_nolag_tensors"] = 65
+    sys_data["parity"]["cont_sym_lag_tensors"] = 91
+    sys_data["executed_8gpu_wave_sym_fastlag"] = {
+        "muont": {
+            "step_s": r_muont["step_median"],
+            "vs_muon_pct": r_muont["step_overhead_vs_wave0_muon_pct"],
+            "e2e_s": r_muont["end_to_end_seconds"],
+            "e2e_vs_muon_pct": r_muont["e2e_overhead_vs_wave0_muon_pct"],
+            "peak_gib": r_muont["peak_gib"],
+            "in_fb": r_muont["input_fallbacks"],
+            "out_fb": r_muont["output_fallbacks"],
+            "crossings": crossing_map(r_muont),
+        },
+        "wt_sym": {
+            "step_s": r_sym["step_median"],
+            "vs_muon_pct": r_sym["step_overhead_vs_wave0_muon_pct"],
+            "vs_muont_pct": r_sym["vs_same_wave_muont"]["step_overhead_pct"],
+            "vs_w0_muont_pct": r_sym["vs_wave0_muont"]["step_overhead_pct"],
+            "e2e_s": r_sym["end_to_end_seconds"],
+            "e2e_vs_muon_pct": r_sym["e2e_overhead_vs_wave0_muon_pct"],
+            "e2e_vs_muont_pct": r_sym["vs_same_wave_muont"]["e2e_overhead_pct"],
+            "peak_gib": r_sym["peak_gib"],
+            "extra_gib_vs_muont": r_sym["peak_gib"] - r_muont["peak_gib"],
+            "in_fb": r_sym["input_fallbacks"],
+            "out_fb": r_sym["output_fallbacks"],
+            "crossings": crossing_map(r_sym),
+        },
+        "wt_sym_lag": {
+            "step_s": r_sym_lag["step_median"],
+            "vs_muon_pct": r_sym_lag["step_overhead_vs_wave0_muon_pct"],
+            "vs_muont_pct": r_sym_lag["vs_same_wave_muont"]["step_overhead_pct"],
+            "vs_w0_muont_pct": r_sym_lag["vs_wave0_muont"]["step_overhead_pct"],
+            "e2e_s": r_sym_lag["end_to_end_seconds"],
+            "e2e_vs_muon_pct": r_sym_lag["e2e_overhead_vs_wave0_muon_pct"],
+            "e2e_vs_muont_pct": r_sym_lag["vs_same_wave_muont"]["e2e_overhead_pct"],
+            "e2e_vs_w0_muont_pct": r_sym_lag["vs_wave0_muont"]["e2e_overhead_pct"],
+            "step_saved_vs_nolag_ms": -h2h["sym_mlpdiag_lag_vs_sym_mlpdiag_nolag"]["step_delta_ms"],
+            "e2e_saved_vs_nolag_s": -h2h["sym_mlpdiag_lag_vs_sym_mlpdiag_nolag"]["e2e_delta_seconds"],
+            "step_saved_vs_mlplag_ms": -h2h["sym_mlpdiag_lag_vs_mlpdiag_lag_same_wave"]["step_delta_ms"],
+            "e2e_saved_vs_mlplag_s": -h2h["sym_mlpdiag_lag_vs_mlpdiag_lag_same_wave"]["e2e_delta_seconds"],
+            "mem_saved_vs_mlplag_gib": r_mlp_lag["peak_gib"] - r_sym_lag["peak_gib"],
+            "extra_gib_vs_muont": r_sym_lag["peak_gib"] - r_muont["peak_gib"],
+            "peak_gib": r_sym_lag["peak_gib"],
+            "in_fb": r_sym_lag["input_fallbacks"],
+            "out_fb": r_sym_lag["output_fallbacks"],
+            "crossings": crossing_map(r_sym_lag),
+        },
+        "wt_mlp_lag": {
+            "step_s": r_mlp_lag["step_median"],
+            "vs_muon_pct": r_mlp_lag["step_overhead_vs_wave0_muon_pct"],
+            "vs_muont_pct": r_mlp_lag["vs_same_wave_muont"]["step_overhead_pct"],
+            "vs_w0_muont_pct": r_mlp_lag["vs_wave0_muont"]["step_overhead_pct"],
+            "e2e_s": r_mlp_lag["end_to_end_seconds"],
+            "e2e_vs_muon_pct": r_mlp_lag["e2e_overhead_vs_wave0_muon_pct"],
+            "e2e_vs_muont_pct": r_mlp_lag["vs_same_wave_muont"]["e2e_overhead_pct"],
+            "step_saved_vs_wave4_ms": -h2h["fastlag_mlpdiag_lag_vs_wave4_legacy_mlpdiag_lag"]["step_delta_ms"],
+            "e2e_saved_vs_wave4_s": -h2h["fastlag_mlpdiag_lag_vs_wave4_legacy_mlpdiag_lag"]["e2e_delta_seconds"],
+            "mem_saved_vs_wave4_gib": r_w4_mlp_lag["peak_gib"] - r_mlp_lag["peak_gib"],
+            "peak_gib": r_mlp_lag["peak_gib"],
+            "in_fb": r_mlp_lag["input_fallbacks"],
+            "out_fb": r_mlp_lag["output_fallbacks"],
+            "crossings": crossing_map(r_mlp_lag),
+        },
+        "ref_crossings": {
+            "wave0_muon": crossing_map(sym_runs["wave0/muon"]),
+            "wave0_muont": crossing_map(sym_runs["wave0/muont"]),
+            "wave2_wt_mlp": crossing_map(sym_runs["wave2/inner_outer_mlpdiag"]),
+            "wave4_wt_mlp_lag": crossing_map(r_w4_mlp_lag),
+        },
+    }
+
+    with open(sys_path, "w") as handle:
+        json.dump(sys_data, handle, indent=2)
+    print("updated results/systems_summary.json")
+
+
+if __name__ == "__main__":
+    main()
