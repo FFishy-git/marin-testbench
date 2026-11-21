@@ -11,6 +11,8 @@ from toner.fast import muon as MU
 from toner.fast.engine import FastTonerCore, gather_uneven
 
 from .block_toner import BLOCK_ARMS, BlockToner
+from .related_base import MatrixBaseline
+from .related_baselines import RELATED_ARMS, build_related
 from .toner_state import engine_state, restore_engine
 
 
@@ -142,6 +144,19 @@ class DownToner(FastTonerCore):
 
 def build(model, config, output, *, positions, rows_per_microbatch, capacity, rows_total, world, rank, device):
     arm = config["experiment"]["arm"]
+    if arm in RELATED_ARMS:
+        fast = build_related(
+            model,
+            config,
+            positions=positions,
+            rows_per_microbatch=rows_per_microbatch,
+            capacity=capacity,
+            rows_total=rows_total,
+            world=world,
+            rank=rank,
+            device=device,
+        )
+        return _with_auxiliary(model, config, fast)
     if arm in BLOCK_ARMS:
         fast = BlockToner(
             model,
@@ -184,7 +199,7 @@ def _with_auxiliary(model, config, fast):
 
 def toner_engines(fast):
     """Every Toner fast engine owned by a matrix optimizer."""
-    if fast is None:
+    if fast is None or isinstance(fast, MatrixBaseline):
         return []
     if isinstance(fast, BlockToner):
         return fast.engines
@@ -193,7 +208,7 @@ def toner_engines(fast):
 
 def fast_runtime_state(fast):
     """Save numerical root state, including cached bases and pending refreshes."""
-    if isinstance(fast, BlockToner):
+    if isinstance(fast, (BlockToner, MatrixBaseline)):
         return fast.runtime_state()
     state = engine_state(fast)
     if isinstance(fast, DownToner):
@@ -202,7 +217,7 @@ def fast_runtime_state(fast):
 
 
 def restore_fast(fast, state):
-    if isinstance(fast, BlockToner):
+    if isinstance(fast, (BlockToner, MatrixBaseline)):
         fast.restore_runtime_state(state)
         return
     restore_engine(fast, state)

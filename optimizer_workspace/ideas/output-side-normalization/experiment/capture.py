@@ -163,7 +163,7 @@ class HybridModel(nn.Module):
 
 
 # Arms whose matrix updates use no input statistic at all.
-NO_INPUT_CAPTURE = ("muon", "left_all")
+NO_INPUT_CAPTURE = ("muon", "left_all", "muon_control", "mousse_control", "mousse_paper")
 
 
 def captures_input(arm):

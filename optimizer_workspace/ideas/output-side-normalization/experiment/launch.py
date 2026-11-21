@@ -12,6 +12,7 @@ from pathlib import Path
 
 from .records import atomic_json, sha256, utc_now
 from .reference import TASK
+from .related_baselines import RELATED_ARMS
 
 CLUSTER = json.loads((TASK / "experiment" / "cluster.json").read_text())
 NODES = tuple(CLUSTER["nodes"])
@@ -36,7 +37,45 @@ OUTPUT_ROOT = Path(CLUSTER["output_root"])
 ENVIRONMENT = CLUSTER["environment"]
 # Synthetic GPU gates for the all-block arms, in addition to the first-wave gates.
 BLOCK_CHECKS = ("gpu_output_rows", "gpu_block_updates", "block_distributed_statistics", "block_compiled_body")
+RELATED_CHECKS = (
+    "go_muon_gpu_numerics",
+    "go_muon_gpu_statistics",
+    "go_muon_gpu_compiled_capture",
+    "mousse_gpu_numerics",
+)
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=accept-new", "-o", "ConnectTimeout=10"]
+
+
+def wave_entries(path=None):
+    """Resolve a separately prepared wave without changing the active cluster wave."""
+    payload = CLUSTER if path is None else json.loads(path.read_text())
+    entries = []
+    for entry in payload["wave"]:
+        config = (
+            TASK / entry["config"] if "config" in entry else config_path(entry["arm"], entry["seed"], entry["batch"])
+        )
+        config.resolve().relative_to(TASK / "experiment")
+        loaded = json.loads(config.read_text())
+        if loaded["experiment"]["arm"] != entry["arm"] or loaded["training"]["seed"] != entry["seed"]:
+            raise ValueError("Wave entry differs from its configuration")
+        entries.append(
+            {**entry, "name": entry.get("name", run_name(entry["arm"], entry["seed"], entry["batch"])), "path": config}
+        )
+    if len(entries) != len(NODES) or len({entry["name"] for entry in entries}) != len(entries):
+        raise ValueError("A wave must have one uniquely named entry per node")
+    return payload["wave_name"], entries
+
+
+def continuation_steps(config):
+    """Cross each related method's first periodic refresh before accepting resume."""
+    related = config["experiment"].get("related_baseline")
+    if related is None:
+        return 3, 2
+    if config["experiment"]["arm"].startswith("go_muon"):
+        refresh = config["root"]["refresh"]
+    else:
+        refresh = related["settings"]["refresh"]
+    return 2 * refresh + 2, refresh + 1
 
 
 def remote(node, arguments):
@@ -47,7 +86,7 @@ def remote(node, arguments):
     return result.stdout.strip()
 
 
-def inspect(node, data, receipt):
+def inspect(node, data, receipt, wave):
     gpu_output = remote(
         node,
         [
@@ -92,6 +131,7 @@ def inspect(node, data, receipt):
     else:
         paths = sorted((TASK / "experiment").rglob("*.py"))
         paths += sorted((TASK / "experiment" / "configs").glob("*.json"))
+        paths += [entry["path"] for entry in wave]
         expected = {str(path.relative_to(TASK)): sha256(path) for path in paths}
         hashes = remote(
             node,
@@ -131,11 +171,15 @@ def main():
     parser.add_argument("--report", type=Path, default=OUTPUT_ROOT / "run-preparation" / "preflight.json")
     parser.add_argument("--out", type=Path, default=OUTPUT_ROOT / "runs" / WAVE_NAME)
     parser.add_argument("--launch", action="store_true")
+    parser.add_argument("--wave-manifest", type=Path, help="Prepared four-entry comparison wave.")
     args = parser.parse_args()
+    wave_name, wave = wave_entries(args.wave_manifest)
+    if args.wave_manifest is not None and args.out == OUTPUT_ROOT / "runs" / WAVE_NAME:
+        args.out = OUTPUT_ROOT / "runs" / wave_name
     reports = []
     for node in NODES:
         try:
-            reports.append(inspect(node, args.data, args.data_receipt))
+            reports.append(inspect(node, args.data, args.data_receipt, wave))
         except (RuntimeError, subprocess.TimeoutExpired) as error:
             reports.append({"node": node, "blockers": [str(error)]})
     blockers = [f"{report['node']}: {blocker}" for report in reports for blocker in report["blockers"]]
@@ -148,14 +192,15 @@ def main():
         expected = {str(p.relative_to(TASK)): sha256(p) for p in sorted((TASK / "experiment").rglob("*.py"))}
         if receipt["source_sha256"] != expected:
             blockers.append("Validation receipt is stale for the current experiment code")
-        configurations = {
-            run_name(arm, seed, batch): sha256(config_path(arm, seed, batch)) for arm, seed, batch in WAVE
-        }
+        configurations = {entry["name"]: sha256(entry["path"]) for entry in wave}
         if receipt.get("config_sha256") != configurations:
             blockers.append("Full-model validation has not covered the current arm configurations")
         if not all(
-            receipt["checks"][check]
+            receipt["checks"].get(check, False)
             for check in (
+                "cpu_numerics",
+                "cpu_distributed_statistics",
+                "model_parameter_count",
                 "gpu_collector",
                 "distributed_statistics",
                 "fa2",
@@ -171,12 +216,32 @@ def main():
             blockers.append("Required numerical and real-data checks have not all passed")
         if not receipt.get("evidence"):
             blockers.append("Validation receipt has no supporting evidence")
+        smokes = receipt.get("evidence", {}).get("real_data_smokes", {})
+        if any(entry["arm"] in RELATED_ARMS for entry in wave):
+            for check in RELATED_CHECKS:
+                if not receipt["checks"].get(check, False):
+                    blockers.append(f"Required related-baseline accelerator check is pending: {check}")
+        for entry in wave:
+            if entry["arm"] in RELATED_ARMS:
+                complete, split = continuation_steps(json.loads(entry["path"].read_text()))
+                evidence = smokes.get(entry["name"], {})
+                if evidence.get("completed_steps") != complete or evidence.get("split_steps") != split:
+                    blockers.append(f"{entry['name']}: baseline refresh-crossing continuation is missing")
+                if entry["arm"] != "muon_control" and not evidence.get("pre_refresh_continuation"):
+                    blockers.append(f"{entry['name']}: restored factors have not been consumed before the next refresh")
         if args.data_receipt is not None and receipt.get("data_receipt_sha256") != sha256(args.data_receipt):
             blockers.append("Validation receipt belongs to different prepared data")
         for execution in receipt.get("evidence", {}).get("gpu_commands", []):
             if execution["exit_code"] != 0 or sha256(Path(execution["log"])) != execution["log_sha256"]:
                 blockers.append("Validation command evidence failed or changed")
-    report = {"time": utc_now(), "environment": ENVIRONMENT, "nodes": reports, "blockers": blockers, "launches": []}
+    report = {
+        "time": utc_now(),
+        "wave_name": wave_name,
+        "environment": ENVIRONMENT,
+        "nodes": reports,
+        "blockers": blockers,
+        "launches": [],
+    }
     args.report.parent.mkdir(parents=True, exist_ok=True)
     atomic_json(args.report, report)
     print(json.dumps(report, indent=2), flush=True)
@@ -186,9 +251,10 @@ def main():
         raise SystemExit("Launch refused: resolve recorded blockers first.")
     if args.out is None:
         parser.error("--launch requires --out")
-    for node, (arm, seed, batch) in zip(NODES, WAVE, strict=True):
-        config = config_path(arm, seed, batch)
-        out = args.out / run_name(arm, seed, batch)
+    for node, entry in zip(NODES, wave, strict=True):
+        arm, seed, batch = entry["arm"], entry["seed"], entry["batch"]
+        config = entry["path"]
+        out = args.out / entry["name"]
         # The remote launch uses a dedicated helper; it never stops other processes.
         result = remote(
             node,
@@ -203,7 +269,7 @@ def main():
         )
         report["launches"].append({"node": node, "arm": arm, "seed": seed, "batch": batch, **json.loads(result)})
         atomic_json(args.report, report)
-        print(f"Launched {run_name(arm, seed, batch)} on {node}: {result}", flush=True)
+        print(f"Launched {entry['name']} on {node}: {result}", flush=True)
 
 
 def start_local(config, data, receipt, out):

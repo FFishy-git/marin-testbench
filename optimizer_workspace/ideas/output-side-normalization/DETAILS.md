@@ -13,6 +13,202 @@ check, or trace which process produced a result.
 The 900-second document monitor refreshes the automated ledger section of
 this file.
 
+### November 21 Related-Baseline Campaign Launch
+
+At 03:44 Asia/Shanghai, the user-requested GO-MUON/Mousse campaign is
+active. All four initial exact-wave GPU validations passed, including
+actual eight-rank continuation comparisons with zero maximum absolute
+error. Validation activity is separate from quality training.
+The short campaign is `PVC/campaigns/related-baselines-20261121/campaign.json`.
+Its immutable SHA-256 is
+`ace7dc4647dda8175888446b794beaf08aff2a3aa4cc4f38ff8dfe377efefd57`.
+
+Each accepted node preflight is freshly rebound by
+`tracking/related_queue_bootstrap.py`, then launched synchronously through
+`related_sequence.py` and the exact-allocation restoration wrapper.
+Bootstrap SHA-256 is
+`227b5dee94fbfb1dbe3ef254e37bcde94deb85a36ad3830a0927043b634071b9`.
+Accepted plans are `PVC/run-preparation/related-nodeN-sequence-attempt1.json`;
+current plans are the distinct `attempt2.json` paths. Stage outputs retain
+their planned `attempt1` names.
+
+| Node Suffix | Accepted Plan SHA-256 | Current Bootstrap Session | Initial Training Owner/Worker |
+| --- | --- | --- | --- |
+| 9 | `ecb11032d96f1c52be67c208d89b7349cf864fd6d15f3b8c8adb3a9e63e39b34` | `16731` | Not yet started at this observation |
+| 80 | `3536ece43fd9fc211b44377897a0acbf2403968c447d6536b3935047e9081653` | `74826` | `477751` / `477763` |
+| 144 | `7132e871d9b3f8b1a0acd6cad89b1e97666a4ca0850727a45d511e66f98c755b` | `76935` | `457884` / `457896` |
+| 139 | `e9bbdf2a5b3f7f8cfdc3d49679971025b63c7f0d36832b7693757018d0d47740` | `35078` | `522253` / `522265` |
+
+At 03:44:11, verified finite-loss history reaches 132/320 updates for
+Muon LR0 on node144, 129/320 for Muon LR2 on node139 and 64/320 for
+the GO-MUON paper adapter LR1 on node80. No short trial is complete.
+The local bootstrap remains active and has read approximately153GB of
+accepted checkpoint content; no timeout restart or numerical waiver is
+applied. One live-history UTF-8 read failure at03:42:35 clears on the
+03:43:11 observation; completed histories still require strict verification.
+
+Read-only monitor `452063` retains its 60-second cadence and reloads
+`PVC/run-preparation/related-monitor-registrations.json` each cycle.
+Registrations now cover all six short training owners and both queued
+paper LR0/LR2 validation owners, in addition to the four initial owners.
+Absent future states are reported as unavailable, not as launched.
+Status and observations remain under `PVC/run-preparation/monitor-related`.
+
+The initial local validation owner's restoration failure is preserved.
+Its separate `related-controlled-validation-attempt1.recovery.json`
+records successful restoration after the unrelated CPU test process
+exited; the original owner is not rewritten. Each short queue restores
+the keeper before its next stage. Full preparation remains gated on all
+18 short endpoints, final held-out selection loss, then fresh seeds1/2
+with four exact full-wave validations and12 full trials. No quality claim
+or cloud upload is established by this launch.
+
+### November 21 04:36 Related-Baseline Campaign Milestone
+
+A fresh `tracking/related_campaign.py` status check at 04:36:30
+Asia/Shanghai verifies 14/18 complete short endpoints. All 12 controlled
+trials and the two paper-adapter LR1 trials have 320 consecutive updates
+and 167,772,160 tokens each, finite final held-out `selection_loss`,
+matching config/data/source identities and final eight-rank checkpoint
+receipts with nonempty rank files. Checkpoint tensors were not reread
+for this reporting check.
+
+The campaign remains
+`PVC/campaigns/related-baselines-20261121/campaign.json`, SHA-256
+`ace7dc4647dda8175888446b794beaf08aff2a3aa4cc4f38ff8dfe377efefd57`,
+with source revision `dab7f3777c75e740536df822f50ffa1d929a340c`.
+Its data receipt SHA-256 is
+`e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10`.
+
+| Completed Training Stage | Worker/Owner Receipt Prefix Under `PVC/run-preparation` | Trials | Owner Completion, Asia/Shanghai | Command / Cleanup / Restore |
+| --- | --- | ---: | --- | --- |
+| Controlled LR0 | `related-controlled-lr0-short-attempt1` | 4 | 04:18:03 | 0 / 0 / 0 |
+| Controlled LR1 | `related-controlled-lr1-short-attempt1` | 4 | 04:23:48 | 0 / 0 / 0 |
+| Controlled LR2 | `related-controlled-lr2-short-attempt1` | 4 | 04:18:32 | 0 / 0 / 0 |
+| Paper LR1 | `related-paper-lr1-short-attempt1` | 2 | 04:02:36 | 0 / 0 / 0 |
+
+Each prefix identifies the retained `.worker.json` and `.owner.json`.
+These receipts record successful restoration for their own stages;
+later allocations can replace those keeper generations.
+The initial local validation failure and separate recovery receipt
+remain unchanged.
+
+At the saved 04:35:46 observation in
+`PVC/run-preparation/monitor-related/observations.jsonl`, paper LR0 validation
+owner/child `594943`/`594955` on node `28.216.17.9` and paper LR2
+owner/child `481660`/`481672` on node `28.216.17.80` are reported live.
+Their receipts
+`related-paper-lr0-validation-attempt1.json` and
+`related-paper-lr2-validation-attempt1.json` record 7 and 18 completed
+GPU commands respectively; final compiled-model, four-arm real-data
+smoke and checkpoint-continuation gates remain false at that snapshot.
+Neither owner has a completed restoration receipt then.
+The four unstarted short trials are `go_muon_paper` and `mousse_paper`
+at LR0 and LR2. Live validation and completed short endpoints remain
+separate states.
+
+`tracking/related_full_campaign.py` status returns `not_prepared` for
+`PVC/campaigns/related-selected-full-seed12-20261121/campaign.json`.
+The campaign directory and
+`experiment/comparisons/related_selected_full_seed12` are absent.
+The planned confirmation remains six arms at fresh seeds 1 and 2,
+12 unique trials, 5,120 updates and 2,684,354,560 tokens per trial.
+Preparation, exact full-wave accelerator acceptance and launch remain
+pending. The short monitor remains independent of the prepared full
+monitor helper.
+
+| CPU-Checked Full Helper | SHA-256 |
+| --- | --- |
+| `tracking/related_full_campaign.py` | `e3722704d90d06f43fda8b6b108ed8a44ea580854cf7327f8310049d5200deb7` |
+| `tracking/related_full_execution.py` | `4c8a93eee7d1db8dac67a3082a22df40ccb62e1e9f8e03d5a05a011d73623d44` |
+| `tracking/related_full_sequence.py` | `6f9292443cf717d8df9153bac1f3cbb2caa0206271d755a08f9e1bd17e92ae8e` |
+| `tracking/monitor_related_full.py` | `3516af586c56bbe206a501c79bdf9a515c373f039ec7299a3e1937386b9be8cd` |
+
+Fresh offline CPU runs pass 114 cases in 98.07 seconds and 20 monitor
+cases in 10.11 seconds. The 114 cases comprise 22 full-campaign,
+31 full-worker, 46 full-sequence and 15 full-monitor cases. The 20-case
+monitor run comprises five short-monitor and the same 15 full-monitor
+cases; the counts are overlapping. Both retain root `pyproject.toml`,
+the 60-second per-test timeout, `infra.ci.pytest_timeout_guard`,
+the 600-second session budget and all seven default marker exclusions.
+CUDA is hidden, bytecode and pytest-cache writes are disabled, and
+subprocess/probe boundaries use CPU fixtures.
+
+Commands run from the repository root:
+
+```bash
+env CUDA_VISIBLE_DEVICES= PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONPATH=/opt/conda/envs/torch-base/lib/python3.13/site-packages:optimizer_workspace/ideas/output-side-normalization/tracking:optimizer_workspace/ideas/output-side-normalization \
+  uv run --offline --no-project \
+  --python /opt/conda/envs/torch-base/bin/python \
+  --with pytest --with pytest-timeout --with pytest-xdist \
+  python -m pytest -n 0 -p no:cacheprovider \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_related_full_campaign.py \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_related_full_execution.py \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_related_full_sequence.py \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_monitor_related_full.py
+
+env CUDA_VISIBLE_DEVICES= PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONPATH=/opt/conda/envs/torch-base/lib/python3.13/site-packages:optimizer_workspace/ideas/output-side-normalization/tracking:optimizer_workspace/ideas/output-side-normalization \
+  uv run --offline --no-project \
+  --python /opt/conda/envs/torch-base/bin/python \
+  --with pytest --with pytest-timeout --with pytest-xdist \
+  python -m pytest -n 0 -p no:cacheprovider \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_monitor_related.py \
+  optimizer_workspace/ideas/output-side-normalization/tracking/test_monitor_related_full.py
+```
+
+This milestone adds journal prose only under the existing shared
+document lock. It changes no experiment/tracking Python, source
+archive, receipt or workload. Full-helper CPU acceptance does not
+establish full-wave GPU acceptance, full-budget results, optimizer
+superiority or an upload. The earlier 03:44 launch entry is preserved.
+
+### November 21 05:02 Paper-Adapter Validation Milestone
+
+Fresh receipt reads verify paper LR2 and LR0 pass all 18 GPU commands
+and all 20 execution gates. LR2's final validation receipt is dated
+04:35:59 Asia/Shanghai and its owner completes at 04:36:12. LR0's receipt
+is dated 04:59:11; its owner completes at 04:59:24 with command, cleanup
+and keeper-restoration exits all zero. Receipt paths are under
+`PVC/run-preparation`:
+
+| Paper Wave | Validation Receipt | SHA-256 | Validation Owner / Child |
+| --- | --- | --- | --- |
+| LR2 | `related-paper-lr2-validation-attempt1.json` | `3ac3d634198fa3a5c693074fa90c2fe778066416da1fdf47849217724bb6f513` | `481660` / `481672` |
+| LR0 | `related-paper-lr0-validation-attempt1.json` | `5e0f92d5d0d367887e8cd6853668f741f9c3f7acd28ea8603b07ab359f73bc51` | `594943` / `594955` |
+
+For each LR, GO-MUON has 2,843 tensor comparisons and Mousse has 3,483
+for both final and pre-refresh eight-rank continuation, all with maximum
+absolute error 0.0. The final smoke budgets are 10 and 22 updates
+respectively. These are execution-validation budgets.
+
+The parent reports independent LR2 verification of 361.79 GB finished
+at 04:50:57. That time and read-volume figure are parent-reported;
+this journal check did not repeat the large reads. The retained LR2
+worker plan binds the accepted validation receipt, 18 logs, two GPU
+probe receipts and 154 smoke-artifact hashes. Its short training owner
+`503028` and worker `503040` are observed live in the saved 05:02:28
+monitor; the worker records GO-MUON launcher `503042`. Mousse remains
+queued behind GO-MUON in that worker.
+
+The same saved monitor observes LR0 validation owner and child exited
+and restored keeper `785103` live. The owner receipt records eight
+restored GPU ranks. Both LR0 short-owner/worker files remain absent.
+A fresh receipt-backed campaign status at 05:02:45 verifies 14/18 short
+endpoints complete and GO-MUON paper LR2 at 279/320 consecutive updates,
+146,276,352 tokens and finite latest training loss. Mousse LR2 and both
+paper LR0 trials are unstarted. Full status remains `not_prepared`.
+
+The saved 04:35:46 observation in
+`PVC/run-preparation/monitor-related/observations.jsonl` still records
+`compiled_model`, `real_data_four_arm_smoke` and
+`checkpoint_continuation` false for both paper LR0 and LR2, with no
+completed restoration then. Those historical snapshot checks and the
+04:36 journal entry are preserved; the later receipts supply the passes.
+No incomplete paper LR is selected, full campaign prepared, quality
+claim made or workload changed by this journal-only update.
+
 ### November 18 Split-Journal Monitoring Correction
 
 At 20:28, original monitor `3776115/919963640` still executes its
@@ -7316,7 +7512,7 @@ No original keeper, controller, validator or monitor was restarted.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-20 20:59:47, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-21 09:41:06, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -7976,14 +8172,7 @@ Preserved read-only terminal waiter error: `RuntimeError: Training-path original
 
 ### NS Marker-Exit Recovery Diagnostic
 
-CPU/source acceptance at 2026-11-19 14:15:49: 103 passing cases, 160 helpers and 529 inventory entries.
-The failed original remains 44/54 commands, 14/18 decisions, six accepted/eight rejected; its separate preservation seal is dated 2026-11-19 14:18:25.
-Recovery saved status: `needs_attention`; 2/54 completed commands and 0/18 case decisions.
-Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 14:33:29: `2855659/940361750`. This is a saved observation and does not establish current liveness or GPU occupancy.
-Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
-Failed command: `muont_ns_tpu_q5_full_lr_lower/resumed` at 2026-11-19 14:33:11; execution/cleanup exits1/1, marked descendants absent. It is excluded from completed trajectory counts.
-Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+Recovery evidence withheld: `ValueError: Training-path recovery local measured marker-exit correction changed`.
 
 ### NS Whole-Process Exit-Drain Diagnostic
 
@@ -9432,6 +9621,20 @@ Saved boundary handoff state: `launched` at 2026-11-17 07:23:23; `PVC/campaigns/
 Saved `validate` controller intent: `starting`; PID `3787810`, start ticks `920013830`. Intent is not a passed GPU or launch result.
 Saved `launch` controller intent: `starting`; PID `3891949`, start ticks `920465861`. Intent is not a passed GPU or launch result.
 Queue exit recorded at 2026-11-17 07:23:23; no live queue inferred.
+
+### Tuning: related-baselines-20261121
+
+Preparation state: `prepared_unvalidated_not_launched` at 2026-11-21 02:48:14.
+Receipt: `PVC/campaigns/related-baselines-20261121/campaign.json`.
+Prepared configurations and saved analysis do not prove GPU launch or cloud verification.
+No saved tuning result analysis is recorded.
+
+### Tuning: related-selected-full-seed12-20261121
+
+Preparation state: `prepared_unvalidated_not_launched` at 2026-11-21 05:38:19.
+Receipt: `PVC/campaigns/related-selected-full-seed12-20261121/campaign.json`.
+Prepared configurations and saved analysis do not prove GPU launch or cloud verification.
+No saved tuning result analysis is recorded.
 
 <!-- END AUTOMATED WAVE LEDGER -->
 
@@ -25761,3 +25964,428 @@ November18 02:04:24.538063. All four analysis comparisons are
 final-eligible at2684354560common tokens with five536870912-token windows.
 No new full-budget result, verified cloud import, measured efficiency
 gain, optimizer superiority or goal completion is claimed.
+
+### November 21 05:40 Short Completion And Full Preparation
+
+Fresh `tracking/related_campaign.py --phase analyze` at 05:40:13
+Asia/Shanghai verifies `complete`, 18/18 short trials, with no endpoint
+reasons. Every endpoint has 320 consecutive updates and 167,772,160
+tokens, finite final held-out `selection_loss`, matching configuration/
+data/source identities and a complete eight-rank checkpoint receipt
+with nonempty rank files. Checkpoint tensors are not reread for this
+reporting check. Short campaign:
+`PVC/campaigns/related-baselines-20261121/campaign.json`, SHA-256
+`ace7dc4647dda8175888446b794beaf08aff2a3aa4cc4f38ff8dfe377efefd57`.
+Executed source revision remains
+`dab7f3777c75e740536df822f50ffa1d929a340c`.
+
+All six final held-out choices match the frozen full-campaign manifest.
+Selected trial names are `<arm>_0p5m_seed0_lr2`.
+
+| Arm | Selected LR Index | Matrix LR | Final Short Selection Loss |
+| --- | ---: | ---: | ---: |
+| `muon_control` | 2 | 0.03199999994630299 | 4.461087772179442 |
+| `inner_outer_mlpdiag` | 2 | 0.03199999994630299 | 4.334938879595934 |
+| `go_muon_control` | 2 | 0.03199999994630299 | 4.510092404330861 |
+| `mousse_control` | 2 | 0.03199999994630299 | 4.428210023629031 |
+| `go_muon_paper` | 2 | 0.03199999994630299 | 4.546900695584365 |
+| `mousse_paper` | 2 | 0.03199999994630299 | 4.32696146575399 |
+
+LR index 2 is the upper boundary of the three-point multiplier grid
+`{1/sqrt(2), 1, sqrt(2)}`. These seed-0 short-budget choices do not
+establish an LR optimum, fresh-seed confirmation or optimizer
+superiority. C4, training loss and runtime remain reporting-only.
+
+Fresh reads verify all four
+`PVC/run-preparation/related-nodeN-sequence-attempt2.state.json`
+receipts complete, with completed-stage counts matching their plans.
+Every stage has sequence, command, cleanup and keeper-restoration
+exit codes zero.
+
+| Node Suffix | Queue Completion, Asia/Shanghai | Completed Stages | Current Restored Keeper / Start Ticks | Current Rank PIDs |
+| --- | --- | ---: | --- | --- |
+| 9 | 05:36:33 | 3 | `851211` / `954473373` | `851262`-`851269` |
+| 80 | 05:12:51 | 3 | `506238` / `1648062069` | `506262`-`506269` |
+| 144 | 04:18:05 | 1 | `465658` / `1503342630` | `465682`-`465689` |
+| 139 | 04:18:34 | 1 | `530080` / `1211307769` | `530104`-`530111` |
+
+The saved 05:40:16 observation in
+`PVC/run-preparation/monitor-related/observations.jsonl`, also read
+through `latest.json`, reports all four current restored keepers live
+with eight ranks and healthy node observations. GPU rows retain the
+original physical UUIDs. Earlier restored keepers can be absent after
+legitimate stage transfers. The monitor's
+`all_registered_owners_complete_and_restored` remains false because
+historical owners and the preserved initial restoration failure remain
+registered; `needs_attention` is false at this snapshot. The separate
+`related-controlled-validation-attempt1.recovery.json` remains the
+recovery evidence. No original failed owner is rewritten.
+
+Full campaign manifest was prepared at 05:38:19:
+`PVC/campaigns/related-selected-full-seed12-20261121/campaign.json`,
+SHA-256
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`.
+It records `prepared_unvalidated_not_launched`. Fresh
+`tracking/related_full_campaign.py --phase status` at 05:40:17
+reports `not_started`, 0/12 complete, every trial `not_started`,
+zero observed updates/tokens and `quality_claim: none`.
+All 12 output directories remain absent at the 05:41:01 manifest
+check. These are timestamped pre-launch observations.
+
+The full manifest freezes the six selected LRs and binds short
+manifests, metric histories, final selection losses and checkpoint
+receipts. Its checkpoint-rank binding uses file size/mtime, without
+tensor reconstruction or content hashing. Twelve unique fresh trials
+use seeds 1 and 2, eight ranks, 5,120 updates and 2,684,354,560 tokens
+each, with 1,024 stable and 4,096 decay updates. Shared controls are
+deduplicated across the controlled and paper-adapter panels. Four
+exact full-wave GPU validations and quality-training launch remain
+pending at the saved full-status observation; short acceptance and
+CPU helper tests do not supply those gates.
+
+The parent reports the independent deployment-helper findings fixed:
+the target tuple is independently pinned to the four approved nodes,
+and receipt publication checks the parent/leaf identities after
+writing. The working `tracking/related_full_deploy.py` SHA-256 is
+`4d8d92c8d6d29be724a648f20f7ba34dac08fc7527ee02233ee384a24e47d7ce`.
+Parent-reported verification is 36 focused CPU tests passing and
+155 combined tests passing in 126.73 seconds. Those tests and the
+independent review were not rerun for this journal-only update.
+Fresh hashing confirms the previously recorded full campaign,
+execution, sequence and monitor helper hashes are unchanged.
+
+Both entries are appended under the existing
+`PVC/.endeavor-update.lock`, using manual patches. The lock holder
+retains the original journal bytes in memory for an exact unchanged-
+prefix check. Existing automated blocks, dirty journal/paper content,
+source files, operational files, live allocations and receipts are
+untouched. No deployment, launch, upload, commit, full-budget result,
+efficiency gain, optimizer superiority or overall goal completion is
+performed or claimed by this append.
+
+Journal verification: scoped `git diff --check` and the required
+offline document-content lint pass. Unskipped lint fails only the
+inherited 500 KiB journal-size rule: ENDEAVOR 820.4 KB and DETAILS
+1648.0 KB before this verification paragraph. The same repository
+lint entry point with explicit `--skip large_files` passes; no content
+or historical evidence is removed. A saved 05:42:28 monitor sample
+also matches all four current keeper/rank generations and commands,
+exact rank compute occupancy and original GPU UUIDs.
+
+### November 21 05:43 Full Validation Queues Launched
+
+The exclusive deployment receipt
+`PVC/run-preparation/related-full-config-deployment-attempt1.json`
+is dated 05:41:13 Asia/Shanghai and records `deployed`. Receipt SHA-256:
+`eb51c0cab39fe8fcc1cc80ebf1929c5cc214188e0d7649f4d7d31ffa1640c312`.
+It binds full campaign SHA-256
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`,
+deployment helper SHA-256
+`4d8d92c8d6d29be724a648f20f7ba34dac08fc7527ee02233ee384a24e47d7ce`
+and archive SHA-256
+`1d7ad10fc325e1804626dde7b20a5b644454d358a8d7561995406cf7283b43f6`.
+Fresh receipt inspection verifies the exact 16-file inventory: 12
+trial configs and four wave manifests. On each remote node 80, 144
+and 139, preflight records all 16 absent, writes record all 16 created,
+and final verification records all 16 identical. Fresh local payload
+hashing matches every recorded digest. This journal check does not
+repeat deployment or remote writes.
+
+All four persisted plans hash to the parent-supplied values and bind
+the intended node and unchanged full-campaign identity. Plans are
+`PVC/run-preparation/related-full-nodeN-sequence-attempt1.json`;
+their `.state.json` receipts record `running`, first stage
+`validation`, and zero completed stages.
+
+| Node Suffix | Wave / Seed | Plan SHA-256 | Recorded Queue Launch, Asia/Shanghai | Parent-Reported Session | Validation Owner / Child |
+| --- | --- | --- | --- | --- | --- |
+| 9 | Controlled / 1 | `429879d2c53ee185254ffce376e9cd184e30a98f2e328e2d999c3e1827e3fc6b` | 05:43:19 | `4001` | `856316` / `856352` |
+| 80 | Paper adapters / 1 | `94e14d55ab690be86080f7cc5f8de9393b8d640eda88f98636c4c0ebce3ddaaa` | 05:43:20 | `76270` | `509266` / `509278` |
+| 144 | Controlled / 2 | `7d264462d9b8b0a968ef6b844773f8b752a4a4bbce9a355e1148040665468ae4` | 05:43:20 | `86258` | `471857` / `471869` |
+| 139 | Paper adapters / 2 | `1a3f7d05be43b08040501562b2ceb1a869222937a9b8031ff8248b36f5c45a06` | 05:43:20 | `27210` | `536220` / `536232` |
+
+The parent reports plan verification on each actual assigned node
+before launch and all four sessions live. This append checks persisted
+plan bindings and process snapshots without polling or controlling
+the parent's launch sessions.
+
+Validation owner receipts use prefix
+`PVC/run-preparation/related-full-<profile>-seedS-attempt1.validation`,
+where profile is `controlled` or `paper`. Each `.owner.json` records
+`running`, `keeper_release_complete: true` and the expected validator
+command. The saved 05:45:05 full-monitor observation verifies exact
+owner/child generations and commands on the assigned nodes:
+start ticks 954515928/954516114 on node 9,
+1648246687/1648246885 on node 80,
+1503856002/1503856204 on node 144 and
+1211818264/1211818477 on node 139.
+All four node observations and allocation observation are healthy;
+`needs_attention` is false. No completed validation/restoration
+receipt is inferred from a live owner.
+
+Separate full monitor PID 855385 started at 05:42:37. A read-only
+process check confirms `tracking/monitor_related_full.py`, interval
+60 seconds, registrations
+`PVC/run-preparation/related-full-monitor-registrations.json`
+and output directory `PVC/run-preparation/monitor-related-full`.
+Saved observations are in `observations.jsonl`, with current snapshot
+`latest.json` and daemon log `daemon-attempt1.log`. Historical
+short-owner restoration remains diagnostic-only in this full scope.
+No monitor is created, restarted or signaled by this journal append.
+
+The saved full-training status at 05:45:10 is `not_started`, 0/12
+complete, with all trials at zero observed updates/tokens and
+`quality_claim: none`. A 05:45:21 filesystem check finds all 12
+full-trial outputs and all four `.full.owner.json` /
+`.full.worker.json` pairs absent. Exact-wave validation and artifact
+verification must finish before the full-training stages. Controlled
+queues then own four trials per seed; paper-adapter queues own two,
+with shared controls deduplicated. All 12 retain the frozen LR choices,
+fresh seeds 1/2 and 5,120-update, 2,684,354,560-token budgets.
+
+This launch milestone is appended under `PVC/.endeavor-update.lock`.
+Prior pre-launch observations, automated blocks and unrelated dirty
+content remain unchanged. Only ENDEAVOR/DETAILS prose is written.
+Validation-queue launch supplies no full-wave pass, full-budget result,
+measured efficiency gain, optimizer superiority, upload or overall
+campaign completion.
+
+### November 21 06:18 Full Validators Complete
+
+Fresh reads of all four full-wave validation receipts verify
+`evidence.gpu_commands` contains exactly 18 completed commands, every
+exit code zero, and all 20 `checks` entries true. Validation prefixes
+are `PVC/run-preparation/related-full-<profile>-seedS-attempt1.validation`.
+The `.json` and `.owner.json` files retain their independent validator
+and allocation evidence.
+
+| Node Suffix | Profile / Seed | Validator Receipt Time, Asia/Shanghai | Validator Receipt SHA-256 | Owner Completion, Asia/Shanghai |
+| --- | --- | --- | --- | --- |
+| 9 | Controlled / 1 | 06:17:51 | `6273619451c6bef6c58ced0a2eb1f3c3ccb85b0a4f951d44ddae329e8711f777` | 06:18:05 |
+| 80 | Paper / 1 | 06:16:21 | `4f1e2205ad30682e1a48e580471294a0551fc257d1cc1b2efa0300c45d2fab96` | 06:16:34 |
+| 144 | Controlled / 2 | 06:16:17 | `67eb9a8814f75bc81eabebb2704fd3f2557ed0ce8e9c8d33f3247ca84dcaed42` | 06:16:30 |
+| 139 | Paper / 2 | 06:18:19 | `31dc22ca95f9054607968e2b306df882db048c10ae8e8d0eab3bd1c0777430a4` | 06:18:33 |
+
+All four original validation owners are `complete`, with
+`exit_code: 0`, `cleanup_exit_code: 0` and `keeper_restore: 0`.
+Owner/child identities remain 856316/856352 on node 9,
+509266/509278 on node 80, 471857/471869 on node 144 and
+536220/536232 on node 139. Restored keeper identities:
+
+| Node Suffix | Keeper Parent / Start Ticks | Rank PIDs |
+| --- | --- | --- |
+| 9 | `1027226` / `954722818` | `1027257`-`1027264` |
+| 80 | `529843` / `1648444446` | `529867`-`529874` |
+| 144 | `492836` / `1504053372` | `492864`-`492871` |
+| 139 | `557759` / `1212027903` | `557783`-`557790` |
+
+The saved full-monitor observation at 06:18:39.272583 in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`
+reports all four owners complete, 18 commands/all 20 checks passed
+and restored keepers live. Its training observation is dated
+06:18:42.710209. The later saved 06:19:48.404789 snapshot also matches
+all restored parent/rank start ticks and commands, with exactly eight
+rank/GPU UUID occupancy pairs per node. Node and allocation
+observations are healthy; `needs_attention` is false.
+
+Saved training status at 06:18:42 and 06:19:51 remains `not_started`,
+0/12 complete, every trial at zero observed updates/tokens and
+`quality_claim: none`. A 06:20:34 filesystem check finds all 12
+full-trial outputs and all four `.full.owner.json` /
+`.full.worker.json` pairs absent. No full-quality trajectory is
+inferred from the bounded validation smoke histories.
+
+Fresh reads of
+`PVC/run-preparation/related-full-nodeN-sequence-attempt1.state.json`
+still find `running`, `completed_stages: 0` and the validation stage
+`running`, with its subprocess exit recorded as zero. The parent
+reports the controllers still independently verifying large artifacts
+before accepting the stage. This journal check does not repeat those
+large reads or claim all-stage acceptance. Retained parent execution
+queues remain 4001/76270/86258/27210 for nodes 9/80/144/139; no queue
+is polled, restarted or signaled by this append.
+
+A read-only process check confirms full monitor 855385 remains live
+with its original 05:42:37 start time, 60-second cadence and separate
+full registrations/output paths. The unchanged full-campaign identity,
+frozen seed-0 LR choices and fresh-seed confirmation budgets remain
+those recorded above. Validator completion and allocation restoration
+are separate from sequence acceptance and full-training launch.
+
+This milestone is appended only to ENDEAVOR/DETAILS under the existing
+`PVC/.endeavor-update.lock`; the original journal prefixes are retained
+for a byte-for-byte preservation check. Prior evidence, unrelated dirty
+content, source, operational files and live allocations are untouched.
+No full-training launch, all-stage acceptance, full-budget result,
+efficiency gain, optimizer superiority, upload or overall completion
+is claimed.
+
+### November 21 06:33 Full Training Launched
+
+Fresh sequence receipt reads verify all four
+`PVC/run-preparation/related-full-nodeN-sequence-attempt1.state.json`
+files record `running`, `completed_stages: 1`, validation `complete`
+with exit zero, and `full-trials` running. The accepted validation
+bindings each contain 18 log hashes, two GPU receipt hashes and 154
+smoke-artifact hashes. Fresh validator-receipt, allocation-receipt and
+allocation-log hashing matches the saved acceptance bindings. This
+journal check does not repeat the controllers' large artifact reads.
+Validator receipt hashes remain those in the 06:18 milestone.
+
+All four accepted validation allocations record command, cleanup and
+keeper-restoration exits zero. The new full owners bind the exact
+restored keeper parents 1027226, 529843, 492836 and 557759 on nodes
+9, 80, 144 and 139 respectively, then record
+`keeper_release_complete: true`. Their earlier monitor
+`restored_keeper_live: false` values after transfer are historical
+keeper observations, with the new full owners live.
+
+Full owner/worker prefixes are
+`PVC/run-preparation/related-full-<profile>-seedS-attempt1.full`.
+The `.owner.json` and `.worker.json` receipts record `running`;
+each worker has zero completed trials and its first launcher running.
+
+| Node Suffix | Profile / Seed | Full Owner / Worker | Owner Start Ticks / Worker Start Ticks | First Launcher PID | First Trial Launch, Asia/Shanghai |
+| --- | --- | --- | --- | --- | --- |
+| 9 | Controlled / 1 | `1038318` / `1038338` | `954814738` / `954814971` | `1038426` | 06:33:20 |
+| 80 | Paper / 1 | `532226` / `532238` | `1648527874` / `1648528092` | `532291` | 06:30:24 |
+| 144 | Controlled / 2 | `494824` / `494885` | `1504137900` / `1504138103` | `494889` | 06:30:32 |
+| 139 | Paper / 2 | `559355` / `559367` | `1212110650` / `1212110866` | `559369` | 06:32:17 |
+
+The saved full-monitor observation at 06:33:37.662960 in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`
+reports all four full owners and workers live. Its training
+observation at 06:33:40.919721 is `running`, 0/12 complete:
+
+| Running Full Trial | Observed Updates | Observed Tokens | Latest Training Loss |
+| --- | ---: | ---: | ---: |
+| `muon_control_0p5m_seed1_lr2` | 0 | 0 | Unavailable |
+| `go_muon_paper_0p5m_seed1_lr2` | 58 | 30,408,704 | 6.065669059753418 |
+| `muon_control_0p5m_seed2_lr2` | 119 | 62,390,272 | 5.517506122589111 |
+| `go_muon_paper_0p5m_seed2_lr2` | 8 | 4,194,304 | 8.001182556152344 |
+
+The three available losses are finite. Step 0 establishes no observed
+training update or loss. Eight subsequent trials remain unstarted in
+their sequential queues. These unequal-update snapshots are progress
+only, without a quality comparison or final result.
+
+The later saved 06:34:46 monitor snapshot independently matches all
+four full-owner/worker start ticks and commands to their receipts;
+allocation observation is healthy and `needs_attention` is false.
+Read-only process inspection confirms monitor 855385 remains live with
+its original start and 60-second separate full scope. Parent execution
+queues remain 4001/76270/86258/27210 for nodes 9/80/144/139; this
+append neither polls nor controls them.
+
+Full campaign SHA-256 remains
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`,
+with frozen seed-0 LR choices and twelve fresh seed-1/2 trials of
+5,120 updates and 2,684,354,560 tokens each. Acceptance of validation
+completes one stage per queue. Full-trial completion, allocation cleanup
+and final keeper restoration remain pending. Prior pre-launch and
+validator-only observations are preserved with their original dates.
+
+This milestone appends only ENDEAVOR/DETAILS prose under
+`PVC/.endeavor-update.lock`. Original prefixes and unrelated dirty
+content are preserved. No source, operational file or workload is
+modified; no full-budget result, measured efficiency gain, optimizer
+superiority, upload or overall campaign completion is claimed.
+
+### November 21 08:15 Muon Full Trials Complete
+
+Saved full-monitor observation 08:15:42.982591 Asia/Shanghai in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`,
+with training observation 08:15:46.760966, records both Muon full
+trials complete and overall progress 2/12. Fresh receipt-backed
+`tracking/related_full_campaign.py --phase status` at 08:17:33
+confirms each has 5,120 consecutive updates, 2,684,354,560 tokens,
+matching identities, finite final selection loss and a complete
+eight-rank checkpoint receipt with nonempty rank files. Both have
+empty completion reasons. Checkpoint tensors are not reread.
+
+| Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `muon_control_0p5m_seed1_lr2` | 3.2203761100985386 | `499e6b4a6faff877bbc0eeb2a7deecf7b301db2cc2c9d241f149977e0cef1c07` |
+| `muon_control_0p5m_seed2_lr2` | 3.194374021848594 | `d21d970b8e4bfb6c9e23d7943e0236c6134b127c3d42f7f25f44d2ab5dfaca1e` |
+
+Run paths are
+`PVC/campaigns/related-selected-full-seed12-20261121/runs/<trial>`;
+final receipts are `checkpoints/step_005120/complete.json`.
+Controlled worker receipts under `PVC/run-preparation` record Muon
+seed 2 complete with exit zero at 08:12:09 and seed 1 at 08:15:33.
+Each worker has one completed trial. Their next `inner_outer_mlpdiag`
+launchers start at 08:12:15 (seed 2, PID 506703) and 08:15:40
+(seed 1, PID 1095118). The saved monitor reports seed-2 ours at
+64 updates; seed-1 ours has no reported metrics yet at that snapshot.
+Later worker receipts establish its launch without backdating metrics.
+
+At the same saved training observation, GO-MUON paper seed 1 reaches
+2,721 updates and seed 2 reaches 2,658. All four full owners/workers
+are live, allocation observation is healthy and `needs_attention`
+is false. Overall training remains `running`, `training_complete`
+false and `quality_claim: none`. No comparison, optimizer superiority,
+efficiency gain, upload or overall completion is claimed; remaining
+trials, queue cleanup and final keeper restoration are pending.
+Only ENDEAVOR/DETAILS are appended under the shared journal lock,
+preserving prior timestamps and unrelated dirty content.
+
+### November 21 09:50 GO-MUON Paper Full Trials Complete
+
+Saved full-monitor observation 09:50:25.445897 Asia/Shanghai in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`,
+with training observation 09:50:29.784508, reports both GO-MUON paper
+endpoints complete and overall full progress 4/12. Independent
+read-only audit at 09:51:16.596790 verifies each has 5,120 consecutive
+updates, exactly 2,684,354,560 tokens, matching source/config/data/seed
+identities, a finite final reserved-mixture selection loss and a
+step-5,120/world-eight checkpoint receipt with eight nonempty rank
+files. Completion reasons are empty; no GB checkpoint tensor is read
+or rehashed.
+
+| Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `go_muon_paper_0p5m_seed1_lr2` | 3.2556959553807467 | `19b4528c61f10c4eda0836cc7ef9347cd8da72587b27533c9c23c49dc2d37846` |
+| `go_muon_paper_0p5m_seed2_lr2` | 3.2232144881914806 | `7e56e922afc5bfd7525ae5b04ce226e101beab9da15870dd84e8e9f0575b6d40` |
+
+Run paths are
+`PVC/campaigns/related-selected-full-seed12-20261121/runs/<trial>`;
+final receipts are `checkpoints/step_005120/complete.json`.
+The independently recomputed manifest/history/checkpoint-receipt
+hashes and completion records match each worker's saved GO-MUON
+completion. Child log hashes also match, and both children exit zero.
+The campaign retains SHA-256
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`;
+all 74 bound source/configuration files, five bound helpers and the
+prepared-data receipt match their frozen hashes.
+
+Paper queue prefixes are
+`PVC/run-preparation/related-full-paper-seedS-attempt1.full`.
+Both `.worker.json` files remain `running`, `completed_trials: 1`,
+and their GO-MUON child completions match the independent audit:
+
+| Node / Seed | GO-MUON Exit-Zero Receipt Time | Mousse Launcher PID | Mousse Launch Time, Asia/Shanghai |
+| --- | --- | --- | --- |
+| 80 / 1 | 09:47:43.666679 | `555224` | 09:47:49.257601 |
+| 139 / 2 | 09:50:31.332289 | `582264` | 09:50:37.178458 |
+
+The seed-2 GO worker acceptance and Mousse launch occur after the
+saved 09:50:29 training observation, which still labels Mousse seed 2
+`not_started`. The later worker receipt establishes its launch without
+backdating metrics. Mousse seed 1 has 67 observed updates at that
+saved training observation. Both full owners/workers remain live:
+532226/532238 on node 80 and 559355/559367 on node 139;
+`needs_attention` is false.
+
+Both paper sequences remain `running`, `completed_stages: 1`;
+validation is accepted complete and `full-trials` remains running.
+Validation receipt and allocation receipt/log hashes match their
+saved acceptance bindings. Both validation allocations record
+command, cleanup and keeper-restoration exits zero. Final paper-queue
+cleanup and restoration are separate and still pending.
+
+Only ENDEAVOR/DETAILS are appended under the existing
+`PVC/.endeavor-update.lock`, retaining original journal prefixes and
+timestamps. No retained launch session, source, helper, plan,
+operational file or allocation is modified. These endpoint values
+establish no comparison, optimizer superiority, efficiency gain,
+upload or overall campaign completion.

@@ -250,7 +250,7 @@ class MatrixFactors:
     right_outer: torch.Tensor | None = None
 
 
-def block_update(weight, gradient, momentum, factors, *, args, lr, weight_decay):
+def block_update(weight, gradient, momentum, factors, *, args, lr, weight_decay, matrix_decay="recipe"):
     """Return updated momentum and the finite-NS parameter change of one block matrix.
 
     D = L_out NS(L_in U R_in) R_out with unit-RMS outer factors. Decay is input-shaped,
@@ -267,12 +267,17 @@ def block_update(weight, gradient, momentum, factors, *, args, lr, weight_decay)
     if factors.right_outer is not None:
         right = unit_rms(factors.right_outer)
         direction = right_product(direction, right)
-        decay = right_product(right_product(weight, right), right)
+        if matrix_decay == "recipe":
+            decay = right_product(right_product(weight, right), right)
     if factors.left_outer is not None:
         left = unit_rms(factors.left_outer)
         direction = left_product(left, direction)
-        if factors.right_outer is None:
+        if factors.right_outer is None and matrix_decay == "recipe":
             decay = left_product(left, left_product(left, weight))
+    if matrix_decay == "isotropic":
+        decay = weight
+    elif matrix_decay != "recipe":
+        raise ValueError(f"Unknown matrix decay: {matrix_decay}")
     scale = max(1.0, weight.shape[-2] / weight.shape[-1]) ** 0.5
     return momentum, -lr * (scale * direction + weight_decay * decay)
 
@@ -300,7 +305,7 @@ def stack_unit_rms(factor):
     return factor * (factor.shape[-1] ** 0.5 / factor.norm(dim=dims, keepdim=True))
 
 
-def block_update_stack(weights, gradients, momenta, left, right, *, args, lr, weight_decay):
+def block_update_stack(weights, gradients, momenta, left, right, *, args, lr, weight_decay, matrix_decay="recipe"):
     """The batched form of block_update over a stack of same-shape matrices.
 
     Newton-Schulz and every factor product run as batched GEMMs, so one launch covers the
@@ -320,14 +325,19 @@ def block_update_stack(weights, gradients, momenta, left, right, *, args, lr, we
     if right_outer is not None:
         right = stack_unit_rms(right_outer)
         direction = torch.bmm(direction, right) if right.ndim == 3 else direction * right[:, None, :]
-        decay = torch.bmm(decay, right) if right.ndim == 3 else decay * right[:, None, :]
-        decay = torch.bmm(decay, right) if right.ndim == 3 else decay * right[:, None, :]
+        if matrix_decay == "recipe":
+            decay = torch.bmm(decay, right) if right.ndim == 3 else decay * right[:, None, :]
+            decay = torch.bmm(decay, right) if right.ndim == 3 else decay * right[:, None, :]
     if left_outer is not None:
         left = stack_unit_rms(left_outer)
         direction = torch.bmm(left, direction) if left.ndim == 3 else direction * left[:, :, None]
-        if right_outer is None:
+        if right_outer is None and matrix_decay == "recipe":
             decay = torch.bmm(left, decay) if left.ndim == 3 else decay * left[:, :, None]
             decay = torch.bmm(left, decay) if left.ndim == 3 else decay * left[:, :, None]
+    if matrix_decay == "isotropic":
+        decay = weights
+    elif matrix_decay != "recipe":
+        raise ValueError(f"Unknown matrix decay: {matrix_decay}")
     scale = max(1.0, weights.shape[-2] / weights.shape[-1]) ** 0.5
     return momenta, -lr * (scale * direction + weight_decay * decay)
 
@@ -353,6 +363,7 @@ class BlockToner:
         _check_output_settings(config)
         self.arm = BLOCK_ARMS[config["experiment"]["arm"]]
         self.args = fast_arguments(config)
+        self.matrix_decay = config["experiment"].get("matrix_decay", "recipe")
         self.world, self.rank, self.device = world, rank, device
         blocks = list(model.body.blocks)
         layers = len(blocks)
@@ -531,6 +542,7 @@ class BlockToner:
                     args=self.args,
                     lr=group["lr"],
                     weight_decay=group["weight_decay"],
+                    matrix_decay=self.matrix_decay,
                 )
             else:
                 delta = torch.empty((0, *shape), device=self.device)

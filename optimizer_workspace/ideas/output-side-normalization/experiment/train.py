@@ -29,6 +29,8 @@ from .data_access import require_receipt
 from .factors import OutputSettings
 from .optimizer import build, toner_engines
 from .records import atomic_json, checkpoint_identity, manifest, restore_checkpoint, save_checkpoint, utc_now
+from .related_base import MatrixBaseline
+from .related_baselines import RELATED_ARMS
 
 
 def main():
@@ -93,7 +95,7 @@ def main():
     if count != config["experiment"]["expected_model_parameters"]:
         raise ValueError(f"Unexpected parameter count {count}")
     output = None
-    if arm not in ("muon", "muont") and arm not in BLOCK_ARMS:
+    if arm not in ("muon", "muont") and arm not in BLOCK_ARMS and arm not in RELATED_ARMS:
         output = OutputMoments(
             model,
             positions,
@@ -159,7 +161,7 @@ def main():
             armed["value"] = False
             fast.begin()
 
-    if fast:
+    if fast and not isinstance(fast, MatrixBaseline):
         model.head.weight.register_post_accumulate_grad_hook(begin_hook)
     mixture = MarinMixture(
         args.data,
@@ -227,6 +229,8 @@ def main():
         for step in range(start_step, limit):
             step_start = time.perf_counter()
             model.zero_grad(set_to_none=True)
+            if isinstance(fast, MatrixBaseline):
+                fast.begin_step(step)
             if output:
                 output.begin(micro * (seq - 1) * accumulation)
             for optimizer in optimizers:
@@ -238,16 +242,16 @@ def main():
                     run.require_backward_grad_sync = index == accumulation - 1
                 if fast and captures_input(arm):
                     model.body.stat_at.copy_(torch.arange(index * rows, (index + 1) * rows, device=device))
-                if isinstance(fast, BlockToner):
+                if isinstance(fast, (BlockToner, MatrixBaseline)):
                     fast.select_microbatch(index)
                 start = step * batch + (rank * accumulation + index) * micro
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     loss = run(*to_device(mixture.batch(start, micro)))
-                if fast and index == accumulation - 1:
+                if fast and not isinstance(fast, MatrixBaseline) and index == accumulation - 1:
                     armed["value"] = True
                 (loss / accumulation).backward()
                 loss_sum += loss.detach() / accumulation
-            if isinstance(fast, BlockToner):
+            if isinstance(fast, (BlockToner, MatrixBaseline)):
                 fast.finish_backward()
             output_start = time.perf_counter()
             if output:
@@ -273,7 +277,7 @@ def main():
                 "peak_allocated_bytes": torch.cuda.max_memory_allocated(),
                 "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
             }
-            if isinstance(fast, BlockToner):
+            if isinstance(fast, (BlockToner, MatrixBaseline)):
                 metrics.update(fast.last_metrics)
             elif fast:
                 metrics["input_fallbacks"] = fast.fallbacks

@@ -68,3 +68,52 @@ Auditing all **32 layers (8 ranks, 352 FP32 EMA matrices per checkpoint)** acros
 
 - Carrying `MuonT` from recipe `LR = 0.0226` to its 320-step screening optimum `LR = 0.064` **degraded full-budget `MuonT` itself by `+0.1001` nats** (`3.4755` vs. `3.3754` late selection; `+0.0402` final C4).
 - With uncontended 8xA100 `fast_lag` anchors at `LR = 0.0226` and the symmetric width-2048 ablation now completed in `wave_sym_fastlag`, remaining confirmation comprises the `{0.016, 0.032, 0.045}` full-budget LR curve around `0.0226` (Item 1), a same-wave `fast_lag` `Null-WT` run (Item 2), live norm-grafting / 4-step held-diagonal checks (Item 3), and reserved seeds `3/4/5` (Item 4).
+
+---
+
+<!-- measured-8gpu-audit:start -->
+## Measured Eight-A100 Timing Audit
+
+Measured real-data training records cover 19/19 paper methods. No stage estimates are used below. These records completed on November 20, 2026.
+Each frozen optimized-runner benchmark starts from MuonT model weights at update 2,500, with fresh optimizer/statistics and data/LR offset 2,500. It executes 96 training updates on eight A100-SXM4-40GB GPUs; the first 36 are discarded and all updates 37-96 are averaged.
+The model uses 32 layers, width 512, MLP width 2048, sequence length 4096, global batch 128 sequences, microbatch 4 and four accumulation passes. Eight GPUs share one node. BF16 model execution, FP32 moments, TF32 disabled, compiled model/update paths, cached-root CUDA graphs, and NCCL DDP are retained. Exact roots run for the initial 20 optimizer updates; the configured host refresh interval is four updates. Evaluation and checkpoint IO are disabled during these short timing runs.
+Timing is Rank-0 host elapsed time for data loading/transfers, all four forward/backward accumulation passes, clipping, optimizer/statistics work and DDP communication, ending after main-stream synchronization. It is not the maximum elapsed time across ranks; background work may overlap the next update.
+
+| Method | Short Mean (s) | Short Median (s) | Step SD (s) | Trajectory Mean (s) | Trajectory Runner |
+| --- | ---: | ---: | ---: | ---: | --- |
+| MuonT | 1.1482 | 1.1007 | 0.1867 | 1.1021 | optimized |
+| Muon | 1.0799 | 1.0816 | 0.0319 | 1.0921 | historical |
+| WT-MLP | 1.3167 | 1.2489 | 0.1671 | 1.3674 | historical |
+| WT-MLP-Lag | 1.2709 | 1.1700 | 0.2369 | 1.1887 | optimized |
+| WT-Sym | 1.2464 | 1.2033 | 0.1322 | 1.2670 | optimized |
+| WT-Sym-Lag | 1.1843 | 1.1288 | 0.1669 | 1.1695 | optimized |
+| OD-All | 1.1629 | 1.1204 | 0.1768 | 1.2104 | historical |
+| OD-Outer | 1.1639 | 1.1166 | 0.1854 | 1.1946 | historical |
+| DT-All | 1.4468 | 1.3085 | 0.2528 | 1.6398 | historical |
+| DT-All-Lag | 1.4641 | 1.2493 | 0.3933 | 1.5045 | historical |
+| Null-WT | 1.3205 | 1.2531 | 0.1790 | 1.3758 | historical |
+| Null-Dense | 1.5195 | 1.3963 | 0.2847 | 1.6568 | historical |
+| Null-OD | 1.1672 | 1.1214 | 0.2329 | 1.1988 | historical |
+| Abl-OuterDense | 1.4416 | 1.3145 | 0.2552 | 1.5440 | historical |
+| Abl-No2048 | 1.3146 | 1.2352 | 0.1934 | 1.3316 | historical |
+| Abl-DownOnly | 1.1661 | 1.1357 | 0.1284 | 1.1508 | historical |
+| Abl-DownSwap | 1.0993 | 1.0972 | 0.0361 | 1.1332 | historical |
+| Abl-OutOnly | 1.5194 | 1.4115 | 0.2914 | 1.5932 | historical |
+| Abl-BothDiag | 1.0948 | 1.0951 | 0.0319 | 1.2763 | historical |
+
+Means retain all slow steps and timing outliers, whose causes are not separated in these logs. Standard deviations describe step variability; they are not confidence intervals. A single 60-update window with fresh optimizer state is insufficient for precise percent-level speed rankings or a full-budget wall-clock claim. The 36-update exclusion exceeds the configured 20-update exact-root startup, but mature statistics and long-run fallback frequencies have not been established. Historical occupancy and independent repeat measurements were not recorded in this audit.
+
+Trajectory means use updates 2049-4096 (2048 measured updates) of completed 5120-update training trajectories at matrix LR 0.02262741696 (Muon: 0.016). The selected record is the optimized wave when available, otherwise the first eligible historical directory in lexicographic order. Other full-budget records use historical implementations and cannot be compared directly with the optimized short means. Cross-method trajectory-mean comparisons also mix runner versions. The JSON audit retains every eligible full-budget record, including rate variants, without pooling runner versions.
+
+Regenerate the audit and report from existing records, without launching training:
+
+```bash
+uv run --no-project --python /opt/conda/envs/torch-base/bin/python \
+  python tracking/audit_8gpu_timings.py \
+  --out paper/results/measured_8gpu_timings.json \
+  --report paper/REPORT.md
+```
+
+Raw benchmarks: `/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/runs/bench_8gpu_opt`.
+The [JSON audit](results/measured_8gpu_timings.json) records exact commands, source/configuration identities, metric file hashes, measurement windows, half-window means, and full-budget record paths. The current workspace source differs from this frozen optimized runner; these results do not measure later implementation changes or newly prepared related-method adapters.
+<!-- measured-8gpu-audit:end -->

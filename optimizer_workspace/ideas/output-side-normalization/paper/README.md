@@ -45,6 +45,27 @@ python -I scripts/analyze_systems.py     # stage & executed 8xA100 fast_lag late
 python -I scripts/render_results_viz.py  # taxonomic tables, TikZ method arch, Pareto/attribution & 3-panel LR horizon
 ```
 
+Table 5's Mean Step % and Peak GiB and Figure 3(a)'s x-coordinates come only
+from `results/measured_8gpu_timings.json`. Every method uses the same optimized
+eight-A100 campaign: arithmetic
+mean over updates 37-96 and peak Rank-0 CUDA allocation over all 96 updates,
+including warmup. Quality columns retain their original full-budget waves.
+Regenerate this table alone with:
+
+```bash
+python -I scripts/render_results_viz.py --table-only
+```
+
+Regenerate Table 5 and both Figure 3 panels without changing other figures:
+
+```bash
+python -I scripts/render_results_viz.py --results-only
+```
+
+Figure 3(a) contains no stage-calibrated estimates or historical speedup arrows.
+Stars identify full-budget `fast_lag` quality rows; their timings use the same
+benchmark as the other methods. Figure 3(b)'s quality metrics are unchanged.
+
 Static and numerical verification:
 
 ```bash
@@ -57,6 +78,7 @@ python -I scripts/check_numbers.py  # every prose numeral against computed JSON 
 | Path | Contents |
 | --- | --- |
 | `results/sym_wave_raw.json` | Committed raw metrics, 5-window series, head-to-head pairs & C4 crossings for `wave_sym_fastlag` |
+| `results/measured_8gpu_timings.json` | Matched eight-A100 Table 5/Figure 3 costs and separately labeled full-budget timing audit |
 | `results/run_numbers.tex`, `results/evidence_numbers.tex` | Per-run macros (`37` distinct trajectories / `45` dirs / `19` arms) |
 | `results/derived_numbers.tex` | Cross-study, Wave-12 horizon & $2\times 2$ `WT` comparison macros |
 | `results/motivation_numbers.tex`, `results/table_motivation.tex` | Section 3 motivating 6+1 covariance & subspace-drift audit (`wave1/null_all`) |

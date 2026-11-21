@@ -4,10 +4,11 @@
 Table~\ref{tab:main} reports the core seed-0 comparison across all six taxonomic
 families against the seed-matched \taxid{MuonT} baseline, separating raw
 held-out selection deltas from \textbf{net-of-null geometry deltas} alongside
-external C4, paired final-window training deltas, and steady-step and peak-VRAM
-profiles across both legacy Waves~0--10 and the uncontended eight-A100
-\texttt{wave\_sym\_fastlag} wave (${}^{\ddagger}$). Figure~\ref{fig:plane} pairs
-the resulting cost--quality Pareto frontier with a multi-metric causal
+external C4 and paired final-window training deltas from legacy Waves~0--10
+and \texttt{wave\_sym\_fastlag} (${}^{\ddagger}$). Its timing and memory columns
+use the same measured eight-A100 optimized-runner benchmark for every method.
+Figure~\ref{fig:plane} pairs these matched mean step costs with full-budget
+held-out quality and a multi-metric causal
 attribution plot across all candidates and input-degradation controls.
 
 \begin{table}[t]
@@ -22,15 +23,25 @@ matched execution-path null (\taxid{Null-WT} for width-$512$-dense arms;
 \taxid{Null-Dense} for full-dense arms and conservative ${}^{\S}$ bounds where
 $-0.0039$ holds against \taxid{Null-WT}; same-wave \taxid{Null-OD} for
 Wave-10 upstream-product ${}^{\dagger}$ rows, where legacy-product \fused{} is
-$-0.0033$ raw at $+8.8\%$ step). Rows marked ${}^{\ddagger}$ are executed on
+$-0.0033$ raw). Quality rows marked ${}^{\ddagger}$ are executed on
 uncontended eight-A100 nodes in \texttt{wave\_sym\_fastlag} paired against
 same-wave \taxid{MuonT} (against Wave-0 \taxid{MuonT}, their raw $\Delta$Sel is
 $\fastMlpLagSelWaveZero{}$, $\symMlpSelWaveZero{}$, and $\symMlpLagSelWaveZero{}$,
 and both symmetric arms reach $\symMlpLagCfourFinalSame{}$ final $\Delta$C4;
 net ${}^{\ddagger}$ values use Wave-3 \taxid{Null-WT} pending a dedicated
-\texttt{fast\_lag} null in Section~\ref{sec:program}). Step~$\%$ marked
-${}^{\ast}$ on \taxid{DT-All-Lag} denotes calibrated SM80 stage overhead
-(Section~\ref{sec:systems}). Shaded rows mark the Pareto-optimal family.}
+\texttt{fast\_lag} null in Section~\ref{sec:program}).
+\textbf{Mean Step $\%$ and Peak GiB} use the matched
+\texttt{bench\_8gpu\_opt} campaign for all methods: 96 real-data training
+updates on eight A100-SXM4-40GB GPUs per method, initialized from MuonT
+update-2{,}500 model weights with fresh optimizer/statistics and matching
+data/LR offset. Mean step overhead averages all updates 37--96 after 36
+warmup updates, relative to the same campaign's MuonT mean; Peak GiB is
+measured peak Rank-0 CUDA allocation across all 96 updates, including warmup.
+Compilation, root CUDA graphs, and NCCL DDP remain enabled; evaluation and
+checkpoint I/O are excluded. The two \taxid{WT-MLP-Lag} quality rows share
+one benchmark cost record. These single 60-update timing windows do not
+establish precise percent-level rankings. Shading identifies the selected
+method family, rather than a frontier established by these short timings.}
 \label{tab:main}
 \scriptsize\setlength{\tabcolsep}{3.8pt}
 \resizebox{\textwidth}{!}{\input{results/table_main}}
@@ -47,8 +58,8 @@ ${}^{\ast}$ on \taxid{DT-All-Lag} denotes calibrated SM80 stage overhead
 ]
 \nextgroupplot[
   width=8.65cm,
-  title={(a) Cost--quality Pareto plane \& \texttt{fast\_lag} frontier},
-  xlabel={Step-time overhead versus \taxid{MuonT} (\%)},
+  title={(a) Cost--quality: matched eight-A100 timing},
+  xlabel={Mean step-time overhead versus \taxid{MuonT} (\%)},
   ylabel={$\Delta$ Held-out selection loss (nats)},
   xmin=-25.5, xmax=47.5, ymin=-0.0086, ymax=0.0108,
   xtick={-20,-10,0,10,20,30,40},
@@ -97,14 +108,19 @@ ${}^{\ast}$ on \taxid{DT-All-Lag} denotes calibrated SM80 stage overhead
 \end{tikzpicture}%
 }
 \caption{Master cost--quality and causal-attribution summary across all
-taxonomic families. \textbf{(a)} Steady-step overhead versus held-out selection
+taxonomic families. Quality deltas, matched nulls, and paired training
+uncertainties follow Table~\ref{tab:main}.
+\textbf{(a)} Mean step overhead versus held-out selection
 delta (down and left is better; \taxid{Abl-BothDiag} at $+0.0180$ sits off-scale
-above the arrow). Dashed arrows connect legacy Wave-4 \taxid{WT-MLP-Lag}
-($+18.0\%$) and synchronous \taxid{WT-Sym} ($+\sysExecSymVsMuontPct\%$) to their
-executed eight-A100 \texttt{fast\_lag} counterparts (filled stars at
-$+\sysExecMlpLagVsMuontPct\%$ and $+\sysExecSymLagVsMuontPct\%$ over same-wave
-\taxid{MuonT}; open pentagon shows stage-calibrated \taxid{DT-All-Lag} at
-$+3.1\%$). \textbf{(b)} Decomposition of raw selection deltas into matched-null
+above the arrow). Every x-coordinate uses the same \texttt{bench\_8gpu\_opt}
+measurement as Table~\ref{tab:main}: the arithmetic mean of training updates
+37--96 after 36 warmup updates on eight A100s, relative to the matched
+\taxid{MuonT} mean. Selection deltas retain their full-budget quality waves;
+stars identify the \texttt{fast\_lag} quality rows (${}^{\ddagger}$), and the
+two \taxid{WT-MLP-Lag} quality points share one measured cost. No calibrated
+timing estimates are plotted. Single 60-update windows do not establish
+precise percent-level rankings.
+\textbf{(b)} Decomposition of raw selection deltas into matched-null
 execution-path share (ochre) plus net geometry gain (family fill) across
 positive two-sided candidates (above dashed divider) versus input-degradation
 controls (below divider), overlaid with external $\Delta\text{C4}$ diamonds and

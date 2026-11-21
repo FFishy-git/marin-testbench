@@ -5,6 +5,7 @@ Reads ONLY the materialized JSON artifacts in paper/results/:
   - results/lr_summary.json
   - results/mechanism_summary.json
   - results/systems_summary.json
+  - results/measured_8gpu_timings.json (matched Table 5 and Figure 3 costs)
 
 Emits:
   - results/table_main.tex       Taxonomic master comparison with 5-slot badges,
@@ -14,8 +15,8 @@ Emits:
                                  table with temporal regime classification
   - figs/method_arch.tex         Pure-TikZ 2-panel architecture & fast_lag
                                  asynchronous timeline diagram
-  - figs/plane_plots.tex         Zero-collision Cost-Quality Pareto plane with
-                                 executed 8xA100 fast_lag & WT-Sym frontier points
+  - figs/plane_plots.tex         Cost-quality plane with matched eight-A100
+                                 mean timings and full-budget quality results
   - figs/attribution.dat         Machine-readable causal attribution table
   - figs/attribution_plots.tex   Panel (b) multi-metric causal attribution
                                  forest plot (Null share + Net gain + C4 + Train)
@@ -26,6 +27,7 @@ Run from paper/:
     python -I scripts/render_results_viz.py
 """
 
+import argparse
 import json
 import os
 
@@ -47,12 +49,32 @@ def write_file(rel_path, lines):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--table-only", action="store_true", help="Regenerate only the master comparison table.")
+    mode.add_argument("--results-only", action="store_true", help="Regenerate only Table 5 and Figure 3.")
+    args = parser.parse_args()
     runs = load_json("summary.json")
     lr_data = load_json("lr_summary.json")
     mech = load_json("mechanism_summary.json")
     sys_data = load_json("systems_summary.json")
+    measured = load_json("measured_8gpu_timings.json")
+    if measured["missing_methods"] or measured["covered_methods"] != measured["total_methods"]:
+        raise ValueError("Table 5 and Figure 3 require measured eight-A100 costs for every method")
+    protocol = measured["protocol"]
+    if protocol["world_size"] != 8 or protocol["benchmark_window"] != [37, 96]:
+        raise ValueError("Table 5 and Figure 3 require the matched eight-A100 benchmark protocol")
+    bench = {
+        arm: entry["measured_benchmark"]
+        for arm, entry in measured["methods"].items()
+    }
+    baseline_mean = bench["muont"]["mean_step_seconds"]
+    mean_overhead = {}
+    for arm, costs in bench.items():
+        if costs["window"] != protocol["benchmark_window"] or costs["measured_updates"] != 60:
+            raise ValueError(f"{arm}: costs do not use the shared 60-update window")
+        mean_overhead[arm] = 100 * (costs["mean_step_seconds"] / baseline_mean - 1)
 
-    sys_tot = sys_data["totals_8gpu"]
     sys_cal = sys_data["calibrated_8gpu_ms"]
     sys_mem = sys_data["memory_32l_isolated"]
     ex_sys = sys_data["executed_8gpu_wave_sym_fastlag"]
@@ -62,16 +84,9 @@ def main():
     d_null_dense = runs["wave1/null_all"]["d_sel_late"]
     d_null_od = runs["wave10/null_leftdiag_upstream_fused"]["d_sel_late"]
 
-    # Calibrated & executed fast_lag overheads vs. MuonT and 8-GPU GiB.
-    fast_dt_muont = sys_tot["fast_all_lag_vs_muont_pct_mid"]
-    fast_dt_muont_lo = sys_tot["fast_all_lag_vs_muont_pct_lo"]
-    fast_dt_muont_hi = sys_tot["fast_all_lag_vs_muont_pct_hi"]
-    fast_dt_gib = sys_mem["fast_all_8gpu_est_gib"]
-
+    # Full-budget execution measurements remain in the architecture diagram.
     exec_wt_lag_muont = ex_sys["wt_mlp_lag"]["vs_muont_pct"]
     exec_wt_lag_gib = ex_sys["wt_mlp_lag"]["peak_gib"]
-    exec_sym_muont = ex_sys["wt_sym"]["vs_muont_pct"]
-    exec_sym_gib = ex_sys["wt_sym"]["peak_gib"]
     exec_sym_lag_muont = ex_sys["wt_sym_lag"]["vs_muont_pct"]
     exec_sym_lag_gib = ex_sys["wt_sym_lag"]["peak_gib"]
 
@@ -79,8 +94,7 @@ def main():
     # 1. Master Results Table: results/table_main.tex
     # ------------------------------------------------------------------
     # Tuple schema per row:
-    # (run_key, arm_cell, tuple_cell, null_ref, net_suffix, pareto_shade,
-    #  step_override, gib_override)
+    # (run_key, arm_cell, tuple_cell, null_ref, net_suffix, pareto_shade)
     families = [
         (
             r"I.\ Baselines (\texttt{Ref})",
@@ -93,8 +107,6 @@ def main():
                     0.0,
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave0/muon",
@@ -103,8 +115,6 @@ def main():
                     None,
                     "",
                     False,
-                    None,
-                    None,
                 ),
             ],
         ),
@@ -119,8 +129,6 @@ def main():
                     d_null_wt,
                     "",
                     True,
-                    None,
-                    None,
                 ),
                 (
                     "wave4/inner_outer_mlpdiag_lag",
@@ -129,8 +137,6 @@ def main():
                     d_null_wt,
                     "",
                     True,
-                    None,
-                    None,
                 ),
                 (
                     "wave_sym_fastlag/inner_outer_mlpdiag_lag",
@@ -139,8 +145,6 @@ def main():
                     d_null_wt,
                     r"^{\ddagger}",
                     True,
-                    rf"$\mathbf{{{exec_wt_lag_muont:+.1f}}}$",
-                    rf"$\mathbf{{{exec_wt_lag_gib:.1f}}}$",
                 ),
                 (
                     "wave_sym_fastlag/inner_outer_sym_mlpdiag",
@@ -149,8 +153,6 @@ def main():
                     d_null_wt,
                     r"^{\ddagger}",
                     True,
-                    f"${exec_sym_muont:+.1f}$",
-                    rf"$\mathbf{{{exec_sym_gib:.1f}}}$",
                 ),
                 (
                     "wave_sym_fastlag/inner_outer_sym_mlpdiag_lag",
@@ -159,8 +161,6 @@ def main():
                     d_null_wt,
                     r"^{\ddagger}",
                     True,
-                    rf"$\mathbf{{{exec_sym_lag_muont:+.1f}}}$",
-                    rf"$\mathbf{{{exec_sym_lag_gib:.1f}}}$",
                 ),
             ],
         ),
@@ -175,8 +175,6 @@ def main():
                     d_null_dense,
                     r"^{\S}",
                     True,
-                    None,
-                    None,
                 ),
                 (
                     "wave10/outer_leftdiag_upstream_fused",
@@ -185,8 +183,6 @@ def main():
                     d_null_od,
                     "",
                     False,
-                    None,
-                    None,
                 ),
             ],
         ),
@@ -201,8 +197,6 @@ def main():
                     d_null_dense,
                     "",
                     False,
-                    rf"$+25.6 \!\to\! +3.1^{{\ast}}$",
-                    f"${runs['wave3/inner_outer_all_lag']['peak_gib']:.1f}$",
                 ),
                 (
                     "wave1/inner_outer_all",
@@ -211,8 +205,6 @@ def main():
                     d_null_dense,
                     "",
                     False,
-                    None,
-                    None,
                 ),
             ],
         ),
@@ -227,8 +219,6 @@ def main():
                     "SELF",
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave1/null_all",
@@ -237,8 +227,6 @@ def main():
                     "SELF",
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave10/null_leftdiag_upstream_fused",
@@ -247,8 +235,6 @@ def main():
                     "SELF",
                     "",
                     False,
-                    None,
-                    None,
                 ),
             ],
         ),
@@ -263,8 +249,6 @@ def main():
                     d_null_dense,
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave2/inner_outer_hidden",
@@ -273,8 +257,6 @@ def main():
                     d_null_wt,
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave0/outer_left_down",
@@ -283,8 +265,6 @@ def main():
                     d_null_dense,
                     r"^{\S}",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave0/down_hybrid",
@@ -293,8 +273,6 @@ def main():
                     None,
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave1/left_all",
@@ -303,8 +281,6 @@ def main():
                     None,
                     "",
                     False,
-                    None,
-                    None,
                 ),
                 (
                     "wave1/inner_outer_all_diag",
@@ -313,20 +289,18 @@ def main():
                     None,
                     "",
                     False,
-                    None,
-                    None,
                 ),
             ],
         ),
     ]
 
     tmain = [
-        "% Generated by scripts/render_results_viz.py from results/*_summary.json. Do not edit.",
+        "% Generated by scripts/render_results_viz.py. Costs: results/measured_8gpu_timings.json. Do not edit.",
         r"\begin{tabular}{@{}lcrrrrrr@{}}",
         r"\toprule",
         r"Arm (\texttt{key}) & $\mathcal{A}(R_{512},R_{2048}\mid L_{512},L_{2048}\mid\tau)$ & "
         r"Raw $\Delta$Sel & Net $\Delta$Sel & $\Delta$C4 & $\Delta$Train $\pm$ SE & "
-        r"Step \% & GiB \\",
+        r"Mean Step \% & Peak GiB \\",
         r"\midrule",
     ]
 
@@ -343,16 +317,19 @@ def main():
             null_ref,
             net_suf,
             pareto,
-            step_override,
-            gib_override,
         ) in rows:
             rec = runs[run_key]
+            arm = run_key.split("/", 1)[1]
+            costs = bench[arm]
+            step_pct = mean_overhead[arm]
+            step_cell = f"${step_pct:+.1f}$" if arm != "muont" else "$0.0$"
+            gib_cell = f"${costs['peak_allocated_gib']:.1f}$"
             prefix = r"\rowcolor{pagepanel} " if pareto else ""
             if run_key == "wave0/muont":
                 tmain.append(
                     f"{prefix}{arm_cell} & {tuple_cell} & "
                     f"$0.0000$ & $0.0000$ & $0.0000$ & $0.0000 \\pm \\text{{---}}$ & "
-                    f"$0.0$ & ${rec['peak_gib']:.1f}$ \\\\"
+                    f"{step_cell} & {gib_cell} \\\\"
                 )
                 continue
 
@@ -381,19 +358,6 @@ def main():
             se_str = f"{rec['d_train_se']:.5f}"[1:]
             train_cell = f"${rec['d_train']:+.4f} \\pm {se_str}$"
 
-            leg_step = f"{rec['step_overhead']:+.1f}"
-            if step_override is not None:
-                step_cell = step_override
-            elif run_key == "wave2/inner_outer_leftdiag":
-                step_cell = rf"$\mathbf{{{leg_step}}}$"
-            else:
-                step_cell = f"${leg_step}$"
-
-            if gib_override is not None:
-                gib_cell = gib_override
-            else:
-                gib_cell = f"${rec['peak_gib']:.1f}$"
-
             tmain.append(
                 f"{prefix}{arm_cell} & {tuple_cell} & {raw_cell} & {net_cell} & "
                 f"{c4_cell} & {train_cell} & {step_cell} & {gib_cell} \\\\"
@@ -401,6 +365,8 @@ def main():
 
     tmain += [r"\bottomrule", r"\end{tabular}"]
     write_file("results/table_main.tex", tmain)
+    if args.table_only:
+        return
 
     # ------------------------------------------------------------------
     # 2. Window Evolution Table: results/table_windows.tex
@@ -478,23 +444,16 @@ def main():
             prefix = r"\rowcolor{pagepanel} " if shade else ""
             tw.append(f"{prefix}{wlabel} & {wcells} & {{\\scriptsize {regime}}} \\\\")
     tw += [r"\bottomrule", r"\end{tabular}"]
-    write_file("results/table_windows.tex", tw)
+    if not args.results_only:
+        write_file("results/table_windows.tex", tw)
 
     # ------------------------------------------------------------------
-    # 3. Cost-Quality Pareto Plane (Panel a): figs/plane_plots.tex
+    # 3. Matched Cost-Quality Plane (Panel a): figs/plane_plots.tex
     # ------------------------------------------------------------------
-    y_wt_lag_leg = runs["wave4/inner_outer_mlpdiag_lag"]["d_sel_late"]
-    x_wt_lag_leg = runs["wave4/inner_outer_mlpdiag_lag"]["step_overhead"]
     y_wt_lag_exec = runs["wave_sym_fastlag/inner_outer_mlpdiag_lag"]["d_sel_late"]
-    x_wt_lag_exec = runs["wave_sym_fastlag/inner_outer_mlpdiag_lag"]["step_overhead"]
-
-    y_sym_exec = runs["wave_sym_fastlag/inner_outer_sym_mlpdiag"]["d_sel_late"]
-    x_sym_exec = runs["wave_sym_fastlag/inner_outer_sym_mlpdiag"]["step_overhead"]
+    x_wt_lag_exec = mean_overhead["inner_outer_mlpdiag_lag"]
     y_sym_lag_exec = runs["wave_sym_fastlag/inner_outer_sym_mlpdiag_lag"]["d_sel_late"]
-    x_sym_lag_exec = runs["wave_sym_fastlag/inner_outer_sym_mlpdiag_lag"]["step_overhead"]
-
-    y_dt_lag = runs["wave3/inner_outer_all_lag"]["d_sel_late"]
-    x_dt_lag_leg = runs["wave3/inner_outer_all_lag"]["step_overhead"]
+    x_sym_lag_exec = mean_overhead["inner_outer_sym_mlpdiag_lag"]
 
     fam_plot_specs = [
         (
@@ -503,8 +462,12 @@ def main():
             r"Width-thresholded (\texttt{WT})",
             [
                 ("wave2/inner_outer_mlpdiag", r"\textbf{\taxid{WT-MLP}}", "anchor=north, yshift=-3pt"),
-                ("wave4/inner_outer_mlpdiag_lag", r"\taxid{WT-MLP-Lag} (W4)", "anchor=south west, xshift=1pt, yshift=2pt"),
-                ("wave_sym_fastlag/inner_outer_sym_mlpdiag", r"\taxid{WT-Sym}", "anchor=south, xshift=-1pt, yshift=2.5pt"),
+                ("wave4/inner_outer_mlpdiag_lag", r"\taxid{WT-MLP-Lag} (W4)", "anchor=east, xshift=-3pt"),
+                (
+                    "wave_sym_fastlag/inner_outer_sym_mlpdiag",
+                    r"\taxid{WT-Sym}$^{\ddagger}$",
+                    "anchor=south west, xshift=2pt, yshift=3pt",
+                ),
             ],
         ),
         (
@@ -512,7 +475,8 @@ def main():
             "mark=diamond*, mark size=2.5pt, color=famOD",
             r"Pure-diagonal (\texttt{OD})",
             [
-                ("wave2/inner_outer_leftdiag", r"\textbf{\taxid{OD-All}}", "anchor=south, xshift=-1pt, yshift=2.5pt"),
+                ("wave2/inner_outer_leftdiag", r"\textbf{\taxid{OD-All}}", None),
+                ("wave10/outer_leftdiag_upstream_fused", r"\taxid{OD-Outer}$^{\dagger}$", None),
             ],
         ),
         (
@@ -520,8 +484,8 @@ def main():
             "mark=pentagon*, mark size=2.3pt, color=famDT",
             r"Dense two-sided (\texttt{DT})",
             [
-                ("wave1/inner_outer_all", r"\taxid{DT-All}", "anchor=north, xshift=-1pt, yshift=-3pt"),
-                ("wave3/inner_outer_all_lag", r"\taxid{DT-All-Lag}", "anchor=west, xshift=3pt"),
+                ("wave1/inner_outer_all", r"\taxid{DT-All}", "anchor=north east, xshift=-1pt, yshift=-3pt"),
+                ("wave3/inner_outer_all_lag", r"\taxid{DT-All-Lag}", "anchor=south west, xshift=3pt, yshift=2pt"),
             ],
         ),
         (
@@ -530,7 +494,8 @@ def main():
             r"Matched nulls (\texttt{Null})",
             [
                 ("wave3/null_mlpdiag", r"\taxid{Null-WT}", "anchor=south, yshift=2.5pt"),
-                ("wave1/null_all", r"\taxid{Null-Dense}", "anchor=north, yshift=-2.5pt"),
+                ("wave1/null_all", r"\taxid{Null-Dense}", "anchor=west, xshift=3pt"),
+                ("wave10/null_leftdiag_upstream_fused", r"\taxid{Null-OD}$^{\dagger}$", None),
             ],
         ),
         (
@@ -538,10 +503,10 @@ def main():
             "mark=triangle*, mark size=2.2pt, color=famAbl",
             r"Ablations (\texttt{Abl})",
             [
-                ("wave0/outer_left_down", r"\taxid{Abl-DownOnly}", "anchor=south west, xshift=2pt, yshift=2.5pt"),
+                ("wave0/outer_left_down", r"\taxid{Abl-DownOnly}", None),
                 ("wave2/inner_outer_hidden", r"\taxid{Abl-No2048}", "anchor=south west, xshift=2pt, yshift=1.5pt"),
                 ("wave2/outer_left_all", r"\taxid{Abl-OuterDense}", "anchor=west, xshift=3pt"),
-                ("wave0/down_hybrid", r"\taxid{Abl-DownSwap}", "anchor=west, xshift=3pt"),
+                ("wave0/down_hybrid", r"\taxid{Abl-DownSwap}", "anchor=south west, xshift=3pt, yshift=2pt"),
                 ("wave1/left_all", r"\taxid{Abl-OutOnly}", "anchor=east, xshift=-3pt"),
             ],
         ),
@@ -557,47 +522,31 @@ def main():
     ]
 
     p_lines = [
-        "% Generated by scripts/render_results_viz.py. Do not edit.",
+        "% Generated by scripts/render_results_viz.py. Costs: results/measured_8gpu_timings.json. Do not edit.",
         f"% Shaded net-of-null improvement zone (below Null-Dense = {d_null_dense:.6f})",
         f"\\fill[famWT!6] (axis cs:-25.5,-0.0086) rectangle (axis cs:47.5,{d_null_dense:.6f});",
         r"\draw[pagemuted!70, dashed, line width=0.55pt] (axis cs:-25.5,0) -- (axis cs:47.5,0);",
         r"\draw[pagemuted!45, dotted, line width=0.5pt] (axis cs:0,-0.0086) -- (axis cs:0,0.0108);",
-        f"\\draw[famNull!85, densely dashed, line width=0.7pt] (axis cs:-25.5,{d_null_dense:.6f}) -- (axis cs:47.5,{d_null_dense:.6f});",
-        f"\\node[font=\\tiny, text=famNull!90!black, anchor=south east] at (axis cs:46.8,{d_null_dense + 0.00005:.6f}) {{null floor ($-0.0013$)}};",
+        f"\\draw[famNull!85, densely dashed, line width=0.7pt] "
+        f"(axis cs:-25.5,{d_null_dense:.6f}) -- (axis cs:47.5,{d_null_dense:.6f});",
+        f"\\node[font=\\tiny, text=famNull!90!black, anchor=south east] "
+        f"at (axis cs:46.8,{d_null_dense + 0.00005:.6f}) {{null floor ($-0.0013$)}};",
     ]
 
-    for fam_key, style, leg_text, items in fam_plot_specs:
+    for _fam_key, style, leg_text, items in fam_plot_specs:
         coords = " ".join(
-            f"({runs[rk]['step_overhead']:.3f},{runs[rk]['d_sel_late']:.6f})"
+            f"({mean_overhead[rk.split('/', 1)[1]]:.3f},{runs[rk]['d_sel_late']:.6f})"
             for rk, _, _ in items
         )
         p_lines.append(f"\\addplot[only marks, {style}] coordinates {{{coords}}};")
         p_lines.append(f"\\addlegendentry{{{leg_text}}}")
 
-    # Executed 8xA100 fast_lag starred points (WT-MLP-Lag & WT-Sym-Lag)
+    # Stars identify full-budget fast_lag quality rows; costs share the benchmark.
     p_lines.append(
         f"\\addplot[only marks, mark=star, mark size=3.6pt, line width=0.95pt, color=famWT] "
         f"coordinates {{({x_wt_lag_exec:.3f},{y_wt_lag_exec:.6f}) ({x_sym_lag_exec:.3f},{y_sym_lag_exec:.6f})}};"
     )
-    p_lines.append(r"\addlegendentry{\texttt{fast\_lag} 8$\times$A100 exec.}")
-
-    # Stage-calibrated DT-All-Lag open pentagon
-    p_lines.append(
-        f"\\addplot[only marks, mark=pentagon, mark size=2.6pt, line width=0.8pt, color=famDT] "
-        f"coordinates {{({fast_dt_muont:.3f},{y_dt_lag:.6f})}};"
-    )
-    p_lines.append(r"\addlegendentry{\texttt{fast\_lag} stage cal.}")
-
-    # Pareto shift arrows
-    p_lines += [
-        f"\\draw[-Latex, famWT, densely dashed, line width=0.85pt] "
-        f"(axis cs:{x_wt_lag_leg - 0.55:.3f},{y_wt_lag_leg:.6f}) -- (axis cs:{x_wt_lag_exec + 0.65:.3f},{y_wt_lag_exec:.6f});",
-        f"\\draw[-Latex, famWT!85, densely dashed, line width=0.8pt] "
-        f"(axis cs:{x_sym_exec - 0.50:.3f},{y_sym_exec:.6f}) -- (axis cs:{x_sym_lag_exec + 0.55:.3f},{y_sym_lag_exec:.6f});",
-        f"\\draw[famDT, line width=0.85pt] (axis cs:{fast_dt_muont_lo:.3f},{y_dt_lag:.6f}) -- (axis cs:{fast_dt_muont_hi:.3f},{y_dt_lag:.6f});",
-        f"\\draw[-Latex, famDT, densely dotted, line width=0.75pt] "
-        f"(axis cs:{x_dt_lag_leg - 0.55:.3f},{y_dt_lag:.6f}) to[bend left=14] (axis cs:{fast_dt_muont + 0.70:.3f},{y_dt_lag:.6f});",
-    ]
+    p_lines.append(r"\addlegendentry{\texttt{fast\_lag} quality (${}^{\ddagger}$)}")
 
     color_by_fam = {
         "WT": "famWT",
@@ -610,27 +559,42 @@ def main():
     for fam_key, _, _, items in fam_plot_specs:
         col = color_by_fam[fam_key]
         for rk, lbl, placement in items:
-            xv = runs[rk]["step_overhead"]
+            if placement is None:
+                continue
+            xv = mean_overhead[rk.split("/", 1)[1]]
             yv = runs[rk]["d_sel_late"]
             p_lines.append(
                 f"\\node[font=\\tiny, text={col}, {placement}, inner sep=1pt] "
                 f"at (axis cs:{xv:.3f},{yv:.6f}) {{{lbl}}};"
             )
 
-    # Disjoint left-margin leader labels (right-aligned to x = -0.8 so they never cross x = 0)
-    p_lines += [
-        f"\\draw[famWT!75, line width=0.45pt] (axis cs:{x_sym_lag_exec - 0.45:.3f},{y_sym_lag_exec:.6f}) -- (axis cs:-0.7,-0.00195);",
-        r"\node[font=\tiny, text=famWT, anchor=east, fill=white, fill opacity=0.92, text opacity=1, inner sep=1pt] "
-        f"at (axis cs:-0.8,-0.00195) {{\\textbf{{\\taxid{{WT-Sym-Lag}}}} ($+{x_sym_lag_exec:.1f}\\%$)}};",
-        f"\\draw[famWT!75, line width=0.45pt] (axis cs:{x_wt_lag_exec - 0.50:.3f},{y_wt_lag_exec:.6f}) -- (axis cs:-0.7,-0.00465);",
-        r"\node[font=\tiny, text=famWT, anchor=east, fill=white, fill opacity=0.92, text opacity=1, inner sep=1pt] "
-        f"at (axis cs:-0.8,-0.00465) {{\\textbf{{\\taxid{{WT-MLP-Lag}}}} ($+{x_wt_lag_exec:.1f}\\%$)}};",
-        f"\\draw[famDT!80, line width=0.45pt] (axis cs:{fast_dt_muont - 0.35:.3f},{y_dt_lag - 0.00015:.6f}) -- (axis cs:-0.7,-0.00745);",
-        r"\node[font=\tiny, text=famDT!90!black, anchor=east, inner sep=1pt] "
-        f"at (axis cs:-0.8,-0.00745) {{\\taxid{{DT-All-Lag}} ($+{fast_dt_muont:.1f}\\%^{{\\ast}}$)}};",
+    # Separate labels for the cluster of low-overhead methods.
+    leader_specs = [
+        ("wave_sym_fastlag/inner_outer_sym_mlpdiag_lag",
+         r"\textbf{\taxid{WT-Sym-Lag}}$^{\ddagger}$", "famWT", -0.8, -0.00075, "east"),
+        ("wave_sym_fastlag/inner_outer_mlpdiag_lag",
+         r"\textbf{\taxid{WT-MLP-Lag}}$^{\ddagger}$", "famWT", -0.8, -0.00765, "east"),
+        ("wave2/inner_outer_leftdiag", r"\textbf{\taxid{OD-All}}", "famOD", -0.8, -0.00375, "east"),
+        ("wave10/outer_leftdiag_upstream_fused",
+         r"\taxid{OD-Outer}$^{\dagger}$", "famOD", -0.8, -0.00275, "east"),
+        ("wave0/outer_left_down", r"\taxid{Abl-DownOnly}", "famAbl!90!black", -0.8, -0.00205, "east"),
+        ("wave10/null_leftdiag_upstream_fused",
+         r"\taxid{Null-OD}$^{\dagger}$", "famNull!90!black", 8.0, -0.0018, "west"),
     ]
+    for rk, label, color, label_x, label_y, anchor in leader_specs:
+        xv = mean_overhead[rk.split("/", 1)[1]]
+        yv = runs[rk]["d_sel_late"]
+        p_lines.append(
+            f"\\draw[{color}, line width=0.45pt] "
+            f"(axis cs:{xv:.3f},{yv:.6f}) -- (axis cs:{label_x:.3f},{label_y:.6f});"
+        )
+        p_lines.append(
+            f"\\node[font=\\tiny, text={color}, anchor={anchor}, fill=white, "
+            f"fill opacity=0.92, text opacity=1, inner sep=1pt] "
+            f"at (axis cs:{label_x:.3f},{label_y:.6f}) {{{label}}};"
+        )
 
-    x_bd = runs["wave1/inner_outer_all_diag"]["step_overhead"]
+    x_bd = mean_overhead["inner_outer_all_diag"]
     y_bd = runs["wave1/inner_outer_all_diag"]["d_sel_late"]
     p_lines += [
         f"\\draw[-Latex, famAbl, line width=0.85pt] (axis cs:{x_bd:.3f},0.0093) -- (axis cs:{x_bd:.3f},0.01055);",
@@ -759,6 +723,8 @@ def main():
 
     write_file("figs/attribution.dat", attr_dat)
     write_file("figs/attribution_plots.tex", a_lines)
+    if args.results_only:
+        return
 
     # ------------------------------------------------------------------
     # 5. Full-Budget Horizon Shift Data & Transfer Bars:

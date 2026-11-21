@@ -1,0 +1,33 @@
+{
+  "wave_name": "related_controlled_selected_full_seed2",
+  "wave": [
+    {
+      "arm": "muon_control",
+      "seed": 2,
+      "batch": "0p5m",
+      "name": "muon_control_0p5m_seed2_lr2",
+      "config": "experiment/comparisons/related_selected_full_seed12/muon_control_0p5m_seed2_lr2.json"
+    },
+    {
+      "arm": "inner_outer_mlpdiag",
+      "seed": 2,
+      "batch": "0p5m",
+      "name": "inner_outer_mlpdiag_0p5m_seed2_lr2",
+      "config": "experiment/comparisons/related_selected_full_seed12/inner_outer_mlpdiag_0p5m_seed2_lr2.json"
+    },
+    {
+      "arm": "go_muon_control",
+      "seed": 2,
+      "batch": "0p5m",
+      "name": "go_muon_control_0p5m_seed2_lr2",
+      "config": "experiment/comparisons/related_selected_full_seed12/go_muon_control_0p5m_seed2_lr2.json"
+    },
+    {
+      "arm": "mousse_control",
+      "seed": 2,
+      "batch": "0p5m",
+      "name": "mousse_control_0p5m_seed2_lr2",
+      "config": "experiment/comparisons/related_selected_full_seed12/mousse_control_0p5m_seed2_lr2.json"
+    }
+  ]
+}

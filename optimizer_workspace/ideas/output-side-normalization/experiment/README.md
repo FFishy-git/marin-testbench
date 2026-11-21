@@ -6,6 +6,75 @@ configurations are separate from that snapshot. See
 [ENDEAVOR.md](../ENDEAVOR.md) for the scientific design, executed results,
 and complete model, data, optimizer, and allocation settings.
 
+## Related-Method Controls
+
+GO-MUON and Mousse now have separately labeled common-setting controls and
+source-recipe adapters. These are prepared baselines, not executed quality
+results or validated A100 implementations.
+
+| Arm | Geometry | Numerical Profile |
+| --- | --- | --- |
+| `muon_control` | No factors; same owner/update runner | Common finite NS and isotropic decay |
+| `go_muon_control` | Activation/cotangent moments; matched quarter powers; final norm graft | Common EMA/ridge/refresh and finite NS |
+| `go_muon_paper` | OAS factors; held activations; sparse backward EMA | Compact SVD polar; source-statistics adapter |
+| `mousse_control` | Weight-gradient Gram EMAs; matched eighth powers; post-NS norm graft | Common EMA/ridge/refresh and finite NS in eigen coordinates |
+| `mousse_paper` | Same gradient-Gram information | Pinned author BF16 NS and shape scaling |
+
+Both panels include `inner_outer_mlpdiag` with explicit isotropic matrix
+decay. The original arm still defaults to its original input-shaped decay;
+the isotropic configuration is a separate ablation, not a replacement.
+Model, initialization seed, data order, global batch, auxiliary AdamW routing,
+evaluation, token budget, and schedule are shared. The panels compare complete
+recipes: norm grafting, powers, statistic sources, and root execution can still
+differ. They do not isolate any single mechanism.
+
+`go_muon_paper` is an implementation of arXiv:2608.09763v1 formulas, not
+author-code parity. Its capture remains attached on reuse steps, and its decay
+is an explicit choice because the paper does not specify matrix decay.
+Quarter roots use FP64 eigendecomposition with FP32 returned factors;
+the graft norm uses an FP64 scalar reduction. This reference implementation
+is not a tuned throughput implementation.
+`mousse_paper` adapts pinned revision
+`d00c1bf17790fbe56424ee5567cce80d8e75f4b2`; architecture, auxiliary routing,
+momentum, and additive update transport remain runner choices.
+Neither adapter supports an unqualified source-paper throughput claim.
+
+Prepared seed-0 short-budget configs are under
+`experiment/comparisons/related_controlled_short/` and
+`experiment/comparisons/related_paper_short/`. Each panel has three paired
+four-arm waves at matrix LR multipliers `{1/sqrt(2), 1, sqrt(2)}`.
+Each trial has 167,772,160 tokens and a completed 20%-stable/80%-decay
+schedule, not an early stop of the full schedule. Shared Muon/ours configs
+are identical across panels and need not be run twice.
+
+Generate additional configurations in a new directory:
+
+```bash
+python -m experiment.related_configure \
+  --out experiment/comparisons/related_full_seed12 \
+  --profile controlled --stage full --seeds 1 2
+```
+
+Pass a prepared wave to the existing gates without changing `cluster.json`:
+
+```bash
+python -m experiment.validate --wave-manifest \
+  experiment/comparisons/related_controlled_short/wave_seed0_lr1.json \
+  --receipt artifacts/run-preparation/related_cpu_validation.json
+```
+
+CPU validation leaves all GPU gates pending. Once GPUs are available, use
+the same manifest with `validate --gpu`, exact data/receipt, and a unique work
+directory, then `launch --wave-manifest` with that passing receipt and a
+separate report/output location. Related-method continuation checks cross a
+periodic refresh: GO-MUON checks ten updates split after five; source Mousse
+checks twenty-two split after eleven.
+A pre-refresh comparison verifies that restored factors are consumed before
+being replaced. Independent related-method GPU numerical and compiled-capture
+checks must also pass. Do not bypass launch gates with direct training
+commands. Choose full-budget rates using selection loss, then run paired seeds;
+short trials and CPU parity tests do not establish optimizer superiority.
+
 Implemented arms. Down-only: Muon, input MuonT, outer-left down,
 inner+outer down, down hybrid. All-block (`block_toner.py`), where an arm
 names an input side plus an output side per output width, and may withhold

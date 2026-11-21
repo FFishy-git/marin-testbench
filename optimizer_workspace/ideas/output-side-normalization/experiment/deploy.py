@@ -22,6 +22,8 @@ def deploy():
     previous = json.loads(receipt_path.read_text())["files"] if receipt_path.exists() else {}
     files = sorted(p for p in (TASK / "experiment").rglob("*") if p.is_file() and "__pycache__" not in p.parts)
     files += sorted(p for p in UPSTREAM.rglob("*") if p.is_file() and "__pycache__" not in p.parts)
+    mousse = TASK / "artifacts/external-sources/Mousse-d00c1bf17790fbe56424ee5567cce80d8e75f4b2"
+    files += [mousse / "dion/dion/mousse.py", mousse / "LICENSE", mousse / "dion/LICENSE"]
     files += [TASK / "ENDEAVOR.md"]
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as archive:

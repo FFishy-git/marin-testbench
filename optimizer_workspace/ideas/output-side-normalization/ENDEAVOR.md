@@ -1,6 +1,6 @@
 # Output-Side Normalization in MuonT: Endeavor
 
-Updated on 2026-11-20, Asia/Shanghai. This is the authoritative record for
+Updated on 2026-11-21, Asia/Shanghai. This is the authoritative record for
 the research question, executed experiments, mathematical definitions,
 results, and remaining experimental program.
 Unqualified clock times in the November 16-20 continuation use Asia/Shanghai
@@ -24,6 +24,76 @@ live in [`DETAILS.md`](DETAILS.md), preserved verbatim and in original order.
 | An artifact, hash, PID or receipt | [`DETAILS.md`](DETAILS.md) |
 
 ## Current Experiment State
+
+Related-baseline observation, November21, 2026 03:44 Asia/Shanghai:
+the user-requested six-arm GO-MUON/Mousse campaign is active. Four
+initial exact-wave GPU validations pass, including exact eight-rank
+continuation. Three remote short trials have started and show finite,
+advancing losses; the local queue is still verifying accepted checkpoint
+content. The short study contains18 unique seed0 trials, each320 updates
+and167,772,160 tokens, across three matrix LR multipliers. Shared
+Muon/WT controls are deduplicated across controlled and paper-adapter
+panels. No short endpoint is complete at this observation.
+
+Select each arm's LR only from its final held-out `selection_loss`
+after all18 short trials pass. Then confirm at fresh seeds1/2 with
+5120 updates and2,684,354,560 tokens per trial. Full preparation and
+four exact full-wave GPU validations remain pending. Every allocation
+stage must restore `gpu_matmul.py`; a read-only60-second monitor and
+three audit subagents accompany execution. No optimizer superiority
+or full-budget result follows from smoke checks or partial histories.
+Launch identities and preserved restoration evidence are in
+[`DETAILS.md`](DETAILS.md#november-21-related-baseline-campaign-launch).
+Earlier checkpoints below are historical observations.
+
+### November 21 04:36 Related-Baseline Campaign Milestone
+
+At 04:36:30 Asia/Shanghai, a fresh receipt-backed status check verifies
+14/18 short trials complete: all three LRs for `muon_control`,
+`inner_outer_mlpdiag`, `go_muon_control` and `mousse_control`, plus LR1
+for `go_muon_paper` and `mousse_paper`. Each completed trial has 320
+consecutive updates, 167,772,160 tokens, a finite final held-out
+`selection_loss`, matching config/data/source identities and an eight-rank
+checkpoint receipt. The four completed training-owner receipts record
+zero command, cleanup and keeper-restoration exits.
+
+The 04:35:46 saved monitor observation reports paper LR0 and LR2
+validation owners live on nodes `28.216.17.9` and `28.216.17.80`.
+Their four paper-method short trials remain unstarted at the fresh
+status check. The full campaign remains `not_prepared`; its configs,
+four full-wave validations and 12 fresh-seed full trials have not been
+prepared or launched. Full preparation still requires all 18 short
+endpoints and frozen per-arm LRs selected by final `selection_loss`.
+
+Offline CPU verification passes 114 full-campaign, worker, sequence and
+full-monitor cases in 98.07 seconds, and 20 short/full monitor cases in
+10.11 seconds. The latter suite overlaps the former by 15 full-monitor
+cases. These checks supply no new full-budget quality result, measured
+efficiency gain, optimizer superiority or cloud-upload evidence.
+Receipt paths, source hashes and test commands are in
+[`DETAILS.md`](DETAILS.md#november-21-0436-related-baseline-campaign-milestone).
+The 03:44 entry above remains a preserved historical observation.
+
+### November 21 05:02 Paper-Adapter Validation Milestone
+
+Paper LR2 and LR0 now pass all 18 GPU commands and all 20 execution
+gates. Both record zero maximum absolute error for GO-MUON and Mousse
+eight-rank continuation, including cached pre-refresh continuation.
+LR2 short training has started. The fresh 05:02:45 Asia/Shanghai status
+still verifies 14/18 short endpoints complete; GO-MUON paper LR2 has
+279/320 consecutive updates with finite loss, while Mousse LR2 and both
+paper LR0 trials remain unstarted. LR0's validation owner completes
+keeper restoration at 04:59:24; the saved 05:02 monitor observes that
+restored keeper live.
+
+The full campaign remains `not_prepared`, with no full trial launched.
+Paper LR selection remains pending all three completed candidates;
+these execution checks establish no optimizer superiority. The saved
+04:35:46 false compiled-model, four-arm smoke and checkpoint-continuation
+gates remain explicit historical evidence, unchanged by the later passes.
+Receipt hashes, owner identities and the parent-reported LR2 verification
+milestone are in
+[`DETAILS.md`](DETAILS.md#november-21-0502-paper-adapter-validation-milestone).
 
 Evidence checkpoint, November 20, 2026 02:01 Asia/Shanghai.
 Receipt and explicit live-observation times are shown below. Saved
@@ -4474,15 +4544,21 @@ auxiliary routing, and input-factor settings remain those documented above.
    $B_{\mathrm{grad},t}=G_tG_t^{\mathsf T}/n$ with the same raw EMA,
    damping, powers, and refresh. This gradient-Gram control is inspired by
    Mousse; it is not a reproduction.
-5. **GO-MUON-form control.** Define $R_{1/4}=\mathsf{Out}_n(C)$ and
-   $L_{1/4}=\mathsf{Out}_m(B)$ with their spectral exponent changed from
-   $1/8$ to $1/4$. Use these same quarter-power factors inside and outside:
-   $D_0=L_{1/4}\mathcal N_{10}(L_{1/4}UR_{1/4})R_{1/4}$.
-   Graft $D_0$ per matrix to the input-MuonT direction's Frobenius norm,
-   $D=D_0\|D_{\mathrm{input}}\|_F/\|D_0\|_F$, and use
-   $Q=WR_{\mathrm{out}}^2$ with the usual input outer power $1/8$.
-   This explicitly chosen decay/common-factor recipe is a formula control;
-   author implementation and decay parity remain unresolved.
+5. **GO-MUON and Mousse baselines.** Common-setting formula controls and
+   separately labeled source-recipe adapters are implemented in
+   `experiment/go_muon.py` and `experiment/mousse.py`. GO-MUON uses matched
+   quarter powers and a final graft to $\sqrt{\min(m,n)}$; Mousse uses
+   gradient-Gram EMAs, matched eighth powers, and a graft to the actual
+   post-NS norm. The prepared four-arm panels include same-runner Muon and
+   an isotropic-decay WT-MLP ablation, preserving the original shaped-decay
+   recipe separately. This supersedes the earlier proposed GO-MUON control
+   grafted to input-MuonT norm. GO-MUON has no identified author code;
+   always-on capture and chosen isotropic decay remain explicit adaptations.
+   Source Mousse numerics are adapted from the pinned author revision,
+   with model, auxiliary routing, momentum, and update transport retained
+   from this runner. Short-budget LR configs are prepared, but GPU parity,
+   real-data refresh-crossing continuation, and matched full-budget results
+   remain pending. See [training operations](experiment/README.md#related-method-controls).
 6. **Dimension-capped input control.** Use right-only block-diagonal down
    factors capped at width 512 to separate smaller-factor benefits from
    output-information benefits.
@@ -12288,7 +12364,7 @@ results do not establish a more efficient, better-performing optimizer.
 <!-- BEGIN AUTOMATED RESEARCH STATUS -->
 ## Recurring Experiment Status
 
-Refreshed 2026-11-20 20:59:47, Asia/Shanghai, from the same authenticated
+Refreshed 2026-11-21 09:41:06, Asia/Shanghai, from the same authenticated
 receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).
 Receipt times below are historical observations, not fresh process or GPU checks.
 Only the two latest numbered wave reports and current diagnostic gates appear here.
@@ -12503,14 +12579,7 @@ Preserved read-only terminal waiter error: `RuntimeError: Training-path original
 
 ### NS Marker-Exit Recovery Diagnostic
 
-CPU/source acceptance at 2026-11-19 14:15:49: 103 passing cases, 160 helpers and 529 inventory entries.
-The failed original remains 44/54 commands, 14/18 decisions, six accepted/eight rejected; its separate preservation seal is dated 2026-11-19 14:18:25.
-Recovery saved status: `needs_attention`; 2/54 completed commands and 0/18 case decisions.
-Source/configuration changes are restricted to the owner adapter and the measured handoff helper. Original numerical readers, tolerances, compilation and CUDA graphs are retained.
-Controller receipt at 2026-11-19 14:33:29: `2855659/940361750`. This is a saved observation and does not establish current liveness or GPU occupancy.
-Retained execution error: `RuntimeError: NS training-path bounded validator failed`.
-Failed command: `muont_ns_tpu_q5_full_lr_lower/resumed` at 2026-11-19 14:33:11; execution/cleanup exits1/1, marked descendants absent. It is excluded from completed trajectory counts.
-Independent complete terminal and successor validation remain separately gated. This diagnostic supplies no full-budget optimizer-quality, whole-training efficiency or SwanLab import result.
+Recovery evidence withheld: `ValueError: Training-path recovery local measured marker-exit correction changed`.
 
 ### NS Whole-Process Exit-Drain Diagnostic
 
@@ -12835,3 +12904,170 @@ retain their executed identities and cannot be resumed from the modified
 checkout without restoring the executed source or a separately reviewed
 identity migration. Existing launch-validation receipts likewise refer to
 their recorded source version; rerun required gates before a new launch.
+
+### November 21 05:40 Short Completion And Full Preparation
+
+A fresh receipt-backed check at 05:40:13 Asia/Shanghai verifies all
+18 unique seed-0 short trials complete. Each trial has 320 consecutive
+updates, 167,772,160 tokens, finite final held-out `selection_loss`,
+matching configuration/data/source identities and a complete eight-rank
+checkpoint receipt. This reporting check does not reread checkpoint
+tensors. The six arms are `muon_control`, `inner_outer_mlpdiag`,
+`go_muon_control`, `mousse_control`, `go_muon_paper` and `mousse_paper`.
+Shared controls remain deduplicated across the two comparison panels.
+
+All six arms select LR index 2, matrix LR approximately 0.032, by
+lowest final short-budget `selection_loss`. This is the upper boundary
+of the three-point grid. These exploratory seed-0 choices establish
+neither an LR optimum nor optimizer superiority; C4, training loss and
+runtime do not select the LR.
+
+All four short queues are complete, with every stage recording zero
+command, cleanup and keeper-restoration exits. The saved 05:40:16
+read-only monitor observation verifies the current restored keepers
+on nodes 9, 80, 144 and 139: PIDs 851211, 506238, 465658 and 530080,
+respectively, with eight live ranks each. The original local-validation
+restoration failure and its separate recovery receipt remain preserved.
+
+Full campaign `related-selected-full-seed12-20261121` was prepared at
+05:38:19. Its manifest records `prepared_unvalidated_not_launched`;
+fresh status at 05:40:17 reports `not_started`, 0/12 completed trials
+and zero observed tokens. Confirmation uses the frozen per-arm LRs
+and fresh seeds 1 and 2, with 5,120 updates and 2,684,354,560 tokens
+per trial. Full-wave accelerator validation and launch remain pending
+at that observation.
+
+The parent reports both independent deployment-helper review findings
+fixed, 36 focused CPU tests passing and 155 combined tests passing in
+126.73 seconds. Those suites were not rerun for this journal-only
+update. CPU checks supply no full-wave GPU acceptance, full-budget
+result, measured efficiency gain or superiority claim. No upload or
+overall campaign completion is claimed. Receipt paths, frozen choices,
+source hashes and keeper generations are in
+[`DETAILS.md`](DETAILS.md#november-21-0540-short-completion-and-full-preparation).
+
+### November 21 05:43 Full Validation Queues Launched
+
+The full configurations are deployed: the exclusive deployment receipt
+records 16 files created and verified identical on each of nodes 80,
+144 and 139. The four full-sequence plans retain the prepared campaign
+identity and bind their assigned nodes. Persisted sequence states
+record validation-stage launches at 05:43:19-05:43:20 Asia/Shanghai.
+The parent reports all four plans verified on their actual assigned
+nodes before launch.
+
+The saved 05:45:05 separate full-monitor observation confirms all four
+validation owners and children live with matching generations. Their
+allocation receipts record `keeper_release_complete: true`.
+Node 9 validates the controlled seed-1 wave, node 80 the paper-adapter
+seed-1 wave, node 144 controlled seed 2 and node 139 paper-adapter seed 2.
+The new full monitor is PID 855385 under `monitor-related-full`;
+the existing short-monitor scope remains separate.
+
+Full quality training has not started at this milestone. The saved
+05:45:10 training status is `not_started`, 0/12 complete and zero
+observed updates/tokens; all 12 trial outputs and four full-training
+owner/worker pairs are absent at the 05:45:21 filesystem check.
+Full training remains pending exact-wave validation and artifact
+verification. Each allocation stage must restore `gpu_matmul.py`.
+No full-wave validation pass, full-budget result, superiority, upload
+or overall completion is claimed. Plan hashes, launch identities and
+deployment evidence are in
+[`DETAILS.md`](DETAILS.md#november-21-0543-full-validation-queues-launched).
+
+### November 21 06:18 Full Validators Complete
+
+All four full-wave validators complete 18 GPU commands with zero
+command exits and all 20 execution checks true. The last validator
+receipt is dated 06:18:19 Asia/Shanghai; its allocation owner completes
+at 06:18:33. All four validation owners record command, cleanup and
+keeper-restoration exits zero.
+
+The saved 06:18:39 full-monitor observation reports all four restored
+keepers live. The 06:19:48 snapshot matches their exact process
+generations, commands and rank/GPU occupancy: keeper parents 1027226,
+529843, 492836 and 557759 on nodes 9, 80, 144 and 139 respectively,
+with eight ranks each. Monitor 855385 remains live in its separate
+full-campaign scope.
+
+Full quality training has not started. Saved training status at
+06:18:42 and 06:19:51 is `not_started`, 0/12 complete and zero
+observed updates/tokens. Fresh sequence receipts remain `running`
+with `completed_stages: 0`; the parent reports their controllers still
+independently verifying large validation artifacts. Validator receipt
+completion does not establish all-stage acceptance or full-training
+launch. No full-budget result, efficiency gain, optimizer superiority,
+upload or overall completion is claimed. Exact receipts and restored
+keeper identities are in
+[`DETAILS.md`](DETAILS.md#november-21-0618-full-validators-complete).
+
+### November 21 06:33 Full Training Launched
+
+All four full-sequence receipts now record independent validation
+acceptance: validation `complete`, `completed_stages: 1` and
+`full-trials` running. Accepted bindings retain the validator receipts,
+logs, GPU probes and smoke artifacts. All four validation allocations
+completed command, cleanup and keeper restoration with exits zero.
+Full-training owners then took over those restored keepers.
+
+The first full trials launched at 06:30:24 on node 80, 06:30:32 on
+node 144, 06:32:17 on node 139 and 06:33:20 on node 9, Asia/Shanghai.
+Node 9's fresh full owner/worker is 1038318/1038338. The saved
+06:33:37 monitor observation confirms all four full owners/workers
+live; its 06:33:40 training observation reports `running`, 0/12
+complete. Muon seed 1 is running at step 0 with no loss yet.
+GO-MUON paper seed 1 reaches step 58 with finite loss 6.065669,
+Muon seed 2 step 119 with finite loss 5.517506, and GO-MUON paper
+seed 2 step 8 with finite loss 8.001183.
+
+These are early progress observations at different update counts.
+They establish no quality comparison, full-budget result, efficiency
+gain or optimizer superiority. Eight subsequent trials remain queued.
+Full-training completion, cleanup and final keeper restoration remain
+pending; monitor 855385 continues its separate full-campaign scope.
+No upload or overall completion is claimed. Launch receipts and exact
+progress values are in
+[`DETAILS.md`](DETAILS.md#november-21-0633-full-training-launched).
+
+### November 21 08:15 Muon Full Trials Complete
+
+The saved 08:15:42 Asia/Shanghai monitor observation reports both
+Muon full trials strictly complete: 5,120 updates and 2,684,354,560
+tokens each. Final held-out `selection_loss` is 3.2203761100985386
+for seed 1 and 3.194374021848594 for seed 2. Fresh verification at
+08:17:33 confirms both endpoints, with no completion reasons.
+
+Overall full progress is 2/12 complete. Both controlled workers record
+Muon exit zero and have launched `inner_outer_mlpdiag`; the seed-1
+transition precedes its first reported update. At the saved observation,
+GO-MUON paper seeds 1 and 2 reach 2,721 and 2,658 updates respectively;
+allocation observation is healthy and `needs_attention` is false.
+These are completion and progress records, without a comparison or
+superiority claim. Remaining trials, full-queue cleanup and final
+keeper restoration are pending. Receipt identities and transition
+times are in
+[`DETAILS.md`](DETAILS.md#november-21-0815-muon-full-trials-complete).
+
+### November 21 09:50 GO-MUON Paper Full Trials Complete
+
+Both GO-MUON paper full trials complete 5,120 consecutive updates and
+2,684,354,560 tokens each. The saved 09:50:29 Asia/Shanghai training
+observation reports both endpoints complete; independent receipt audit
+at 09:51:16 confirms matching identities, finite final held-out
+selection losses and complete eight-rank checkpoint receipts.
+Final `selection_loss` is 3.2556959553807467 for seed 1 and
+3.2232144881914806 for seed 2. No checkpoint tensor is reread.
+
+Both paper workers accept GO-MUON with exit zero, then launch Mousse
+at 09:47:49 on node 80 and 09:50:37 on node 139. These later worker
+receipts are separate from the saved monitor's training observation.
+Overall full progress at that observation is 4/12 complete, with
+`needs_attention: false`. Both paper queues remain running with one
+completed trial each; Mousse full-budget completion, cleanup and final
+keeper restoration remain pending. The accepted validation allocations
+retain command, cleanup and restoration exits zero.
+
+This is a completion and transition record, without a comparison,
+optimizer superiority or overall campaign-completion claim. Exact
+receipt hashes and transition identities are in
+[`DETAILS.md`](DETAILS.md#november-21-0950-go-muon-paper-full-trials-complete).

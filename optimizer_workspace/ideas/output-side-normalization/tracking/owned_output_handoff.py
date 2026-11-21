@@ -31,7 +31,7 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def observed(pid: int) -> dict | None:
+def observed(pid: int, *, allow_reparent: bool = False) -> dict | None:
     """Reject generation drift instead of accepting a mixed /proc observation."""
     directory = PROC_ROOT / str(pid)
     try:
@@ -40,7 +40,8 @@ def observed(pid: int) -> dict | None:
         after = (directory / "stat").read_text().rsplit(")", 1)[1].split()
     except (FileNotFoundError, ProcessLookupError):
         return None
-    if before[19] != after[19] or before[1:4] != after[1:4]:
+    ownership = slice(2, 4) if allow_reparent else slice(1, 4)
+    if before[19] != after[19] or before[ownership] != after[ownership]:
         raise RuntimeError("Handoff process generation changed during observation")
     return {
         "pid": pid,
@@ -53,37 +54,38 @@ def observed(pid: int) -> dict | None:
     }
 
 
-def live_processes() -> dict[int, dict]:
+def live_processes(*, allow_reparent: bool = False) -> dict[int, dict]:
     result = {}
     for path in PROC_ROOT.iterdir():
         if path.name.isdigit():
-            process = observed(int(path.name))
+            process = observed(int(path.name), allow_reparent=allow_reparent)
             if process is not None and process["status"] != "Z":
                 result[process["pid"]] = process
     return result
 
 
-def same_generation(before: dict, after: dict | None) -> bool:
+def same_generation(before: dict, after: dict | None, *, allow_reparent: bool = False) -> bool:
     """Allow scheduler state transitions while retaining every ownership field."""
+    ignored = ("status", "parent") if allow_reparent else ("status",)
     return (
         after is not None
         and before["status"] not in ("Z", "X", "x")
         and after["status"] not in ("Z", "X", "x")
-        and {key: value for key, value in before.items() if key != "status"}
-        == {key: value for key, value in after.items() if key != "status"}
+        and {key: value for key, value in before.items() if key not in ignored}
+        == {key: value for key, value in after.items() if key not in ignored}
     )
 
 
-def marker_processes(name: str, value: str) -> dict[int, dict]:
+def marker_processes(name: str, value: str, *, allow_reparent: bool = False) -> dict[int, dict]:
     """Rescan transient exits without accepting mixed generations or partial absence."""
     token = f"{name}={value}".encode()
     identities, marked = {}, set()
     for _ in range(MARKER_SCAN_ATTEMPTS):
         result, unstable = {}, set()
-        for pid, process in live_processes().items():
+        for pid, process in live_processes(allow_reparent=allow_reparent).items():
             if process["status"] in EXIT_STATES:
                 continue
-            if pid in identities and not same_generation(identities[pid], process):
+            if pid in identities and not same_generation(identities[pid], process, allow_reparent=allow_reparent):
                 raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
             try:
                 tokens = (PROC_ROOT / str(pid) / "environ").read_bytes().split(b"\0")
@@ -99,15 +101,16 @@ def marker_processes(name: str, value: str) -> dict[int, dict]:
             marked.add(pid)
             result[pid] = process
         for pid, process in result.items():
-            current = observed(pid)
+            current = observed(pid, allow_reparent=allow_reparent)
             if current is None:
                 unstable.add(pid)
             elif current["status"] in EXIT_STATES:
                 # Exiting processes lose cmdline, but their owner fields must remain exact.
-                if any(current[key] != process[key] for key in ("pid", "start_ticks", "parent", "group", "session")):
+                fields = ("pid", "start_ticks", "group", "session") + (() if allow_reparent else ("parent",))
+                if any(current[key] != process[key] for key in fields):
                     raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
                 unstable.add(pid)
-            elif not same_generation(process, current):
+            elif not same_generation(process, current, allow_reparent=allow_reparent):
                 raise RuntimeError(f"Marked process generation changed during handoff: pid={pid}")
         if not unstable:
             return result

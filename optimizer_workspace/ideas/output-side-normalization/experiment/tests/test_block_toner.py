@@ -188,6 +188,7 @@ class CpuStepToner:
         self.args = ARGS
         self.world, self.rank, self.device, self.pg = 1, 0, "cpu", None
         self.lagged, self.last_metrics, self.steps = {}, {}, 0
+        self.matrix_decay = "recipe"
         generator = torch.Generator().manual_seed(4)
         self.shape_groups, self.momentum, self.params = [], {}, []
         for index, shape in enumerate(shapes):
@@ -328,6 +329,29 @@ def test_identity_left_factors_reduce_two_sided_update_to_input_muont():
     muont = newton_schulz_batched(source[None], 10, 1e-5, "f32")[0] @ unit(ro)
     torch.testing.assert_close(identity, null, rtol=0, atol=0)
     torch.testing.assert_close(null, -0.02 * (muont + 0.1 * weight @ unit(ro) @ unit(ro)), rtol=1e-5, atol=1e-6)
+
+
+def test_isotropic_decay_changes_only_the_penalty_in_single_and_stacked_updates():
+    generator = torch.Generator().manual_seed(41)
+    weight, gradient, momentum = (torch.randn(4, 6, generator=generator) for _ in range(3))
+    li, lo, ri, ro = random_factors(4, 6, generator)
+    common = {"args": ARGS, "lr": 0.02, "weight_decay": 0.1}
+    factors = MatrixFactors(li, lo, ri, ro)
+    _, recipe = block_update(weight, gradient, momentum, factors, **common)
+    actual_momentum, isotropic = block_update(weight, gradient, momentum, factors, matrix_decay="isotropic", **common)
+    expected_change = -0.02 * 0.1 * (weight - weight @ unit(ro) @ unit(ro))
+    torch.testing.assert_close(isotropic - recipe, expected_change, rtol=1e-4, atol=1e-7)
+    stacked_momentum, stacked = block_update_stack(
+        weight[None],
+        gradient[None],
+        momentum[None],
+        (li[None], lo[None]),
+        (ri[None], ro[None]),
+        matrix_decay="isotropic",
+        **common,
+    )
+    torch.testing.assert_close(stacked_momentum[0], actual_momentum, rtol=0, atol=0)
+    torch.testing.assert_close(stacked[0], isotropic, rtol=1e-4, atol=1e-6)
 
 
 def test_diagonal_update_equals_dense_update_with_diagonal_factors():
