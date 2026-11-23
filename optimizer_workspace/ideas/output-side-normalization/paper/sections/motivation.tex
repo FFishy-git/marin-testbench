@@ -153,7 +153,7 @@ entire $2.68\text{B}$-token training run:
   and \texttt{out:up}: despite massive neuron scale spread (mean
   $\mathrm{CV}_{\diag}$ growing from \motInDownEarlyCvMean{} to
   \motInDownFinalCvMean{}, giving high $R^2(A^{-1/2}) = \motInDownExpVarLMedPct\%$
-  purely from coordinate variance heterogeneity), its $\mathrm{erank}/d$ is only
+  alongside coordinate variance heterogeneity), its $\mathrm{erank}/d$ is only
   \motInDownErankMedPct\%, $\rho_{\mathrm{rms}}$ is \motInDownCorrRmsMed{}
   ($6.8\times$ \texttt{out:gate}'s RMS, or $46\times$ higher correlation energy
   per coordinate), and $56.6\%$ of $\|\tilde C_{\text{down}}-I_d\|_F^2$ lies off
@@ -171,12 +171,16 @@ Schur multiplication of weakly dependent covariances
 ($\Sigma_{ij} \approx \Sigma^{\text{bwd}}_{ij}\Sigma^{\text{fwd}}_{ij}$), small
 off-diagonal correlations multiply toward zero ($|\rho_{ij}^{\text{bwd}}\rho_{ij}^{\text{fwd}}| < |\rho_{ij}|$)
 down to the $N_t^{-1/2}$ sampling floor, whereas diagonal variances multiply
-together and compound neuron scale anisotropy. By contrast, the forward
-post-SwiGLU input $x_{\text{down}} = \operatorname{SiLU}(g)\odot u$ has strictly
-positive channel means from one-sided $\operatorname{SiLU}$, adding a dense
-outer-product mean term $\mu\mu^{\Tr}$ to $\mathbb E[x_{\text{down}}x_{\text{down}}^{\Tr}]$
-that keeps $C_{\text{down}}$ strongly correlated off-diagonal --- a sharp,
-falsifiable prediction tested directly by symmetric width-2048 diagonalization
+together and compound neuron scale anisotropy. The forward post-SwiGLU input
+$x_{\text{down}} = \operatorname{SiLU}(g)\odot u$ retains measured off-diagonal
+structure. Its second moment decomposes as
+$\mathbb E[x_{\text{down}}x_{\text{down}}^{\Tr}]
+=\operatorname{Cov}(x_{\text{down}})+\mu\mu^{\Tr}$.
+Nonzero channel means could contribute correlated structure through
+$\mu\mu^{\Tr}$, but the Hadamard product does not imply strictly positive
+channel means. This audit does not separate the mean term from centered
+covariance. Symmetric width-2048 diagonalization tests the complete recipe
+consequence of discarding this off-diagonal structure
 (\taxid{WT-Sym}, Section~\ref{sec:sym-ablation}).
 \end{finding}
 

@@ -30,36 +30,53 @@ The complementarity result (Section~\ref{sec:complement}), the freshness result
 eight-A100 \texttt{fast\_lag} wall-clock crossings
 (Sections~\ref{sec:sym-ablation} and~\ref{sec:systems}) rest on seed-0
 comparisons with exact token pairing and standard errors two orders of magnitude
-below the paired training effects. \taxid{WT-MLP}'s quality benefit is
-replicated on three seeds (Section~\ref{sec:replication}), with a factor-of-two
-spread and the largest value on the selection seed, while the matched-null
-effect is observed in three separate nulls across Waves~1, 3, and~10. Nothing
-here is replicated on a seed reserved from exploration: seeds 0, 1 and 2 have
-all been inspected, which is why Section~\ref{sec:program} reserves 3, 4 and 5.
+below the paired training effects. \taxid{WT-MLP}'s quality benefit was first
+replicated on legacy seeds~0, 1, and~2 (Section~\ref{sec:replication}), and the
+confirmation campaign (Section~\ref{sec:confirmation}) has now replicated all
+four core arms (\taxid{Muon}, \taxid{MuonT}, \taxid{OD-All},
+\taxid{WT-MLP-Lag}) on three fresh post-selection paired seeds (seeds~1, 2,
+and~3) on the unified \texttt{fast\_lag} runner alongside 16-domain Paloma
+evaluation, with \taxid{WT-MLP-Lag} winning $3/3$ seeds on selection loss, C4,
+and Paloma macro mean. By contrast, the $4\times$ Chinchilla overtraining test
+($130\text{M}$, $80$ TPP) and the $520\text{M}$ ($799.6\text{M}$ total) model
+scaling test each rest on a single paired seed (seed~0), supported by $11/11$
+second-half held-out evaluation wins, $5{,}120$--$10{,}240$ paired training
+updates, and $15/16$--$16/16$ Paloma domain wins.
 
 \paragraph{Known confounds and what remains open.}
-Three boundaries govern how the current numbers should be read.
-\emph{Full-budget learning-rate neighborhood}: while Section~\ref{sec:tuning}
-shows that the 320-step optimum ($0.064$) regresses full-budget \muont{} by
-\waveTwelveMuontSelDiffMag{} nats and Section~\ref{sec:mech-graft} rules out
-step-size inflation (\mechMlpdiagGraftNorm{} norm ratio), the $\{0.016, 0.032,
-0.045\}$ full-budget points around our $0.0226$ anchor remain to be executed
-(Section~\ref{sec:program}, Item~1).
-\emph{Same-wave \texttt{fast\_lag} matched null and baseline polling jitter}:
-Wave-3 \nullmlp{} crossed a wave boundary relative to Wave-2 \mlpdiag{}, and
-\texttt{wave\_sym\_fastlag} has not yet executed its own \texttt{fast\_lag}
-\taxid{Null-WT} control (Item~2; Table~\ref{tab:main} marks net ${}^{\ddagger}$
-deltas accordingly). In addition, \texttt{wave\_sym\_fastlag/muont} is bitwise
-identical to \texttt{wave0/muont} through update~\symWaveExactSteps{} and
+The \confTotalRuns{}-run confirmation campaign (Section~\ref{sec:confirmation})
+closed the two primary attribution and tuning gaps from the exploratory waves:
+full-budget LR bracketing around $0.0226$ ($\{0.016, 0.0226, 0.032\}$) and the
+same-runner \texttt{fast\_lag} \taxid{Null-WT} control ($\confNullFinalSelDelta{}$
+final / $\confNullLateSelDelta{}$ late-11 selection nats). Four narrower
+boundaries still govern how our numbers should be read.
+\emph{Gate-1 LR asymmetry in Phase~2 and Wave~3A}: because Gate~1 locked
+\taxid{MuonT} to $0.016$ while leaving \taxid{OD-All} and \taxid{WT-MLP-Lag} at
+$0.0226$, Phase~2's 3-seed comparison is conservative against \taxid{WT-MLP-Lag}
+at step $5{,}120$ while preventing clean mid-decay averaging (which is why
+Section~\ref{sec:confirmation} reports matched-LR late-11 and paired-train
+averages from Phases~1, 3B, and~4). Wave~3B directly resolved the resulting
+$41\%$ LR confound at $4\times$ Chinchilla.
+\emph{Baseline host-polling jitter}: \texttt{wave\_sym\_fastlag/muont} is
+bitwise identical to \texttt{wave0/muont} through update~\symWaveExactSteps{} and
 diverges by $\symWaveMuontVsWaveZeroSel{}$ late selection nats thereafter due to
 upstream asynchronous host \texttt{eigh} polling
 (Appendix~\ref{app:systems}); we therefore report \texttt{wave\_sym\_fastlag}
 deltas against both same-wave \taxid{MuonT} and \texttt{wave0/muont}.
-\emph{Single-seed wall-clock margin}: \taxid{WT-Sym-Lag}'s launch-anchored lead
-at $\text{C4}\le 3.52$ ($\sysCrossSymLagThreeFiveTwoS$\,s versus
-$\sysCrossMuonWaveZeroThreeFiveTwoS$\,s for \taxid{Muon} and
-$\sysCrossMuontSymThreeFiveTwoS$\,s for same-wave \taxid{MuonT}) is a modest
-$8$--$107$\,s margin on one seed and requires multi-seed confirmation in Item~4.
+\emph{Single-seed wall-clock and scaling points}: \taxid{WT-Sym-Lag}'s
+launch-anchored lead at $\text{C4}\le 3.52$ ($\sysCrossSymLagThreeFiveTwoS$\,s)
+remains a single-seed margin, and at $520\text{M}$ \taxid{WT-MLP-Lag}'s
+step-time overhead rises from $+\confPTwoWtStepPct\%$ ($130\text{M}$) to
+$+\confPFourWtStepPct\%$ (reflecting $d=1024$ dense output roots under
+microbatch~1 on 40\,GB A100s).
+\emph{Related-baseline LR ceiling and adapter scope}: in the separate paired
+campaign of Section~\ref{sec:related-baselines} (18 short and 12 full runs
+comparing \texttt{muon\_control}, \taxid{WT-MLP}, Mousse, and GO-MUON under
+isotropic $\lambda = 0.1$ decay), all six arms selected the upper boundary of
+the three-point grid ($\eta = 0.032$), GO-MUON's paper adapter kept capture
+hooks active on reuse steps, and only two fresh seeds were executed. Those runs
+therefore diagnose training dynamics under the shared protocol rather than
+establishing fully tuned rankings for Mousse or GO-MUON.
 
 \paragraph{Reproduction fidelity.}
 Our baseline is a runtime adaptation, not an exact reproduction of the pinned
@@ -76,11 +93,15 @@ detail, but it bounds how much weight any single final evaluation can carry on
 its own.
 
 \paragraph{Generality.}
-One model size, one token budget, one hardware configuration, one data mixture.
-We have one larger-batch pair and no larger model. The arm geometries are tied
-to this architecture's projection structure --- in particular to the SwiGLU MLP
-expansion ratio of 4, which concentrates $96.2\%$ of $O(d^3)$ eigendecomposition
-work in the width-2048 projections.
+Our experiments span two model scales ($130\text{M}$ non-embedding /
+$265.6\text{M}$ total and $520\text{M}$ non-embedding / $799.6\text{M}$ total),
+two token-per-parameter horizons ($20$ TPP / $1\times$ Chinchilla and $80$ TPP
+/ $4\times$ Chinchilla), two batch sizes ($0.5\text{M}$ and $1\text{M}$ tokens),
+and 16 external Paloma domains, all on one pre-training mixture and one
+hardware family (eight-A100 nodes). Multi-billion-parameter scale and non-SwiGLU
+architectures remain untested, and the arm geometries are tailored to SwiGLU's
+$4\times$ MLP expansion, which concentrates $96.2\%$ of $O(d^3)$
+eigendecomposition work in the width-$4d$ projections.
 
 \section{Related work}
 \label{sec:related}
@@ -88,13 +109,18 @@ work in the width-2048 projections.
 \paragraph{Muon and matrix-aware steps.}
 Muon \citep{jordan2024muon} established that orthogonalizing momentum with a
 cheap fixed-degree iteration is competitive at scale, and the preconditioned
-variant we baseline against adds input-side whitening to it. Our arms are
+variant we baseline against adds input-side whitening to it. Our core arms are
 modifications of that baseline, not of Muon itself, and we report plain Muon
-only as a reference point. We are not aware of a published study that adds
-output-cotangent second moments to a Muon-type optimizer, separates pre- versus
-post-SwiGLU width-2048 covariance regimes, and measures the result against a
-matched execution-path null; where our arms approach a published two-sided form
-we label them formula controls rather than reproductions.
+only as a reference point. Contemporary two-sided spectral methods apply
+matched-power preconditioning around the polar map with Frobenius grafting:
+Mousse \citep{zhang2026mousse} uses Shampoo gradient-Gram moments with spectral
+tempering ($\alpha = 1/8$), while GO-MUON \citep{che2026gomuon} uses
+OAS-regularized activation and output-cotangent moments at exact quarter power
+($\alpha = 1/4$). Section~\ref{sec:related-baselines} evaluates both under
+controlled and adapted profiles alongside \taxid{WT-MLP} and \texttt{muon\_control},
+highlighting the interaction between outer exponent, Frobenius grafting, and
+learning-rate range; where our arms approach a published two-sided form we
+label them formula controls or adapters rather than reproductions.
 
 \paragraph{Kronecker-factored and full-matrix preconditioners.}
 K-FAC \citep{martens2015kfac} and the Shampoo family

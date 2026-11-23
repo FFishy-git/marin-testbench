@@ -26,6 +26,10 @@ sys_path = os.path.join(HERE, "results", "systems_summary.json")
 sys_data = json.load(open(sys_path)) if os.path.exists(sys_path) else {}
 sym_path = os.path.join(HERE, "results", "sym_wave_raw.json")
 sym_raw = json.load(open(sym_path)) if os.path.exists(sym_path) else {}
+related_path = os.path.join(HERE, "results", "related_baselines.json")
+related_data = json.load(open(related_path)) if os.path.exists(related_path) else {}
+conf_path = os.path.join(HERE, "results", "confirmation_campaign.json")
+conf_data = json.load(open(conf_path)) if os.path.exists(conf_path) else {}
 
 values = set()
 
@@ -53,6 +57,8 @@ walk(runs)
 walk(mech)
 walk(sys_data)
 walk(sym_raw)
+walk(related_data)
+walk(conf_data)
 
 for rec in runs.values():
     for other in runs.values():

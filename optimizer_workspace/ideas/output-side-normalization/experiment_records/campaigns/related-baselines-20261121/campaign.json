@@ -1,0 +1,790 @@
+{
+  "schema_version": 1,
+  "name": "related-baselines-20261121",
+  "time": "2026-11-20T18:48:14.314974+00:00",
+  "status": "prepared_unvalidated_not_launched",
+  "root": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization",
+  "source": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization",
+  "source_revision": "dab7f3777c75e740536df822f50ffa1d929a340c",
+  "files_sha256": {
+    "experiment/__init__.py": "0b8b3dcd0de9b149267692b35c140355dff388fd3126a08ac8236db8ceaed083",
+    "experiment/access.py": "52f2600be4220b1063e2d1d19845de5d2aabedab1616f259518340aebae9236a",
+    "experiment/block_toner.py": "34cc7db8f2f0e7f6b96958daf1a023c40527a9998260a516daa96ccce9e58b13",
+    "experiment/bootstrap.py": "658aa14a0c7a454a90d4e26e3343bfc4946a2c134d5549e2aa29380940b35939",
+    "experiment/capture.py": "4d0da06ddb99eb4a7d204ec45de28abc9b7564245637ab5913dcac6844ff12b1",
+    "experiment/configure.py": "e2b9e2e096f54ddb24415c8993ed4ef7621092c8cb20dcff088e25695f64faaa",
+    "experiment/data_access.py": "8fd029d6b1d0de090ccb076feaf6f01ea5decb8d0c234392389779aaf01892fb",
+    "experiment/deploy.py": "56e2955085338444f0f488c9c3423e7493fd51411900d45538f1ec4dcd6be1ba",
+    "experiment/factors.py": "a1a5408531d3a4055e20d63dfa9d449299952a50ea5be12a01426176f711cf7f",
+    "experiment/go_muon.py": "8880d08e0e22db5b772802a9912c5a3304716145b423e5b9461f234187c1ab1b",
+    "experiment/go_muon_gpu_checks.py": "7de3d7cd2868a478fa6654329f5c748029dec9587c0638eeb4928b8fdbfce9d4",
+    "experiment/gpu_checks.py": "c17be3302c4971cbeab7fc9687c7ea42e699c8c2daa50bb7952b0ec6f591a38b",
+    "experiment/launch.py": "6a6794b65d97f3f41e03c9518eabc17afc7ecb2f13f416513097284c99cb3153",
+    "experiment/mousse.py": "42a77b45103f5f5da7b4b77eb484baa3314ba155b22916e54e99377775949de1",
+    "experiment/mousse_gpu_checks.py": "923e19512f19d161b72684efda011571da966df39f36c3e77a5e836c712e84d1",
+    "experiment/optimizer.py": "f182de6054c3d8eaf806bf01b2b3a7360f9e997d8b2508f7bea069151d90b93d",
+    "experiment/prepare.py": "77d536a09be4098952e307e8ed52c96e530cec73d6853caf4b15f5bbcfb15408",
+    "experiment/records.py": "d6ea6b514f8fc6789e10d6d1753393fae667fe77664c486d4c0d7352a669dc58",
+    "experiment/reference.py": "9b00ba490aa6538dabe5f637ce322ed09be4b700c8ed446d87db4db7db4d7bd7",
+    "experiment/related_base.py": "87051e7fc85c527ebbb5957533754189a256e346efc33e3c6ce603fa0da9075e",
+    "experiment/related_baselines.py": "67a70f78f4393b02215e3a55b5beda5c6795fefec3aa3de960ae6f39aa4f4dba",
+    "experiment/related_configure.py": "77533f42b9af5797e250df826f756e574017228a880f93bbc45423bcffdcd63f",
+    "experiment/related_gpu_checks.py": "7429b4c04d1691a47a528b6c0e7ae910c73a7d8dc8e25f2db1e44e2c6ac7b1c3",
+    "experiment/tests/conftest.py": "84643f4ff5513dd98ce30b58b51738e083354db599dae61e19f7bf18c9f7c045",
+    "experiment/tests/test_block_toner.py": "150615ee4877ee4daa2b739ccd24e25b95c5d944ba872ba7797aa220e3cbdeed",
+    "experiment/tests/test_go_muon.py": "ba5f0e3befb622202ea9a3d418a2a63ef8b1340865a7d27d2ec1ae0d97881eae",
+    "experiment/tests/test_mousse.py": "aba179ca4c1e1cf774cb9e5fd98dfb526a08f18f58e8374021ce25ae72035675",
+    "experiment/tests/test_numerics.py": "487f18c2301479f1271aff779de116456e76ad3d01fa6989a4ff4dedcde3406b",
+    "experiment/tests/test_related_base.py": "2d03715b53d7914ae64ec05d586e73ab4ea747684876fa99ce6482e926388c91",
+    "experiment/tests/test_related_integration.py": "a3534bc236ae9d067dedd4819549f36ee1535630b59f0f2f76eadc257410148c",
+    "experiment/toner_state.py": "9f941c40c9fd07acaa77edbbf6fdf6a503fd70995beb914f1f41b643dc2ae065",
+    "experiment/train.py": "8d2a7d018db8b6889e8cec3ce0c54cf34e605ba5a88f936811c100e67d2d3261",
+    "experiment/validate.py": "f8497d1879bb080dfe9bf01ac69ac3c73f40f67e0666e6d9f8e69cba2e03ff36",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/data.py": "df868b5dc3ca628012c9c744b073f6f097e8b16d3b41e9d963921d3c7bb8383a",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/head_ce.py": "57fd2263cd19496c8a90a4acfb81c3d86b7491b6d7c06ea05de58d588b1154b4",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/model.py": "8e5b283d2f02b71195109821575c923c8f976ef9d304f5839973b258e7e1d759",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/native.py": "6403d49decb726b2b5c7d75d27861963f47fb69e75ea14199c7623017841154a",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/ops.py": "14d2c3316160631ea0a8d09433b21e9c9d069ddff4a0c47f36975d23ba25311f",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/optimizer.py": "18d40a0858643cdc8f6f968da8f75b1ac324abcf948b4d8cf12b24e0943825db",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/prepare_data.py": "bdff8f06a69a721c9968859390eec919073e3c5006f02a685875fb9cac03f392",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/train.py": "cb926b0e463fe381a0d179605b3685a656925f38f7a3e65c99a628e47c8e7856",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/__init__.py": "543e160569c4a55f7c5672d919c0ef2de824be493f7309711317bea763359cb0",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/__init__.py": "aa34cf67454aaede1b312fac734be7a6e90f01d2cd12c6741b61e697461bfa03",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/adapter.py": "3f4d1c47e5756942879edfe98995aec58a48374c0ad4a50cf75dda7594085269",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/engine.py": "1887e09312bb7276a2e3057cf9a41c644c353aa1b1c53dbaa1359c32f43892cb",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/fused_root.py": "3e663d31d4ff5a76b85ba54afab16e50ce8a1b38d5c28c4e88f521775ddfb48d",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/muon.py": "b03f10c80ce46c61d4db788dda481bc8407273e809b252bd99132c49d665bb42",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/roots.py": "6a61bdefa6fd3fca6365e571baac4208c53d73e9187978be5d75a6e1951f331c",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/symm16.py": "4c59b154629b649d14afdb835dab9774384fdd48bc3d0c7b3de5cf8bb66abf99",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/syrk.py": "b36281c862f010261a558224711bdbed8320ed4cb4bf6db272c98a0bb5d3ab66",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/linalg.py": "3d5e3dcc406317cb3116098bae659dd1800db755ba6097c56d650ec4acb58705",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/reference.py": "ad2c2a817ed3bfc831485a8ca15cf9bfd94c4746f6fabca9ae4a9f47f1ed458f",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/statistics.py": "8a8f6181ec6ef49bd229371356957eb5d614d55606dc1e0d4ccbd312d691ca8b",
+    "experiment/upstream_manifest.json": "38ce335f473b48c3d27ef4c739c58236afa9c2ac96d33b5a0155f0240a6c1b27",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/data_plan.json": "f8411c768b51a1bc7271d9cc04e5ae398d6dc7763173dc2c975d25ac684ec57d",
+    "artifacts/external-sources/Mousse-d00c1bf17790fbe56424ee5567cce80d8e75f4b2/dion/dion/mousse.py": "874f02c33531b26cfa0b5c6c1c798afe72ec9c63ce07f804ee6caea222ccd201",
+    "experiment/comparisons/related_controlled_short/wave_seed0_lr0.json": "c4024dfb18ea5a7437202db4e49f425bc42a05eface598890d57c0fb102c7ec1",
+    "experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr0.json": "3e600add029ca5cce63f8f9380f55bb86402d8ab74ab61614aee2695544acba1",
+    "experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr0.json": "496dc20a3fa076c977f40831fcdf8a9515b727fbb7ccc48b0e3f4ab97a054c23",
+    "experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr0.json": "44b2ce567f118c642072b9ab58bf15425761750ee0ae4bf3cbd19a6545c5bfde",
+    "experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr0.json": "ea70f022df911ff775ce17644d874371fdffa2400f62fd8513bc69d07c4f02d4",
+    "experiment/comparisons/related_controlled_short/wave_seed0_lr1.json": "3ef0c4e66fb04e17aaa7733df26af68a37f60c51f417b75fad9be1c2520a0e01",
+    "experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr1.json": "853b31d73d93eb96341fd7a6ffda5d6f78ce8fcf073d270a5ee425ce69affbb2",
+    "experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr1.json": "a548110a4834c9bd7e994ce8d6e66f9b06351eb6d8e1bd671f45ad80ad08d7f8",
+    "experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr1.json": "168b4e45361f1d4c4b8699daccbe0f4e345d874ef739467f7d1cdad2891f4132",
+    "experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr1.json": "2a69ee906495959b92f36cbdd383075b2e492c3975deeb3a3039c3276a6905d2",
+    "experiment/comparisons/related_controlled_short/wave_seed0_lr2.json": "7b5581fe85ddeb21ed5f1c8085120d48e814e689b43cc6fa1cb6c7c0cef48a32",
+    "experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr2.json": "cb15b2440cdf3efdb8d985c824dd16d6324ed62bf4a6796856f3e9c7008ee1ab",
+    "experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr2.json": "c4e50aefe8c47b52f0b776b1b65a59ec033e5a184aa2fe9036e51aea0dcd0b03",
+    "experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr2.json": "395fabaffef35fed73443e8063fb3cabf412771271eeb32d27113bb52c20127d",
+    "experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr2.json": "812eb02315a39c3f296fc8218fdef6d9f37fec0e157fa4741b838f2210c5e253",
+    "experiment/comparisons/related_paper_short/wave_seed0_lr0.json": "fe9e05abc482369b9d8a408b42f9a6a446ec49560920c74c978eba0113fd620c",
+    "experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr0.json": "3e600add029ca5cce63f8f9380f55bb86402d8ab74ab61614aee2695544acba1",
+    "experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr0.json": "496dc20a3fa076c977f40831fcdf8a9515b727fbb7ccc48b0e3f4ab97a054c23",
+    "experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr0.json": "d7f82029a4b932c6523078110b3b0624e75b2155d84b82a07b49ef37ce1cec73",
+    "experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr0.json": "c248c00e0ec4723c299bc12cfdc809837e2abe106b7e5d65792cfff540082778",
+    "experiment/comparisons/related_paper_short/wave_seed0_lr1.json": "938727646572c83ae140a391cb3429b198d7b2cd7fdc6d8dae7c6e6ee3edfa82",
+    "experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr1.json": "853b31d73d93eb96341fd7a6ffda5d6f78ce8fcf073d270a5ee425ce69affbb2",
+    "experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr1.json": "a548110a4834c9bd7e994ce8d6e66f9b06351eb6d8e1bd671f45ad80ad08d7f8",
+    "experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr1.json": "1e38909336ad418fda36db5d32f423064b63e9848966e8a651336f5d0e8b3592",
+    "experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr1.json": "a806fe851fa89897d3d86f9b57c9418198f88487581766ac96ed94d53576b9d3",
+    "experiment/comparisons/related_paper_short/wave_seed0_lr2.json": "7f7b884f71fcc8e62e865559d73a0087ab353b09439ee797b84b54f463e5f90c",
+    "experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr2.json": "cb15b2440cdf3efdb8d985c824dd16d6324ed62bf4a6796856f3e9c7008ee1ab",
+    "experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr2.json": "c4e50aefe8c47b52f0b776b1b65a59ec033e5a184aa2fe9036e51aea0dcd0b03",
+    "experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr2.json": "3a8274f6e8d64c31477a0f57824d5b79ea226e968c20dbdedff84e61a3110e14",
+    "experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr2.json": "387fddf35a06a51d2f72c5b3c8a2cfdd6059bc1aba08aea6733dff66babdb88f"
+  },
+  "source_sha256": {
+    "experiment/__init__.py": "0b8b3dcd0de9b149267692b35c140355dff388fd3126a08ac8236db8ceaed083",
+    "experiment/access.py": "52f2600be4220b1063e2d1d19845de5d2aabedab1616f259518340aebae9236a",
+    "experiment/block_toner.py": "34cc7db8f2f0e7f6b96958daf1a023c40527a9998260a516daa96ccce9e58b13",
+    "experiment/bootstrap.py": "658aa14a0c7a454a90d4e26e3343bfc4946a2c134d5549e2aa29380940b35939",
+    "experiment/capture.py": "4d0da06ddb99eb4a7d204ec45de28abc9b7564245637ab5913dcac6844ff12b1",
+    "experiment/configure.py": "e2b9e2e096f54ddb24415c8993ed4ef7621092c8cb20dcff088e25695f64faaa",
+    "experiment/data_access.py": "8fd029d6b1d0de090ccb076feaf6f01ea5decb8d0c234392389779aaf01892fb",
+    "experiment/deploy.py": "56e2955085338444f0f488c9c3423e7493fd51411900d45538f1ec4dcd6be1ba",
+    "experiment/factors.py": "a1a5408531d3a4055e20d63dfa9d449299952a50ea5be12a01426176f711cf7f",
+    "experiment/go_muon.py": "8880d08e0e22db5b772802a9912c5a3304716145b423e5b9461f234187c1ab1b",
+    "experiment/go_muon_gpu_checks.py": "7de3d7cd2868a478fa6654329f5c748029dec9587c0638eeb4928b8fdbfce9d4",
+    "experiment/gpu_checks.py": "c17be3302c4971cbeab7fc9687c7ea42e699c8c2daa50bb7952b0ec6f591a38b",
+    "experiment/launch.py": "6a6794b65d97f3f41e03c9518eabc17afc7ecb2f13f416513097284c99cb3153",
+    "experiment/mousse.py": "42a77b45103f5f5da7b4b77eb484baa3314ba155b22916e54e99377775949de1",
+    "experiment/mousse_gpu_checks.py": "923e19512f19d161b72684efda011571da966df39f36c3e77a5e836c712e84d1",
+    "experiment/optimizer.py": "f182de6054c3d8eaf806bf01b2b3a7360f9e997d8b2508f7bea069151d90b93d",
+    "experiment/prepare.py": "77d536a09be4098952e307e8ed52c96e530cec73d6853caf4b15f5bbcfb15408",
+    "experiment/records.py": "d6ea6b514f8fc6789e10d6d1753393fae667fe77664c486d4c0d7352a669dc58",
+    "experiment/reference.py": "9b00ba490aa6538dabe5f637ce322ed09be4b700c8ed446d87db4db7db4d7bd7",
+    "experiment/related_base.py": "87051e7fc85c527ebbb5957533754189a256e346efc33e3c6ce603fa0da9075e",
+    "experiment/related_baselines.py": "67a70f78f4393b02215e3a55b5beda5c6795fefec3aa3de960ae6f39aa4f4dba",
+    "experiment/related_configure.py": "77533f42b9af5797e250df826f756e574017228a880f93bbc45423bcffdcd63f",
+    "experiment/related_gpu_checks.py": "7429b4c04d1691a47a528b6c0e7ae910c73a7d8dc8e25f2db1e44e2c6ac7b1c3",
+    "experiment/tests/conftest.py": "84643f4ff5513dd98ce30b58b51738e083354db599dae61e19f7bf18c9f7c045",
+    "experiment/tests/test_block_toner.py": "150615ee4877ee4daa2b739ccd24e25b95c5d944ba872ba7797aa220e3cbdeed",
+    "experiment/tests/test_go_muon.py": "ba5f0e3befb622202ea9a3d418a2a63ef8b1340865a7d27d2ec1ae0d97881eae",
+    "experiment/tests/test_mousse.py": "aba179ca4c1e1cf774cb9e5fd98dfb526a08f18f58e8374021ce25ae72035675",
+    "experiment/tests/test_numerics.py": "487f18c2301479f1271aff779de116456e76ad3d01fa6989a4ff4dedcde3406b",
+    "experiment/tests/test_related_base.py": "2d03715b53d7914ae64ec05d586e73ab4ea747684876fa99ce6482e926388c91",
+    "experiment/tests/test_related_integration.py": "a3534bc236ae9d067dedd4819549f36ee1535630b59f0f2f76eadc257410148c",
+    "experiment/toner_state.py": "9f941c40c9fd07acaa77edbbf6fdf6a503fd70995beb914f1f41b643dc2ae065",
+    "experiment/train.py": "8d2a7d018db8b6889e8cec3ce0c54cf34e605ba5a88f936811c100e67d2d3261",
+    "experiment/validate.py": "f8497d1879bb080dfe9bf01ac69ac3c73f40f67e0666e6d9f8e69cba2e03ff36",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/data.py": "df868b5dc3ca628012c9c744b073f6f097e8b16d3b41e9d963921d3c7bb8383a",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/head_ce.py": "57fd2263cd19496c8a90a4acfb81c3d86b7491b6d7c06ea05de58d588b1154b4",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/model.py": "8e5b283d2f02b71195109821575c923c8f976ef9d304f5839973b258e7e1d759",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/native.py": "6403d49decb726b2b5c7d75d27861963f47fb69e75ea14199c7623017841154a",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/ops.py": "14d2c3316160631ea0a8d09433b21e9c9d069ddff4a0c47f36975d23ba25311f",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/optimizer.py": "18d40a0858643cdc8f6f968da8f75b1ac324abcf948b4d8cf12b24e0943825db",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/prepare_data.py": "bdff8f06a69a721c9968859390eec919073e3c5006f02a685875fb9cac03f392",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/reproduce/marin/train.py": "cb926b0e463fe381a0d179605b3685a656925f38f7a3e65c99a628e47c8e7856",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/__init__.py": "543e160569c4a55f7c5672d919c0ef2de824be493f7309711317bea763359cb0",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/__init__.py": "aa34cf67454aaede1b312fac734be7a6e90f01d2cd12c6741b61e697461bfa03",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/adapter.py": "3f4d1c47e5756942879edfe98995aec58a48374c0ad4a50cf75dda7594085269",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/engine.py": "1887e09312bb7276a2e3057cf9a41c644c353aa1b1c53dbaa1359c32f43892cb",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/fused_root.py": "3e663d31d4ff5a76b85ba54afab16e50ce8a1b38d5c28c4e88f521775ddfb48d",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/muon.py": "b03f10c80ce46c61d4db788dda481bc8407273e809b252bd99132c49d665bb42",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/roots.py": "6a61bdefa6fd3fca6365e571baac4208c53d73e9187978be5d75a6e1951f331c",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/symm16.py": "4c59b154629b649d14afdb835dab9774384fdd48bc3d0c7b3de5cf8bb66abf99",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/fast/syrk.py": "b36281c862f010261a558224711bdbed8320ed4cb4bf6db272c98a0bb5d3ab66",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/linalg.py": "3d5e3dcc406317cb3116098bae659dd1800db755ba6097c56d650ec4acb58705",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/reference.py": "ad2c2a817ed3bfc831485a8ca15cf9bfd94c4746f6fabca9ae4a9f47f1ed458f",
+    "artifacts/external-sources/Toner-dab7f3777c75e740536df822f50ffa1d929a340c/src/toner/statistics.py": "8a8f6181ec6ef49bd229371356957eb5d614d55606dc1e0d4ccbd312d691ca8b"
+  },
+  "helpers_sha256": {
+    "related_campaign.py": "d34313662af2d201709b0e3aa34c9952cacb6a192279177094a2f9f9e1e50716",
+    "compare_runs.py": "01b55ee1226b9e31ad8db0d6d996bb45003a063e8981e0917fd4a6bc500eca2a",
+    "analyze_tuning.py": "1e8053c00b0d875aff319edee2e681bcdbfeefe17a7f62c423f780c5a6ae30d0",
+    "prepare_tuning.py": "f0fa98b1d91fdaed6b4b8e3552fe81eac102fed22082fb3c49cfcfafcfa558ef"
+  },
+  "data": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/data",
+  "data_receipt": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/data/experiment_receipt.json",
+  "data_receipt_sha256": "e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10",
+  "arms": [
+    "muon_control",
+    "inner_outer_mlpdiag",
+    "go_muon_control",
+    "mousse_control",
+    "go_muon_paper",
+    "mousse_paper"
+  ],
+  "trials": [
+    {
+      "name": "muon_control_0p5m_seed0_lr0",
+      "arm": "muon_control",
+      "family": "muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr0.json",
+      "config_sha256": "3e600add029ca5cce63f8f9380f55bb86402d8ab74ab61614aee2695544acba1",
+      "config_identity_sha256": "cfd3980c39074f7d540a32820cc9f9f8c447498ba7fa48e2eaae834fd93df67c",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr0.json",
+          "config_sha256": "3e600add029ca5cce63f8f9380f55bb86402d8ab74ab61614aee2695544acba1",
+          "wave": "related_controlled_short_seed0_lr0"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr0.json",
+          "config_sha256": "3e600add029ca5cce63f8f9380f55bb86402d8ab74ab61614aee2695544acba1",
+          "wave": "related_paper_adapters_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/muon_control_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "inner_outer_mlpdiag_0p5m_seed0_lr0",
+      "arm": "inner_outer_mlpdiag",
+      "family": "inner_outer_mlpdiag",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr0.json",
+      "config_sha256": "496dc20a3fa076c977f40831fcdf8a9515b727fbb7ccc48b0e3f4ab97a054c23",
+      "config_identity_sha256": "cfab9336cd165b42416f82b11a8041cac43e9bc4d0050064cc935ffb58d774ef",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr0.json",
+          "config_sha256": "496dc20a3fa076c977f40831fcdf8a9515b727fbb7ccc48b0e3f4ab97a054c23",
+          "wave": "related_controlled_short_seed0_lr0"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr0.json",
+          "config_sha256": "496dc20a3fa076c977f40831fcdf8a9515b727fbb7ccc48b0e3f4ab97a054c23",
+          "wave": "related_paper_adapters_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/inner_outer_mlpdiag_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_control_0p5m_seed0_lr0",
+      "arm": "go_muon_control",
+      "family": "go_muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr0.json",
+      "config_sha256": "44b2ce567f118c642072b9ab58bf15425761750ee0ae4bf3cbd19a6545c5bfde",
+      "config_identity_sha256": "a47c2652656442ed957fa9bb101584af5b7c76b22af90489ec1ae52ae92028f0",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr0.json",
+          "config_sha256": "44b2ce567f118c642072b9ab58bf15425761750ee0ae4bf3cbd19a6545c5bfde",
+          "wave": "related_controlled_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_control_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_control_0p5m_seed0_lr0",
+      "arm": "mousse_control",
+      "family": "mousse_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr0.json",
+      "config_sha256": "ea70f022df911ff775ce17644d874371fdffa2400f62fd8513bc69d07c4f02d4",
+      "config_identity_sha256": "f609509e71ba0232ca2e436f98d27becb2e37b0f6805cffdcb0e85d415754c1c",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr0.json",
+          "config_sha256": "ea70f022df911ff775ce17644d874371fdffa2400f62fd8513bc69d07c4f02d4",
+          "wave": "related_controlled_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_control_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_paper_0p5m_seed0_lr0",
+      "arm": "go_muon_paper",
+      "family": "go_muon_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr0.json",
+      "config_sha256": "d7f82029a4b932c6523078110b3b0624e75b2155d84b82a07b49ef37ce1cec73",
+      "config_identity_sha256": "0191da5c07a54b178166d6fcbf83b915cab58b44c4b95a78b11d3cc8a161a2cc",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr0.json",
+          "config_sha256": "d7f82029a4b932c6523078110b3b0624e75b2155d84b82a07b49ef37ce1cec73",
+          "wave": "related_paper_adapters_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_paper_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_paper_0p5m_seed0_lr0",
+      "arm": "mousse_paper",
+      "family": "mousse_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 0,
+      "lr_multiplier": 0.7071067811865475,
+      "matrix_lr": 0.015999999973151494,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr0.json",
+      "config_sha256": "c248c00e0ec4723c299bc12cfdc809837e2abe106b7e5d65792cfff540082778",
+      "config_identity_sha256": "a9f66eea88284c7296bd2a1635f28422f42a64cbcfab426f7e2a8dca3dfa7732",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr0.json",
+          "config_sha256": "c248c00e0ec4723c299bc12cfdc809837e2abe106b7e5d65792cfff540082778",
+          "wave": "related_paper_adapters_short_seed0_lr0"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_paper_0p5m_seed0_lr0",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "muon_control_0p5m_seed0_lr1",
+      "arm": "muon_control",
+      "family": "muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr1.json",
+      "config_sha256": "853b31d73d93eb96341fd7a6ffda5d6f78ce8fcf073d270a5ee425ce69affbb2",
+      "config_identity_sha256": "ea7e78bff763cfdf62bc394b143ffaf5eb7d8720d49b25d61d492584c3d36536",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr1.json",
+          "config_sha256": "853b31d73d93eb96341fd7a6ffda5d6f78ce8fcf073d270a5ee425ce69affbb2",
+          "wave": "related_controlled_short_seed0_lr1"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr1.json",
+          "config_sha256": "853b31d73d93eb96341fd7a6ffda5d6f78ce8fcf073d270a5ee425ce69affbb2",
+          "wave": "related_paper_adapters_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/muon_control_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "inner_outer_mlpdiag_0p5m_seed0_lr1",
+      "arm": "inner_outer_mlpdiag",
+      "family": "inner_outer_mlpdiag",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr1.json",
+      "config_sha256": "a548110a4834c9bd7e994ce8d6e66f9b06351eb6d8e1bd671f45ad80ad08d7f8",
+      "config_identity_sha256": "a80e77a9a155b78737aa96dcc28c5745cd2ee247b0bb2509558c5a93c5839be9",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr1.json",
+          "config_sha256": "a548110a4834c9bd7e994ce8d6e66f9b06351eb6d8e1bd671f45ad80ad08d7f8",
+          "wave": "related_controlled_short_seed0_lr1"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr1.json",
+          "config_sha256": "a548110a4834c9bd7e994ce8d6e66f9b06351eb6d8e1bd671f45ad80ad08d7f8",
+          "wave": "related_paper_adapters_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/inner_outer_mlpdiag_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_control_0p5m_seed0_lr1",
+      "arm": "go_muon_control",
+      "family": "go_muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr1.json",
+      "config_sha256": "168b4e45361f1d4c4b8699daccbe0f4e345d874ef739467f7d1cdad2891f4132",
+      "config_identity_sha256": "95fed063891b4e8a04211e49fbfb0abf1b007b7c2a31d51eec12fbfb525a47c1",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr1.json",
+          "config_sha256": "168b4e45361f1d4c4b8699daccbe0f4e345d874ef739467f7d1cdad2891f4132",
+          "wave": "related_controlled_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_control_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_control_0p5m_seed0_lr1",
+      "arm": "mousse_control",
+      "family": "mousse_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr1.json",
+      "config_sha256": "2a69ee906495959b92f36cbdd383075b2e492c3975deeb3a3039c3276a6905d2",
+      "config_identity_sha256": "c2e3e2ea19a27f527ecd1226121873483c4fca5e110514b0bb8123a3e1031c8b",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr1.json",
+          "config_sha256": "2a69ee906495959b92f36cbdd383075b2e492c3975deeb3a3039c3276a6905d2",
+          "wave": "related_controlled_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_control_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_paper_0p5m_seed0_lr1",
+      "arm": "go_muon_paper",
+      "family": "go_muon_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr1.json",
+      "config_sha256": "1e38909336ad418fda36db5d32f423064b63e9848966e8a651336f5d0e8b3592",
+      "config_identity_sha256": "9420bee2e77c750283074bb69b4e1985a8b08423614ced974ba7f97e39b13218",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr1.json",
+          "config_sha256": "1e38909336ad418fda36db5d32f423064b63e9848966e8a651336f5d0e8b3592",
+          "wave": "related_paper_adapters_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_paper_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_paper_0p5m_seed0_lr1",
+      "arm": "mousse_paper",
+      "family": "mousse_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 1,
+      "lr_multiplier": 1.0,
+      "matrix_lr": 0.02262741696,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr1.json",
+      "config_sha256": "a806fe851fa89897d3d86f9b57c9418198f88487581766ac96ed94d53576b9d3",
+      "config_identity_sha256": "3975878c2239301fe2adc72f47b5cc92c0422e7248f8329bd79915f10b5c671e",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr1.json",
+          "config_sha256": "a806fe851fa89897d3d86f9b57c9418198f88487581766ac96ed94d53576b9d3",
+          "wave": "related_paper_adapters_short_seed0_lr1"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_paper_0p5m_seed0_lr1",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "muon_control_0p5m_seed0_lr2",
+      "arm": "muon_control",
+      "family": "muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr2.json",
+      "config_sha256": "cb15b2440cdf3efdb8d985c824dd16d6324ed62bf4a6796856f3e9c7008ee1ab",
+      "config_identity_sha256": "07f20963656f5bc0a9f707df6de0691832cc2a0bc8eab2d5a0a6347c550b28e4",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/muon_control_0p5m_seed0_lr2.json",
+          "config_sha256": "cb15b2440cdf3efdb8d985c824dd16d6324ed62bf4a6796856f3e9c7008ee1ab",
+          "wave": "related_controlled_short_seed0_lr2"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/muon_control_0p5m_seed0_lr2.json",
+          "config_sha256": "cb15b2440cdf3efdb8d985c824dd16d6324ed62bf4a6796856f3e9c7008ee1ab",
+          "wave": "related_paper_adapters_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/muon_control_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "inner_outer_mlpdiag_0p5m_seed0_lr2",
+      "arm": "inner_outer_mlpdiag",
+      "family": "inner_outer_mlpdiag",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr2.json",
+      "config_sha256": "c4e50aefe8c47b52f0b776b1b65a59ec033e5a184aa2fe9036e51aea0dcd0b03",
+      "config_identity_sha256": "8ca3fee67a65f3d68e5da96770a2e437b2726c53374de79b529086cd80c0fcee",
+      "profiles": [
+        "controlled",
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/inner_outer_mlpdiag_0p5m_seed0_lr2.json",
+          "config_sha256": "c4e50aefe8c47b52f0b776b1b65a59ec033e5a184aa2fe9036e51aea0dcd0b03",
+          "wave": "related_controlled_short_seed0_lr2"
+        },
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/inner_outer_mlpdiag_0p5m_seed0_lr2.json",
+          "config_sha256": "c4e50aefe8c47b52f0b776b1b65a59ec033e5a184aa2fe9036e51aea0dcd0b03",
+          "wave": "related_paper_adapters_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/inner_outer_mlpdiag_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_control_0p5m_seed0_lr2",
+      "arm": "go_muon_control",
+      "family": "go_muon_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr2.json",
+      "config_sha256": "395fabaffef35fed73443e8063fb3cabf412771271eeb32d27113bb52c20127d",
+      "config_identity_sha256": "832de34db80a6586b6376185c8c09dcb6a6b6eed99f3a81302b5e43ca73a192f",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/go_muon_control_0p5m_seed0_lr2.json",
+          "config_sha256": "395fabaffef35fed73443e8063fb3cabf412771271eeb32d27113bb52c20127d",
+          "wave": "related_controlled_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_control_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_control_0p5m_seed0_lr2",
+      "arm": "mousse_control",
+      "family": "mousse_control",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr2.json",
+      "config_sha256": "812eb02315a39c3f296fc8218fdef6d9f37fec0e157fa4741b838f2210c5e253",
+      "config_identity_sha256": "00eab1019baf8d40b4d8003087db05a5eec92b60af01d959b18aa1744875256c",
+      "profiles": [
+        "controlled"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/mousse_control_0p5m_seed0_lr2.json",
+          "config_sha256": "812eb02315a39c3f296fc8218fdef6d9f37fec0e157fa4741b838f2210c5e253",
+          "wave": "related_controlled_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_control_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "go_muon_paper_0p5m_seed0_lr2",
+      "arm": "go_muon_paper",
+      "family": "go_muon_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr2.json",
+      "config_sha256": "3a8274f6e8d64c31477a0f57824d5b79ea226e968c20dbdedff84e61a3110e14",
+      "config_identity_sha256": "ccdc6ee386d2f59b2faae2b32c11e43fad0a6fa0bffb1eb4ff1e47ffeeeab6d5",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/go_muon_paper_0p5m_seed0_lr2.json",
+          "config_sha256": "3a8274f6e8d64c31477a0f57824d5b79ea226e968c20dbdedff84e61a3110e14",
+          "wave": "related_paper_adapters_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/go_muon_paper_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    },
+    {
+      "name": "mousse_paper_0p5m_seed0_lr2",
+      "arm": "mousse_paper",
+      "family": "mousse_paper",
+      "seed": 0,
+      "batch": "0p5m",
+      "lr_index": 2,
+      "lr_multiplier": 1.4142135623730951,
+      "matrix_lr": 0.03199999994630299,
+      "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr2.json",
+      "config_sha256": "387fddf35a06a51d2f72c5b3c8a2cfdd6059bc1aba08aea6733dff66babdb88f",
+      "config_identity_sha256": "d9f2ece3b002bb1c50163667ae0c3543614013b5b65f3cbe8e0f874dbe347950",
+      "profiles": [
+        "paper_adapters"
+      ],
+      "aliases": [
+        {
+          "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/mousse_paper_0p5m_seed0_lr2.json",
+          "config_sha256": "387fddf35a06a51d2f72c5b3c8a2cfdd6059bc1aba08aea6733dff66babdb88f",
+          "wave": "related_paper_adapters_short_seed0_lr2"
+        }
+      ],
+      "out": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/related-baselines-20261121/runs/mousse_paper_0p5m_seed0_lr2",
+      "steps": 320,
+      "tokens": 167772160,
+      "world_size": 8
+    }
+  ],
+  "waves": [
+    {
+      "wave_name": "related_controlled_short_seed0_lr0",
+      "profile": "controlled",
+      "lr_index": 0,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/wave_seed0_lr0.json",
+      "manifest_sha256": "c4024dfb18ea5a7437202db4e49f425bc42a05eface598890d57c0fb102c7ec1",
+      "trials": [
+        "muon_control_0p5m_seed0_lr0",
+        "inner_outer_mlpdiag_0p5m_seed0_lr0",
+        "go_muon_control_0p5m_seed0_lr0",
+        "mousse_control_0p5m_seed0_lr0"
+      ]
+    },
+    {
+      "wave_name": "related_controlled_short_seed0_lr1",
+      "profile": "controlled",
+      "lr_index": 1,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/wave_seed0_lr1.json",
+      "manifest_sha256": "3ef0c4e66fb04e17aaa7733df26af68a37f60c51f417b75fad9be1c2520a0e01",
+      "trials": [
+        "muon_control_0p5m_seed0_lr1",
+        "inner_outer_mlpdiag_0p5m_seed0_lr1",
+        "go_muon_control_0p5m_seed0_lr1",
+        "mousse_control_0p5m_seed0_lr1"
+      ]
+    },
+    {
+      "wave_name": "related_controlled_short_seed0_lr2",
+      "profile": "controlled",
+      "lr_index": 2,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_controlled_short/wave_seed0_lr2.json",
+      "manifest_sha256": "7b5581fe85ddeb21ed5f1c8085120d48e814e689b43cc6fa1cb6c7c0cef48a32",
+      "trials": [
+        "muon_control_0p5m_seed0_lr2",
+        "inner_outer_mlpdiag_0p5m_seed0_lr2",
+        "go_muon_control_0p5m_seed0_lr2",
+        "mousse_control_0p5m_seed0_lr2"
+      ]
+    },
+    {
+      "wave_name": "related_paper_adapters_short_seed0_lr0",
+      "profile": "paper_adapters",
+      "lr_index": 0,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/wave_seed0_lr0.json",
+      "manifest_sha256": "fe9e05abc482369b9d8a408b42f9a6a446ec49560920c74c978eba0113fd620c",
+      "trials": [
+        "muon_control_0p5m_seed0_lr0",
+        "inner_outer_mlpdiag_0p5m_seed0_lr0",
+        "go_muon_paper_0p5m_seed0_lr0",
+        "mousse_paper_0p5m_seed0_lr0"
+      ]
+    },
+    {
+      "wave_name": "related_paper_adapters_short_seed0_lr1",
+      "profile": "paper_adapters",
+      "lr_index": 1,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/wave_seed0_lr1.json",
+      "manifest_sha256": "938727646572c83ae140a391cb3429b198d7b2cd7fdc6d8dae7c6e6ee3edfa82",
+      "trials": [
+        "muon_control_0p5m_seed0_lr1",
+        "inner_outer_mlpdiag_0p5m_seed0_lr1",
+        "go_muon_paper_0p5m_seed0_lr1",
+        "mousse_paper_0p5m_seed0_lr1"
+      ]
+    },
+    {
+      "wave_name": "related_paper_adapters_short_seed0_lr2",
+      "profile": "paper_adapters",
+      "lr_index": 2,
+      "manifest": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization/experiment/comparisons/related_paper_short/wave_seed0_lr2.json",
+      "manifest_sha256": "7f7b884f71fcc8e62e865559d73a0087ab353b09439ee797b84b54f463e5f90c",
+      "trials": [
+        "muon_control_0p5m_seed0_lr2",
+        "inner_outer_mlpdiag_0p5m_seed0_lr2",
+        "go_muon_paper_0p5m_seed0_lr2",
+        "mousse_paper_0p5m_seed0_lr2"
+      ]
+    }
+  ],
+  "unique_trials": 18,
+  "trials_per_arm": 3,
+  "tokens_per_arm": 503316480,
+  "selection": {
+    "metric": "selection_loss",
+    "point": "completed_update_320",
+    "require_all_three_complete": true,
+    "weights": {
+      "dclm": 3.8,
+      "starcoder": 0.25,
+      "proofpile": 0.055
+    },
+    "c4": "reporting_only",
+    "tie_break": "trial_name",
+    "training_window_tokens": 33554432
+  },
+  "limitations": "Preparation is not GPU validation or launch approval. Shared Muon/WT trials run once, not once per manifest. Status reads local evidence without process liveness. Checkpoints are checked by receipt and nonempty rank files, not tensor reconstruction. No silent retries or fresh-seed claims."
+}

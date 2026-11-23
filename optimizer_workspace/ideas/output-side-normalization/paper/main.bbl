@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,12 @@
 Rohan Anil, Vineet Gupta, Tomer Koren, Kevin Regan, and Yoram Singer.
 \newblock Scalable second order optimization for deep learning.
 \newblock \emph{arXiv preprint arXiv:2002.09018}, 2020.
+
+\bibitem[Che(2026)]{che2026gomuon}
+Tong Che.
+\newblock Second-order muon done right: A principled marriage of spectral
+  geometry and curvature.
+\newblock \emph{arXiv preprint arXiv:2608.09763}, 2026.
 
 \bibitem[Choi et~al.(2019)Choi, Shallue, Nado, Lee, Maddison, and
   Dahl]{choi2019empirical}
@@ -76,5 +82,13 @@ Nikhil Vyas, Depen Morwani, Rosie Zhao, Itai Shapira, David Brandfonbrener,
   Lucas Janson, and Sham Kakade.
 \newblock {SOAP}: Improving and stabilizing shampoo using adam.
 \newblock \emph{arXiv preprint arXiv:2409.11321}, 2024.
+
+\bibitem[Zhang et~al.(2026)Zhang, Xing, Huang, Lv, Zhou, Qiu, Guo, and
+  Chen]{zhang2026mousse}
+Yechen Zhang, Shuhao Xing, Junhao Huang, Kai Lv, Yunhua Zhou, Xipeng Qiu,
+  Qipeng Guo, and Kai Chen.
+\newblock Mousse: Rectifying the geometry of muon with curvature-aware
+  preconditioning.
+\newblock \emph{arXiv preprint arXiv:2603.09697}, 2026.
 
 \end{thebibliography}

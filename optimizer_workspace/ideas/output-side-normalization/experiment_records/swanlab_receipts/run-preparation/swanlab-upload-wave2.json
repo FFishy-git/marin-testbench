@@ -1,0 +1,682 @@
+{
+  "runs": {
+    "inner_outer_hidden": {
+      "id": "wave2-inner_outer_hidden-2cb58232c31f",
+      "path": "siyuc3141/output-side-normalization-marin/wave2-inner_outer_hidden-2cb58232c31f",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_hidden-2cb58232c31f",
+      "status": "verified",
+      "metrics_sha256": "4ffd080dbbee16ae380fe34b7eecacfe63b556b9f07add2f64c29a015eacc046",
+      "manifest_sha256": "ac4ab863e56bc3c0fd4b66e1c5cf2092d5012d24716128c873712512cfcb056c",
+      "checkpoint_receipt_sha256": "150bba4c5e510a43695a1010a587418e47b37e5b83c55045c9a707416adaa071",
+      "checkpoint_rank_bytes": [
+        2515081611,
+        1450536395,
+        1451585483,
+        1452634635,
+        1467314123,
+        1449487243,
+        1451585483,
+        1451585483
+      ],
+      "uploaded_at": "2026-11-16T06:03:20.495269+00:00",
+      "verification": {
+        "verified_at": "2026-11-16T08:47:27.094899+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_hidden-2cb58232c31f/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "runtime/output_fallbacks": 5120,
+          "runtime/output_extra_roots": 5120,
+          "runtime/output_max_basis_age": 5120,
+          "runtime/output_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.1303977966308594,
+          "runtime/step_seconds": 1.2627958059310913,
+          "runtime/output_host_seconds": 5.904585123062134e-07,
+          "runtime/elapsed_seconds": 6981.625135233626,
+          "runtime/peak_allocated_bytes": 23095470592,
+          "runtime/peak_reserved_bytes": 29095886848,
+          "runtime/input_fallbacks": 15,
+          "runtime/input_extra_roots": 8562,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "runtime/output_fallbacks": 20345,
+          "runtime/output_extra_roots": 27713,
+          "runtime/output_max_basis_age": 3,
+          "runtime/output_pending_refreshes": 12,
+          "eval/c4_loss": 3.450013588235704,
+          "eval/heldout/dclm": 3.3328437698556974,
+          "eval/heldout/starcoder": 1.9380033169437532,
+          "eval/heldout/proofpile": 2.258762403645795,
+          "eval/selection_loss": 3.2335052586816344,
+          "runtime/eval_seconds": 0.8987994380295277,
+          "runtime/checkpoint_seconds": 5.675720965489745,
+          "runtime/end_to_end_seconds": 6988.200051277876
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 1.6940658945086007e-21,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 2.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "inner_outer_mlpdiag": {
+      "id": "wave2-inner_outer_mlpdiag-be2442b6b244",
+      "path": "siyuc3141/output-side-normalization-marin/wave2-inner_outer_mlpdiag-be2442b6b244",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_mlpdiag-be2442b6b244",
+      "status": "verified",
+      "metrics_sha256": "dc1ce73dd8b1d6add2759cedf55746966251d157c929cbdc2173183ad550a554",
+      "manifest_sha256": "f18ca1f73b749631b7d365d06d7149c1f5e3309cdbff367d21c0df92c8e9f61b",
+      "checkpoint_receipt_sha256": "aaa2cf55089a4bc46133b85cf4f6212fe935aa4d2a3a3577ecf2c26cfb7589a0",
+      "checkpoint_rank_bytes": [
+        2513507979,
+        1453159243,
+        1451061003,
+        1452110155,
+        1451061003,
+        1482518283,
+        1452110155,
+        1452110155
+      ],
+      "uploaded_at": "2026-11-16T06:03:35.146686+00:00",
+      "verification": {
+        "verified_at": "2026-11-16T08:47:30.137764+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_mlpdiag-be2442b6b244/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "runtime/output_fallbacks": 5120,
+          "runtime/output_extra_roots": 5120,
+          "runtime/output_max_basis_age": 5120,
+          "runtime/output_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.1279547214508057,
+          "runtime/step_seconds": 1.322927126660943,
+          "runtime/output_host_seconds": 8.028000593185425e-07,
+          "runtime/elapsed_seconds": 7136.366509784013,
+          "runtime/peak_allocated_bytes": 24303954432,
+          "runtime/peak_reserved_bytes": 30385635328,
+          "runtime/input_fallbacks": 37,
+          "runtime/input_extra_roots": 7842,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 5,
+          "runtime/output_fallbacks": 19998,
+          "runtime/output_extra_roots": 29144,
+          "runtime/output_max_basis_age": 4,
+          "runtime/output_pending_refreshes": 9,
+          "eval/c4_loss": 3.44643423596902,
+          "eval/heldout/dclm": 3.328912107564591,
+          "eval/heldout/starcoder": 1.936169021881398,
+          "eval/heldout/proofpile": 2.2566995852923655,
+          "eval/selection_loss": 3.229726368186815,
+          "runtime/eval_seconds": 0.8961829841136932,
+          "runtime/checkpoint_seconds": 4.694923335686326,
+          "runtime/end_to_end_seconds": 7141.957873592153
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "inner_outer_leftdiag": {
+      "id": "wave2-inner_outer_leftdiag-95d82b1af49d",
+      "path": "siyuc3141/output-side-normalization-marin/wave2-inner_outer_leftdiag-95d82b1af49d",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_leftdiag-95d82b1af49d",
+      "status": "verified",
+      "metrics_sha256": "d5872c5569fad65c68b19c18424eb0416352fa0fe234c9ddc49692f43b229497",
+      "manifest_sha256": "b2d6443f0922b9e7ffb1c7a402be78d80d6aee7045b4ba195a46f51c30b9ec3f",
+      "checkpoint_receipt_sha256": "4af077e9feccc110927c05d173858a007d833e5fc5a2e81646aff5fc9d834d32",
+      "checkpoint_rank_bytes": [
+        2440428363,
+        1377981387,
+        1377981387,
+        1380079691,
+        1377981387,
+        1379030539,
+        1377981387,
+        1377981387
+      ],
+      "uploaded_at": "2026-11-16T06:03:47.994452+00:00",
+      "verification": {
+        "verified_at": "2026-11-16T08:47:34.063884+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-inner_outer_leftdiag-95d82b1af49d/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.128498077392578,
+          "runtime/step_seconds": 1.207432609051466,
+          "runtime/output_host_seconds": 9.015202522277832e-07,
+          "runtime/elapsed_seconds": 6468.016668159515,
+          "runtime/peak_allocated_bytes": 24008321536,
+          "runtime/peak_reserved_bytes": 28053602304,
+          "runtime/input_fallbacks": 30,
+          "runtime/input_extra_roots": 5074,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 3.4495632661513667,
+          "eval/heldout/dclm": 3.3316531007215655,
+          "eval/heldout/starcoder": 1.9394956456945347,
+          "eval/heldout/proofpile": 2.2579723976870887,
+          "eval/selection_loss": 3.232483355916778,
+          "runtime/eval_seconds": 0.9028668478131294,
+          "runtime/checkpoint_seconds": 4.5351861622184515,
+          "runtime/end_to_end_seconds": 6473.4550028871745
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 7.105427357601002e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 1.6940658945086007e-21,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_left_all": {
+      "id": "wave2-outer_left_all-73868edb3c65",
+      "path": "siyuc3141/output-side-normalization-marin/wave2-outer_left_all-73868edb3c65",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-outer_left_all-73868edb3c65",
+      "status": "verified",
+      "metrics_sha256": "148f527c50fa4843cc019fc539836a040d14839afc405891120e4d6da999d823",
+      "manifest_sha256": "b52696e19faedbe45523b6096695eb0a54462d678a848d4ec83b6352333fc701",
+      "checkpoint_receipt_sha256": "12cd0060cfbf97ddc413c30a5d413225f29fa4c8fc488bfbe1e3a8d9461b42e2",
+      "checkpoint_rank_bytes": [
+        2997428491,
+        1993707979,
+        1905622539,
+        1904573387,
+        1887795595,
+        1888844747,
+        1889893899,
+        1889893899
+      ],
+      "uploaded_at": "2026-11-16T06:04:00.795951+00:00",
+      "verification": {
+        "verified_at": "2026-11-16T08:47:37.117523+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave2-outer_left_all-73868edb3c65/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "runtime/output_fallbacks": 5120,
+          "runtime/output_extra_roots": 5120,
+          "runtime/output_max_basis_age": 5120,
+          "runtime/output_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.1270828247070312,
+          "runtime/step_seconds": 1.2884187679737806,
+          "runtime/output_host_seconds": 3.3155083656311035e-07,
+          "runtime/elapsed_seconds": 8074.766730796546,
+          "runtime/peak_allocated_bytes": 25981514240,
+          "runtime/peak_reserved_bytes": 34756100096,
+          "runtime/input_fallbacks": 13,
+          "runtime/input_extra_roots": 6417,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "runtime/output_fallbacks": 32410,
+          "runtime/output_extra_roots": 44171,
+          "runtime/output_max_basis_age": 5,
+          "runtime/output_pending_refreshes": 13,
+          "eval/c4_loss": 3.448630514268446,
+          "eval/heldout/dclm": 3.3317411909828256,
+          "eval/heldout/starcoder": 1.9371611796419554,
+          "eval/heldout/proofpile": 2.2585341519561295,
+          "eval/selection_loss": 3.2324302555427074,
+          "runtime/eval_seconds": 0.9086048491299152,
+          "runtime/checkpoint_seconds": 5.680897835642099,
+          "runtime/end_to_end_seconds": 8081.356703640893
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 2.117582368135751e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 9.094947017729282e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/output_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 2.220446049250313e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 9.094947017729282e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-marin",
+  "project_url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "status": "verified",
+  "verified_at": "2026-11-16T08:47:37.172066+00:00"
+}

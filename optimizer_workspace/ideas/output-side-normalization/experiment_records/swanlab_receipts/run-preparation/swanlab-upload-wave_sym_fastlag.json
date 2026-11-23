@@ -1,0 +1,78 @@
+{
+  "runs": {
+    "inner_outer_mlpdiag_lag": {
+      "id": "wave-sym-fastlag-inner-outer-mlpdiag-lag-bfe2ebe3c672",
+      "path": "siyuc3141/output-side-normalization-marin/wave-sym-fastlag-inner-outer-mlpdiag-lag-bfe2ebe3c672",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-mlpdiag-lag-bfe2ebe3c672",
+      "status": "verified",
+      "manifest_sha256": "414d9132e5f7f8ce11454884a9e3e73bcb7300e48cf33e69acdb45b8252a4ea2",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "ae83ca70bb44c79a4cab5c47cee63d17e7ab04ece25976e0b4b92c0674b7a67f"
+      },
+      "uploaded_at": "2026-11-23T14:50:09.325886+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:10.023062+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-mlpdiag-lag-bfe2ebe3c672/chart",
+        "steps": 5120
+      }
+    },
+    "inner_outer_sym_mlpdiag": {
+      "id": "wave-sym-fastlag-inner-outer-sym-mlpdiag-491103d7bfae",
+      "path": "siyuc3141/output-side-normalization-marin/wave-sym-fastlag-inner-outer-sym-mlpdiag-491103d7bfae",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-sym-mlpdiag-491103d7bfae",
+      "status": "verified",
+      "manifest_sha256": "def40b714801bbb83bbcdf73898e810ac7741271ee71381d28475ec1528d2a0f",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "5dbe7dba693e3fcf332913e887ae851dede88ee54b052bda52ecea6d37721852"
+      },
+      "uploaded_at": "2026-11-23T14:50:20.844386+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:21.456770+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-sym-mlpdiag-491103d7bfae/chart",
+        "steps": 5120
+      }
+    },
+    "inner_outer_sym_mlpdiag_lag": {
+      "id": "wave-sym-fastlag-inner-outer-sym-mlpdiag--c4c0ca73c74e",
+      "path": "siyuc3141/output-side-normalization-marin/wave-sym-fastlag-inner-outer-sym-mlpdiag--c4c0ca73c74e",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-sym-mlpdiag--c4c0ca73c74e",
+      "status": "verified",
+      "manifest_sha256": "06f59544245dc2c69bd7a1315325b348feced47812a6fd2682071e3d11e6eabf",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "61507a769dae19971f29c69a112b24a3d9bdc28eadcc36711cc0c9113c2d3794"
+      },
+      "uploaded_at": "2026-11-23T14:50:33.841054+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:34.487001+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-inner-outer-sym-mlpdiag--c4c0ca73c74e/chart",
+        "steps": 5120
+      }
+    },
+    "muont": {
+      "id": "wave-sym-fastlag-muont-7297cdd2283b",
+      "path": "siyuc3141/output-side-normalization-marin/wave-sym-fastlag-muont-7297cdd2283b",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-muont-7297cdd2283b",
+      "status": "verified",
+      "manifest_sha256": "d4fe1a10637f3d09d35625d5ff6ca48e87771958c853ba83ddca9a7fd08aebab",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "f5126cca4bae0a9c04239e6e736f722af1d44ca8f59651f4ee8c2c551f2413b9"
+      },
+      "uploaded_at": "2026-11-23T14:50:43.949241+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:44.836538+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave-sym-fastlag-muont-7297cdd2283b/chart",
+        "steps": 5120
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-marin",
+  "project_url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "status": "verified",
+  "updated_at": "2026-11-23T14:50:44.859724+00:00"
+}

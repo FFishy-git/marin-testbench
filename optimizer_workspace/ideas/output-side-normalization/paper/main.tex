@@ -79,6 +79,8 @@
 \input{results/motivation_numbers}
 \input{results/mechanism_numbers}
 \input{results/systems_numbers}
+\input{results/related_numbers}
+\input{results/confirmation_numbers}
 
 \usetikzlibrary{arrows.meta, calc, fit, backgrounds, decorations.pathreplacing, shapes.geometric}
 \usepgfplotslibrary{groupplots}
@@ -191,8 +193,7 @@ products whose off-diagonal correlations hug the sampling floor (median RMS
 \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
 anisotropy on the diagonal, whereas residual width-512 cotangents (\texttt{o},
 \texttt{down}) are $>99\%$ rotational, post-SwiGLU width-2048 inputs
-(\texttt{in:down}) carry $56.6\%$ off-diagonal anisotropy from strictly positive
-channel means, and cotangent eigenspaces drift
+(\texttt{in:down}) carry $56.6\%$ off-diagonal anisotropy, and cotangent eigenspaces drift
 $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed inputs
 ($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact eigendecomposition fallbacks).
 Evaluating \nOptimizerArms{} configurations across \nDistinctRuns{} full-budget
@@ -204,8 +205,10 @@ $\mlpdiagsel{}$ nats ($-0.0059$ net of a matched null absorbing
 three seeds at matched step norm (\mechMlpdiagGraftNorm{}, $\mechMlpdiagGraftDeg^\circ$
 rotation), while substituting output for input whitening fails ($\leftallsel{}$
 nats) and symmetric MLP width-thresholding (\taxid{WT-Sym}, also diagonalizing
-\texttt{in:down}) causally confirms the pre-/post-SwiGLU split by trading an
-early constant-LR conditioning penalty for matched final C4 ($\symMlpLagCfourFinalAbs{}$).
+\texttt{in:down}) incurs an early constant-LR training penalty despite high
+diagonal-root fidelity, then matches final C4 ($\symMlpLagCfourFinalAbs{}$).
+This recipe comparison changes inner whitening, outer transport, and shaped
+decay together.
 On uncontended eight-A100 nodes, our asynchronous one-step-lagged runner
 (\texttt{fast\_lag}) cuts full-run steady-step overhead over \taxid{MuonT} from
 $+18.0\%$ to $+\sysExecMlpLagVsMuontPct\%$ ($\sysExecMlpLagStepS$\,s,
@@ -217,8 +220,26 @@ $\sysCrossSymLagThreeFiveTwoS$\,s --- ahead of same-wave \taxid{MuonT}
 ($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s), and vanilla \taxid{Muon}
 ($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s). Finally, 320-step learning-rate
 screening over-steps the 5{,}120-step horizon ($\waveTwelveMuontSelDiff{}$ nats on
-\taxid{MuonT} at $0.064$ versus $0.0226$), focusing remaining confirmation on a
-compact full-budget curve around $0.0226$.
+\taxid{MuonT} at $0.064$ versus $0.0226$), motivating a \confTotalRuns{}-run
+\texttt{fast\_lag} confirmation and scaling campaign
+(Section~\ref{sec:confirmation}). At full budget, \taxid{Null-WT} closes the
+same-runner attribution gap ($\confNullFinalSelDelta{}$ final /
+$\confNullLateSelDelta{}$ late-11 selection nats), \taxid{WT-MLP-Lag} beats
+\taxid{MuonT} at every matched learning rate ($\confPOneZeroOneSixWtLateSel{}$
+and $\confPOneZeroTwoTwoWtLateSel{}$ late-11 selection at $0.016$ and $0.0226$,
+winning $11/11$ evaluations in each), replicates across three fresh
+post-selection seeds ($\confPTwoWtSelDeltaMean{} \pm \confPTwoWtSelDeltaStd{}$
+selection, $\confPTwoWtPalomaDeltaMean{}$ across 16 Paloma domains, $3/3$ seeds
+at $+\confPTwoWtStepPct\%$ step time), holds under $4\times$ Chinchilla
+overtraining ($80$ TPP, $10.74\text{B}$ tokens: $\confPThreeWtFinalSel{}$ final /
+$\confPThreeWtLateSel{}$ late-11 selection, $\confPThreeWtPalomaDelta{}$ Paloma
+winning $\confPThreeWtPalomaWins{}/16$ domains at matched $\eta = 0.0106$), and
+scales to a $520\text{M}$-non-embedding ($799.6\text{M}$ total) transformer at
+$10.74\text{B}$ tokens ($\confPFourWtFinalSel{}$ final / $\confPFourWtLateSel{}$
+late-11 selection, $\confPFourWtPalomaDelta{}$ Paloma winning
+$\confPFourWtPalomaWins{}/16$ domains at $+\confPFourWtStepPct\%$ step time),
+where diagonal-only \taxid{OD-All} regresses slightly
+($\confPFourOdFinalSel{}$ selection, $\confPFourOdPalomaDelta{}$ Paloma).
 \end{abstract}
 
 \input{sections/intro}

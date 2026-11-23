@@ -27,7 +27,10 @@ configurations across six families) and running every member to the full budget.
 The study comprises \nDistinctRuns{} distinct full-budget trajectories
 (\nRunDirs{} completed run directories) across arm geometries, matched null
 controls, three seeds, two batch sizes, and uncontended eight-A100 systems
-variants, plus 28 short-schedule learning-rate screening trials. All runs within
+variants, plus 28 short-schedule learning-rate screening trials and a separate
+paired related-baseline campaign (18 short and 12 full-budget runs on fresh
+seeds~1 and~2 comparing \taxid{WT-MLP} against vanilla Muon, Mousse, and
+GO-MUON under common isotropic decay; Section~\ref{sec:related-baselines}). All runs within
 a seed consume identical tokens in identical order, making per-update paired
 differencing exact and resolving effects of a few thousandths of a nat.
 
@@ -53,15 +56,14 @@ Three main findings structure the paper, centered on our $2\times 2$
   (\motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$),
   whereas residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are
   $>99\%$ rotational, post-SwiGLU width-2048 \texttt{in:down} retains $56.6\%$
-  off-diagonal anisotropy from strictly positive channel means, and cotangent
+  off-diagonal anisotropy, and cotangent
   eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than
   RMSNormed inputs, triggering $\motFbOutTotal{}$ exact eigendecomposition
   fallbacks across eight GPUs versus $\motFbInTotal{}$ on inputs
   (Section~\ref{sec:motivation}).
 
-\item \textbf{The output side is a complement, not a substitute --- acting by
-  directional rotation, with symmetric width-2048 ablation confirming the
-  SwiGLU covariance split.}
+\item \textbf{Output whitening complements input whitening through directional
+  rotation; symmetric width-2048 diagonalization incurs an early training cost.}
   Added on top of input whitening, \taxid{WT-MLP} (\mlpdiag{}) improves held-out
   loss by \mlpdiagselmag{} nats across all five training windows and all three
   seeds, while \taxid{OD-All} (\alldiag{}) retains two-thirds of that gain with
@@ -74,13 +76,16 @@ Three main findings structure the paper, centered on our $2\times 2$
   benefit (Section~\ref{sec:null}), while instantaneous step norms match
   \taxid{MuonT} to \mechMlpdiagGraftNorm{} ($\mechMlpdiagGraftNormPct\%$) at a
   $\mechMlpdiagGraftDeg^\circ$ update rotation (Section~\ref{sec:mech-graft}).
-  Moreover, additionally diagonalizing \texttt{in:down} (\taxid{WT-Sym},
-  \taxid{WT-Sym-Lag}) incurs the predicted early constant-LR conditioning cost
+  Additionally diagonalizing \texttt{in:down} (\taxid{WT-Sym},
+  \taxid{WT-Sym-Lag}) incurs an early constant-LR training cost
   ($\symMlpWinOneSame{}$ and $\symMlpLagWinOneSame{}$ nats in Window~1 versus
   $\fastMlpLagWinOneSame{}$ for \taxid{WT-MLP-Lag}) before recovering during LR
   decay to match \taxid{WT-MLP-Lag} on final C4 ($\symMlpLagCfourFinalAbs{}$
   versus $\fastMlpLagCfourFinalAbs{}$) while saving $\sysExecSymLagSavedMlpLagMs$\,ms/step
   and $\sysExecSymLagSavedMlpLagGib$\,GiB (Section~\ref{sec:sym-ablation}).
+  Exact training curves and the distinction between root fidelity and update
+  fidelity are discussed in Section~\ref{sec:sym-root-fidelity}; this comparison
+  changes inner and outer input factors, shaped decay, and execution together.
 
 \item \textbf{Executed eight-A100 \texttt{fast\_lag} closes the DDP latency gap
   to $+\sysExecSymLagVsMuontPct\%$--$+\sysExecMlpLagVsMuontPct\%$ over MuonT and
@@ -106,24 +111,42 @@ Three main findings structure the paper, centered on our $2\times 2$
   seconds (Section~\ref{sec:systems}).
 \end{enumerate}
 
-\paragraph{What remains to confirm: the full-budget learning-rate horizon.}
-One empirical gate remains before claiming tuned optimizer superiority. On a
-short 320-update (6\% budget) screening schedule, \taxid{MuonT} gained
+\paragraph{Full-budget confirmation, overtraining ($4\times$ Chinchilla), and $520\text{M}$ scaling.}
+On a short 320-update (6\% budget) screening schedule, \taxid{MuonT} gained
 \lrHeadroom{} nats when its learning rate moved from the recipe's $0.0226$ to
-$0.064$. Carrying those short-schedule optima to the full 5{,}120-update budget,
-however, \emph{degraded \taxid{MuonT} itself by \waveTwelveMuontSelDiff{} nats}
-relative to $0.0226$, and noisy short-horizon tie-breaking split equivalent
-outer-diagonal arms across $0.064$ and $0.0905$, producing \transferWorst{}-nat
-regressions past the full-budget stability cliff (Section~\ref{sec:tuning}).
-Thus $0.0226$, not $0.064$, lies near the full-budget optimum, and
-Section~\ref{sec:program} specifies the compact confirmation sweep around
-$0.0226$ and same-wave \texttt{fast\_lag} null check that close the comparison.
+$0.064$, yet carrying $0.064$ to 5{,}120 updates \emph{degraded \taxid{MuonT}
+itself by \waveTwelveMuontSelDiff{} nats} and split equivalent outer-diagonal
+arms across $0.064$ and $0.0905$ (Section~\ref{sec:tuning}). To close full-budget
+tuning, same-runner null attribution, post-selection replication, and scaling,
+we executed an isolated \confTotalRuns{}-run \texttt{fast\_lag} confirmation and
+scaling campaign with \confPalomaCount{} 16-domain Paloma evaluations
+(Section~\ref{sec:confirmation}). At $130\text{M}$ ($1\times$ Chinchilla), the
+\texttt{fast\_lag} \taxid{Null-WT} control sits within
+$\confNullFinalSelDelta{}$ final ($\confNullLateSelDelta{}$ late-11) selection
+nats of \taxid{MuonT}, \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $11/11$
+second-half evaluations at both matched $0.016$ ($\confPOneZeroOneSixWtLateSel{}$)
+and $0.0226$ ($\confPOneZeroTwoTwoWtLateSel{}$; $\confPOneZeroTwoTwoWtNetLateSel{}$
+net of \taxid{Null-WT}), and replicates on three fresh post-selection seeds
+($\confPTwoWtSelDeltaMean{}$ selection, $\confPTwoWtPalomaDeltaMean{}$ across 16
+Paloma domains, $3/3$ seeds at $+\confPTwoWtStepPct\%$ step time). Scaling token
+horizon $4\times$ to $80$ TPP ($10.74\text{B}$ tokens) at matched $\eta = 0.0106$
+yields $\confPThreeWtFinalSel{}$ final / $\confPThreeWtLateSel{}$ late-11
+selection ($\confPThreeWtPalomaDelta{}$ Paloma, winning
+$\confPThreeWtPalomaWins{}/16$ domains), and scaling model width $2\times$ to
+$520\text{M}$ non-embedding ($799.6\text{M}$ total) parameters at $10.74\text{B}$
+tokens under Toner's pinned matched LR ($0.0226$) preserves
+$\confPFourWtFinalSel{}$ final / $\confPFourWtLateSel{}$ late-11 selection and
+$\confPFourWtPalomaDelta{}$ Paloma ($\confPFourWtPalomaWins{}/16$ domains) while
+diagonal-only \taxid{OD-All} loses its edge ($\confPFourOdFinalSel{}$ selection,
+$\confPFourOdPalomaDelta{}$ Paloma).
 
 \paragraph{Scope.}
-Everything here is one model size, one token budget, one hardware
-configuration, and --- for the arm comparison --- a single data order per seed.
-We make no claim about scaling: the clean statement of our results is about an
-optimizer modification measured carefully at one point, not about a method.
-Section~\ref{sec:limitations} is explicit about which of our numbers are
-exploratory, which are replicated, and which are deterministic repeats of the
-same trajectory rather than independent observations.
+Our mechanistic and ablation study measures \nOptimizerArms{} arms exhaustively
+at $130\text{M}$ ($1\times$ Chinchilla), and the confirmation campaign extends
+the four core arms (\taxid{Muon}, \taxid{MuonT}, \taxid{OD-All},
+\taxid{WT-MLP-Lag}) to full-budget LR bracketing, three fresh post-selection
+seeds, $4\times$ Chinchilla overtraining ($80$ TPP), $520\text{M}$ ($799.6\text{M}$
+total) model scaling, and 16-domain Paloma evaluation.
+Section~\ref{sec:limitations} is explicit about which claims are multi-seed,
+which scaling points remain single-seed, and which historical directories are
+deterministic repeats rather than independent observations.

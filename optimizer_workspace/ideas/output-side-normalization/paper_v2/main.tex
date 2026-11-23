@@ -1,0 +1,178 @@
+% Output-side normalization in Muon-type optimizers (clean v2 draft: Methodology & Results first).
+% Build: PATH=/opt/texlive/2026/bin/x86_64-linux:$PATH latexmk -pdf main.tex
+\ifdefined\pdftexversion\pdfoutput=1\fi
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{placeins}
+\usepackage{mdframed}
+\usepackage{xurl}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage[round]{natbib}
+\PassOptionsToPackage{hyphens}{url}
+
+\providecommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\input{macro.tex}
+
+% Clean full-page standard article typography and palette compatibility helpers.
+\definecolor{pageink}{HTML}{1C2B33}
+\definecolor{pagemuted}{HTML}{5F6B73}
+\definecolor{pagelink}{HTML}{2E5AA8}
+\definecolor{pagepanel}{HTML}{F1F4F7}
+\definecolor{pageaccent}{HTML}{2E5AA8}
+\definecolor{pagerule}{HTML}{D2D7DB}
+\colorlet{sectionblue}{pageink}
+
+\newcommand*{\pagesf}{\sffamily}
+\newcommand*{\pagesfsb}{\sffamily\bfseries}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{pageink}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{pageink}}{\thesubsection}{0.75em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color{pageink}}{\thesubsubsection}{0.75em}{}
+\titleformat{\paragraph}[runin]{\normalfont\normalsize\bfseries\color{pageink}}{\theparagraph}{0.75em}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{0.75em}
+
+\captionsetup{font=small, labelfont=bf, width=0.96\textwidth}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=pagelink,
+  citecolor=pagelink,
+  urlcolor=pagelink,
+  hypertexnames=false
+}
+
+\urlstyle{tt}
+\interfootnotelinepenalty=10000
+\renewcommand{\topfraction}{0.88}
+\renewcommand{\bottomfraction}{0.75}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.75}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\graphicspath{{figs/}}
+% Deterministic numeric macros generated from verified JSON summaries.
+\input{results/run_numbers}
+\input{results/lr_numbers}
+\input{results/derived_numbers}
+\input{results/evidence_numbers}
+\input{results/motivation_numbers}
+\input{results/mechanism_numbers}
+\input{results/systems_numbers}
+\input{results/related_numbers}
+\input{results/confirmation_numbers}
+
+\usetikzlibrary{arrows.meta, calc, fit, backgrounds, decorations.pathreplacing, shapes.geometric}
+\usepgfplotslibrary{groupplots}
+
+% Unified colorblind-safe taxonomic palette.
+\definecolor{famRef}{HTML}{24313A}
+\definecolor{famWT}{HTML}{1B4F9C}
+\definecolor{famOD}{HTML}{0E7470}
+\definecolor{famDT}{HTML}{537EA8}
+\definecolor{famNull}{HTML}{B97720}
+\definecolor{famAbl}{HTML}{C0392B}
+\definecolor{famSlate}{HTML}{52606D}
+\definecolor{famMuted}{HTML}{8A949C}
+
+\pgfplotsset{
+  paperplot/.style={
+    grid=major,
+    major grid style={draw=pagerule!55, line width=0.35pt},
+    axis line style={draw=pagemuted!70, line width=0.5pt},
+    tick style={draw=pagemuted!70, line width=0.45pt},
+    tick align=outside,
+    title style={font=\pagesfsb\footnotesize\color{pageink}, yshift=1pt},
+    label style={font=\pagesf\footnotesize\color{pageink}},
+    tick label style={font=\scriptsize\color{pageink!88}},
+    legend style={font=\scriptsize\color{pageink}, draw=pagerule, fill=white,
+                  fill opacity=0.94, text opacity=1, rounded corners=1.5pt,
+                  inner sep=2.5pt},
+    legend cell align=left,
+  }
+}
+
+\newcommand{\Nten}{\mathcal{N}_{10}}
+\newcommand{\unitrms}{\operatorname{unitRMS}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Diag}{\operatorname{Diag}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\In}{\mathsf{In}}
+\newcommand{\Out}{\mathsf{Out}}
+\newcommand{\Tr}{{\mathsf T}}
+\definecolor{checkgreen}{HTML}{1B7F3B}
+\definecolor{crossred}{HTML}{C0392B}
+\newcommand{\yesmark}{\textcolor{checkgreen}{\ding{51}}}
+\newcommand{\nomark}{\textcolor{crossred}{\ding{55}}}
+
+% Formal 5-slot operator signature A(R_d, R_{4d} | L_d, L_{4d} | \tau).
+\newcommand{\opcfg}[5]{\mathcal{A}\!\left(#1,\,#2\;\middle|\;#3,\,#4\;\middle|\;#5\right)}
+\newcommand{\tcfg}[5]{$(#1,#2\mid #3,#4\mid #5)$}
+\newcommand{\fFull}{\textcolor{famWT}{\bullet}}
+\newcommand{\fDiag}{\textcolor{famOD}{\oplus}}
+\newcommand{\fOuter}{\textcolor{famSlate}{\triangleright}}
+\newcommand{\fOuterFull}{\textcolor{famSlate}{\triangleright_{\!\textcolor{famWT}{\bullet}}}}
+\newcommand{\fOuterDiag}{\textcolor{famSlate}{\triangleright_{\!\textcolor{famOD}{\oplus}}}}
+\newcommand{\fNone}{\textcolor{famMuted}{\text{---}}}
+\newcommand{\fNull}{\textcolor{famNull}{\varnothing}}
+\newcommand{\fNullFull}{\textcolor{famNull}{\varnothing_{\!\textcolor{famWT}{\bullet}}}}
+\newcommand{\fNullDiag}{\textcolor{famNull}{\varnothing_{\!\textcolor{famOD}{\oplus}}}}
+\newcommand{\taxid}[1]{{\pagesfsb #1}}
+
+% Implementation identifiers.
+\newcommand{\muont}{\texttt{muont}}
+\newcommand{\dense}{\texttt{inner\_outer\_all}}
+\newcommand{\denselag}{\texttt{inner\_outer\_all\_lag}}
+\newcommand{\mlpdiag}{\texttt{inner\_outer\_mlpdiag}}
+\newcommand{\mlpdiaglag}{\texttt{inner\_outer\_mlpdiag\_lag}}
+\newcommand{\symmlpdiag}{\texttt{inner\_outer\_sym\_mlpdiag}}
+\newcommand{\symmlpdiaglag}{\texttt{inner\_outer\_sym\_mlpdiag\_lag}}
+\newcommand{\alldiag}{\texttt{inner\_outer\_leftdiag}}
+\newcommand{\outerdiag}{\texttt{outer\_leftdiag}}
+\newcommand{\fused}{\texttt{outer\_leftdiag\_fused}}
+\newcommand{\nullall}{\texttt{null\_all}}
+\newcommand{\nullmlp}{\texttt{null\_mlpdiag}}
+\newcommand{\nullod}{\texttt{null\_leftdiag\_upstream\_fused}}
+\newcommand{\leftall}{\texttt{left\_all}}
+\newcommand{\noexp}{\texttt{inner\_outer\_hidden}}
+\newcommand{\outerall}{\texttt{outer\_left\_all}}
+\newcommand{\outerdown}{\texttt{outer\_left\_down}}
+\newcommand{\downhybrid}{\texttt{down\_hybrid}}
+\newcommand{\bothdiag}{\texttt{inner\_outer\_all\_diag}}
+
+\title{\textbf{Width-Thresholded Output-Cotangent Normalization\\in Muon-Type Optimizers}}
+\author{\todo{authors}\\[3pt]{\small \todo{affiliations}}}
+\date{\small \today}
+
+\begin{document}
+
+\maketitle
+
+% Abstract and Introduction intentionally deferred; manuscript currently opens with Methodology and Results.
+
+\input{sections/method}
+\FloatBarrier
+\input{sections/results}
+\FloatBarrier
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

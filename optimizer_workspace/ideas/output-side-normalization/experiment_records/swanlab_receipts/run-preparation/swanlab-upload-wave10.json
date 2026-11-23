@@ -1,0 +1,1018 @@
+{
+  "runs": {
+    "muont": {
+      "id": "wave10-muont-6d4170e2fdf8",
+      "path": "siyuc3141/output-side-normalization-marin/wave10-muont-6d4170e2fdf8",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-muont-6d4170e2fdf8",
+      "status": "verified",
+      "metrics_sha256": "a01bbead189aa060fa9157cd13f95b672377ebc0eba68e0bc0a38769180b403d",
+      "manifest_sha256": "c5c72905b50880caf3e3d46e84992014799b0fd99ea1c2fc3487e8655f73bca9",
+      "checkpoint_receipt_sha256": "3ccefc797c4f29b9390450360d0daac9ec91a6ec5b101e3631a8f813c8249360",
+      "checkpoint_rank_bytes": [
+        2439585227,
+        1377134731,
+        1377134731,
+        1378183883,
+        1377134731,
+        1393912523,
+        1377134731,
+        1377134731
+      ],
+      "uploaded_at": "2026-11-17T11:42:39.366788+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T11:42:42.672375+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-muont-6d4170e2fdf8/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/input_refresh_installations/count": 5120,
+          "runtime/input_refresh_installations/installed": 5120,
+          "runtime/input_refresh_installations/discarded": 5120,
+          "runtime/input_gpu_ms_previous/stats": 5119,
+          "runtime/input_gpu_ms_previous/roots": 5119,
+          "runtime/input_gpu_ms_previous/update": 5119,
+          "runtime/input_refresh_installations/d/count": 5099,
+          "runtime/input_refresh_installations/d/installed": 5099,
+          "runtime/input_refresh_installations/d/discarded": 5099,
+          "runtime/input_refresh_installations/d/min_age": 5099,
+          "runtime/input_refresh_installations/d/max_age": 5099,
+          "runtime/input_refresh_installations/d/min_source_step": 5099,
+          "runtime/input_refresh_installations/d/max_source_step": 5099,
+          "runtime/input_refresh_installations/f/count": 5099,
+          "runtime/input_refresh_installations/f/installed": 5099,
+          "runtime/input_refresh_installations/f/discarded": 5099,
+          "runtime/input_refresh_installations/f/min_age": 5099,
+          "runtime/input_refresh_installations/f/max_age": 5099,
+          "runtime/input_refresh_installations/f/min_source_step": 5099,
+          "runtime/input_refresh_installations/f/max_source_step": 5099,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.1309003829956055,
+          "runtime/step_seconds": 1.090637655928731,
+          "runtime/output_host_seconds": 7.506459951400757e-07,
+          "runtime/elapsed_seconds": 5962.413043744862,
+          "runtime/peak_allocated_bytes": 22044538880,
+          "runtime/peak_reserved_bytes": 26084376576,
+          "runtime/input_fallbacks": 13,
+          "runtime/input_gpu_ms_previous/stats": 123.59584045410156,
+          "runtime/input_gpu_ms_previous/roots": 25.254655838012695,
+          "runtime/input_gpu_ms_previous/update": 152.38870239257812,
+          "eval/c4_loss": 3.4516581432059668,
+          "eval/heldout/dclm": 3.3339377720350165,
+          "eval/heldout/starcoder": 1.9435906313205085,
+          "eval/heldout/proofpile": 2.2613150841805525,
+          "eval/selection_loss": 3.2348924533966192,
+          "runtime/eval_seconds": 0.8966877404600382,
+          "runtime/checkpoint_seconds": 9.890025351196527,
+          "runtime/end_to_end_seconds": 5973.200211849064,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 5118,
+          "runtime/input_refresh_installations/d/max_source_step": 5118,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 5118,
+          "runtime/input_refresh_installations/f/max_source_step": 5118
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 1.6940658945086007e-21,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_gpu_ms_previous/stats": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/roots": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/update": {
+            "max_absolute": 2.842170943040401e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_fused": {
+      "id": "wave10-outer_leftdiag_fused-d59b3a6d3a8e",
+      "path": "siyuc3141/output-side-normalization-marin/wave10-outer_leftdiag_fused-d59b3a6d3a8e",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-outer_leftdiag_fused-d59b3a6d3a8e",
+      "status": "verified",
+      "metrics_sha256": "2a75aad481e1b6a380e6b514af2e940898293b16495f9013e3b5347c96a22716",
+      "manifest_sha256": "edeae08bf418265cfd365d68f2b0840af0489a24481fafe12bcbd801f73c2fa5",
+      "checkpoint_receipt_sha256": "4b782406c6cd74b736173dacca486654520805dea0cc63c3e63afc0a4a44eb9b",
+      "checkpoint_rank_bytes": [
+        2440437899,
+        1377987403,
+        1377987403,
+        1379036619,
+        1377987403,
+        1377987403,
+        1377987403,
+        1377987403
+      ],
+      "uploaded_at": "2026-11-17T11:42:57.830058+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T11:43:01.400706+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-outer_leftdiag_fused-d59b3a6d3a8e/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/input_refresh_installations/count": 5120,
+          "runtime/input_refresh_installations/installed": 5120,
+          "runtime/input_refresh_installations/discarded": 5120,
+          "runtime/input_refresh_installations/d/count": 5099,
+          "runtime/input_refresh_installations/d/installed": 5099,
+          "runtime/input_refresh_installations/d/discarded": 5099,
+          "runtime/input_refresh_installations/d/min_age": 5099,
+          "runtime/input_refresh_installations/d/max_age": 5099,
+          "runtime/input_refresh_installations/d/min_source_step": 5099,
+          "runtime/input_refresh_installations/d/max_source_step": 5099,
+          "runtime/input_refresh_installations/f/count": 5099,
+          "runtime/input_refresh_installations/f/installed": 5099,
+          "runtime/input_refresh_installations/f/discarded": 5099,
+          "runtime/input_refresh_installations/f/min_age": 5099,
+          "runtime/input_refresh_installations/f/max_age": 5099,
+          "runtime/input_refresh_installations/f/min_source_step": 5099,
+          "runtime/input_refresh_installations/f/max_source_step": 5099,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.1291940212249756,
+          "runtime/step_seconds": 1.1818731110543013,
+          "runtime/output_host_seconds": 1.2796372175216675e-06,
+          "runtime/elapsed_seconds": 6466.38780243136,
+          "runtime/peak_allocated_bytes": 24040632832,
+          "runtime/peak_reserved_bytes": 28250734592,
+          "runtime/input_fallbacks": 5,
+          "runtime/input_extra_roots": 4911,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 3.4498582080239424,
+          "eval/heldout/dclm": 3.330912482269081,
+          "eval/heldout/starcoder": 1.9392726409675438,
+          "eval/heldout/proofpile": 2.2585773737293753,
+          "eval/selection_loss": 3.231792289505362,
+          "runtime/eval_seconds": 0.8971712086349726,
+          "runtime/checkpoint_seconds": 7.669321745634079,
+          "runtime/end_to_end_seconds": 6474.954602567479,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 5118,
+          "runtime/input_refresh_installations/d/max_source_step": 5118,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 5118,
+          "runtime/input_refresh_installations/f/max_source_step": 5118
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 8.470329472543003e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_upstream_fused": {
+      "id": "wave10-outer_leftdiag_upstream_fused-ddd1b4aae770",
+      "path": "siyuc3141/output-side-normalization-marin/wave10-outer_leftdiag_upstream_fused-ddd1b4aae770",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-outer_leftdiag_upstream_fused-ddd1b4aae770",
+      "status": "verified",
+      "metrics_sha256": "6993a182afae8f4c6303086cdff50bfe788238befe76270007000c8c6d1a99ff",
+      "manifest_sha256": "0579cca705d4ca1030c821ced93dcc5a245ea91501ec5ba1b55fe2aaf756990a",
+      "checkpoint_receipt_sha256": "243c02e1e41ce3afdc8479fa6913da913653fe87506c7dd8245f82a40a41a44b",
+      "checkpoint_rank_bytes": [
+        2440437899,
+        1377987467,
+        1377987467,
+        1379036619,
+        1377987467,
+        1377987467,
+        1377987467,
+        1377987467
+      ],
+      "uploaded_at": "2026-11-17T11:43:18.390346+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T11:43:21.737920+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-outer_leftdiag_upstream_fused-ddd1b4aae770/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/input_refresh_installations/count": 5120,
+          "runtime/input_refresh_installations/installed": 5120,
+          "runtime/input_refresh_installations/discarded": 5120,
+          "runtime/input_refresh_installations/d/count": 5099,
+          "runtime/input_refresh_installations/d/installed": 5099,
+          "runtime/input_refresh_installations/d/discarded": 5099,
+          "runtime/input_refresh_installations/d/min_age": 5099,
+          "runtime/input_refresh_installations/d/max_age": 5099,
+          "runtime/input_refresh_installations/d/min_source_step": 5099,
+          "runtime/input_refresh_installations/d/max_source_step": 5099,
+          "runtime/input_refresh_installations/f/count": 5099,
+          "runtime/input_refresh_installations/f/installed": 5099,
+          "runtime/input_refresh_installations/f/discarded": 5099,
+          "runtime/input_refresh_installations/f/min_age": 5099,
+          "runtime/input_refresh_installations/f/max_age": 5099,
+          "runtime/input_refresh_installations/f/min_source_step": 5099,
+          "runtime/input_refresh_installations/f/max_source_step": 5099,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.130112648010254,
+          "runtime/step_seconds": 1.1874716002494097,
+          "runtime/output_host_seconds": 1.9744038581848145e-06,
+          "runtime/elapsed_seconds": 6422.965432126075,
+          "runtime/peak_allocated_bytes": 24040633344,
+          "runtime/peak_reserved_bytes": 28183625728,
+          "runtime/input_fallbacks": 7,
+          "runtime/input_extra_roots": 4965,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 3.4489155287172335,
+          "eval/heldout/dclm": 3.3321904657597363,
+          "eval/heldout/starcoder": 1.9413486637511679,
+          "eval/heldout/proofpile": 2.2588558664433975,
+          "eval/selection_loss": 3.233105483186158,
+          "runtime/eval_seconds": 0.8988044280558825,
+          "runtime/checkpoint_seconds": 5.447834383696318,
+          "runtime/end_to_end_seconds": 6429.312376761809,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 5118,
+          "runtime/input_refresh_installations/d/max_source_step": 5118,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 5118,
+          "runtime/input_refresh_installations/f/max_source_step": 5118
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 8.470329472543003e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 2.220446049250313e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "null_leftdiag_upstream_fused": {
+      "id": "wave10-null_leftdiag_upstream_fused-246709198862",
+      "path": "siyuc3141/output-side-normalization-marin/wave10-null_leftdiag_upstream_fused-246709198862",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-null_leftdiag_upstream_fused-246709198862",
+      "status": "verified",
+      "metrics_sha256": "f163daa3941065890978e1902ce6fb56d18f234a17b7a9c97731168d2684077d",
+      "manifest_sha256": "e1e47f15a7d7f92ca354103177ddeb1e847a838d34a3495c7f79a78193728b6d",
+      "checkpoint_receipt_sha256": "b14a349ca40c0e68b56c64c83a36b59ab117b3b0a4ab515ad891fcf5a0e31616",
+      "checkpoint_rank_bytes": [
+        2440437899,
+        1377987467,
+        1377987467,
+        1379036619,
+        1379036619,
+        1377987467,
+        1377987467,
+        1394765259
+      ],
+      "uploaded_at": "2026-11-17T11:43:37.430498+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T11:43:40.490161+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/wave10-null_leftdiag_upstream_fused-246709198862/chart",
+        "point_counts": {
+          "tokens": 5120,
+          "train/loss": 5120,
+          "runtime/step_seconds": 5120,
+          "runtime/output_host_seconds": 5120,
+          "runtime/elapsed_seconds": 5120,
+          "runtime/peak_allocated_bytes": 5120,
+          "runtime/peak_reserved_bytes": 5120,
+          "runtime/input_fallbacks": 5120,
+          "runtime/input_extra_roots": 5120,
+          "runtime/input_max_basis_age": 5120,
+          "runtime/input_pending_refreshes": 5120,
+          "eval/c4_loss": 22,
+          "eval/heldout/dclm": 22,
+          "eval/heldout/starcoder": 22,
+          "eval/heldout/proofpile": 22,
+          "eval/selection_loss": 22,
+          "runtime/eval_seconds": 22,
+          "runtime/end_to_end_seconds": 5120,
+          "runtime/input_refresh_installations/count": 5120,
+          "runtime/input_refresh_installations/installed": 5120,
+          "runtime/input_refresh_installations/discarded": 5120,
+          "runtime/input_refresh_installations/d/count": 5099,
+          "runtime/input_refresh_installations/d/installed": 5099,
+          "runtime/input_refresh_installations/d/discarded": 5099,
+          "runtime/input_refresh_installations/d/min_age": 5099,
+          "runtime/input_refresh_installations/d/max_age": 5099,
+          "runtime/input_refresh_installations/d/min_source_step": 5099,
+          "runtime/input_refresh_installations/d/max_source_step": 5099,
+          "runtime/input_refresh_installations/f/count": 5099,
+          "runtime/input_refresh_installations/f/installed": 5099,
+          "runtime/input_refresh_installations/f/discarded": 5099,
+          "runtime/input_refresh_installations/f/min_age": 5099,
+          "runtime/input_refresh_installations/f/max_age": 5099,
+          "runtime/input_refresh_installations/f/min_source_step": 5099,
+          "runtime/input_refresh_installations/f/max_source_step": 5099,
+          "runtime/checkpoint_seconds": 21
+        },
+        "final_metrics": {
+          "tokens": 2684354560,
+          "train/loss": 3.130913019180298,
+          "runtime/step_seconds": 1.1868756357580423,
+          "runtime/output_host_seconds": 1.2032687664031982e-06,
+          "runtime/elapsed_seconds": 6447.050053196028,
+          "runtime/peak_allocated_bytes": 24040633344,
+          "runtime/peak_reserved_bytes": 28250734592,
+          "runtime/input_fallbacks": 10,
+          "runtime/input_extra_roots": 4561,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 3.449843708747137,
+          "eval/heldout/dclm": 3.3328386397152157,
+          "eval/heldout/starcoder": 1.937617056062661,
+          "eval/heldout/proofpile": 2.259645626436514,
+          "eval/selection_loss": 3.2334888195828246,
+          "runtime/eval_seconds": 0.9023585990071297,
+          "runtime/checkpoint_seconds": 4.721942942589521,
+          "runtime/end_to_end_seconds": 6452.674679609016,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 5118,
+          "runtime/input_refresh_installations/d/max_source_step": 5118,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 5118,
+          "runtime/input_refresh_installations/f/max_source_step": 5118
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 8.470329472543003e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 2.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 4.547473508864641e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-marin",
+  "project_url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "status": "verified",
+  "verified_at": "2026-11-17T11:43:40.544174+00:00"
+}

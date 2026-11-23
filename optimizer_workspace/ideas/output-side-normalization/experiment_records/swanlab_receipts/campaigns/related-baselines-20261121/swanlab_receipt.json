@@ -1,0 +1,316 @@
+{
+  "runs": {
+    "go_muon_control_0p5m_seed0_lr0": {
+      "id": "related-baseline-go-muon-control-0p5m-see-2b4d8c7d67ef",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-control-0p5m-see-2b4d8c7d67ef",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-2b4d8c7d67ef",
+      "status": "verified",
+      "manifest_sha256": "5f73cf682248011fbeaf45ef6b970a28aee011d0c5d675b750ab5d4703e93f45",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "071691840becd9cc01574e23ea9b049122ebc5a6ed2690ca84259d4779ac6279"
+      },
+      "uploaded_at": "2026-11-23T14:50:47.952397+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:48.654945+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-2b4d8c7d67ef/chart",
+        "steps": 320
+      }
+    },
+    "go_muon_control_0p5m_seed0_lr1": {
+      "id": "related-baseline-go-muon-control-0p5m-see-ea93e283a4a4",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-control-0p5m-see-ea93e283a4a4",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-ea93e283a4a4",
+      "status": "verified",
+      "manifest_sha256": "a0e85a6fac6cd175b6a426f16dfa125feb23643b01f3a3e1b96e4400137796f9",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "efc215f2c9d4c264c28b21019cc8176981ac1067c5d1d89eb586f03b6cdef492"
+      },
+      "uploaded_at": "2026-11-23T14:50:52.168436+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:52.806590+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-ea93e283a4a4/chart",
+        "steps": 320
+      }
+    },
+    "go_muon_control_0p5m_seed0_lr2": {
+      "id": "related-baseline-go-muon-control-0p5m-see-bf0c69b0b120",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-control-0p5m-see-bf0c69b0b120",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-bf0c69b0b120",
+      "status": "verified",
+      "manifest_sha256": "d10a95ae48fd1142ec8262790e298556cb961b8090ae6f6e92055380e2127e70",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "801b93ede656cb1da3353ee554ecd9736276069d96b93a2f4fe5c3cac2b6c835"
+      },
+      "uploaded_at": "2026-11-23T14:50:56.104636+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:50:56.709826+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-control-0p5m-see-bf0c69b0b120/chart",
+        "steps": 320
+      }
+    },
+    "go_muon_paper_0p5m_seed0_lr0": {
+      "id": "related-baseline-go-muon-paper-0p5m-seed0-aa06765e6c48",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-paper-0p5m-seed0-aa06765e6c48",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-aa06765e6c48",
+      "status": "verified",
+      "manifest_sha256": "e7599339cf576e4ff7798b1f063f97c5ace7548f17a8f8697e7a598242e59cac",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "65651e6f1cb3e374f61ba9fab7865cfe46554535c8f5791878602b95c95580f4"
+      },
+      "uploaded_at": "2026-11-23T14:51:00.446801+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:01.073504+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-aa06765e6c48/chart",
+        "steps": 320
+      }
+    },
+    "go_muon_paper_0p5m_seed0_lr1": {
+      "id": "related-baseline-go-muon-paper-0p5m-seed0-b54006ac1f69",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-paper-0p5m-seed0-b54006ac1f69",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-b54006ac1f69",
+      "status": "verified",
+      "manifest_sha256": "56b1f4c278158ff980912dead60587d4d4309884b51c08e2b72af69d540f1159",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "f72470ffc59ff2b5e9fc1e0aeb9027ef67caa16fad8543f8429ec1a6a28b5bb5"
+      },
+      "uploaded_at": "2026-11-23T14:51:04.369470+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:05.270935+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-b54006ac1f69/chart",
+        "steps": 320
+      }
+    },
+    "go_muon_paper_0p5m_seed0_lr2": {
+      "id": "related-baseline-go-muon-paper-0p5m-seed0-ae445ccd105c",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-go-muon-paper-0p5m-seed0-ae445ccd105c",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-ae445ccd105c",
+      "status": "verified",
+      "manifest_sha256": "e7147155d835e7c6cd2f5be285ec362cbfad2bf47881068ef6823417bdec2737",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "1fc1d03193dcf88ed17f2113ddf5f26d8395fcdb1289ab03436837cb248aaf55"
+      },
+      "uploaded_at": "2026-11-23T14:51:08.621109+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:09.229781+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-go-muon-paper-0p5m-seed0-ae445ccd105c/chart",
+        "steps": 320
+      }
+    },
+    "inner_outer_mlpdiag_0p5m_seed0_lr0": {
+      "id": "related-baseline-inner-outer-mlpdiag-0p5m-5a264ba57306",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-inner-outer-mlpdiag-0p5m-5a264ba57306",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-5a264ba57306",
+      "status": "verified",
+      "manifest_sha256": "a662099fb44c1ac0f65398ea6fd71f536ca03891dfbd1c59f39d1119999152a4",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "1d75d83a442c023ea58acd9ff0d41f008248d0b5be81c901f11961b11132e53a"
+      },
+      "uploaded_at": "2026-11-23T14:51:13.839553+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:14.504874+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-5a264ba57306/chart",
+        "steps": 320
+      }
+    },
+    "inner_outer_mlpdiag_0p5m_seed0_lr1": {
+      "id": "related-baseline-inner-outer-mlpdiag-0p5m-dff3eea27a00",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-inner-outer-mlpdiag-0p5m-dff3eea27a00",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-dff3eea27a00",
+      "status": "verified",
+      "manifest_sha256": "aded1cb61fa4df7e284eddf2f08c02eca3cd7852f5dbf23e3b8e0c4d9bb4e16a",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "2df587b50632cbf400741271fd10a8ba94c1531b792f347f1eb78f44c954c875"
+      },
+      "uploaded_at": "2026-11-23T14:51:18.654910+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:19.565337+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-dff3eea27a00/chart",
+        "steps": 320
+      }
+    },
+    "inner_outer_mlpdiag_0p5m_seed0_lr2": {
+      "id": "related-baseline-inner-outer-mlpdiag-0p5m-c3a26da0dfba",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-inner-outer-mlpdiag-0p5m-c3a26da0dfba",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-c3a26da0dfba",
+      "status": "verified",
+      "manifest_sha256": "e7b082e7d1127fcdfe157865a67b8bdf719997f13f0b3e44f976d6af27c08a06",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "cc99e0d1a5275a601c8eb2eeb87ce59f2a035e393869db08ca94072f6f5ee6fc"
+      },
+      "uploaded_at": "2026-11-23T14:51:23.025483+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:51:23.665701+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-inner-outer-mlpdiag-0p5m-c3a26da0dfba/chart",
+        "steps": 320
+      }
+    },
+    "mousse_control_0p5m_seed0_lr0": {
+      "id": "related-baseline-mousse-control-0p5m-seed-9bd1adaf8b66",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-control-0p5m-seed-9bd1adaf8b66",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-9bd1adaf8b66",
+      "status": "verified",
+      "manifest_sha256": "f4a4585ec7fa12ff190a99d0a375d4b56a085d83367aee765897ea473638e10c",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "ecfbbe9e6324bb0360077af5523f7a0a8456706889588fd1ec84d292fe03c3c4"
+      },
+      "uploaded_at": "2026-11-23T14:52:27.834620+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:28.488082+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-9bd1adaf8b66/chart",
+        "steps": 320
+      }
+    },
+    "mousse_control_0p5m_seed0_lr1": {
+      "id": "related-baseline-mousse-control-0p5m-seed-929d98117366",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-control-0p5m-seed-929d98117366",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-929d98117366",
+      "status": "verified",
+      "manifest_sha256": "d28bbb4bc7d0c51ac8fe3838e7ff4189c4a2917ad4efbe1fd0b205dff6c5d96c",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "dbd7ba055c820754dcec15f1a8f28ba6ee5a5e4e2ef7216a5ea7e4417334a612"
+      },
+      "uploaded_at": "2026-11-23T14:52:32.051668+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:32.828870+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-929d98117366/chart",
+        "steps": 320
+      }
+    },
+    "mousse_control_0p5m_seed0_lr2": {
+      "id": "related-baseline-mousse-control-0p5m-seed-ce63a373328a",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-control-0p5m-seed-ce63a373328a",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-ce63a373328a",
+      "status": "verified",
+      "manifest_sha256": "51c773a9e219bfaa394db0a7b0947547c69bf34aef4c2d4db01d5556616f03c1",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "76424ae679e7e634d86962c36bf75185df64ab3cb5f264d39a9194984f8d213e"
+      },
+      "uploaded_at": "2026-11-23T14:52:35.848744+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:36.553940+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-control-0p5m-seed-ce63a373328a/chart",
+        "steps": 320
+      }
+    },
+    "mousse_paper_0p5m_seed0_lr0": {
+      "id": "related-baseline-mousse-paper-0p5m-seed0--a940dfcc3d3b",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-paper-0p5m-seed0--a940dfcc3d3b",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--a940dfcc3d3b",
+      "status": "verified",
+      "manifest_sha256": "e46c91df5a4968099c0de03fdb2177c5b92d39770ef5e69f87da7489660bb439",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "becc20fcaa111d94713bb9a6314f566602160ee3124c8d925e814f79a26db57f"
+      },
+      "uploaded_at": "2026-11-23T14:52:40.495412+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:41.187695+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--a940dfcc3d3b/chart",
+        "steps": 320
+      }
+    },
+    "mousse_paper_0p5m_seed0_lr1": {
+      "id": "related-baseline-mousse-paper-0p5m-seed0--557856f4881c",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-paper-0p5m-seed0--557856f4881c",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--557856f4881c",
+      "status": "verified",
+      "manifest_sha256": "89390024458a628b416cfdb791af82de32dbfc854f3ac1d9ecf545f218bcc554",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "384bbe3f3fee167b29915704a0a6a6ab96c1dbb5615538cf30616c611bc5f2a6"
+      },
+      "uploaded_at": "2026-11-23T14:52:44.633405+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:45.279770+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--557856f4881c/chart",
+        "steps": 320
+      }
+    },
+    "mousse_paper_0p5m_seed0_lr2": {
+      "id": "related-baseline-mousse-paper-0p5m-seed0--c67bdf9634cd",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-mousse-paper-0p5m-seed0--c67bdf9634cd",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--c67bdf9634cd",
+      "status": "verified",
+      "manifest_sha256": "fabb13109663cc00d1c719358a592992b220ef785a7a56a50edc18580d18c474",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "2f24b45ffa2415ae501255c575172586f67a0e16787328c9e186452c6cea9435"
+      },
+      "uploaded_at": "2026-11-23T14:52:48.790345+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:49.606514+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-mousse-paper-0p5m-seed0--c67bdf9634cd/chart",
+        "steps": 320
+      }
+    },
+    "muon_control_0p5m_seed0_lr0": {
+      "id": "related-baseline-muon-control-0p5m-seed0--93dc4023fb49",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-muon-control-0p5m-seed0--93dc4023fb49",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--93dc4023fb49",
+      "status": "verified",
+      "manifest_sha256": "65fd4639bab32f8360abffcafca9a2f1cd41fc2cb57c29cb68d1665518baa528",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "ab7a1410e3305ad6e3d8d2ae3d458aba846b91195ff61ff4279706a7854fcc22"
+      },
+      "uploaded_at": "2026-11-23T14:52:52.841209+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:53.451366+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--93dc4023fb49/chart",
+        "steps": 320
+      }
+    },
+    "muon_control_0p5m_seed0_lr1": {
+      "id": "related-baseline-muon-control-0p5m-seed0--a05a96df44ae",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-muon-control-0p5m-seed0--a05a96df44ae",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--a05a96df44ae",
+      "status": "verified",
+      "manifest_sha256": "c97612b1d4209a81d96b9cfaf4bc48d08f0da8845f77fd83e3c4455402961a7c",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "a743e27ef8b605be3efc8bfb6b3765e01691f937cecc34bde8ac88c8aa7b8a7f"
+      },
+      "uploaded_at": "2026-11-23T14:52:56.451942+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:52:57.067787+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--a05a96df44ae/chart",
+        "steps": 320
+      }
+    },
+    "muon_control_0p5m_seed0_lr2": {
+      "id": "related-baseline-muon-control-0p5m-seed0--24fc4ce99066",
+      "path": "siyuc3141/output-side-normalization-marin/related-baseline-muon-control-0p5m-seed0--24fc4ce99066",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--24fc4ce99066",
+      "status": "verified",
+      "manifest_sha256": "a9588a4462af9b6767eeec19d31166a7f53ac2fe2585a6ba9b781a7a837da5eb",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "5e77360ba7c465549067db1efc44432e905bac7340d486d0b3820e8f4e1b12a8"
+      },
+      "uploaded_at": "2026-11-23T14:53:01.096582+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T14:53:01.928840+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/related-baseline-muon-control-0p5m-seed0--24fc4ce99066/chart",
+        "steps": 320
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-marin",
+  "project_url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "status": "verified",
+  "updated_at": "2026-11-23T14:53:01.948485+00:00"
+}

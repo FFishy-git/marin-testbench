@@ -3,12 +3,15 @@
 We audited input and output-cotangent second moments across a baseline \muont{}
 trajectory, derived a $2\times 2$ family of asymmetric and symmetric
 width-thresholded two-sided updates, and evaluated \nOptimizerArms{} optimizer
-configurations across \nDistinctRuns{} distinct full-budget 2.68B-token
+configurations across \nDistinctRuns{} distinct exploratory $2.68\text{B}$-token
 trajectories (\nRunDirs{} completed run directories), 28 short-schedule
-learning-rate trials, a post-training step-geometry audit, and uncontended
-eight-A100 \texttt{fast\_lag} executions.
+learning-rate trials, a 30-trial related-baseline study, and an isolated
+\confTotalRuns{}-run \texttt{fast\_lag} confirmation and scaling campaign
+spanning full-budget LR bracketing, three fresh post-selection seeds, $4\times$
+Chinchilla overtraining ($80$ TPP), $520\text{M}$ ($799.6\text{M}$ total) model
+scaling, and \confPalomaCount{} 16-domain Paloma evaluations.
 
-Four findings define the scope and design of output-side normalization in
+Five findings define the scope and design of output-side normalization in
 Muon-type optimizers:
 \begin{enumerate}
 \item \textbf{Architectural covariance split and cotangent drift.}
@@ -23,11 +26,11 @@ Muon-type optimizers:
   and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
   residual width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
   rotational, post-SwiGLU width-2048 \texttt{in:down} retains $56.6\%$
-  off-diagonal anisotropy from positive channel means, and cotangent eigenspaces
+  off-diagonal anisotropy, and cotangent eigenspaces
   drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed
   inputs ($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact fallbacks).
-\item \textbf{Width-thresholded complementarity, step rotation, and causal
-  SwiGLU validation.}
+\item \textbf{Width-thresholded complementarity, step rotation, and asymmetric
+  training performance.}
   Output moments help on top of input whitening ($\mlpdiagsel{}$ nats held-out
   selection loss for \taxid{WT-MLP} across all five windows and three seeds;
   $-0.0059$ nats net of \taxid{Null-WT}) and fail when substituted for it
@@ -35,10 +38,13 @@ Muon-type optimizers:
   two-thirds of that gain with zero output eigendecompositions and instantaneous
   step norms match \taxid{MuonT} to \mechMlpdiagGraftNorm{} at a
   $\mechMlpdiagGraftDeg^\circ$ rotation. Symmetrically diagonalizing
-  \texttt{in:down} (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}) confirms the pre- versus
-  post-SwiGLU covariance split, incurring a $\symLagVsMlpLagWinOne{}$-nat early
+  \texttt{in:down} (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}) incurs a
+  $\symLagVsMlpLagWinOne{}$-nat early
   constant-LR training cost before recovering during LR decay to match
   \taxid{WT-MLP-Lag} on final C4 ($\symMlpLagCfourFinalAbs{}$).
+  High diagonal-root fidelity does not ensure optimizer-direction fidelity;
+  the recipe comparison changes inner whitening, outer transport, shaped
+  decay, and execution together (Section~\ref{sec:sym-root-fidelity}).
 \item \textbf{Executed eight-A100 \texttt{fast\_lag} at
   $+\sysExecSymLagVsMuontPct\%$--$+\sysExecMlpLagVsMuontPct\%$ over MuonT and
   wall-clock crossing ahead of MuonT and Muon.}
@@ -55,11 +61,39 @@ Muon-type optimizers:
   ($\sysCrossMuontSymThreeFiveTwoS$\,s), Wave-0 \taxid{MuonT}
   ($\sysCrossMuontWaveZeroThreeFiveTwoS$\,s), and vanilla \taxid{Muon}
   ($\sysCrossMuonWaveZeroThreeFiveTwoS$\,s).
-\item \textbf{Methodological discipline.} Matched execution-path nulls
-  accounted for a fifth to a third of raw fixed-rate gains, and 320-step
-  learning-rate screening selected an over-stepped rate ($0.064$) that
-  regressed full-budget \muont{} itself by \waveTwelveMuontSelDiffMag{} nats
-  relative to $0.0226$. Together they focus remaining confirmation on the
-  compact full-budget curve around $0.0226$, same-wave \texttt{fast\_lag} null,
-  and reserved seeds specified in Section~\ref{sec:program}.
+\item \textbf{Methodological discipline and related-baseline dynamics.}
+  Matched execution-path nulls accounted for a fifth to a third of raw
+  fixed-rate gains, and 320-step learning-rate screening selected an
+  over-stepped rate ($0.064$) that regressed full-budget \muont{} itself by
+  \waveTwelveMuontSelDiffMag{} nats relative to $0.0226$. In a separate paired
+  comparison under common isotropic decay at boundary-selected $\eta = 0.032$
+  (Section~\ref{sec:related-baselines}), \taxid{WT-MLP} improved final
+  selection loss by $\relWtFinalSelDeltaMean{}$ nats over \texttt{muon\_control}
+  while both GO-MUON variants finished worse ($\relGoCtrlFinalSelDeltaMean{}$
+  and $\relGoPaperFinalSelDeltaMean{}$) after surging to a
+  $\relGoCtrlEarlyMinSOne{}$-nat early lead and crossing behind Muon near update
+  $\relGoCtrlCrossStepSOne{}$ during the flat-LR plateau --- exposing an
+  interaction between quarter-power Frobenius grafting, upper-boundary LR
+  censoring, and isotropic decay rather than establishing inferiority of a
+  fully tuned GO-MUON.
+\item \textbf{Full-budget confirmation, $4\times$ overtraining, and $520\text{M}$
+  scaling.}
+  In the \confTotalRuns{}-run \texttt{fast\_lag} confirmation campaign
+  (Section~\ref{sec:confirmation}), \taxid{Null-WT} closes the same-runner null
+  gap ($\confNullFinalSelDelta{}$ final / $\confNullLateSelDelta{}$ late-11
+  selection), \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $11/11$ second-half
+  evaluations at every matched rate ($0.016$: $\confPOneZeroOneSixWtLateSel{}$;
+  $0.0226$: $\confPOneZeroTwoTwoWtLateSel{}$, $\confPOneZeroTwoTwoWtNetLateSel{}$
+  net of null), wins $3/3$ fresh post-selection seeds
+  ($\confPTwoWtSelDeltaMean{}$ selection, $\confPTwoWtPalomaDeltaMean{}$ across
+  16 Paloma domains at $+\confPTwoWtStepPct\%$ step time), holds under $4\times$
+  Chinchilla overtraining ($80$ TPP, matched $\eta=0.0106$:
+  $\confPThreeWtFinalSel{}$ final / $\confPThreeWtLateSel{}$ late-11 selection,
+  $\confPThreeWtPalomaDelta{}$ Paloma winning $\confPThreeWtPalomaWins{}/16$
+  domains), and scales to $520\text{M}$ non-embedding ($799.6\text{M}$ total)
+  parameters at $10.74\text{B}$ tokens ($\confPFourWtFinalSel{}$ final /
+  $\confPFourWtLateSel{}$ late-11 selection, $\confPFourWtPalomaDelta{}$ Paloma
+  winning $\confPFourWtPalomaWins{}/16$ domains at $+\confPFourWtStepPct\%$ step
+  time), whereas diagonal-only \taxid{OD-All} regresses slightly at $520\text{M}$
+  ($\confPFourOdFinalSel{}$ selection, $\confPFourOdPalomaDelta{}$ Paloma).
 \end{enumerate}

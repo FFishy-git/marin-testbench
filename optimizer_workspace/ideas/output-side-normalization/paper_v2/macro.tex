@@ -1,0 +1,140 @@
+
+\usepackage{tikz}
+\usetikzlibrary{matrix, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\captionsetup[figure]{width=0.92\textwidth}
+\usepackage{wrapfig}
+\usepackage{needspace}
+\usepackage{xcolor}
+\usepackage{cancel}
+\usepackage{acronym}
+
+\renewcommand{\CancelColor}{\color{red}}
+
+\def\stle{\overset{\mathrm{s.t.}}{\leq}}
+\def\enc#1{\mathrm{enc}_{#1}}
+\def\dec#1{\mathrm{dec}_{#1}}
+\def\pre#1{\mathrm{pre}_{#1}}
+\def\heaviside{\mathrm{Heav}}
+
+\DeclareMathOperator*{\spn}{span}
+
+\newcommand{\eqi}[1]{\overset{\text{(\romannumeral#1)}}{=}}
+\newcommand{\brai}[1]{\text{(\romannumeral#1)}}
+\newcommand{\braRNum}[1]{\text{(\RNum{#1})}}
+
+\definecolor{mypink}{HTML}{FF1493}
+\definecolor{darkred}{HTML}{BB253B}
+\definecolor{lightgreen}{HTML}{90C0BF}
+\newcommand{\highlight}[1]{{\textcolor{darkcyan}{#1}}}
+\newcommand{\hermite}[1]{{he}_{#1}}
+\def\addref{\textcolor{lightgreen}{\textbf{[Add Reference]}}}
+\definecolor{darkcyan}{HTML}{0081B9}
+
+\newmdenv[
+  backgroundcolor=gray!10,
+  skipabove=1em,
+  skipbelow=1em,
+  leftline=false,
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  linecolor=gray!88,
+  linewidth=4pt
+]{githubquote}
+
+\usepackage[most,skins,theorems]{tcolorbox}
+\tcbset{
+  aibox/.style={
+    width=\linewidth,
+    top=10pt,
+    bottom=4pt,
+    colback=blue!6!white,
+    colframe=black,
+    colbacktitle=black,
+    enhanced,
+    center,
+    attach boxed title to top left={yshift=-0.1in,xshift=0.15in},
+    boxed title style={boxrule=0pt,colframe=white,},
+  }
+}
+
+\definecolor{rliableolive}{HTML}{BBCC33}
+\definecolor{rliableblue}{HTML}{77AADD}
+\definecolor{rliablered}{HTML}{EE8866}
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\definecolor{darkblue}{HTML}{2878D9}
+\definecolor{navyblue}{HTML}{0000FF}
+
+\newtcolorbox{AIbox}[2][]{aibox,title=#2,colback=rliableblue!10!white,#1}
+
+\providecolor{yaleblue}{HTML}{00356B}
+\colorlet{findingframe}{yaleblue}
+\definecolor{findingaccent}{HTML}{D97757}
+\colorlet{findingbg}{yaleblue!5!white}
+
+\newtcolorbox[%
+  auto counter,
+  number within=section,
+  crefname={finding}{findings},
+  Crefname={Finding}{Findings},
+]{finding}[1][]{%
+  enhanced,
+  breakable,
+  before skip=10pt,
+  after skip=10pt,
+  colback=findingbg,
+  colframe=findingframe,
+  boxrule=0pt,
+  arc=3pt,
+  outer arc=3pt,
+  left=12pt, right=12pt, top=8pt, bottom=10pt,
+  before upper={%
+    \noindent\textbf{Finding~\thetcbcounter\ifblank{#1}{}{. #1}.}\enspace
+  },
+}
+
+\newenvironment{olivebox}{%
+    \begin{tcolorbox}[colback=rliableolive!10!white,colframe=black,boxsep=3pt,top=4pt,bottom=4pt,left=3pt,right=3pt]
+}{%
+    \end{tcolorbox}
+}
+
+\newenvironment{lightbluebox}{%
+    \begin{tcolorbox}[colback=rliableblue!15!white,colframe=gray!10!white,boxsep=3pt,top=4pt,bottom=4pt,left=3pt,right=3pt]
+}{%
+    \end{tcolorbox}
+}
+\newenvironment{bluebox}{%
+    \begin{tcolorbox}[colback=navyblue!5!white,colframe=gray!20!white,boxsep=3pt,top=4pt,bottom=4pt,left=3pt,right=3pt]
+}{%
+    \end{tcolorbox}
+}
+
+\newenvironment{violetbox}{%
+    \begin{tcolorbox}[colback=violet!10!white,colframe=black,boxsep=3pt,top=4pt,bottom=4pt,left=3pt,right=3pt]
+}{%
+    \end{tcolorbox}
+}
+
+\newenvironment{olivebox2}{%
+    \begin{tcolorbox}[colback=rliableolive!10!white,colframe=gray!20!white,boxsep=3pt,top=4pt,bottom=4pt,left=3pt,right=3pt]
+}{%
+    \end{tcolorbox}
+}
+
+\usepackage{subcaption}
+
+\usepackage{titlesec}
+\usepackage{xcolor}
+\definecolor{sectionblue}{HTML}{00356B}
+
+\titleformat{\section}
+  {\Large\bfseries\color{sectionblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\large\bfseries\color{sectionblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{sectionblue}}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries\color{black}}{}{0pt}{}

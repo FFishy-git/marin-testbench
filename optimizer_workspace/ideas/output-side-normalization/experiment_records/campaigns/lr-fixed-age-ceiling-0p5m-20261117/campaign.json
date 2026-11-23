@@ -1,0 +1,206 @@
+{
+  "time": "2026-11-17T02:46:03.355862+00:00",
+  "status": "prepared_unvalidated_not_queued",
+  "source": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116",
+  "source_receipt": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/run-preparation/wave7-release-binding.json",
+  "source_receipt_sha256": "6dd26100ab7aec66160a6d72ab37fc5173b12fbb5685e82ab000bf8a55640901",
+  "data_receipt_sha256": "e6ff883cb816c34cc502061dbc6a8239fc19dfc803588786758bb1020e1afe10",
+  "preparation_helper_sha256": "812a308df26c692c8c412567dc578e6806b0b6e7db169cefb2984af1697c101a",
+  "families": [
+    "muont",
+    "inner_outer_leftdiag",
+    "outer_leftdiag",
+    "outer_leftdiag_fused"
+  ],
+  "batch": "0p5m",
+  "seed": 0,
+  "trials": [
+    {
+      "name": "muont_lr_ceiling_4x",
+      "family": "muont",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 4.0,
+      "matrix_lr": 0.09050966784,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/muont_lr_ceiling_4x.json",
+      "config_sha256": "51dc5318e36e6389018ca3a3f3944d7c03b630025f8f5bd3ec37e4ddf4ee9db7",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/muont_0p5m_seed0.json",
+      "reference_config_sha256": "b1a2b81ef99e1c8fd6022c9a6e53a6bfdcda129e1e103cccf2b54b0757baef5f",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "inner_outer_leftdiag_lr_ceiling_4x",
+      "family": "inner_outer_leftdiag",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 4.0,
+      "matrix_lr": 0.09050966784,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/inner_outer_leftdiag_lr_ceiling_4x.json",
+      "config_sha256": "c9bb2d0f9a96647253c15c20bb6e320c231101f8808732d682ce0da846b71685",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/inner_outer_leftdiag_0p5m_seed0.json",
+      "reference_config_sha256": "9b95323b24a977879ce114854bc341c5ea7902f26f1903bc86b06897ca6f1236",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "outer_leftdiag_lr_ceiling_4x",
+      "family": "outer_leftdiag",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 4.0,
+      "matrix_lr": 0.09050966784,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/outer_leftdiag_lr_ceiling_4x.json",
+      "config_sha256": "7a41eba19de87c662fec40448b4161adda523703b9bd8a879690e2a5ceaa5899",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/outer_leftdiag_0p5m_seed0.json",
+      "reference_config_sha256": "cbbb975cadb21322283fd5e757d465420278c726de2adc341f7979a91320c021",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "outer_leftdiag_fused_lr_ceiling_4x",
+      "family": "outer_leftdiag_fused",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 4.0,
+      "matrix_lr": 0.09050966784,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/outer_leftdiag_fused_lr_ceiling_4x.json",
+      "config_sha256": "8791423928234a4af22e0ad947a15be845e6c89182748eccc27aa96a151691d4",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/outer_leftdiag_fused_0p5m_seed0.json",
+      "reference_config_sha256": "5b248d5ab05b2600eb6ca023135533749399c9e7bec2c56c6e799abdff0b3f9b",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "muont_lr_ceiling_4sqrt2x",
+      "family": "muont",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 5.656854249492381,
+      "matrix_lr": 0.12799999978521195,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/muont_lr_ceiling_4sqrt2x.json",
+      "config_sha256": "2a1f2d1ce5c11c35605532bcf0b16606474d8583b72d01efc12d5bb56eaaf313",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/muont_0p5m_seed0.json",
+      "reference_config_sha256": "b1a2b81ef99e1c8fd6022c9a6e53a6bfdcda129e1e103cccf2b54b0757baef5f",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "inner_outer_leftdiag_lr_ceiling_4sqrt2x",
+      "family": "inner_outer_leftdiag",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 5.656854249492381,
+      "matrix_lr": 0.12799999978521195,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/inner_outer_leftdiag_lr_ceiling_4sqrt2x.json",
+      "config_sha256": "3d9dc9a915284abe0c800b6fa9f859b7ee718c5031f0be304285f54d9a721876",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/inner_outer_leftdiag_0p5m_seed0.json",
+      "reference_config_sha256": "9b95323b24a977879ce114854bc341c5ea7902f26f1903bc86b06897ca6f1236",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "outer_leftdiag_lr_ceiling_4sqrt2x",
+      "family": "outer_leftdiag",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 5.656854249492381,
+      "matrix_lr": 0.12799999978521195,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/outer_leftdiag_lr_ceiling_4sqrt2x.json",
+      "config_sha256": "e1993627b9381d1fb2b66c316d735a64335285c53835b55ce5582e2ddc0e612c",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/outer_leftdiag_0p5m_seed0.json",
+      "reference_config_sha256": "cbbb975cadb21322283fd5e757d465420278c726de2adc341f7979a91320c021",
+      "steps": 320,
+      "tokens": 167772160
+    },
+    {
+      "name": "outer_leftdiag_fused_lr_ceiling_4sqrt2x",
+      "family": "outer_leftdiag_fused",
+      "batch": "0p5m",
+      "seed": 0,
+      "lr_multiplier": 5.656854249492381,
+      "matrix_lr": 0.12799999978521195,
+      "config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-ceiling-0p5m-20261117/configs/outer_leftdiag_fused_lr_ceiling_4sqrt2x.json",
+      "config_sha256": "927d5aae540de14b34abbb12859197ba2d2ba5fd0651d12d45e29a387b2aad39",
+      "reference_config": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/candidates/fixed-age-outer-diagonal-20261116/experiment/configs/outer_leftdiag_fused_0p5m_seed0.json",
+      "reference_config_sha256": "5b248d5ab05b2600eb6ca023135533749399c9e7bec2c56c6e799abdff0b3f9b",
+      "steps": 320,
+      "tokens": 167772160
+    }
+  ],
+  "initial_trials_per_family": 2,
+  "initial_tokens_per_family": 335544320,
+  "max_attempts_per_family": 4,
+  "max_tokens_per_family": 671088640,
+  "failed_attempts": "Retain actual identities and charge observed tokens; never silently retry.",
+  "selection": {
+    "metric": "selection_loss",
+    "point": "completed short-budget endpoint",
+    "holdout": "Seed-0 64 reserved windows per source, excluded by the pinned MarinMixture.",
+    "weights": {
+      "dclm": 3.8,
+      "starcoder": 0.25,
+      "proofpile": 0.055
+    },
+    "c4": "Reporting only; never used to rank trials or select LR.",
+    "training_window_tokens": 33554432,
+    "late_selection": "Secondary exact-token final-half mean; not the selection criterion.",
+    "confirmation": "Rank seven completed equal-budget LR points per family using final reserved-mixture selection loss. A remaining upper-edge winner is unresolved. Keep two remaining refinements per family, then independently validate full-budget LR settings and freeze fresh paired-seed confirmation."
+  },
+  "launch_condition": "Wait for all four Wave-9 full-budget histories, five complete shared broad-window analyses, full-resolution private SwanLab verification, fresh original-worker absence, marked-child cleanup and keeper restoration. Freeze separate ceiling-study validation/execution helpers; validate all eight actual LR configurations through update-22/update-24 continuation and fused capture/update gates at unchanged tolerances before acquiring fresh original-node allocations. Preparation creates no GPU job or queue; no candidate or completed campaign is modified.",
+  "study": "wave7_fixed_age_matrix_lr_ceiling",
+  "root": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization",
+  "refresh_install_age": 1,
+  "original_gpu_validation_sha256": "1d38c711be4cc248027b78e244c5c32f43eb1411ba335338012329ea4587892c",
+  "original_validation_state_sha256": "d7a52cbae5597164798c6538a77ae36c44814e55e62e2cf57b1ee740226c3b60",
+  "parent_campaign": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-upper-boundary-0p5m-20261117/campaign.json",
+  "parent_campaign_sha256": "da497d1b384deab3997a92f11b9241d677feb765f3ebe6a4566769158e55ab59",
+  "parent_analysis_sha256": "bd0a3886bb60cabb1155e805392c01903067e2f1e96be64d9d7ed86eed557f13",
+  "parent_upload_sha256": "d54d5fdbba92bb49c366dad2fce8518751e39972cde82400f11adbd610254097",
+  "parent_completed_family_lr_choices": {
+    "muont": {
+      "trial": "muont_lr_expand_2sqrt2x",
+      "campaign": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-upper-boundary-0p5m-20261117/campaign.json",
+      "matrix_lr": 0.06399999989260598,
+      "final_selection_loss": 4.251045720908877,
+      "upper_boundary_selected": true
+    },
+    "inner_outer_leftdiag": {
+      "trial": "inner_outer_leftdiag_lr_expand_2sqrt2x",
+      "campaign": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-upper-boundary-0p5m-20261117/campaign.json",
+      "matrix_lr": 0.06399999989260598,
+      "final_selection_loss": 4.233923618488805,
+      "upper_boundary_selected": true
+    },
+    "outer_leftdiag": {
+      "trial": "outer_leftdiag_lr_expand_2sqrt2x",
+      "campaign": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-upper-boundary-0p5m-20261117/campaign.json",
+      "matrix_lr": 0.06399999989260598,
+      "final_selection_loss": 4.244207478125193,
+      "upper_boundary_selected": true
+    },
+    "outer_leftdiag_fused": {
+      "trial": "outer_leftdiag_fused_lr_expand_2sqrt2x",
+      "campaign": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-fixed-age-upper-boundary-0p5m-20261117/campaign.json",
+      "matrix_lr": 0.06399999989260598,
+      "final_selection_loss": 4.241099412252447,
+      "upper_boundary_selected": true
+    }
+  },
+  "parent_cloud_verified_at": "2026-11-16T23:42:10.070383+00:00",
+  "predecessor_wave": "wave9",
+  "predecessor_release_sha256": "5a05d7d796fd5e3e01695bcc2c4d511d2f7e23e5eeb7072350edf44cc58012f5",
+  "new_grid": [
+    {
+      "label": "lr_ceiling_4x",
+      "multiplier": 4.0
+    },
+    {
+      "label": "lr_ceiling_4sqrt2x",
+      "multiplier": 5.656854249492381
+    }
+  ],
+  "cumulative_trials_per_family": 7,
+  "cumulative_tokens_per_family": 1174405120,
+  "remaining_attempts_per_family": 2
+}

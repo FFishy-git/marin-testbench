@@ -1,0 +1,368 @@
+\section{Methodology}
+\label{sec:method}
+
+We organize our methodology in four logical steps: (i) formulating two-sided
+output-cotangent preconditioning inside Muon-type optimizers and indexing all
+design choices in a unified five-slot taxonomy (Section~\ref{sec:method-formulation});
+(ii) auditing input and cotangent second moments across a baseline \taxid{MuonT}
+trajectory to derive which projections merit dense versus diagonal roots
+(Section~\ref{sec:method-audit}); (iii) specifying asymmetric width-thresholded
+preconditioning (\taxid{WT-MLP-Lag}) and its synchronization-free eight-GPU
+execution architecture (\texttt{fast\_lag}; Section~\ref{sec:method-design}); and
+(iv) detailing our multi-regime experimental protocol and multi-horizon paired
+statistical framework (Section~\ref{sec:method-protocol}).
+
+\subsection{Two-Sided Preconditioned Muon Formulation and Operator Taxonomy}
+\label{sec:method-formulation}
+
+\paragraph{Input-side MuonT leaves the output-cotangent half of the gradient unused.}
+For any two-dimensional linear layer $y = W x$ with weight matrix
+$W \in \mathbb{R}^{m \times n}$, the backpropagated gradient is the outer
+product $G = \delta x^{\Tr}$ of output cotangents $\delta \in \mathbb{R}^{m}$
+and layer inputs $x \in \mathbb{R}^{n}$. Whereas plain \taxid{Muon}
+\citep{jordan2024muon} orthogonalizes Nesterov momentum $U_t$ directly via a
+10-step Newton--Schulz polar map $\Nten(U_t)$, input-side preconditioned
+\taxid{MuonT} whitens $U_t$ only on the right against the exponential moving
+average (EMA) input second moment $C_t = \beta C_{t-1} + (1-\beta) N_t^{-1}\sum_{j=1}^{N_t} x_{t,j} x_{t,j}^{\Tr}$:
+\begin{equation}
+\label{eq:muont}
+\Delta W_t = -\eta_t \Bigl[\, s\,\Nten(U_t R)\,\hat R \;+\; \lambda\,W_t \hat R^2 \,\Bigr],
+\qquad s = \sqrt{\max(1, m/n)}.
+\end{equation}
+Here $R$ and $\hat R$ are inner and outer inverse roots of the trace-normalized
+damped input moment $\tilde C_t = C_t / (\tr(C_t)/n) + \epsilon I_n$. Because
+$\delta$ is already materialized during backpropagation, the symmetric output
+second moment
+\begin{equation}
+\label{eq:B-moment}
+B_t = \beta B_{t-1} + (1-\beta)\frac{1}{N_t}\sum_{j=1}^{N_t}\delta_{t,j}\delta_{t,j}^{\Tr},
+\qquad \tilde B_t = \frac{B_t}{\tr(B_t)/m} + \epsilon I_m,
+\end{equation}
+can be accumulated at the same sampled token positions ($N_t = 36{,}608$ tokens
+per update across all microbatches and ranks, $\beta = 0.938$, $\epsilon = 10^{-3}$)
+and globally reduced prior to the EMA update.
+
+\paragraph{Two-sided preconditioning pairs trace-normalized inner whitening with norm-preserving outer transport.}
+Adding output-cotangent factors $(L, \hat L)$ to \eqref{eq:muont} produces the
+general two-sided update family
+\begin{equation}
+\label{eq:two-sided}
+\Delta W_t = -\eta_t \Bigl[\, s\,\hat L\,\Nten\!\left(L\,U_t\,R\right)\hat R \;+\; \lambda\,W_t \hat R^2 \,\Bigr],
+\end{equation}
+where the inner whitening factors and unit-RMS outer transport factors are
+defined identically on both sides:
+\begin{equation}
+\label{eq:factors}
+R = \tilde C_t^{-1/2}, \quad \hat R = \unitrms(\tilde C_t^{-1/8}), \qquad
+L = \tilde B_t^{-1/2}, \quad \hat L = \unitrms(\tilde B_t^{-1/8}),
+\end{equation}
+with $\unitrms(X) = X \sqrt{k} / \|X\|_F$ for $X \in \mathbb{R}^{k \times k}$. Normalizing $\hat L$ and
+$\hat R$ to unit root-mean-square ensures that adding output-side factors
+reorients the update direction rather than inflating step-size norm, while
+retaining \taxid{MuonT}'s input-shaped weight decay $\lambda W_t \hat R^2$
+isolates output geometry from decay changes. Every layer's diagonal
+approximation replaces the full symmetric matrix with its diagonal:
+$L_{\diag} = \Diag(\diag(\tilde B_t)^{-1/2})$ and
+$\hat L_{\diag} = \unitrms(\Diag(\diag(\tilde B_t)^{-1/8}))$, computed exactly
+at age zero without eigendecomposition.
+
+\paragraph{A five-slot operator signature organizes every candidate, matched null, and ablation into six families.}
+In a Llama-style transformer of model width $d$ and SwiGLU MLP width $4d$, each
+layer contains seven block projections ($q,k,v,o$ at $d\times d$; $\text{gate},
+\text{up}$ at $4d\times d$; $\text{down}$ at $d\times 4d$). Sharing coinciding
+inputs yields four input moments per layer (three width-$d$, one width-$4d$
+\texttt{in:down}), whereas distinct backward cotangents require seven output
+moments per layer (five width-$d$, two width-$4d$ \texttt{out:gate},
+\texttt{out:up}). Every optimizer variant is therefore uniquely indexed by the
+five-slot tuple
+\begin{equation}
+\label{eq:tuple}
+\opcfg{R_{d}}{R_{4d}}{L_{d}}{L_{4d}}{\tau},
+\end{equation}
+specifying the right-input operators $(R_d, R_{4d})$, left-cotangent operators
+$(L_d, L_{4d})$, and output-factor staleness $\tau \in \{0, 1, \text{---}\}$ in
+updates. Each spatial slot chooses among dense spectral roots ($\fFull$), exact
+age-zero inline diagonal roots ($\fDiag$), post-$\Nten$ outer-only scaling
+($\fOuterFull$ or $\fOuterDiag$, forcing $L=I$), uncollected identity
+($\fNone$), or a computed-and-withheld matched execution-path null
+($\fNullFull, \fNullDiag$, which runs the entire capture, reduction, and root
+pipeline before setting $L=\hat L=I$). Table~\ref{tab:taxonomy} maps all six
+taxonomic families and their per-layer computational profiles.
+
+\begin{table}[t]
+\centering
+\caption{Unified five-slot operator taxonomy $\opcfg{R_d}{R_{4d}}{L_d}{L_{4d}}{\tau}$
+covering all \nOptimizerArms{} configurations studied across six colorblind-safe
+families. Spatial primitives denote dense cached-eigenbasis roots ($\fFull$),
+exact age-zero diagonal roots ($\fDiag$), outer-only scaling ($\fOuterFull,
+\fOuterDiag$), uncollected identity ($\fNone$), and matched execution-path nulls
+($\fNullFull, \fNullDiag$); superscript ${}^{\text{dn}}$ restricts an operator
+to the 32 \texttt{down} matrices. Output $O(d^3)$ eigendecomposition work
+reports the per-layer fraction relative to full dense two-sided preconditioning
+(\taxid{DT-All}), where the two width-$4d$ pre-SwiGLU cotangents
+(\texttt{out:gate}, \texttt{out:up}) account for $96.2\%$ of cubic work.}
+\label{tab:taxonomy}
+\footnotesize\setlength{\tabcolsep}{4.8pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llcll@{}}
+\toprule
+Family & Representative Arms & Signature $\mathcal{A}(R_d,R_{4d}\mid L_d,L_{4d}\mid \tau)$ & Out $O(d^3)$ & Scientific Role \\
+\midrule
+\textcolor{famRef}{\pagesfsb I.\ Ref} & \taxid{Muon} / \taxid{MuonT} & \tcfg{\fNone}{\fNone}{\fNone}{\fNone}{\text{---}} \; / \; \tcfg{\fFull}{\fFull}{\fNone}{\fNone}{0} & $0\%$ & Unwhitened \& input-only baselines \\
+\rowcolor{pagepanel}
+\textcolor{famWT}{\pagesfsb II.\ WT} & \textbf{\taxid{WT-MLP} / \taxid{WT-MLP-Lag}} & \tcfg{\fFull}{\fFull}{\fFull}{\fDiag}{0/1} & $3.8\%$ & Asymmetric width-thresholded (core) \\
+\rowcolor{pagepanel}
+\textcolor{famWT}{\pagesfsb II.\ WT} & \taxid{WT-Sym} / \taxid{WT-Sym-Lag} & \tcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{0/1} & $3.8\%$ & Symmetric width-$4d$ diagonal ($2\times 2$) \\
+\textcolor{famOD}{\pagesfsb III.\ OD} & \taxid{OD-All} / \taxid{OD-Outer} & \tcfg{\fFull}{\fFull}{\fDiag}{\fDiag}{0} \; / \; \tcfg{\fFull}{\fFull}{\fOuterDiag}{\fOuterDiag}{0} & $0\%$ & Zero-\texttt{eigh} diagonal-output limit \\
+\textcolor{famDT}{\pagesfsb IV.\ DT} & \taxid{DT-All} / \taxid{DT-All-Lag} & \tcfg{\fFull}{\fFull}{\fFull}{\fFull}{0/1} & $100\%$ & Full dense two-sided ceiling \\
+\textcolor{famNull}{\pagesfsb V.\ Null} & \taxid{Null-WT} / \taxid{Null-Dense} / \taxid{Null-OD} & \tcfg{\fFull}{\fFull}{\fNullFull}{\fNullDiag}{0}, \tcfg{\fFull}{\fFull}{\fNullFull}{\fNullFull}{0}, \tcfg{\fFull}{\fFull}{\fNullDiag}{\fNullDiag}{0} & Matched & Isolate geometry vs.\ execution path \\
+\textcolor{famAbl}{\pagesfsb VI.\ Abl} & \taxid{Abl-No2048}, \taxid{Abl-OuterDense}, \taxid{Abl-OutOnly}, \taxid{Abl-BothDiag} & Dropped $4d$, outer-only, or input-degraded & Varies & Complementarity \& scope controls \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Empirical Covariance and Subspace-Drift Diagnosis}
+\label{sec:method-audit}
+
+\paragraph{Pre-SwiGLU width-$4d$ cotangents are nearly diagonal, whereas width-$d$ residual cotangents and post-SwiGLU width-$4d$ inputs remain strongly coupled.}
+To design the output preconditioner deductively rather than by ad-hoc search, we
+audited all 352 FP32 EMA second moments (128 inputs, 224 cotangents) across all
+32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$ tokens) of a
+baseline \taxid{MuonT} trajectory (Table~\ref{tab:motivation} and
+Figure~\ref{fig:motivation}a). Three sharply separated covariance regimes emerge
+directly from transformer block structure. First, pre-SwiGLU width-$2048$
+cotangents (\texttt{out:gate}, \texttt{out:up}) pass backward through the
+elementwise Hadamard gate $\operatorname{SiLU}(g)\odot u$; multiplying by a
+zero-mean independent branch suppresses off-diagonal correlations to the
+$N_t^{-1/2} \approx 0.0052$ sampling floor (median off-diagonal RMS
+$\rho_{\mathrm{rms}} = \motOutGateCorrRmsMed{}$ and $\motOutUpCorrRmsMed{}$),
+concentrating $\motOutGateDiagAnisoMedPct\%$ and $\motOutUpDiagAnisoMedPct\%$ of
+centered anisotropy $\|\tilde B - I\|_F^2$ on the diagonal and giving exact
+diagonal inverse roots $R^2(A^{-1/2}) = \motOutGateExpVarLMedPct\%$ and
+$\motOutUpExpVarLMedPct\%$ Frobenius fidelity. Second, residual-stream
+width-$512$ cotangents (\texttt{out:o}, \texttt{out:down}) have nearly uniform
+diagonals ($\mathrm{CV}_{\diag} \approx 0.06$--$0.07$) so $>99\%$ of their
+anisotropy is off-diagonal rotation ($\mathrm{DiagAniso} = 0.8\%$,
+$R^2 = 1.2\%$); diagonal approximations miss almost all structure there. Third,
+post-SwiGLU width-$2048$ activations (\texttt{in:down}) combine high coordinate
+scale spread ($\mathrm{CV}_{\diag} = 2.92$) with substantial off-diagonal
+coupling ($56.6\%$ off-diagonal anisotropy, $\rho_{\mathrm{rms}} = 0.0346$),
+creating an asymmetric width-$4d$ split between pre-SwiGLU outputs and
+post-SwiGLU inputs.
+
+\paragraph{Cotangent eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed inputs, making stale $4d\times 4d$ eigendecompositions counterproductive.}
+Tracking principal-angle subspace drift $\mathrm{Drift}_{16}$ across consecutive
+250-update checkpoints reveals that input eigenspaces stabilized by pre-RMSNorm
+evolve slowly ($\mathrm{Drift}_{16} = 0.021$ for \texttt{in:attn} and
+\texttt{in:mlp}), whereas output cotangents rotate $5\times$ to
+$\motDriftRatioOutVVsInAttn\times$ faster ($0.107$--$0.662$;
+Figure~\ref{fig:motivation}b). Consequently, the cached-eigenbasis root solver
+triggers $\motFbOutTotal{}$ exact \texttt{cuSOLVER eigh} fallbacks across eight
+GPUs on outputs versus only $\motFbInTotal{}$ on inputs over a single 5{,}120-step
+run. Because the two width-$4d$ projections (\texttt{out:gate}, \texttt{out:up})
+represent $2\cdot 4^3 / (5\cdot 1^3 + 2\cdot 4^3) = 96.2\%$ of output $O(d^3)$
+eigendecomposition work while carrying noise-floor off-diagonal correlations,
+running asynchronous dense eigendecompositions on them pays $96.2\%$ of the
+cubic cost to track a stale basis on an almost-diagonal matrix.
+
+\begin{table}[t]
+\centering
+\caption{Empirical covariance structure, diagonal root fidelity, and subspace
+drift across all 11 layer-moment groups of baseline \taxid{MuonT} (32-layer
+medians at update $2{,}500$ / $1.31\text{B}$ tokens; 352 FP32 EMA moments).
+Columns report moment width $d$, normalized effective rank $\mathrm{erank}/d$,
+diagonal coefficient of variation $\mathrm{CV}_{\diag}$, off-diagonal
+correlation RMS $\rho_{\mathrm{rms}}$ (finite-sample floor $N_t^{-1/2} \approx
+0.0052$), diagonal energy share $\mathrm{DiagE}$, diagonal share of centered
+anisotropy $\mathrm{DiagAniso} = \|\Diag(\tilde A - I)\|_F^2 / \|\tilde A - I\|_F^2$,
+Frobenius $R^2$ of the diagonal inverse square root relative to dense
+$\tilde A^{-1/2}$, and top-16 principal-angle subspace drift $\mathrm{Drift}_{16}$
+over $250$ updates ($2{,}250 \to 2{,}500$).}
+\label{tab:motivation}
+\footnotesize\setlength{\tabcolsep}{4.8pt}
+\resizebox{\textwidth}{!}{\input{results/table_motivation}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{groupplot}[
+  paperplot,
+  group style={group size=2 by 1, horizontal sep=2.2cm},
+  height=5.3cm,
+]
+\nextgroupplot[
+  width=7.8cm,
+  ybar=1.5pt, bar width=4.8pt,
+  title={(a) Diagonal anisotropy \& root fidelity ($32$-layer medians)},
+  ylabel={Share / Fidelity (\%)},
+  xmin=-0.6, xmax=10.6, ymin=0, ymax=98,
+  xtick={0,1,2,3,4,5,6,7,8,9,10},
+  xticklabels={
+    \texttt{in:a},\texttt{in:o},\texttt{in:m},\texttt{in:dn},
+    \texttt{o:q},\texttt{o:k},\texttt{o:v},\texttt{o:o},\texttt{o:dn},
+    \textbf{\texttt{o:gt}},\textbf{\texttt{o:up}}
+  },
+  xticklabel style={font=\tiny, rotate=35, anchor=east},
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny},
+]
+\addplot[fill=famOD!75, draw=famOD] table[x=idx, y=diag_aniso_med_pct] {figs/motivation_bars.dat};
+\addlegendentry{$\mathrm{DiagAniso}$ (\%)}
+\addplot[fill=famWT!75, draw=famWT] table[x=idx, y=exp_var_L_med_pct] {figs/motivation_bars.dat};
+\addlegendentry{Diag.\ root $R^2(A^{-1/2})$ (\%)}
+
+\nextgroupplot[
+  width=7.2cm,
+  title={(b) Exact \texttt{eigh} fallbacks across training},
+  xlabel={Tokens processed (billions)},
+  ylabel={Cumulative 8-GPU fallbacks ($\times 10^3$)},
+  xmin=0, xmax=2.72, ymin=0, ymax=115,
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\tiny},
+  every axis plot/.append style={line width=1.1pt, mark size=1.8pt},
+]
+\addplot[color=famAbl, mark=square*] table[x=tokens, y=out_fb_k] {figs/motivation_traj.dat};
+\addlegendentry{Output cotangents (all 7 sites)}
+\addplot[color=famRef, densely dashed, mark=o] table[x=tokens, y=in_fb_k] {figs/motivation_traj.dat};
+\addlegendentry{Input activations (all 4 sites)}
+\end{groupplot}
+\end{tikzpicture}%
+}
+\caption{Motivating covariance and subspace-drift audit on baseline
+\taxid{MuonT} (352 FP32 EMA moments across 32 layers).
+\textbf{(a)} Median diagonal anisotropy $\mathrm{DiagAniso}$ and diagonal
+inverse-square-root fidelity $R^2(A^{-1/2})$ across all 11 moment groups at
+update $2{,}500$: pre-SwiGLU width-$2048$ cotangents (\texttt{o:gt},
+\texttt{o:up}) are predominantly diagonal ($78\%$--$82\%$), residual-stream
+width-$512$ cotangents (\texttt{o:o}, \texttt{o:dn}) are $>99\%$ rotational, and
+post-SwiGLU \texttt{in:dn} retains $56.6\%$ off-diagonal anisotropy.
+\textbf{(b)} Cumulative Rank-0 exact \texttt{cuSOLVER eigh} fallbacks across
+$0.13\text{B}$--$2.68\text{B}$ tokens: rapidly drifting output cotangents
+trigger orders of magnitude more eigendecomposition fallbacks than RMSNormed
+inputs.}
+\label{fig:motivation}
+\end{figure}
+
+\subsection{Width-Thresholded Preconditioning and Asynchronous Execution}
+\label{sec:method-design}
+
+\paragraph{Asymmetric width-thresholding (\taxid{WT-MLP}) assigns dense roots to width-$d$ projections and exact age-zero inline diagonals to width-$4d$ outputs.}
+Combining the covariance split and cubic cost concentration yields our core
+operator $\opcfg{\fFull}{\fFull}{\fFull}{\fDiag}{\tau}$ (\taxid{WT-MLP} at
+$\tau=0$; \taxid{WT-MLP-Lag} at $\tau=1$): all four input moments (including
+post-SwiGLU \texttt{in:down}) and the five width-$d$ output cotangents
+($q,k,v,o,\text{down}$) retain dense spectral roots, while the two width-$4d$
+pre-SwiGLU output cotangents (\texttt{gate}, \texttt{up}) use exact age-zero
+inline diagonal roots $(L_{\diag}, \hat L_{\diag})$. This single threshold
+eliminates $96.2\%$ of output $O(d^3)$ eigendecomposition flops and saves
+$\sysMemSavedGib$\,GiB per GPU at $130\text{M}$ without sacrificing rotational
+preconditioning on the residual stream. To test whether diagonalization can also
+extend to width-$4d$ inputs, we pair \taxid{WT-MLP} against symmetric
+\taxid{WT-Sym} ($\opcfg{\fFull}{\fDiag}{\fFull}{\fDiag}{\tau}$) and against the
+zero-eigendecomposition output limit \taxid{OD-All}
+($\opcfg{\fFull}{\fFull}{\fDiag}{\fDiag}{0}$).
+
+\paragraph{One-step factor lag ($\tau=1$) and synchronization-free execution (\texttt{fast\_lag}) hide side-stream eigendecomposition latency.}
+Even with width-$4d$ output eigendecompositions removed, naive synchronous
+execution ($\tau=0$) stalls the main stream on per-step global synchronization,
+fallback eigendecompositions, custom-op backward graph partitions, and SIMT-FP32
+factor products. Our \texttt{fast\_lag} execution architecture
+(Figure~\ref{fig:method_arch}) eliminates all four bottlenecks: (i) setting
+$\tau=1$ lets step $t$'s Tensor-Core update consume ready factors
+$(L^{(t-1)}, \hat L^{(t-1)})$ (a one-sixteenth EMA lag relative to
+$\beta=0.938$) while a priority-0 CUDA side stream overlaps packed
+\texttt{syrk}, \texttt{reduce\_scatter}, CUDA-graph root iterations, and
+mid-step \texttt{eigh} fallback resolution beneath the forward--backward pass of
+step $t+1$; (ii) per-site diagonal accumulators avoid autograd hook version
+conflicts under DDP bucket partitioning; and (iii) Ozaki FP16-split Tensor-Core
+products replace SIMT-FP32 matrix multiplies in the two-sided step.
+
+\begin{figure}[t]
+\centering
+\input{figs/method_arch}
+\caption{Spatial assignment and asynchronous execution pipeline of
+width-thresholded two-sided \taxid{MuonT}.
+\textbf{(a)} Per-block operator assignment: all width-$d$ inputs and all five
+width-$d$ cotangents ($\delta_q,\delta_k,\delta_v,\delta_o,\delta_{\text{down}}$)
+receive dense spectral roots ($\fFull$), pre-SwiGLU width-$4d$ cotangents
+($\delta_{\text{gate}},\delta_{\text{up}}$) receive exact age-zero inline
+diagonal roots ($\fDiag$), and post-SwiGLU \texttt{in:down} stays dense in
+\taxid{WT-MLP} ($\fFull$) versus diagonal in \taxid{WT-Sym} ($\fDiag$).
+\textbf{(b)} Asynchronous one-step-lagged \texttt{fast\_lag} timeline ($\tau=1$):
+step $t$'s Tensor-Core update consumes $(L^{(t-1)}, \hat L^{(t-1)})$ while the
+side stream overlaps reduction, CUDA-graph root refinement, and fallback
+resolution beneath step $t+1$'s forward--backward window.}
+\label{fig:method_arch}
+\end{figure}
+
+\subsection{Experimental Regimes and Multi-Horizon Paired Protocol}
+\label{sec:method-protocol}
+
+\paragraph{Four pinned regimes test geometry ablations, full-budget tuning, multi-seed replication, $4\times$ overtraining, and $520\text{M}$ model scaling.}
+All experiments train pre-RMSNorm Llama-style transformers with separate
+$q,k,v,o$ projections, SwiGLU MLPs at expansion $4$, and a Llama-3.1 tokenizer
+($V=128{,}256$) on a fixed DCLM/StarCoder/Proof-Pile-2 mixture
+($3.8 : 0.25 : 0.055$) using eight A100-SXM4-40GB GPUs per run with
+FlashAttention-2, deterministic algorithms, and FP32 parameter/moment state
+(embeddings, \texttt{lm\_head}, and RMSNorm gains stay on auxiliary AdamW).
+Table~\ref{tab:regimes} details all four regimes: (i) the $130\text{M}$
+non-embedding ($265.6\text{M}$ total) $1\times$ Chinchilla ($20$ TPP,
+$2.68\text{B}$ tokens) anchor used for the \nOptimizerArms{}-arm ablation suite,
+full-budget LR bracketing, and three fresh post-selection paired seeds;
+(ii) $130\text{M}$ $4\times$ Chinchilla overtraining ($80$ TPP, $10.74\text{B}$
+tokens, $20{,}480$ updates) with Marin's $4^{-0.3}$ token-horizon LR scaling;
+(iii) $520\text{M}$ non-embedding ($799.6\text{M}$ total, $2\times$ width)
+$1\times$ Chinchilla ($20$ TPP, $10.74\text{B}$ tokens, $1\text{M}$ batch) using
+Toner's exact pinned $520\text{M}$ recipe with zero per-arm retuning; and
+(iv) a separate 30-trial related-baseline campaign comparing \taxid{WT-MLP},
+vanilla \taxid{Muon}, Mousse \citep{zhang2026mousse}, and GO-MUON
+\citep{che2026gomuon} under common isotropic decay ($\lambda = 0.1$).
+
+\begin{table}[t]
+\centering
+\caption{Experimental regimes and pinned hyperparameters across the study. Non-embedding
+parameter counts exclude tied/untied embeddings and \texttt{lm\_head} ($134.3\text{M}$
+at $130\text{M}$ and $536.9\text{M}$ at $520\text{M}$). Every regime uses identical
+token streams within each seed, $\beta_{\text{mom}}=0.95$ with Nesterov momentum,
+10-step BF16 Newton--Schulz $\Nten$, moment EMA $\beta=0.938$, ridge
+$\epsilon=10^{-3}$, and inner/outer powers $(1/2, 1/8)$. Matrix learning rates at
+$130\text{M}$ $4\times$ apply Marin's $4^{-0.3}$ horizon law to both $\eta$ and
+$\eta_{\text{aux}}$; $520\text{M}$ uses Toner's official pinned $1\text{M}$-batch
+recipe identically across all three Toner-family arms.}
+\label{tab:regimes}
+\footnotesize\setlength{\tabcolsep}{4.0pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Regime & $(L, d, d_{\text{mlp}}, H)$ & Total Params & Tokens (TPP) & Batch / Steps & Schedule & Matrix $\eta$ / Aux $\eta_{\text{aux}}$ & Eval / Paloma \\
+\midrule
+$130\text{M}$ $1\times$ (Core \& P1--2) & $(32, 512, 2048, 8)$ & $265.6\text{M}$ & $2.68\text{B}$ ($20$) & $0.5\text{M}$ / $5{,}120$ & 20\% flat, 80\% lin. & $\{.016, .0226, .032\}$ / $.0048$ & 22 evals + 16-dom \\
+$130\text{M}$ $4\times$ (Phase 3A/3B) & $(32, 512, 2048, 8)$ & $265.6\text{M}$ & $10.74\text{B}$ ($80$) & $0.5\text{M}$ / $20{,}480$ & 20\% flat, 80\% lin. & $.0106$ (3B matched) / $.0032$ & 22 evals + 16-dom \\
+$520\text{M}$ $1\times$ (Phase 4A) & $(32, 1024, 4096, 16)$ & $799.6\text{M}$ & $10.74\text{B}$ ($20$) & $1.0\text{M}$ / $10{,}240$ & 100\% linear decay & $.016$ (Muon), $.0226$ (all 3) / $.0024$ & 22 evals + 16-dom \\
+Related Baselines (Iso.\ $\lambda$) & $(32, 512, 2048, 8)$ & $265.6\text{M}$ & $2.68\text{B}$ ($20$) & $0.5\text{M}$ / $5{,}120$ & 20\% flat, 80\% lin. & $.032$ (320-step ceiling) / $.0048$ & 22 evals (S1, S2) \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\paragraph{Multi-horizon paired evaluation and matched nulls resolve millinat effects without single-checkpoint noise.}
+Within every seed, global sequence identifiers pin identical tokens to identical
+update indices across all arms. We track three distinct metrics: (i)
+\textbf{held-out selection loss}, the mixture-weighted cross-entropy over 64
+reserved unseen windows per training source ($\approx 786{,}000$ tokens per
+evaluation), comparable strictly within seed; (ii) \textbf{external validation},
+comprising Paloma \texttt{c4\_en} (236 fixed windows logged during training) and
+post-hoc evaluation across all \textbf{16 Paloma subsets} at final checkpoints;
+and (iii) \textbf{per-update paired training loss} ($\Delta\text{Train}_t =
+\mathcal{L}_t^{\text{arm}} - \mathcal{L}_t^{\text{base}}$). Because single final
+evaluations carry non-trivial sampling variance, every matched-LR regime reports
+\emph{both} final-checkpoint losses and multi-step averages: the \textbf{11-point
+second-half held-out mean} ($\text{step} > T/2$, covering $\approx 8.65\text{M}$
+held-out selection tokens and $\approx 10.6\text{M}$ C4 tokens) plus
+\textbf{lag-1 autocorrelation-inflated paired training means}
+$\bar\Delta \pm \mathrm{SE}_{\rho_1}$ over the entire second half ($2{,}560$,
+$10{,}240$, or $5{,}120$ consecutive updates), where
+$\mathrm{SE}_{\rho_1} = \sqrt{(s^2 / n)(1+\rho_1)/(1-\rho_1)}$. Finally,
+because auxiliary capture and reduction pipelines can perturb floating-point
+reassociation and host-thread scheduling, we subtract same-family matched nulls
+(\taxid{Null-WT}, \taxid{Null-Dense}, \taxid{Null-OD}) to separate true geometry
+from execution-path artifacts.

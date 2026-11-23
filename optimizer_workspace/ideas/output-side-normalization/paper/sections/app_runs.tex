@@ -16,12 +16,14 @@ dense right-input roots and width-$512$ or all-width left factors
 during the 1{,}024-step constant-LR plateau that relaxes to a stable negative
 offset ($\fastMlpLagWinOneSame{}$ to $\fastMlpLagWinFiveSame{}$ on
 \texttt{fast\_lag} \taxid{WT-MLP-Lag}). Second, symmetric MLP width-thresholded
-arms (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}) exhibit the exact signature predicted
-by Finding~3.1: diagonalizing post-SwiGLU \texttt{in:down} costs
+arms (\taxid{WT-Sym}, \taxid{WT-Sym-Lag}) show an early recipe penalty:
+diagonalizing post-SwiGLU \texttt{in:down} costs
 $\symMlpWinOneSame{}$ and $\symMlpLagWinOneSame{}$ nats in Window~1 while the
 learning rate is held at peak, before flipping negative in Window~2 and
 recovering monotonically across LR decay to $\symMlpWinFiveSame{}$ and
-$\symMlpLagWinFiveSame{}$ in Window~5. Third, pure-diagonal output scaling
+$\symMlpLagWinFiveSame{}$ in Window~5. Figure~\ref{fig:wt-lag-training} plots
+the exact same-wave lagged training curves; Section~\ref{sec:sym-root-fidelity}
+states the attribution limits. Third, pure-diagonal output scaling
 (\taxid{OD-All}) is flat and persistent across all five windows. Fourth, matched
 nulls (\taxid{Null-WT}, \taxid{Null-Dense}, \taxid{Null-OD}) start slightly
 positive and drift gradually negative --- an accumulating path perturbation.

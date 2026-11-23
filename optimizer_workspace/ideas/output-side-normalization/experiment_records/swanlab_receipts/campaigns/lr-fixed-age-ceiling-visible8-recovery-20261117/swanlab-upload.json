@@ -1,0 +1,2051 @@
+{
+  "runs": {
+    "muont_lr_ceiling_4x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4x-f4d1fd3da7d8",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4x-f4d1fd3da7d8",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4x-f4d1fd3da7d8",
+      "status": "verified",
+      "manifest_sha256": "eb2dca0dcf2ee20d744c9b7141f15d77a48ef24d0955e537881cebee059e1dfe",
+      "metrics_sha256": "16c86183f218b9c0de11ba747541073be272d9894007afff3af3a4384f258c4c",
+      "checkpoint_receipt_sha256": "58f62d510213eb51ce47f0b074dba397d332c9b81f85137f825f6fbed392f485",
+      "checkpoint_rank_bytes": [
+        2439583371,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "51dc5318e36e6389018ca3a3f3944d7c03b630025f8f5bd3ec37e4ddf4ee9db7",
+      "uploaded_at": "2026-11-17T06:28:38.938865+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:10.920777+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4x-f4d1fd3da7d8/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_gpu_ms_previous/stats": 319,
+          "runtime/input_gpu_ms_previous/roots": 319,
+          "runtime/input_gpu_ms_previous/update": 319,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.263490676879883,
+          "runtime/step_seconds": 1.1018100697547197,
+          "runtime/output_host_seconds": 8.437782526016235e-07,
+          "runtime/elapsed_seconds": 491.1367981042713,
+          "runtime/peak_allocated_bytes": 22044538880,
+          "runtime/peak_reserved_bytes": 25948061696,
+          "runtime/input_fallbacks": 13,
+          "runtime/input_gpu_ms_previous/stats": 45.33561706542969,
+          "runtime/input_gpu_ms_previous/roots": 24.850847244262695,
+          "runtime/input_gpu_ms_previous/update": 202.8981170654297,
+          "eval/c4_loss": 4.449114187491882,
+          "eval/heldout/dclm": 4.310533748568924,
+          "eval/heldout/starcoder": 3.559191429116496,
+          "eval/heldout/proofpile": 3.451037353531927,
+          "eval/selection_loss": 4.253260208595686,
+          "runtime/eval_seconds": 0.8935152105987072,
+          "runtime/checkpoint_seconds": 4.749035123735666,
+          "runtime/end_to_end_seconds": 496.7796363532543,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 8.470329472543003e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_gpu_ms_previous/stats": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/roots": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/update": {
+            "max_absolute": 2.842170943040401e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "inner_outer_leftdiag_lr_ceiling_4x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4x-edbbb5f5c3cf",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4x-edbbb5f5c3cf",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4x-edbbb5f5c3cf",
+      "status": "verified",
+      "manifest_sha256": "fd3cfe94aa666024d9509c05f4713f4f526505f0ef6b774a307ed029154dd260",
+      "metrics_sha256": "e404af6993db32bddbfe4521a5077ec1a6a11709c8bd9768e24810dfbeb78ae6",
+      "checkpoint_receipt_sha256": "7d2eba199aa4940d42b6e4f95f0e7bf01c08486ff02e87f67109e6289757c9b3",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "c9bb2d0f9a96647253c15c20bb6e320c231101f8808732d682ce0da846b71685",
+      "uploaded_at": "2026-11-17T06:28:45.226342+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:13.750917+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4x-edbbb5f5c3cf/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.241960525512695,
+          "runtime/step_seconds": 1.216120257973671,
+          "runtime/output_host_seconds": 1.301988959312439e-06,
+          "runtime/elapsed_seconds": 571.6187691334635,
+          "runtime/peak_allocated_bytes": 24008321536,
+          "runtime/peak_reserved_bytes": 28248637440,
+          "runtime/input_fallbacks": 22,
+          "runtime/input_extra_roots": 496,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.428938944578906,
+          "eval/heldout/dclm": 4.289343847459926,
+          "eval/heldout/starcoder": 3.5270974734363683,
+          "eval/heldout/proofpile": 3.4303341311303686,
+          "eval/selection_loss": 4.23141275661851,
+          "runtime/eval_seconds": 0.8972793221473694,
+          "runtime/checkpoint_seconds": 4.683164289221168,
+          "runtime/end_to_end_seconds": 577.1995081137866,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_lr_ceiling_4x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4x-7fa032a59483",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4x-7fa032a59483",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4x-7fa032a59483",
+      "status": "verified",
+      "manifest_sha256": "207a14273cbf7d56ea682f41f6ed9982223fece8424b87603db7ac16b8274fd6",
+      "metrics_sha256": "f0e1592dfbde4d732130b79c7ddc300fb0609ed281d174f53c65b5306473d6f0",
+      "checkpoint_receipt_sha256": "b3ecfd571509d9a6eb484a156dddff03490e7fde4825d6438427ad183afb43d4",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "7a41eba19de87c662fec40448b4161adda523703b9bd8a879690e2a5ceaa5899",
+      "uploaded_at": "2026-11-17T06:28:51.755374+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:22.627406+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4x-7fa032a59483/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.248772621154785,
+          "runtime/step_seconds": 1.2228956315666437,
+          "runtime/output_host_seconds": 1.2908130884170532e-06,
+          "runtime/elapsed_seconds": 559.4008985906839,
+          "runtime/peak_allocated_bytes": 24008321536,
+          "runtime/peak_reserved_bytes": 28215083008,
+          "runtime/input_fallbacks": 14,
+          "runtime/input_extra_roots": 495,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.435369812371786,
+          "eval/heldout/dclm": 4.29423753034428,
+          "eval/heldout/starcoder": 3.5391203142857233,
+          "eval/heldout/proofpile": 3.4356697839294745,
+          "eval/selection_loss": 4.236746536417983,
+          "runtime/eval_seconds": 0.9002557843923569,
+          "runtime/checkpoint_seconds": 4.411679785698652,
+          "runtime/end_to_end_seconds": 564.7131039928645,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_fused_lr_ceiling_4x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4x-63504c0ac82a",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4x-63504c0ac82a",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4x-63504c0ac82a",
+      "status": "verified",
+      "manifest_sha256": "5794087c6e2731b3a8701ba9311f2ea48996a66d61cd2fd1fa12c3fda1757681",
+      "metrics_sha256": "ce6300f8a5db1583176dbe01d22b82f603ec6085b7e1209433879644298268a3",
+      "checkpoint_receipt_sha256": "0e3776fbb13ff1de8d4286385820a51ed60f0e09b3d7b699ca2f7a7e74949292",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985675,
+        1377985675
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "8791423928234a4af22e0ad947a15be845e6c89182748eccc27aa96a151691d4",
+      "uploaded_at": "2026-11-17T06:45:26.490285+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:29.465491+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4x-63504c0ac82a/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.253891468048096,
+          "runtime/step_seconds": 1.2003024965524673,
+          "runtime/output_host_seconds": 9.201467037200928e-07,
+          "runtime/elapsed_seconds": 562.3890407737345,
+          "runtime/peak_allocated_bytes": 24040632832,
+          "runtime/peak_reserved_bytes": 28047310848,
+          "runtime/input_fallbacks": 16,
+          "runtime/input_extra_roots": 504,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.440880397324264,
+          "eval/heldout/dclm": 4.300776105522382,
+          "eval/heldout/starcoder": 3.5518112305283402,
+          "eval/heldout/proofpile": 3.4397162931451577,
+          "eval/selection_loss": 4.243626407975669,
+          "runtime/eval_seconds": 0.9030669312924147,
+          "runtime/checkpoint_seconds": 4.8052798211574554,
+          "runtime/end_to_end_seconds": 568.097649179399,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "muont_lr_ceiling_4sqrt2x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4sqrt2x-b2b24a892bbf",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4sqrt2x-b2b24a892bbf",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4sqrt2x-b2b24a892bbf",
+      "status": "verified",
+      "manifest_sha256": "359b963003832cdd1abd2da1d61936df0855e1fdf8212b4201632caa96d59ae9",
+      "metrics_sha256": "4628c999421492b2ade15ba472ebcf14fd590c12c4678d637f91876a0591244a",
+      "checkpoint_receipt_sha256": "ba7c4cde228e64f7bdaffad93f3ac7686cee6ab093cb7e7e666853a987b03c86",
+      "checkpoint_rank_bytes": [
+        2439583371,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939,
+        1377132939
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "2a1f2d1ce5c11c35605532bcf0b16606474d8583b72d01efc12d5bb56eaaf313",
+      "uploaded_at": "2026-11-17T06:45:33.270791+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:36.021204+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-muont_lr_ceiling_4sqrt2x-b2b24a892bbf/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_gpu_ms_previous/stats": 319,
+          "runtime/input_gpu_ms_previous/roots": 319,
+          "runtime/input_gpu_ms_previous/update": 319,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.307505130767822,
+          "runtime/step_seconds": 1.1027896273881197,
+          "runtime/output_host_seconds": 7.506459951400757e-07,
+          "runtime/elapsed_seconds": 494.04985465854406,
+          "runtime/peak_allocated_bytes": 22044538880,
+          "runtime/peak_reserved_bytes": 26109542400,
+          "runtime/input_fallbacks": 15,
+          "runtime/input_gpu_ms_previous/stats": 42.3548469543457,
+          "runtime/input_gpu_ms_previous/roots": 23.389087677001953,
+          "runtime/input_gpu_ms_previous/update": 204.66502380371094,
+          "eval/c4_loss": 4.495794509644861,
+          "eval/heldout/dclm": 4.3556211319489355,
+          "eval/heldout/starcoder": 3.661076802299136,
+          "eval/heldout/proofpile": 3.519724288306248,
+          "eval/selection_loss": 4.302122859400142,
+          "runtime/eval_seconds": 0.9001901801675558,
+          "runtime/checkpoint_seconds": 5.192124333232641,
+          "runtime/end_to_end_seconds": 500.142560781911,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 2.117582368135751e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_gpu_ms_previous/stats": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/roots": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_gpu_ms_previous/update": {
+            "max_absolute": 1.1368683772161603e-13,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "inner_outer_leftdiag_lr_ceiling_4sqrt2x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4sqrt2x-a4bc67cc64e8",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4sqrt2x-a4bc67cc64e8",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4sqrt2x-a4bc67cc64e8",
+      "status": "verified",
+      "manifest_sha256": "f148c09e1a66a5989fd3b1b428fe64c31f5a330fd658ea413b9e2ff417cd16dd",
+      "metrics_sha256": "22a043bd71120b01c598925bde7c38561fc5411ea5cae71f4d7af4706aee9a80",
+      "checkpoint_receipt_sha256": "3cf6f930670da90ad96f3a61a82e68782ffdf228076652bcadff35219fc98e61",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "3d9dc9a915284abe0c800b6fa9f859b7ee718c5031f0be304285f54d9a721876",
+      "uploaded_at": "2026-11-17T06:45:39.958354+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:42.805849+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-inner_outer_leftdiag_lr_ceiling_4sqrt2x-a4bc67cc64e8/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.277755260467529,
+          "runtime/step_seconds": 1.2126384973526,
+          "runtime/output_host_seconds": 1.212581992149353e-06,
+          "runtime/elapsed_seconds": 551.4916718639433,
+          "runtime/peak_allocated_bytes": 24008321536,
+          "runtime/peak_reserved_bytes": 28215083008,
+          "runtime/input_fallbacks": 18,
+          "runtime/input_extra_roots": 494,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.466006296575692,
+          "eval/heldout/dclm": 4.324880201341323,
+          "eval/heldout/starcoder": 3.5989961378740305,
+          "eval/heldout/proofpile": 3.4733407282603674,
+          "eval/selection_loss": 4.269263712453071,
+          "runtime/eval_seconds": 0.8977636378258467,
+          "runtime/checkpoint_seconds": 5.060273319482803,
+          "runtime/end_to_end_seconds": 557.4499753136188,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_lr_ceiling_4sqrt2x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4sqrt2x-66fa42804886",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4sqrt2x-66fa42804886",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4sqrt2x-66fa42804886",
+      "status": "verified",
+      "manifest_sha256": "2c5b0bc6d8a24ac10c16c3476a27b8771c5eb3690d1d8ff260f259d0ce1ce88f",
+      "metrics_sha256": "5e44bd2ae420e5215937829eb595400818e30be856f1446609d4bc4a44f7c2a6",
+      "checkpoint_receipt_sha256": "21c4ab11bca9760a9a3dd542b678dacf8ec2169dc6740043a529ff900db1288b",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611,
+        1377985611
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "e1993627b9381d1fb2b66c316d735a64335285c53835b55ce5582e2ddc0e612c",
+      "uploaded_at": "2026-11-17T06:45:46.339636+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:49.469402+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_lr_ceiling_4sqrt2x-66fa42804886/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.289977073669434,
+          "runtime/step_seconds": 1.2195131164044142,
+          "runtime/output_host_seconds": 1.0505318641662598e-06,
+          "runtime/elapsed_seconds": 537.9234125036746,
+          "runtime/peak_allocated_bytes": 24008321536,
+          "runtime/peak_reserved_bytes": 27917287424,
+          "runtime/input_fallbacks": 18,
+          "runtime/input_extra_roots": 473,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.477173769279381,
+          "eval/heldout/dclm": 4.335109145122424,
+          "eval/heldout/starcoder": 3.6139001503204686,
+          "eval/heldout/proofpile": 3.482924762557423,
+          "eval/selection_loss": 4.2797687334923245,
+          "runtime/eval_seconds": 0.8991838321089745,
+          "runtime/checkpoint_seconds": 4.6157803032547235,
+          "runtime/end_to_end_seconds": 543.4386376366019,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    },
+    "outer_leftdiag_fused_lr_ceiling_4sqrt2x": {
+      "id": "lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4sqrt2x-e4bb20f4a4ec",
+      "path": "siyuc3141/output-side-normalization-marin/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4sqrt2x-e4bb20f4a4ec",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4sqrt2x-e4bb20f4a4ec",
+      "status": "verified",
+      "manifest_sha256": "9811183f497037a8b4311d96359f790bca1cf983496ac3172ec6b78f4ab11e72",
+      "metrics_sha256": "9a447a2c66fef3cbb77b603c821a00e9d3e32214589829541e444b974af06a74",
+      "checkpoint_receipt_sha256": "be65e5c8b14a1fc61ab72fca12bc588603e80c3a06977fb15aeddf42dc7edd57",
+      "checkpoint_rank_bytes": [
+        2440436107,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675,
+        1377985675
+      ],
+      "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+      "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+      "trial_config_sha256": "927d5aae540de14b34abbb12859197ba2d2ba5fd0651d12d45e29a387b2aad39",
+      "uploaded_at": "2026-11-17T06:45:53.348719+00:00",
+      "verification": {
+        "verified_at": "2026-11-17T06:45:56.004512+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-marin/runs/lr-fixed-age-ceiling-visible8-recovery-20261117-outer_leftdiag_fused_lr_ceiling_4sqrt2x-e4bb20f4a4ec/chart",
+        "point_counts": {
+          "tokens": 320,
+          "train/loss": 320,
+          "runtime/step_seconds": 320,
+          "runtime/output_host_seconds": 320,
+          "runtime/elapsed_seconds": 320,
+          "runtime/peak_allocated_bytes": 320,
+          "runtime/peak_reserved_bytes": 320,
+          "runtime/input_fallbacks": 320,
+          "runtime/input_extra_roots": 320,
+          "runtime/input_max_basis_age": 320,
+          "runtime/input_pending_refreshes": 320,
+          "eval/c4_loss": 9,
+          "eval/heldout/dclm": 9,
+          "eval/heldout/starcoder": 9,
+          "eval/heldout/proofpile": 9,
+          "eval/selection_loss": 9,
+          "runtime/eval_seconds": 9,
+          "runtime/end_to_end_seconds": 320,
+          "runtime/input_refresh_installations/count": 320,
+          "runtime/input_refresh_installations/installed": 320,
+          "runtime/input_refresh_installations/discarded": 320,
+          "runtime/input_refresh_installations/d/count": 299,
+          "runtime/input_refresh_installations/d/installed": 299,
+          "runtime/input_refresh_installations/d/discarded": 299,
+          "runtime/input_refresh_installations/d/min_age": 299,
+          "runtime/input_refresh_installations/d/max_age": 299,
+          "runtime/input_refresh_installations/d/min_source_step": 299,
+          "runtime/input_refresh_installations/d/max_source_step": 299,
+          "runtime/input_refresh_installations/f/count": 299,
+          "runtime/input_refresh_installations/f/installed": 299,
+          "runtime/input_refresh_installations/f/discarded": 299,
+          "runtime/input_refresh_installations/f/min_age": 299,
+          "runtime/input_refresh_installations/f/max_age": 299,
+          "runtime/input_refresh_installations/f/min_source_step": 299,
+          "runtime/input_refresh_installations/f/max_source_step": 299,
+          "runtime/checkpoint_seconds": 4
+        },
+        "final_metrics": {
+          "tokens": 167772160,
+          "train/loss": 4.2947998046875,
+          "runtime/step_seconds": 1.199471926316619,
+          "runtime/output_host_seconds": 1.383945345878601e-06,
+          "runtime/elapsed_seconds": 535.8459146805108,
+          "runtime/peak_allocated_bytes": 24040632832,
+          "runtime/peak_reserved_bytes": 27978104832,
+          "runtime/input_fallbacks": 15,
+          "runtime/input_extra_roots": 470,
+          "runtime/input_max_basis_age": 4,
+          "runtime/input_pending_refreshes": 4,
+          "eval/c4_loss": 4.484376913439233,
+          "eval/heldout/dclm": 4.342408176670727,
+          "eval/heldout/starcoder": 3.632403699818985,
+          "eval/heldout/proofpile": 3.493160719418118,
+          "eval/selection_loss": 4.287789484986969,
+          "runtime/eval_seconds": 0.904760317876935,
+          "runtime/checkpoint_seconds": 4.371273834258318,
+          "runtime/end_to_end_seconds": 541.1222195327282,
+          "runtime/input_refresh_installations/count": 4,
+          "runtime/input_refresh_installations/installed": 4,
+          "runtime/input_refresh_installations/discarded": 0,
+          "runtime/input_refresh_installations/d/count": 3,
+          "runtime/input_refresh_installations/d/installed": 3,
+          "runtime/input_refresh_installations/d/discarded": 0,
+          "runtime/input_refresh_installations/d/min_age": 1,
+          "runtime/input_refresh_installations/d/max_age": 1,
+          "runtime/input_refresh_installations/d/min_source_step": 318,
+          "runtime/input_refresh_installations/d/max_source_step": 318,
+          "runtime/input_refresh_installations/f/count": 1,
+          "runtime/input_refresh_installations/f/installed": 1,
+          "runtime/input_refresh_installations/f/discarded": 0,
+          "runtime/input_refresh_installations/f/min_age": 1,
+          "runtime/input_refresh_installations/f/max_age": 1,
+          "runtime/input_refresh_installations/f/min_source_step": 318,
+          "runtime/input_refresh_installations/f/max_source_step": 318
+        },
+        "all_scalar_values_exact": false,
+        "integer_values_exact": true,
+        "csv_export_max_ulp": 2,
+        "serialization_errors": {
+          "tokens": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "train/loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/step_seconds": {
+            "max_absolute": 8.881784197001252e-16,
+            "max_ulp": 2.0
+          },
+          "runtime/output_host_seconds": {
+            "max_absolute": 4.235164736271502e-22,
+            "max_ulp": 2.0
+          },
+          "runtime/elapsed_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/peak_allocated_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/peak_reserved_bytes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_fallbacks": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_extra_roots": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_max_basis_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_pending_refreshes": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/c4_loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/dclm": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "eval/heldout/starcoder": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "eval/heldout/proofpile": {
+            "max_absolute": 4.440892098500626e-16,
+            "max_ulp": 1.0
+          },
+          "eval/selection_loss": {
+            "max_absolute": 1.7763568394002505e-15,
+            "max_ulp": 1.0
+          },
+          "runtime/eval_seconds": {
+            "max_absolute": 1.1102230246251565e-16,
+            "max_ulp": 1.0
+          },
+          "runtime/end_to_end_seconds": {
+            "max_absolute": 5.684341886080802e-14,
+            "max_ulp": 1.0
+          },
+          "runtime/input_refresh_installations/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/d/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/count": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/installed": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/discarded": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_age": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/min_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/input_refresh_installations/f/max_source_step": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          },
+          "runtime/checkpoint_seconds": {
+            "max_absolute": 0.0,
+            "max_ulp": 0.0
+          }
+        },
+        "token_axis_verified": true,
+        "configuration_verified": true
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-marin",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "campaign_sha256": "dbd1c8093d4896022f596c2b0a340c485830355c3a5119f124aa784feca8f05e",
+  "execution_binding_sha256": "bb78f33830e77048741cb9c99f7f6c6f3129a4be84819dda02ab459dd7ff676f",
+  "status": "verified",
+  "verified_at": "2026-11-17T06:45:56.038525+00:00"
+}

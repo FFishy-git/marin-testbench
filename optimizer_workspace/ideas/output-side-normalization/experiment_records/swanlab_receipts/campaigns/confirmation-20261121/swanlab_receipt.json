@@ -1,0 +1,519 @@
+{
+  "runs": {
+    "wave1a/muont_130m_1x_seed0_lr0p016": {
+      "id": "conf-wave1a-muont_130m_1x_seed0_lr0p016-1be519a7edc3",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1a-muont_130m_1x_seed0_lr0p016-1be519a7edc3",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-muont_130m_1x_seed0_lr0p016-1be519a7edc3",
+      "status": "verified",
+      "manifest_sha256": "153cc926141d1722d5b0300d555831ac5c08f7ce5b8354b9c680c841c599a7ca",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "82febb8fb4eead3d74511d54223e6d659ca5deb882c7a6b6232f61261065a9a2"
+      },
+      "uploaded_at": "2026-11-22T13:46:04.771789+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:05.552846+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-muont_130m_1x_seed0_lr0p016-1be519a7edc3/chart",
+        "steps": 5120
+      }
+    },
+    "wave1a/muont_130m_1x_seed0_lr0p032": {
+      "id": "conf-wave1a-muont_130m_1x_seed0_lr0p032-09f58b9a516a",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1a-muont_130m_1x_seed0_lr0p032-09f58b9a516a",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-muont_130m_1x_seed0_lr0p032-09f58b9a516a",
+      "status": "verified",
+      "manifest_sha256": "ec40bb56aa35785d0977796bc0011bd6760b067e23111beea21007231b623772",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "5b9b29ed25567a25effddb5d3d02bd6ede2990d5a7788708846d69974784f8f4"
+      },
+      "uploaded_at": "2026-11-22T13:46:14.871986+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:15.663600+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-muont_130m_1x_seed0_lr0p032-09f58b9a516a/chart",
+        "steps": 5120
+      }
+    },
+    "wave1a/wt_mlp_lag_130m_1x_seed0_lr0p016": {
+      "id": "conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p016-2cf4fc346c52",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p016-2cf4fc346c52",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p016-2cf4fc346c52",
+      "status": "verified",
+      "manifest_sha256": "a905e8ad00d2bc1a6b04fcec27490a358839c235ebe5b9aea28929f512f262eb",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "5afccdfaa3a0a0e6a5cd4d31431a0f14c6178b3d914ad983fea08d364b53d9a9"
+      },
+      "uploaded_at": "2026-11-22T13:46:26.804150+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:27.519037+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p016-2cf4fc346c52/chart",
+        "steps": 5120
+      }
+    },
+    "wave1a/wt_mlp_lag_130m_1x_seed0_lr0p032": {
+      "id": "conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p032-486029ed3874",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p032-486029ed3874",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p032-486029ed3874",
+      "status": "verified",
+      "manifest_sha256": "ec4feaabdba7c183f571cbb03c16cd81a790a23079576e775384febdaa73722c",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "7eaa7646e439b4bb55db944ec47619fc0086cc78a8e30c1909ef92dc128880b1"
+      },
+      "uploaded_at": "2026-11-22T13:46:37.698320+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:38.403717+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1a-wt_mlp_lag_130m_1x_seed0_lr0p032-486029ed3874/chart",
+        "steps": 5120
+      }
+    },
+    "wave1b/muon_130m_1x_seed0_lr0p0226": {
+      "id": "conf-wave1b-muon_130m_1x_seed0_lr0p0226-5f363de6a92a",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1b-muon_130m_1x_seed0_lr0p0226-5f363de6a92a",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-muon_130m_1x_seed0_lr0p0226-5f363de6a92a",
+      "status": "verified",
+      "manifest_sha256": "8243a9631d8960d05581fb023e59bb0c7d18ba10eb26367bf72312bd24712677",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "ea1f81d310099bfe0d9903ceea3a8846d517ef6ff17f8166fb1c7bdd4ded17d2"
+      },
+      "uploaded_at": "2026-11-22T13:46:45.738827+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:46.649727+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-muon_130m_1x_seed0_lr0p0226-5f363de6a92a/chart",
+        "steps": 5120
+      }
+    },
+    "wave1b/null_wt_130m_1x_seed0_lr0p0226": {
+      "id": "conf-wave1b-null_wt_130m_1x_seed0_lr0p0226-5229d0abded3",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1b-null_wt_130m_1x_seed0_lr0p0226-5229d0abded3",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-null_wt_130m_1x_seed0_lr0p0226-5229d0abded3",
+      "status": "verified",
+      "manifest_sha256": "f9ab5f915b88ad8d039133353416312075c6aa826c7ab8a9dcecdbc7c4bfba0d",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "4bf665f1198fd678c1519a319809b2b96ccd81baf75176fc9a296e76e09a76f5"
+      },
+      "uploaded_at": "2026-11-22T13:46:58.224571+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:46:58.923447+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-null_wt_130m_1x_seed0_lr0p0226-5229d0abded3/chart",
+        "steps": 5120
+      }
+    },
+    "wave1b/od_all_130m_1x_seed0_lr0p0226": {
+      "id": "conf-wave1b-od_all_130m_1x_seed0_lr0p0226-2df13b6344a4",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1b-od_all_130m_1x_seed0_lr0p0226-2df13b6344a4",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-od_all_130m_1x_seed0_lr0p0226-2df13b6344a4",
+      "status": "verified",
+      "manifest_sha256": "114231083f3211ddb1bb5e1570a551146e3f7bae4b4e97d92b83b5b8c4dc92a0",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "cbebbec04bf7128c237b4a8df795c44b196e8af0899da00e5ab6a296fa6c58bf"
+      },
+      "uploaded_at": "2026-11-22T13:47:08.719269+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:47:09.654589+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-od_all_130m_1x_seed0_lr0p0226-2df13b6344a4/chart",
+        "steps": 5120
+      }
+    },
+    "wave1b/od_all_130m_1x_seed0_lr0p032": {
+      "id": "conf-wave1b-od_all_130m_1x_seed0_lr0p032-4a8860549056",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave1b-od_all_130m_1x_seed0_lr0p032-4a8860549056",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-od_all_130m_1x_seed0_lr0p032-4a8860549056",
+      "status": "verified",
+      "manifest_sha256": "802427ffa21683f6e192189afcd3ed762a3492334ce4c7d20736b6bf244742d5",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "c6907374edc2b0215f7772676504e944f0ca9dc68e17a27b0936b369c0682820"
+      },
+      "uploaded_at": "2026-11-22T13:47:20.068083+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:47:20.916459+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave1b-od_all_130m_1x_seed0_lr0p032-4a8860549056/chart",
+        "steps": 5120
+      }
+    },
+    "wave2a/muon_130m_1x_seed1": {
+      "id": "conf-wave2a-muon_130m_1x_seed1-e09dc4a0cb09",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2a-muon_130m_1x_seed1-e09dc4a0cb09",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-muon_130m_1x_seed1-e09dc4a0cb09",
+      "status": "verified",
+      "manifest_sha256": "fd65bbb9d2ceac70c6c39f35cc932e2153fea576d119081758783794fba87cc7",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "e5907911bafc298d92e643fa0414a8a2e1f5154c226a9eccd9324bb4c7cf4386"
+      },
+      "uploaded_at": "2026-11-22T13:47:28.549195+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:47:29.364124+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-muon_130m_1x_seed1-e09dc4a0cb09/chart",
+        "steps": 5120
+      }
+    },
+    "wave2a/muont_130m_1x_seed1": {
+      "id": "conf-wave2a-muont_130m_1x_seed1-cba17adea5d5",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2a-muont_130m_1x_seed1-cba17adea5d5",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-muont_130m_1x_seed1-cba17adea5d5",
+      "status": "verified",
+      "manifest_sha256": "4f97aa9e4864865a4726d0e6cd2c22257badb84c5f79b9ff4b151d50ea273d78",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "103e01ec994dadbdbab3b817fcd18fe5c7515b2858af3dd8e8aa829788c8b690"
+      },
+      "uploaded_at": "2026-11-22T13:47:39.831525+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:47:40.797782+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-muont_130m_1x_seed1-cba17adea5d5/chart",
+        "steps": 5120
+      }
+    },
+    "wave2a/od_all_130m_1x_seed1": {
+      "id": "conf-wave2a-od_all_130m_1x_seed1-0e511db10bd2",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2a-od_all_130m_1x_seed1-0e511db10bd2",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-od_all_130m_1x_seed1-0e511db10bd2",
+      "status": "verified",
+      "manifest_sha256": "79d49b805c8d5abcceb70dcc164d5cf891cef1f2d7a88009708e24f4e0457468",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "5a5a4c02fbacc75713728f8e61e1d483d0baf95c7f132239471c7ea2c6212908"
+      },
+      "uploaded_at": "2026-11-22T13:47:51.344848+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:47:52.121634+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-od_all_130m_1x_seed1-0e511db10bd2/chart",
+        "steps": 5120
+      }
+    },
+    "wave2a/wt_mlp_lag_130m_1x_seed1": {
+      "id": "conf-wave2a-wt_mlp_lag_130m_1x_seed1-6c1a95c0e16d",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2a-wt_mlp_lag_130m_1x_seed1-6c1a95c0e16d",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-wt_mlp_lag_130m_1x_seed1-6c1a95c0e16d",
+      "status": "verified",
+      "manifest_sha256": "b62231b5e9562eb9620b7cfa2c8009f7593ff4571b869fdeb05ca7432e0db15e",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "bfd6c4b06f43f28b06e0f122b3ceef535e1ce728bc1e65f79252ff7af56c5c9b"
+      },
+      "uploaded_at": "2026-11-22T13:48:03.506627+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:04.286711+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2a-wt_mlp_lag_130m_1x_seed1-6c1a95c0e16d/chart",
+        "steps": 5120
+      }
+    },
+    "wave2b/muon_130m_1x_seed2": {
+      "id": "conf-wave2b-muon_130m_1x_seed2-ea671ff4fe19",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2b-muon_130m_1x_seed2-ea671ff4fe19",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-muon_130m_1x_seed2-ea671ff4fe19",
+      "status": "verified",
+      "manifest_sha256": "36b1343dba5779503a8bec94f2ed912d3cbf4b7277a17712d7bd6b1f4a1884ea",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "877c79f60651bdef7672e690d1dbde19c2b7506b5043705f878a0c574ce2bf9c"
+      },
+      "uploaded_at": "2026-11-22T13:48:11.781126+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:12.499755+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-muon_130m_1x_seed2-ea671ff4fe19/chart",
+        "steps": 5120
+      }
+    },
+    "wave2b/muont_130m_1x_seed2": {
+      "id": "conf-wave2b-muont_130m_1x_seed2-1a68d890c1fd",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2b-muont_130m_1x_seed2-1a68d890c1fd",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-muont_130m_1x_seed2-1a68d890c1fd",
+      "status": "verified",
+      "manifest_sha256": "885e0e89838c1e375568fa838bfbb750693d92a42eb41226702b503b83e1d5c1",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "8a210b86ced1ec2766722f10215e8c9313f185a8e0320cdcd33d0512345da35a"
+      },
+      "uploaded_at": "2026-11-22T13:48:22.571599+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:23.296679+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-muont_130m_1x_seed2-1a68d890c1fd/chart",
+        "steps": 5120
+      }
+    },
+    "wave2b/od_all_130m_1x_seed2": {
+      "id": "conf-wave2b-od_all_130m_1x_seed2-b2ee626d6d5b",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2b-od_all_130m_1x_seed2-b2ee626d6d5b",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-od_all_130m_1x_seed2-b2ee626d6d5b",
+      "status": "verified",
+      "manifest_sha256": "02cd9ed3734094f897f0a86dae5c846fc38efebe47003e78c97ea451420ee8a6",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "8c931464fc0bc4dee5febac27ab32b4d5dd89d5c22539ed681b0522386c0a7e1"
+      },
+      "uploaded_at": "2026-11-22T13:48:32.990854+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:33.812847+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-od_all_130m_1x_seed2-b2ee626d6d5b/chart",
+        "steps": 5120
+      }
+    },
+    "wave2b/wt_mlp_lag_130m_1x_seed2": {
+      "id": "conf-wave2b-wt_mlp_lag_130m_1x_seed2-288708c98db2",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2b-wt_mlp_lag_130m_1x_seed2-288708c98db2",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-wt_mlp_lag_130m_1x_seed2-288708c98db2",
+      "status": "verified",
+      "manifest_sha256": "f258d96e7922df02ee8760de7ba516116a39303373f131422fab770c4ba61672",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "65870aa9f0d3942a97e139abecea8b93b1a52bbc56fc6db02d0a001799c6a7f3"
+      },
+      "uploaded_at": "2026-11-22T13:48:45.929155+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:46.646170+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2b-wt_mlp_lag_130m_1x_seed2-288708c98db2/chart",
+        "steps": 5120
+      }
+    },
+    "wave2c/muon_130m_1x_seed3": {
+      "id": "conf-wave2c-muon_130m_1x_seed3-57015d123a9a",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2c-muon_130m_1x_seed3-57015d123a9a",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-muon_130m_1x_seed3-57015d123a9a",
+      "status": "verified",
+      "manifest_sha256": "17d36a7ce433ed18fbf126dc4cac4823c7a0719673a9a6fe43ba61267922497e",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "4b4f02667fb8f3a22d46c134c706632e4add750b7fef2f2591105f6f6eaaed44"
+      },
+      "uploaded_at": "2026-11-22T13:48:54.387676+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:48:55.187384+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-muon_130m_1x_seed3-57015d123a9a/chart",
+        "steps": 5120
+      }
+    },
+    "wave2c/muont_130m_1x_seed3": {
+      "id": "conf-wave2c-muont_130m_1x_seed3-84825e899d9e",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2c-muont_130m_1x_seed3-84825e899d9e",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-muont_130m_1x_seed3-84825e899d9e",
+      "status": "verified",
+      "manifest_sha256": "95e01d70226e8fb0c9579294d15f553d278d23ea706ee8bcda74ada98c0ef17e",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "076eacc5496d3fe9c4e1524505ddc8bfe6455c47359130ca969babe39c9cbb01"
+      },
+      "uploaded_at": "2026-11-22T13:49:04.579241+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:49:05.249130+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-muont_130m_1x_seed3-84825e899d9e/chart",
+        "steps": 5120
+      }
+    },
+    "wave2c/od_all_130m_1x_seed3": {
+      "id": "conf-wave2c-od_all_130m_1x_seed3-8eff394214a0",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2c-od_all_130m_1x_seed3-8eff394214a0",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-od_all_130m_1x_seed3-8eff394214a0",
+      "status": "verified",
+      "manifest_sha256": "b211f9534069aee6fab62682f4941e91f9714404f22ff849556d37cd3cb89b1b",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "46bacbe982d2a232ac9fa14d5106fc205bd02fc3505a1a0646861d5c7dd0b469"
+      },
+      "uploaded_at": "2026-11-22T13:49:16.796155+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:49:17.578502+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-od_all_130m_1x_seed3-8eff394214a0/chart",
+        "steps": 5120
+      }
+    },
+    "wave2c/wt_mlp_lag_130m_1x_seed3": {
+      "id": "conf-wave2c-wt_mlp_lag_130m_1x_seed3-be6b06ad33b4",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave2c-wt_mlp_lag_130m_1x_seed3-be6b06ad33b4",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-wt_mlp_lag_130m_1x_seed3-be6b06ad33b4",
+      "status": "verified",
+      "manifest_sha256": "376b62e3a41f663b997dc177c3bed27f940db1e43fa8f5b90b36f5b4ba5ea0b8",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "8ea7edb4b73ad83aa2c27462dd87048a54673ce9fe277df371daeaa3f2c6b903"
+      },
+      "uploaded_at": "2026-11-22T13:49:30.576603+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:49:31.325708+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave2c-wt_mlp_lag_130m_1x_seed3-be6b06ad33b4/chart",
+        "steps": 5120
+      }
+    },
+    "wave3a/muon_130m_4x_seed0": {
+      "id": "conf-wave3a-muon_130m_4x_seed0-4b13a3fa75b1",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3a-muon_130m_4x_seed0-4b13a3fa75b1",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-muon_130m_4x_seed0-4b13a3fa75b1",
+      "status": "verified",
+      "manifest_sha256": "8d6d6b12e243b8202336a8af327b7e4549d585015cafd9e4777f9c53df82f492",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "230198c2ea2dd05e176171f793c062cb9faca899380ed154d675f77f2b0f854d"
+      },
+      "uploaded_at": "2026-11-22T13:49:52.373477+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:49:53.101522+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-muon_130m_4x_seed0-4b13a3fa75b1/chart",
+        "steps": 20480
+      }
+    },
+    "wave3a/muont_130m_4x_seed0": {
+      "id": "conf-wave3a-muont_130m_4x_seed0-b943ea9c3438",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3a-muont_130m_4x_seed0-b943ea9c3438",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-muont_130m_4x_seed0-b943ea9c3438",
+      "status": "verified",
+      "manifest_sha256": "c943d250bec422622a3efc76600e7f505c9e6be0fd6122c82aab737e9591c22d",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "432d6c2408dd893a40bc020be32b45fc681b1c5a7a4ceea63b1d20a0e8ee09c7"
+      },
+      "uploaded_at": "2026-11-22T13:50:20.793561+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:50:21.523660+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-muont_130m_4x_seed0-b943ea9c3438/chart",
+        "steps": 20480
+      }
+    },
+    "wave3a/od_all_130m_4x_seed0": {
+      "id": "conf-wave3a-od_all_130m_4x_seed0-5e6c89e3575e",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3a-od_all_130m_4x_seed0-5e6c89e3575e",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-od_all_130m_4x_seed0-5e6c89e3575e",
+      "status": "verified",
+      "manifest_sha256": "ec0948504e4ad08ece4de11fb7b15dcc3dac90ac7c423d41ca879f0b2d31d5f7",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "e21ff2d20c8612d2c9e4c8e6c872c7a6b6787577081b2ddddbd816ef1b7570d8"
+      },
+      "uploaded_at": "2026-11-22T13:50:49.827776+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:50:50.584586+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-od_all_130m_4x_seed0-5e6c89e3575e/chart",
+        "steps": 20480
+      }
+    },
+    "wave3a/wt_mlp_lag_130m_4x_seed0": {
+      "id": "conf-wave3a-wt_mlp_lag_130m_4x_seed0-4aa950d7fbae",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3a-wt_mlp_lag_130m_4x_seed0-4aa950d7fbae",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-wt_mlp_lag_130m_4x_seed0-4aa950d7fbae",
+      "status": "verified",
+      "manifest_sha256": "aa95b6e1eaaa42c10c3101d63261b1eaf82aa7ecfeb37cf2430e42c5593f0581",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "f00268a94364806d0a13d62e12576bc8eb431cc4471f226fcdd2b27419161d84"
+      },
+      "uploaded_at": "2026-11-22T13:51:25.533170+00:00",
+      "verification": {
+        "verified_at": "2026-11-22T13:51:26.289158+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3a-wt_mlp_lag_130m_4x_seed0-4aa950d7fbae/chart",
+        "steps": 20480
+      }
+    },
+    "wave4a/muon_520m_1x_seed0": {
+      "id": "conf-wave4a-muon_520m_1x_seed0-cadfcd727df0",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave4a-muon_520m_1x_seed0-cadfcd727df0",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-muon_520m_1x_seed0-cadfcd727df0",
+      "status": "verified",
+      "manifest_sha256": "b0fde4b0408b5ffad4275955d2a35c13c2bdf8ac8d0dc6c59aef19172355d53b",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "1da2372b762c3b6d13a03ba114fea08700694e93de399653aba7e45ac475dc1f"
+      },
+      "uploaded_at": "2026-11-23T03:38:13.426477+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T03:38:14.298192+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-muon_520m_1x_seed0-cadfcd727df0/chart",
+        "steps": 10240
+      }
+    },
+    "wave4a/muont_520m_1x_seed0": {
+      "id": "conf-wave4a-muont_520m_1x_seed0-07b0d738c555",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave4a-muont_520m_1x_seed0-07b0d738c555",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-muont_520m_1x_seed0-07b0d738c555",
+      "status": "verified",
+      "manifest_sha256": "cae16de0fd0ccd6024bc312c73fb64ef2f5b06b22e37ac1ce1f7b70dc21593c4",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "429f1e3c5915334f525ce64c2003f1b749e91fea2c6784ffd9e8e306dbfa8a2d"
+      },
+      "uploaded_at": "2026-11-23T03:38:30.097592+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T03:38:30.943967+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-muont_520m_1x_seed0-07b0d738c555/chart",
+        "steps": 10240
+      }
+    },
+    "wave4a/od_all_520m_1x_seed0": {
+      "id": "conf-wave4a-od_all_520m_1x_seed0-1256fd701d5b",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave4a-od_all_520m_1x_seed0-1256fd701d5b",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-od_all_520m_1x_seed0-1256fd701d5b",
+      "status": "verified",
+      "manifest_sha256": "fbeb379c01483b8aa50051da5d670c37af608c04a86e9807bea654ac393628d8",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "0349e7503c818256e352b4a2ba68c809ed96ae0257269ec119363d27164f698b"
+      },
+      "uploaded_at": "2026-11-23T03:38:47.002435+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T03:38:47.794489+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-od_all_520m_1x_seed0-1256fd701d5b/chart",
+        "steps": 10240
+      }
+    },
+    "wave4a/wt_mlp_lag_520m_1x_seed0": {
+      "id": "conf-wave4a-wt_mlp_lag_520m_1x_seed0-4e6084898655",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave4a-wt_mlp_lag_520m_1x_seed0-4e6084898655",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-wt_mlp_lag_520m_1x_seed0-4e6084898655",
+      "status": "verified",
+      "manifest_sha256": "f8e96fbc27fa9c61365c256021c116e84a7c327925bf23d7b7c6b601d10f5c2e",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "2238c9513006805f22957d2cf9c6fcbd78388e775494b1ceae38b55327cf3504"
+      },
+      "uploaded_at": "2026-11-23T03:39:06.332706+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T03:39:07.048835+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave4a-wt_mlp_lag_520m_1x_seed0-4e6084898655/chart",
+        "steps": 10240
+      }
+    },
+    "wave3b/od_all_130m_4x_seed0_lr0p01056": {
+      "id": "conf-wave3b-od_all_130m_4x_seed0_lr0p01056-57a7ba822cc4",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3b-od_all_130m_4x_seed0_lr0p01056-57a7ba822cc4",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3b-od_all_130m_4x_seed0_lr0p01056-57a7ba822cc4",
+      "status": "verified",
+      "manifest_sha256": "22abf5b761a932c0cbf4840bf18dd75914b26d2cffca356451af5ed38670bd1f",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "f8acfca873ad237116b9a3f740107596b5f4678f66c61702b9af6c8b62bc0b38"
+      },
+      "uploaded_at": "2026-11-23T09:56:29.399443+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T09:56:30.117636+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3b-od_all_130m_4x_seed0_lr0p01056-57a7ba822cc4/chart",
+        "steps": 20480
+      }
+    },
+    "wave3b/wt_mlp_lag_130m_4x_seed0_lr0p01056": {
+      "id": "conf-wave3b-wt_mlp_lag_130m_4x_seed0_lr0p01056-d7ca73da45ee",
+      "path": "siyuc3141/output-side-normalization-confirmation/conf-wave3b-wt_mlp_lag_130m_4x_seed0_lr0p01056-d7ca73da45ee",
+      "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3b-wt_mlp_lag_130m_4x_seed0_lr0p01056-d7ca73da45ee",
+      "status": "verified",
+      "manifest_sha256": "e9edbe07143f6adc53f28437de84c680aa1257f591b7bfb268d7c9281afeef21",
+      "segments_sha256": {
+        "metrics_from_000000.jsonl": "4a5ef65c78929f92562f23e924c46c41c3cf7ada7cbe366486cf7b3507d975bd"
+      },
+      "uploaded_at": "2026-11-23T09:57:03.260003+00:00",
+      "verification": {
+        "verified_at": "2026-11-23T09:57:03.935540+00:00",
+        "state": "FINISHED",
+        "url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation/runs/conf-wave3b-wt_mlp_lag_130m_4x_seed0_lr0p01056-d7ca73da45ee/chart",
+        "steps": 20480
+      }
+    }
+  },
+  "project": "siyuc3141/output-side-normalization-confirmation",
+  "project_url": "https://swanlab.cn/@siyuc3141/output-side-normalization-confirmation",
+  "visibility": "PRIVATE",
+  "sdk": "0.10.5",
+  "updated_at": "2026-11-23T09:57:04.578344+00:00"
+}

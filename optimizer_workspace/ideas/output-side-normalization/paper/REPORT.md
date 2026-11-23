@@ -40,13 +40,16 @@ Auditing all **32 layers (8 ranks, 352 FP32 EMA matrices per checkpoint)** acros
 
 ---
 
-## 2. Empirical Results, $2\times 2$ `WT` Causal Validation & Step-Geometry Audit (`sections/results.tex`, Section 6)
+## 2. Empirical Results, $2\times 2$ `WT` Recipe Comparison & Step-Geometry Audit (`sections/results.tex`, Section 6)
 
 1. **Asymmetric Width-Thresholding (`WT-MLP` & `WT-MLP-Lag`):**
    - `WT-MLP` achieves **`-0.0066` nats** held-out selection loss (`-0.0059` net of `Null-WT`) and **`-0.0061` nats** late C4 (`-0.0040` net), winning across all 5 windows, all 3 seeds (`-0.0061`, `-0.0042`, `-0.0040` late C4), and 1M batch (`-0.0035` late C4), at matched step norm (`0.9854`, `22.4°` rotation).
    - Uncontended 8xA100 `fast_lag` `WT-MLP-Lag` achieves **`-0.0047` nats** late selection vs. same-wave `MuonT` (**`-0.0053`** vs. `wave0/muont`), cutting legacy Wave 4 step overhead by >3x (`+17.6%` $\to$ **`+5.8%`** vs. `MuonT`, `21.59 GiB`, `-685.4 s` E2E).
-2. **Symmetric Width-Thresholding (`WT-Sym` & `WT-Sym-Lag`) Causally Validates `Finding 3.1`:**
-   - Diagonalizing post-SwiGLU `in:down` (`56.6%` off-diagonal from $\mu\mu^\top > 0$) alongside `out:gate,up` incurs a `+0.0181 ± 0.0024` paired training-loss penalty vs. `WT-MLP-Lag` in Window 1 (`+0.0065` / `+0.0071` vs. `MuonT`), before recovering monotonically across LR decay (`-0.0013` / `-0.0015` vs. `MuonT` in Window 5) to **tie/edge `WT-MLP-Lag` on final C4 (`3.4482` vs. `3.4491`, `-0.0029` vs. same-wave `MuonT`)** while saving `21.0 ms/step` and `0.78 GiB` (`20.81 GiB` peak).
+2. **Symmetric Width-Thresholding (`WT-Sym` & `WT-Sym-Lag`) Has an Early Recipe Penalty:**
+   - Diagonalizing post-SwiGLU `in:down` (`56.6%` off-diagonal anisotropy) alongside `out:gate,up` incurs a `+0.0181 ± 0.0024` paired training-loss penalty vs. `WT-MLP-Lag` in Window 1 (`+0.0065` / `+0.0071` vs. `MuonT`), before recovering across LR decay (`-0.0013` / `-0.0015` vs. `MuonT` in Window 5) to **tie/edge `WT-MLP-Lag` on final C4 (`3.4482` vs. `3.4491`, `-0.0029` vs. same-wave `MuonT`)** while saving `21.0 ms/step` and `0.78 GiB` (`20.81 GiB` peak).
+   - Section 6.4 now includes [exact training curves](figs/wt_lag_training.pdf): all `5,120` logged losses per arm, an early zoom, and the exact paired difference, without smoothing, binning, or downsampling. The five window means of symmetric-minus-asymmetric loss are `+0.01807148`, `+0.00412952`, `+0.00256797`, `+0.00103564`, and `+0.00051875` nats. Late and final mixture selection remain worse even though final C4 is slightly better.
+   - The diagonalized groups have the highest inner-root fidelity (`out:gate` `82.2%`, `in:down` `79.4%`, `out:up` `75.9%`). This Frobenius score does not measure momentum-weighted optimizer-direction error. `in:down` also has lower outer-root fidelity (`66.7%` at update `2,500`). The recipe comparison changes inner whitening, outer transport, input-shaped decay, and execution together; it does not isolate missing off-diagonal inner conditioning. Channel-mean contributions have not been measured.
+   - [Full-precision data](figs/wt_lag_training.dat) and a [provenance receipt](results/wt_lag_training.json) preserve the original commands, source/configuration identities, SHA-256 hashes, and row counts. Run `python -I scripts/plot_wt_lag_training.py` from this paper directory to export the original same-wave logs, or add `--from-data` to rebuild offline. A checkpoint replay separating inner, outer, and decay factors is proposed but has not run.
 
 ---
 
@@ -64,10 +67,14 @@ Auditing all **32 layers (8 ranks, 352 FP32 EMA matrices per checkpoint)** acros
 
 ---
 
-## 4. Corrected Wave-12 Tuning Audit & Remaining Confirmation (`sections/tuning.tex`, `sections/program.tex`)
+## 4. Corrected Wave-12 Tuning Audit & Completed 30-Run Confirmation & Scaling Campaign (`sections/tuning.tex`, `sections/results.tex` §6.9, `sections/program.tex`)
 
 - Carrying `MuonT` from recipe `LR = 0.0226` to its 320-step screening optimum `LR = 0.064` **degraded full-budget `MuonT` itself by `+0.1001` nats** (`3.4755` vs. `3.3754` late selection; `+0.0402` final C4).
-- With uncontended 8xA100 `fast_lag` anchors at `LR = 0.0226` and the symmetric width-2048 ablation now completed in `wave_sym_fastlag`, remaining confirmation comprises the `{0.016, 0.032, 0.045}` full-budget LR curve around `0.0226` (Item 1), a same-wave `fast_lag` `Null-WT` run (Item 2), live norm-grafting / 4-step held-diagonal checks (Item 3), and reserved seeds `3/4/5` (Item 4).
+- The isolated **30-run `fast_lag` confirmation & scaling campaign** (`confirmation-20261121`, 22 post-hoc 16-domain Paloma evaluations) is now **complete** and integrated via `scripts/integrate_confirmation_campaign.py` into Section 6.9 (`Table 7`, `Figure 9`):
+  - **Phase 1 (`130M 1×` full-budget LR bracket + `fast_lag` `Null-WT`):** `Null-WT` lands within `-0.0003` final (`-0.0008` late-11) selection nats of `MuonT`; `WT-MLP-Lag` beats `MuonT` on `11/11` second-half evaluations at both matched `0.016` (`-0.0047` late-11, `-0.0038` final) and `0.0226` (`-0.0047` late-11, `-0.0039` net of `Null-WT`).
+  - **Phase 2 (`130M 1×` fresh paired seeds `1, 2, 3`):** `WT-MLP-Lag` (`0.0226`) beats Gate-1-tuned `MuonT` (`0.016`) on `3/3` fresh seeds (`-0.0034 ± 0.0014` selection, `-0.0035 ± 0.0008` C4, `-0.0040 ± 0.0027` across 16 Paloma domains, `+5.1%` median step time).
+  - **Phase 3A/3B (`130M 4×` = `80 TPP`, `10.74B` tokens):** Matching `OD-All` and `WT-MLP-Lag` to `MuonT`'s exact `0.0105561` LR resolves Wave 3A's `+41%` LR confound; `WT-MLP-Lag` beats `MuonT` on `11/11` second-half evaluations (`-0.0045` late-11, `-0.0040` final, `-0.0041 ± 0.00002` across `10,240` second-half training updates) and wins `16/16` Paloma domains (`-0.0057` macro mean).
+  - **Phase 4 (`520M 1×` = `20 TPP`, `799.6M` total params, `10.74B` tokens, pinned matched LR `0.0226274`):** `WT-MLP-Lag` beats `MuonT` on `11/11` second-half evaluations (`-0.0030` late-11, `-0.0028` final, `-0.0024 ± 0.00002` across `5,120` second-half updates) and wins `15/16` Paloma domains (`-0.0054` macro mean) at `+10.5%` step time (`31.6 GiB`), whereas diagonal-only `OD-All` regresses slightly (`+0.0006` selection, `+0.0005` Paloma).
 
 ---
 

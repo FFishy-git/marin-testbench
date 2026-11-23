@@ -7512,7 +7512,7 @@ No original keeper, controller, validator or monitor was restarted.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-21 09:41:06, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-23 23:02:22, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -26389,3 +26389,330 @@ timestamps. No retained launch session, source, helper, plan,
 operational file or allocation is modified. These endpoint values
 establish no comparison, optimizer superiority, efficiency gain,
 upload or overall campaign completion.
+
+### November 21 10:19 Inner-Outer Full Trials Complete
+
+Saved full-monitor observation 10:19:42.448448 Asia/Shanghai in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`,
+with training observation 10:19:46.398794, reports both
+`inner_outer_mlpdiag` endpoints complete and overall full progress
+6/12. Independent read-only audit at 10:24:32.551676 verifies each
+has 5,120 consecutive updates, 2,684,354,560 tokens, matching
+source/config/data/seed identities, a finite final reserved-mixture
+selection loss and a complete eight-rank checkpoint receipt with
+nonempty rank files. Completion reasons are empty. The recomputed
+manifest/history/checkpoint-receipt hashes and completion records
+match the controlled workers' saved records; child log hashes match.
+Checkpoint tensors are not reread or rehashed.
+
+| Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `inner_outer_mlpdiag_0p5m_seed1_lr2` | 3.2085932244236335 | `adacdbc2ac05ea364fab0d7243f5f0cc91b319479b73ab64ca2db14cf1728e98` |
+| `inner_outer_mlpdiag_0p5m_seed2_lr2` | 3.186354654529432 | `5d49c996e63b02b7f71ade6e098e7399d3d9883637a69f7bcee18648f31650dd` |
+
+Controlled `.full.worker.json` receipts under
+`PVC/run-preparation/related-full-controlled-seedS-attempt1`
+remain `running`, `completed_trials: 2`. Both Muon and inner-outer
+children are complete with exit zero. Inner-outer seed 1 records its
+exit-zero receipt at 10:19:34.756656 and launches controlled GO-MUON
+PID 1163270 at 10:19:40.546837. Seed 2 records its exit-zero receipt
+at 10:15:33.497489 and launches controlled GO-MUON PID 522105 at
+10:15:39.180152.
+
+The later saved allocation observation is 10:20:52.210334; its
+training observation at 10:20:56.603449 reports controlled GO-MUON
+seed 1 running at step 0 with no metrics yet and seed 2 at step 128.
+Mousse paper seed 1 reaches 1,483 updates and seed 2 reaches 1,344.
+`needs_attention` is false; overall progress remains 6/12 complete.
+These unequal-update snapshots establish progress only.
+
+Full campaign SHA-256 remains
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`.
+Bound source/helper/configuration checks from the preceding GO-MUON
+milestone are preserved. No full comparative conclusion, optimizer
+superiority, efficiency gain, upload or overall completion is claimed.
+Only ENDEAVOR/DETAILS are appended under the shared journal lock,
+preserving all previous prefixes and timestamps. Paper monitoring
+continues read-only; remaining full trials, cleanup and final keeper
+restoration remain pending.
+
+### November 21 11:44 Paper Full Queues Complete and Restored
+
+Saved full-monitor observation 11:44:11.584038 Asia/Shanghai in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`,
+with training observation 11:44:16.469182, reports all four paper
+full trials complete and overall progress 8/12. Independent
+read-only audit at 11:44:32.516989 verifies GO-MUON and Mousse,
+seeds 1 and 2, each have 5,120 consecutive updates, exactly
+2,684,354,560 tokens, matching source/config/data/seed identities,
+a finite final reserved-mixture selection loss and a complete
+step-5,120/world-eight checkpoint receipt with nonempty rank files.
+Completion reasons are empty. Recomputed manifest/history/receipt
+hashes and completion records match both workers' saved endpoints;
+all four child log hashes match and all four exits are zero.
+No checkpoint tensor is reread or rehashed.
+
+| Mousse Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `mousse_paper_0p5m_seed1_lr2` | 3.222549962364088 | `1510b8c22f0c61d70146cd405d2fd9a49a943b0708f6b4d4e0ee473fd917c806` |
+| `mousse_paper_0p5m_seed2_lr2` | 3.1977579393027447 | `84f816d0bf7a5bd2ead2daf539d57c6d71db19ab0f12850c2937aac058e78856` |
+
+The GO-MUON receipt hashes and endpoint values from the 09:50
+milestone remain unchanged and pass this audit again. Final receipt
+paths remain
+`PVC/campaigns/related-selected-full-seed12-20261121/runs/<trial>/checkpoints/step_005120/complete.json`.
+All 74 bound source/configuration files, five bound helpers and the
+prepared-data receipt match the frozen campaign hashes. Campaign
+SHA-256 remains
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`.
+
+Paper worker/owner prefixes remain
+`PVC/run-preparation/related-full-paper-seedS-attempt1.full`.
+Both workers are `complete`, `completed_trials: 2`; both owners are
+`complete` with `exit_code`, `cleanup_exit_code` and `keeper_restore`
+all zero. Both
+`PVC/run-preparation/related-full-nodeN-sequence-attempt1.state.json`
+receipts are `complete`, `completed_stages: 2`, with validation and
+full-trials accepted complete with exit zero. Sequence-bound worker,
+allocation receipt and allocation log hashes match persisted files.
+Accepted validation receipt/allocation hashes remain unchanged.
+
+| Node / Seed | Mousse Exit-Zero Receipt | Worker Complete | Owner Complete and Restored | Sequence Complete, Asia/Shanghai |
+| --- | --- | --- | --- | --- |
+| 80 / 1 | 11:39:23.725886 | 11:39:28.156023 | 11:39:40.239822 | 11:39:44.662451 |
+| 139 / 2 | 11:42:42.808061 | 11:42:47.069396 | 11:43:01.939889 | 11:43:06.471509 |
+
+Saved daemon observations on the actual assigned nodes at
+11:44:11.584038 and 11:45:22.121849 report both latest paper full
+owners' `restored_keeper_live: true`. Independent audit at 11:45:40
+matches each restored parent/rank process to its saved start ticks,
+command and ownership fields, excluding only scheduler status.
+Each node has exactly the eight expected rank/GPU UUID occupancy
+pairs and the original eight GPU identities:
+
+| Node | Restored Keeper Parent | Parent Start Ticks | Eight Rank PIDs |
+| --- | --- | --- | --- |
+| `28.216.17.80` | `568231` | `1650383151` | `568255` through `568262` |
+| `28.216.17.139` | `595489` | `1213974628` | `595522` through `595529` |
+
+Both restored commands run the original `gpu_matmul.py`, size 8192,
+fp16, pause zero. Worker-helper and `gpu_resource_manager.sh` hashes
+also match their recorded identities. Full owner/worker processes
+have exited; the restored keepers remain live. Historical validation
+keeper snapshots are not used to establish final restoration.
+
+Overall training remains incomplete at 8/12; the saved observation
+has `needs_attention: false`. The paper sidecar reaches its requested
+completion/restoration stopping condition. The parent retains overall
+and controlled monitoring; retained launch sessions 76270/27210 and
+daemon 855385 are untouched. Only ENDEAVOR/DETAILS are appended under
+the existing journal lock, preserving prior prefixes and timestamps.
+No source, operational file, allocation, upload or commit is changed.
+No full comparison, optimizer superiority, efficiency gain or overall
+campaign completion is claimed.
+
+### November 21 12:54 Controlled GO-MUON Full Trials Complete
+
+Saved full-monitor observation 12:54:44.958170 Asia/Shanghai on
+November 21, 2026, in
+`PVC/run-preparation/monitor-related-full/observations.jsonl`,
+with training observation 12:54:49.883646, reports both controlled
+GO-MUON endpoints complete and overall progress 10/12. Independent
+read-only audit at 13:00:10.520066 verifies each has 5,120 consecutive
+updates, 2,684,354,560 tokens, matching source/config/data/seed
+identities, finite final reserved-mixture selection loss and a complete
+step-5,120/world-eight checkpoint receipt with eight nonempty rank
+files. Completion reasons are empty. Recomputed manifest/history/
+checkpoint-receipt hashes and completion records match both workers'
+saved GO-MUON records; child log hashes match and both exits are zero.
+No checkpoint tensor is reread or rehashed.
+
+| Controlled GO-MUON Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `go_muon_control_0p5m_seed1_lr2` | 3.253994510709102 | `91f18dec0264ef36187097c045bf59881540165b1f49b088edaffaeaf2fe837b` |
+| `go_muon_control_0p5m_seed2_lr2` | 3.2227085116593877 | `12320000cb1723aeec455cfd436367a8fb91fa03ac40bc7b3316ab18b9dd6d84` |
+
+Controlled `.full.worker.json` receipts under
+`PVC/run-preparation/related-full-controlled-seedS-attempt1`
+remain `running`, `completed_trials: 3`. Both workers have joined
+GO-MUON with exit zero and started their final Mousse trial:
+
+| Seed | GO-MUON Exit-Zero Receipt | Mousse Launcher PID | Mousse Launch, Asia/Shanghai |
+| --- | --- | --- | --- |
+| 1 | 12:54:46.109323 | `1397117` | 12:54:51.664287 |
+| 2 | 12:50:17.234636 | `539842` | 12:50:23.036914 |
+
+The saved 12:58:16.035527 allocation observation, with training
+status at 12:58:20.598161, reports controlled Mousse seed 1 at
+99 updates and seed 2 at 254, with finite training losses and
+`needs_attention: false`. Both paper sequences remain complete with
+two accepted stages; their sequence-bound worker/allocation/log
+hashes match and owner command/cleanup/restoration exits are zero.
+The saved monitor still reports restored paper keepers live. The
+parent reports collecting retained paper sessions 76270/27210 with
+exit zero; this journal audit does not access those sessions.
+
+Campaign SHA-256 remains
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`.
+All 74 bound source/configuration files, five bound helpers and the
+prepared-data receipt match their frozen hashes. Overall training is
+still `running`, 10/12 complete. Controlled Mousse full completion,
+queue cleanup and final keeper restoration remain pending. Only
+ENDEAVOR/DETAILS are appended under the shared journal lock,
+preserving prior prefixes, timestamps and unrelated dirty content.
+No source, operational file, allocation, upload or commit is modified.
+No full campaign completion, comparison, efficiency gain or optimizer
+superiority is claimed.
+
+### November 21 15:16 Related-Baseline Campaign Complete and Restored
+
+All 18 seed-0 short trials and all 12 fresh-seed full trials are
+strictly complete on November 21, 2026. Each short trial has 320
+updates and 167,772,160 tokens. Each full trial has 5,120 consecutive
+updates and exactly 2,684,354,560 tokens, matching source/configuration/
+data/seed identities, finite histories and final reserved-mixture
+`selection_loss`, and a complete eight-rank checkpoint receipt.
+The existing CLI `--phase analyze` completes with exit zero.
+
+Here `PVC` denotes
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization`.
+Both exclusive persisted receipts are read directly and their SHA-256
+hashes match the supplied identities:
+
+| Final Receipt Under `PVC/run-preparation/` | Receipt Time, Asia/Shanghai | SHA-256 |
+| --- | --- | --- |
+| `related-full-final-analysis-20261121T1512.json` | 15:11:47.675221 | `4a55b61353e609eb5c4fe6b35362506e48dd8985de51395366e4949452430abd` |
+| `related-full-final-operations-20261121T1516.json` | 15:16:13.723707 | `00b3de34ae85e8a392fe278150217a67e32b5fbd2a4a50e4d1a9ec7481cd3f07` |
+
+Their UTC times are `2026-11-21T07:11:47.675221+00:00` and
+`2026-11-21T07:16:13.723707+00:00`. Both receipts are `complete`
+and bind full campaign SHA-256
+`316821c95f78fbe2d8dd03501d1182a7e98d860aa844e640953614cc7d724d4f`
+at `PVC/campaigns/related-selected-full-seed12-20261121/campaign.json`.
+Source revision remains `dab7f3777c75e740536df822f50ffa1d929a340c`;
+source/configuration/helper bindings remain frozen.
+
+The six arms retain their seed-0 selected LR index 2,
+`0.03199999994630299` (about 0.032), the upper boundary of the
+three-point multiplier grid `{1/sqrt(2), 1, sqrt(2)}`. This does not
+establish LR optimality. Full trials use fresh paired seeds 1 and 2,
+equal token budgets and `resume: null`; no short checkpoint is resumed
+and no full-result LR reselection occurs. Shared Muon and
+`inner_outer_mlpdiag` aliases run only once per seed.
+
+Final held-out reserved-mixture selection losses, rounded to six
+decimals, are:
+
+| Arm | Seed 1 | Seed 2 | Mean |
+| --- | ---: | ---: | ---: |
+| Muon control | 3.220376 | 3.194374 | 3.207375 |
+| Ours (`inner_outer_mlpdiag`) | 3.208593 | 3.186355 | 3.197474 |
+| GO-MUON controlled | 3.253995 | 3.222709 | 3.238352 |
+| Mousse controlled | 3.219362 | 3.193421 | 3.206392 |
+| GO-MUON paper adapter | 3.255696 | 3.223214 | 3.239455 |
+| Mousse paper adapter | 3.222550 | 3.197758 | 3.210154 |
+
+Paired final selection deltas use candidate minus reference.
+Negative values mean lower measured loss; means use unrounded
+endpoints. The analysis includes both orientations of Muon/ours:
+
+| Candidate | Reference | Seed 1 Delta | Seed 2 Delta | Mean Delta |
+| --- | --- | ---: | ---: | ---: |
+| Muon control | Ours | +0.011783 | +0.008019 | +0.009901 |
+| Ours | Muon control | -0.011783 | -0.008019 | -0.009901 |
+| GO-MUON controlled | Muon control | +0.033618 | +0.028334 | +0.030976 |
+| GO-MUON controlled | Ours | +0.045401 | +0.036354 | +0.040878 |
+| Mousse controlled | Muon control | -0.001014 | -0.000953 | -0.000983 |
+| Mousse controlled | Ours | +0.010769 | +0.007067 | +0.008918 |
+| GO-MUON paper adapter | Muon control | +0.035320 | +0.028840 | +0.032080 |
+| GO-MUON paper adapter | Ours | +0.047103 | +0.036860 | +0.041981 |
+| Mousse paper adapter | Muon control | +0.002174 | +0.003384 | +0.002779 |
+| Mousse paper adapter | Ours | +0.013957 | +0.011403 | +0.012680 |
+
+The newly completed controlled Mousse endpoints and checkpoint
+receipt hashes are:
+
+| Full Trial | Final Selection Loss | Final Checkpoint Receipt SHA-256 |
+| --- | ---: | --- |
+| `mousse_control_0p5m_seed1_lr2` | 3.2193622626557 | `b3923f2d55e15080135be25a1ddc67543bf4868654d8ce718bd5b7ddbe2e20b8` |
+| `mousse_control_0p5m_seed2_lr2` | 3.1934214211648553 | `f8957e214c60381fd7accdd4f5b5770896766843432d8a7302f79329672d5db7` |
+
+Receipt paths remain
+`PVC/campaigns/related-selected-full-seed12-20261121/runs/<trial>/checkpoints/step_005120/complete.json`.
+Earlier ten full endpoints and their receipt hashes remain unchanged.
+The parent reports Euclid's independent result audit with no issues:
+all 20 per-seed and 10 mean deltas match exactly; all 30 short/full
+histories contain 67,200 rows without duplicate JSON keys, duplicate
+update positions or endpoint mismatches. All 12 full manifests have
+`resume: null`, and all six selections from the 18-short grid choose
+index 2. This result audit does not audit operations or reread tensors.
+
+Controlled and paper-adapter results remain separate. GO-MUON
+controlled uses common EMA statistics, ridge and finite Newton-Schulz
+polar iterations; its paper adapter uses sparse statistics, OAS
+shrinkage and exact polar computation while retaining common training
+and always-attached statistics capture. Mousse controlled uses common
+EMA/ridge/refresh/Newton-Schulz/shape scaling; its paper adapter retains
+author numerical choices with adapted routing and additive updates,
+plus common model/data/momentum/auxiliary optimizer/schedule choices.
+These adapters are not full author reproductions. The two fresh seeds
+support descriptive measurements only, without statistical inference,
+optimizer superiority or efficiency claims. C4 remains reporting-only.
+
+The parent operations audit, session 21302, passes with exit zero.
+It rechecks strict `require_plan`/`require_worker` against reconstructed
+exact frozen plans, accepted sequence-bound validation receipts and
+control hashes, and full worker records. All four queues are
+`complete`, `completed_stages: 2`. Each validator records 18 GPU
+commands, CPU test exit zero and all 20 checks true. All eight
+validation/full owners have command, cleanup and keeper-restoration
+exits zero. All 12 full children complete with exit zero and matching
+logs, full histories and endpoints.
+
+The receipt's fresh actual-node restoration observation is
+`2026-11-21T07:16:12.696520+00:00` (15:16:12.696520
+Asia/Shanghai), scoped to `latest_four_full_owners_only`.
+`all_registered_owners_complete_and_restored` is true and
+`needs_attention` is false. Former full owners/workers have exited.
+Every node has nine generation-bound keeper processes (one parent
+and eight ranks), exact eight-rank/GPU UUID occupancy and the original
+GPU UUID set:
+
+| Node | Sequence Complete, Asia/Shanghai | Restored Keeper Parent | Eight Rank PIDs |
+| --- | --- | ---: | --- |
+| `28.216.17.9` | 15:10:24.870027 | 1584478 | 1584513 through 1584520 |
+| `28.216.17.80` | 11:39:44.662451 | 568231 | 568255 through 568262 |
+| `28.216.17.144` | 15:05:59.167879 | 555610 | 555634 through 555641 |
+| `28.216.17.139` | 11:43:06.471509 | 595489 | 595522 through 595529 |
+
+Restored keepers run the original `gpu_matmul.py`, size 8192, fp16,
+pause zero. The parent reports collecting overall observer 8839,
+node-9 session 4001 and paper sessions 76270/27210 with exit zero;
+this journal audit does not access those sessions. Monitors
+452063/855385 remain separately live. The final daemon's historical
+aggregate restoration snapshot `false` refers to superseded validation
+keeper generations and is diagnostic, not a campaign failure.
+The latest-four-full-owner operations receipt establishes restoration;
+its embedded training observation covers the 18-short campaign, while
+the separate analysis receipt establishes 12/12 full completion.
+
+The saved full-monitor observation at 14:14:45.561764 records a
+transient `UnicodeDecodeError` while reading controlled Mousse seed 2;
+allocation observation remains healthy. The error clears at
+14:15:54.492679 without training restart or source modification.
+Completed histories parse normally and this incident remains recorded.
+
+Controller-side audit 26070 was stopped after redundant reads of old
+validation tensor artifacts caused by unavailable remote-node
+file-identity caches. The bounded replacement retains accepted
+validation receipts/control hashes and independently compares workers,
+logs and full histories with fresh actual-node restoration evidence.
+No full result checkpoint tensors are reread. Journal verification
+reads saved receipts directly and does not invoke controller-side
+`require_validation` or `execution.validate_trials` again.
+
+Only ENDEAVOR/DETAILS are appended with manual patches under the
+existing `PVC/.endeavor-update.lock`, preserving prior prefixes,
+timestamps and unrelated dirty content. No source, configuration,
+helper, operational file, allocation, upload, commit or publication
+is changed.

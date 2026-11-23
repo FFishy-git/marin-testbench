@@ -12364,7 +12364,7 @@ results do not establish a more efficient, better-performing optimizer.
 <!-- BEGIN AUTOMATED RESEARCH STATUS -->
 ## Recurring Experiment Status
 
-Refreshed 2026-11-21 09:41:06, Asia/Shanghai, from the same authenticated
+Refreshed 2026-11-23 23:02:22, Asia/Shanghai, from the same authenticated
 receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).
 Receipt times below are historical observations, not fresh process or GPU checks.
 Only the two latest numbered wave reports and current diagnostic gates appear here.
@@ -13071,3 +13071,108 @@ This is a completion and transition record, without a comparison,
 optimizer superiority or overall campaign-completion claim. Exact
 receipt hashes and transition identities are in
 [`DETAILS.md`](DETAILS.md#november-21-0950-go-muon-paper-full-trials-complete).
+
+### November 21 10:19 Inner-Outer Full Trials Complete
+
+Both `inner_outer_mlpdiag` full trials complete 5,120 consecutive
+updates and 2,684,354,560 tokens each. The saved 10:19:42
+Asia/Shanghai observation, with training status at 10:19:46, reports
+overall progress 6/12 complete. Independent receipt audit at 10:24:32
+confirms matching identities, finite final held-out selection losses
+and complete eight-rank checkpoint receipts. Final `selection_loss`
+is 3.2085932244236335 for seed 1 and 3.186354654529432 for seed 2.
+
+Both controlled workers record Muon and inner-outer exits zero and
+have launched GO-MUON controlled. Saved training status at 10:20:56
+reports controlled GO-MUON seeds at 0 and 128 updates, and Mousse
+paper seeds at 1,483 and 1,344. Observation remains healthy with
+`needs_attention: false`; source bindings remain frozen. No full
+comparison or superiority conclusion is drawn. Remaining trials,
+queue cleanup and final keeper restoration are pending. Receipt
+hashes and transition times are in
+[`DETAILS.md`](DETAILS.md#november-21-1019-inner-outer-full-trials-complete).
+
+### November 21 11:44 Paper Full Queues Complete and Restored
+
+Both paper queues complete GO-MUON followed by Mousse, with all four
+trials strictly completing 5,120 consecutive updates and
+2,684,354,560 tokens each. Independent audit at 11:44:32
+Asia/Shanghai verifies matching identities, finite final held-out
+selection losses, complete eight-rank checkpoint receipts and
+exit-zero worker records. Mousse final `selection_loss` is
+3.222549962364088 for seed 1 and 3.1977579393027447 for seed 2.
+The earlier GO-MUON endpoints remain verified.
+
+Both paper workers complete two trials; both owners record command,
+cleanup and keeper-restoration exits zero. The node-80 sequence
+completes at 11:39:44 and node 139 at 11:43:06, with two accepted
+stages each. Saved actual-node observations at 11:44:11 and 11:45:22
+verify restored `gpu_matmul.py` parents 568231 and 595489, all eight
+rank generations per node and exact rank/GPU UUID occupancy.
+
+The saved 11:44:16 training observation reports overall 8/12 complete
+and `needs_attention: false`. Paper-queue monitoring reaches its
+completion/restoration stopping condition; the parent retains overall
+and controlled monitoring. No comparison, optimizer superiority,
+efficiency gain or overall campaign completion is claimed. Exact
+receipts and restoration identities are in
+[`DETAILS.md`](DETAILS.md#november-21-1144-paper-full-queues-complete-and-restored).
+
+### November 21 12:54 Controlled GO-MUON Full Trials Complete
+
+Both controlled GO-MUON full trials strictly complete 5,120 consecutive
+updates and 2,684,354,560 tokens each. The saved 12:54:44
+Asia/Shanghai observation, with training status at 12:54:49, reports
+overall progress 10/12 complete. Independent receipt audit at 13:00:10
+confirms matching identities, finite final held-out selection losses,
+complete eight-rank checkpoint receipts and exit-zero worker records.
+Final `selection_loss` is 3.253994510709102 for seed 1 and
+3.2227085116593877 for seed 2.
+
+Both controlled workers have three completed trials and have started
+Mousse. Saved training status at 12:58:20 reports Mousse seeds at
+99 and 254 updates, with `needs_attention: false`. Both paper queues
+remain complete with two accepted stages and restored keepers; the
+parent reports collecting sessions 76270/27210 with exit zero.
+Source/configuration/helper bindings remain frozen. Controlled Mousse
+completion, cleanup and final keeper restoration are pending. No full
+campaign completion, comparison or optimizer superiority is claimed.
+Receipt hashes and transition times are in
+[`DETAILS.md`](DETAILS.md#november-21-1254-controlled-go-muon-full-trials-complete).
+
+### November 21 15:16 Related-Baseline Campaign Complete and Restored
+
+The related-baseline campaign completes all 18 seed-0 short trials
+(320 updates, 167,772,160 tokens each) and all 12 fresh-seed full
+trials (5,120 consecutive updates, 2,684,354,560 tokens each).
+The exclusive final analysis at 15:11:47 Asia/Shanghai on
+November 21, 2026, verifies complete finite histories, endpoints and
+eight-rank checkpoint receipts. Shared Muon/inner-outer controls run
+once per seed; all full runs use fresh seeds 1/2 with no resume.
+
+Mean final reserved-mixture `selection_loss` is 3.207375 for Muon,
+3.197474 for `inner_outer_mlpdiag`, 3.238352 for controlled GO-MUON,
+3.206392 for controlled Mousse, 3.239455 for the GO-MUON paper
+adapter and 3.210154 for the Mousse paper adapter. These are
+two-seed descriptive measurements, without statistical inference,
+optimizer superiority or efficiency claims. Every selected LR remains
+index 2, about 0.032, the short-grid upper boundary; LR optimality is
+unestablished and no full-run reselection occurs. Paper adapters retain
+common training choices and are not full author reproductions.
+
+The exclusive 15:16:13 operations receipt passes, independently
+recording four complete two-stage queues, all 12 child exits zero,
+all eight validation/full owners' command/cleanup/restoration exits
+zero, and a fresh actual-node observation at 15:16:12. All four latest
+full owners are complete and restored with no attention: each original
+GPU UUID set has exact eight-rank keeper occupancy and nine matching
+process generations. Historical validation keeper snapshots are
+superseded diagnostics. Monitors 452063/855385 remain separately live.
+
+The transient 14:14:45 Unicode monitor-read error clears at 14:15:54
+without training restart or source modification; final histories parse
+normally. Euclid's independent result audit reports no issues and does
+not establish operations or tensor validity. No full result checkpoint
+tensors are reread and nothing is published. Final tables, paired deltas,
+receipt hashes, restoration identities and audit limits are in
+[`DETAILS.md`](DETAILS.md#november-21-1516-related-baseline-campaign-complete-and-restored).

@@ -328,16 +328,15 @@ eliminates them completely.}
 \subsection{Asymmetric versus symmetric width-2048 diagonalization}
 \label{sec:sym-ablation}
 
-Finding~3.1 in Section~\ref{sec:mot-aniso} made an explicit architectural
-prediction: width-$2048$ \emph{pre-SwiGLU} cotangents (\texttt{out:gate},
+The covariance audit in Section~\ref{sec:mot-aniso} motivates treating the
+width-$2048$ sides separately: \emph{pre-SwiGLU} cotangents (\texttt{out:gate},
 \texttt{out:up}) are zero-mean Hadamard products with
 $\motOutGateDiagAnisoMedPct\%$ and $\motOutUpDiagAnisoMedPct\%$ diagonal
 anisotropy, whereas width-$2048$ \emph{post-SwiGLU} activations
-($x_{\text{down}} = \operatorname{SiLU}(g)\odot u$) have strictly positive
-channel means ($\mu\mu^{\Tr} > 0$) that keep $56.6\%$ of
+($x_{\text{down}} = \operatorname{SiLU}(g)\odot u$) retain $56.6\%$ of
 $\|\tilde C_{\text{down}} - I\|_F^2$ off-diagonal ($\mathrm{DiagAniso} =
 \motInDownDiagAnisoMedPct\%$). In \texttt{wave\_sym\_fastlag}, we tested that
-asymmetry directly on four uncontended eight-A100 nodes by completing the
+recipe choice on four uncontended eight-A100 nodes by completing the
 $2\times 2$ \texttt{WT} factorial with \taxid{WT-Sym} (\symmlpdiag{}, $\tau=0$)
 and \taxid{WT-Sym-Lag} (\symmlpdiaglag{}, $\tau=1$), which apply exact age-zero
 inline diagonal roots to \emph{both} width-$2048$ MLP sides (\texttt{out:gate,up}
@@ -357,11 +356,12 @@ and \texttt{in:down}) while keeping all width-$512$ inputs and cotangents dense:
   $\symMlpCfourFinalSame{}$ and $\symMlpLagCfourFinalSame{}$ nats
   ($\symMlpCfourFinalAbs{}$ and $\symMlpLagCfourFinalAbs{}$ versus
   $\symWaveMuontCfourFinalAbs{}$ for same-wave \taxid{MuonT}).
-\item \textbf{Five-window trajectories isolate the early off-diagonal
-  \texttt{in:down} conditioning penalty.} Comparing same-wave \taxid{WT-Sym-Lag}
+\item \textbf{Exact paired trajectories show an early symmetric-recipe
+  penalty.} Comparing same-wave \taxid{WT-Sym-Lag}
   directly against same-wave \taxid{WT-MLP-Lag} ($\fastMlpLagSelSame{}$ late
   selection, $\fastMlpLagSelWaveZero{}$ versus Wave-0) pinpoints exactly when
-  dense $R_{\text{down}}$ matters (Table~\ref{tab:windows}). During the
+  the recipes separate (Figure~\ref{fig:wt-lag-training} and
+  Table~\ref{tab:windows}). During the
   1{,}024-step constant-LR plateau ($\eta=0.0226$), \taxid{WT-MLP-Lag} opens a
   $\fastMlpLagWinOneSame{} \pm \fastMlpLagWinOneSeSame{}$ paired training-loss
   lead over \taxid{MuonT}, whereas diagonalizing \texttt{in:down} in
@@ -393,17 +393,96 @@ and \texttt{in:down}) while keeping all width-$512$ inputs and cotangents dense:
   \taxid{MuonT}).
 \end{enumerate}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{wt_lag_training.pdf}
+\caption{Exact same-wave training histories of \taxid{WT-MLP-Lag} and
+\taxid{WT-Sym-Lag}: seed $0$, the same token order, $524{,}288$ tokens per
+update, eight A100s, and the \texttt{fast\_lag} runner.
+\textbf{(a)} All $5{,}120$ recorded training losses per arm, without smoothing,
+binning, or downsampling. Each loss is the global-batch mean over the
+accumulation passes and DDP ranks, evaluated before the optimizer update.
+\textbf{(b)} The same raw curves restricted to updates $129$--$1{,}024$;
+updates $1$--$128$ remain visible in panel (a).
+\textbf{(c)} The exact per-update paired difference, symmetric minus
+asymmetric; positive values favor \taxid{WT-MLP-Lag}. Dashed vertical lines
+mark the end of the constant-LR plateau at update $1{,}024$. The broad loss
+decrease in panel (a) obscures the smaller recipe gap, which panels (b) and
+(c) expose. These training losses are distinct from held-out mixture selection
+and C4 evaluations.}
+\label{fig:wt-lag-training}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Why high diagonal-root fidelity does not predict the training curve}
+\label{sec:sym-root-fidelity}
+
+The three width-$2048$ groups diagonalized by \taxid{WT-Sym} have the highest
+inner-root $R^2$ values in Table~\ref{tab:motivation}: \texttt{out:gate}
+($\motOutGateExpVarLMedPct\%$), \texttt{in:down}
+($\motInDownExpVarLMedPct\%$), and \texttt{out:up}
+($\motOutUpExpVarLMedPct\%$). All width-$512$ sides remain dense.
+The same factor choices apply to the lagged variants; the two plotted recipes
+differ only in whether \texttt{in:down}'s factors are dense or diagonal.
+These scores are $32$-layer medians at update $2{,}500$ of baseline
+\taxid{MuonT}.
+This makes symmetric diagonalization a reasonable economy to test, but
+$R^2$ measures Frobenius agreement with an inverse-root matrix. It does not
+measure the error in the realized optimizer direction or the resulting loss.
+For \texttt{in:down}, large coordinate scale variation coexists with
+$56.6\%$ off-diagonal moment anisotropy; its median off-diagonal correlation
+RMS is \motInDownCorrRmsMed{}, versus \motOutGateCorrRmsMed{} for
+\texttt{out:gate}. A high aggregate root score can therefore coexist with
+correlations that could still matter to the update.
+
+In the two-sided update \eqref{eq:family}, writing $R_{\diag}$ for the diagonal
+input root, the pre-orthogonalization
+error is $L U(R-R_{\diag})$. Its size depends on the actual momentum $U$ and
+output factor $L$, whereas the root score weights all matrix directions
+uniformly. The finite, rounded $\Nten$ map subsequently transforms this
+perturbation; root $R^2$ supplies no bound on final direction alignment.
+The symmetric recipe replaces both $R=C^{-1/2}$ and the
+unit-RMS outer factor $\hat R\propto C^{-1/8}$, with trace normalization and
+damping understood as in \eqref{eq:factors}. The baseline audit gives
+\texttt{in:down}'s outer-root median $R^2$ only
+$\motInDownExpVarLhatMedPct\%$ at update $2{,}500$, below its inner-root
+$\motInDownExpVarLMedPct\%$. Neither score alone selects a complete recipe.
+
+Figure~\ref{fig:wt-lag-training} shows the measured consequence: the
+$\symLagVsMlpLagWinOne{}$-nat mean paired penalty at updates $1$--$1{,}024$
+(constant LR) contracts to $\symLagVsMlpLagWinFive{}$ at updates
+$4{,}097$--$5{,}120$. It does not imply
+that \taxid{WT-Sym-Lag} fails on every metric: it retains a final C4 gain
+over \taxid{MuonT} and slightly improves final C4 over \taxid{WT-MLP-Lag},
+while late and final mixture selection remain worse
+(Table~\ref{tab:main} and the same-wave comparisons above). The two recipes share
+the model, seed, workload, rate schedule, and runner source, but this is one
+seed at one common learning rate, not independently tuned superiority.
+
+\paragraph{What the comparison does not isolate.}
+Changing \texttt{in:down} replaces inner whitening, outer update transport,
+and the input-shaped decay $\lambda W\hat R^2$ together. Dense and diagonal
+statistics also use different reduction and root-execution paths. The
+trajectories establish a difference between those complete recipes; they do
+not separately identify loss from missing off-diagonal inner conditioning,
+outer-factor changes, or decay. A discriminating follow-up would replay an
+identical early checkpoint $(W,U,C,B)$ while replacing the inner root, outer
+factor, and decay factor separately, then measure direction angle, norm, and
+whitening residual before confirming any selected variant in training.
+That replay has not been performed.
+
 \begin{finding}[Pre- and post-SwiGLU width-2048 moments behave asymmetrically,
-matching Table~\ref{tab:motivation}]
+with root fidelity an incomplete recipe-selection criterion]
 Diagonalizing width-2048 \emph{outputs} (\texttt{out:gate,up} in \taxid{WT-MLP})
 outperforms full dense preconditioning across every window, whereas
 additionally diagonalizing the width-2048 \emph{input} (\texttt{in:down} in
 \taxid{WT-Sym} / \taxid{WT-Sym-Lag}) incurs a $\symLagVsMlpLagWinOne{}$-nat
-early constant-LR training penalty before recovering during LR decay to tie
+early constant-LR recipe penalty before recovering during LR decay to tie
 final C4 ($\symMlpLagCfourFinalAbs{}$). Thus \taxid{WT-MLP-Lag} is Pareto-optimal
 for held-out quality across training, while \taxid{WT-Sym-Lag} trades mid-run
 selection margin for minimal VRAM ($\sysExecSymLagGib$\,GiB) and the fastest
-wall-clock crossing.
+wall-clock crossing. This comparison does not isolate inner conditioning from
+outer transport, decay, and execution effects.
 \end{finding}
 
 \subsection{Replication across seeds and one batch size}
@@ -614,3 +693,462 @@ two matrices ($\mechLeftdiagOutODeg^\circ$ and $\mechLeftdiagOutDownDeg^\circ$),
 matching Section~\ref{sec:mot-aniso}.}
 \label{fig:stepgeom}
 \end{figure}
+
+\subsection{Paired comparison with related two-sided Muon baselines}
+\label{sec:related-baselines}
+
+To contextualize \taxid{WT-MLP} (\mlpdiag{}) against contemporary two-sided
+preconditioned Muon designs, we executed a separate two-stage paired campaign
+comparing vanilla \taxid{Muon} (\texttt{muon\_control}) and \taxid{WT-MLP}
+against two related methods: \textbf{Mousse} \citep{zhang2026mousse}, which
+applies matched-power two-sided whitening using Shampoo gradient Gram moments
+($GG^{\Tr}, G^{\Tr}G$) with spectral tempering ($\alpha = 1/8$) and Frobenius
+grafting, and \textbf{GO-MUON} \citep{che2026gomuon}, which applies matched
+quarter-power ($\alpha = 1/4$) activation and output-cotangent roots with global
+Frobenius grafting:
+\begin{equation}
+\label{eq:gomuon}
+D_0 = B^{-1/4}\operatorname{Polar}\!\left(B^{-1/4} M A^{-1/4}\right)A^{-1/4},
+\qquad
+D = \frac{\sqrt{\min(m,n)}}{\|D_0\|_F}\,D_0 .
+\end{equation}
+
+\paragraph{Experimental design and separation of profiles.}
+Every arm runs under the same 265M-parameter Llama architecture, data stream,
+batch size ($524{,}288$ tokens), schedule ($20\%$ flat, $80\%$ linear decay),
+auxiliary AdamW, and \emph{isotropic} matrix weight decay ($\lambda = 0.1$) so
+no arm inherits input-shaped decay. To separate mathematical geometry from
+method-specific numerical recipes, we keep two panels strictly distinct while
+deduplicating the shared controls (\texttt{muon\_control} and \mlpdiag{}):
+\begin{itemize}
+\item \textbf{Common-setting formula controls} (\texttt{mousse\_control},
+  \texttt{go\_muon\_control}): share our EMA ($\beta = 0.938$), trace-normalized
+  ridge ($\epsilon = 10^{-3}$), refresh period ($K = 4$), 10-step BF16
+  Newton--Schulz map $\Nten$, and $\sqrt{\max(1,m/n)}$ shape scaling.
+\item \textbf{Paper-recipe adapters} (\texttt{mousse\_paper},
+  \texttt{go\_muon\_paper}): adopt each paper's own preconditioning and polar
+  recipe --- Mousse's five-stage BF16 NS, $\beta = 0.95$, $\epsilon = 10^{-5}$,
+  $K = 10$, and $\sqrt{m/n}$ scaling; GO-MUON's sparse $K = 4$ OAS shrinkage
+  without fixed ridge, backward decay $\beta_B = 0.97$, and exact compact-SVD
+  polar factor --- while retaining the common model, data, schedule, sampled
+  BF16 row capture, and isotropic $\lambda = 0.1$ decay. These are explicitly
+  adapted controls rather than full author-code reproductions.
+\end{itemize}
+Stage~1 screened three matrix learning rates
+$\eta \in \{0.016,\,0.0226,\,0.032\}$ on seed~0 for 320 updates
+($167.8\text{M}$ tokens; 18 completed runs). All six arms selected the upper
+grid boundary $\eta = 0.032$. Stage~2 froze that selection and ran all six arms
+for the full 5{,}120 updates ($2.68\text{B}$ tokens) across fresh paired seeds~1
+and~2 (12 completed runs). Table~\ref{tab:related} summarizes both stages, and
+Figure~\ref{fig:related-training} displays the exact per-update paired training
+dynamics and short-run learning-rate sensitivity.
+
+\begin{table}[t]
+\centering
+\caption{Paired related-baseline comparison against Mousse
+\citep{zhang2026mousse} and GO-MUON \citep{che2026gomuon} under common isotropic
+matrix weight decay ($\lambda = 0.1$). All deltas are paired within seed against
+\texttt{muon\_control} (negative is better); the baseline row reports absolute
+losses. \textbf{Short $\Delta$Sel} shows the 320-update seed-0 screen across
+$\{0.016, 0.0226, 0.032\}$; every arm selected the upper boundary $0.032$.
+\textbf{Full columns} report the frozen $\eta = 0.032$, 5{,}120-update runs on
+fresh paired seeds~1 and~2: final held-out selection loss, 11-point late
+selection mean, reporting-only final C4, Window~1 to Window~5 paired
+training-loss means ($536.9\text{M}$ tokens each), mean wall-clock time
+(including evaluation and checkpointing; GO-MUON retains always-on capture hooks
+on reuse steps and therefore does not reproduce hook-gated wall-clock savings),
+and peak Rank-0 allocation. Because all six arms hit the $0.032$ LR ceiling and
+only two fresh seeds were run, these are descriptive measurements rather than a
+tuned superiority claim.}
+\label{tab:related}
+\scriptsize\setlength{\tabcolsep}{3.4pt}
+\resizebox{\textwidth}{!}{\input{results/table_related}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{related_baselines_training.pdf}
+\caption{Training-loss dynamics and learning-rate boundary censoring across the
+paired related-baseline campaign (5{,}120 exact updates per arm at frozen
+$\eta = 0.032$ on fresh seeds~1 and~2; no smoothing, binning, or downsampling).
+\textbf{(a)} Exact per-update paired training-loss difference against
+seed-matched \texttt{muon\_control} (negative favors the candidate; Seed~1
+darker, Seed~2 lighter). \taxid{WT-MLP} stays strictly negative throughout all
+5{,}120 updates, \taxid{Mousse-Ctrl} relaxes near zero, and both GO-MUON
+variants nearly overlap at $+0.033$ to $+0.046$ nats across Windows~2--5.
+\textbf{(b)} Zoom of updates $1$--$400$, entirely within the
+1{,}024-update flat-LR plateau: GO-MUON surges to a
+$\relGoCtrlEarlyMinSOne{}$-nat lead over Muon at update
+$\relGoCtrlEarlyMinStepSOne{}$ ($\relGoCtrlStepFiftySOne{}$ at update~50) before
+climbing back across zero at updates $\relGoPaperCrossStepSOne{}$--$\relGoCtrlCrossStepSOne{}$
+on Seed~1 ($\relGoPaperCrossStepSTwo{}$--$\relGoCtrlCrossStepSTwo{}$ on Seed~2)
+while the learning rate is still constant.
+\textbf{(c)} 320-update seed-0 LR screen across $\{0.016, 0.0226, 0.032\}$:
+all six arms improve monotonically into the upper grid boundary ($0.032$), and
+GO-MUON's deficit shrinks steadily as $\eta$ increases.}
+\label{fig:related-training}
+\end{figure}
+
+\paragraph{Descriptive outcome across the six arms.}
+At the frozen $\eta = 0.032$ selection on fresh seeds~1 and~2
+(Table~\ref{tab:related}), \taxid{WT-MLP} leads all arms with a mean final
+selection delta of $\relWtFinalSelDeltaMean{}$ nats ($\relWtFinalSelDeltaSOne{}$
+on Seed~1, $\relWtFinalSelDeltaSTwo{}$ on Seed~2; $\relWtLateSelDeltaMean{}$
+late-11 mean; $\relWtFinalCfourDeltaMean{}$ final C4), confirming that its
+asymmetric width-thresholded gain persists even under isotropic weight decay.
+\taxid{Mousse-Ctrl} closely tracks \texttt{muon\_control}
+($\relMousseCtrlFinalSelDeltaMean{}$ mean final selection;
+$\relMousseCtrlFinalSelDeltaSOne{}$ / $\relMousseCtrlFinalSelDeltaSTwo{}$), while
+\taxid{Mousse-Paper} finishes slightly behind
+($\relMoussePaperFinalSelDeltaMean{}$). In contrast, \emph{both} GO-MUON
+variants finish substantially worse than \texttt{muon\_control}:
+$\relGoCtrlFinalSelDeltaSix{}$ nats mean final selection for
+\texttt{go\_muon\_control} ($\relGoCtrlFinalSelDeltaSOne{}$ on Seed~1,
+$\relGoCtrlFinalSelDeltaSTwo{}$ on Seed~2) and $\relGoPaperFinalSelDeltaSix{}$
+nats for \texttt{go\_muon\_paper} ($\relGoPaperFinalSelDeltaSOne{}$ /
+$\relGoPaperFinalSelDeltaSTwo{}$). The same gap appears in 11-point late
+selection ($\relGoCtrlLateSelDeltaMean{}$ and $\relGoPaperLateSelDeltaMean{}$),
+final C4 ($\relGoCtrlFinalCfourDeltaMean{}$ and
+$\relGoPaperFinalCfourDeltaMean{}$), and Window-5 training loss
+($\relGoCtrlWinFiveMean{}$ and $\relGoPaperWinFiveMean{}$), ruling out a
+final-checkpoint fluctuation.
+
+\paragraph{Why both GO-MUON variants surge early and then cross behind Muon.}
+The exact per-update training curves in Figure~\ref{fig:related-training}(a)--(b)
+reveal a striking two-phase behavior that rules out simple implementation
+defects and localizes the underlying mechanism:
+\begin{enumerate}
+\item \textbf{Not an implementation or numerical-approximation artifact.}
+  Both GO-MUON formulas passed A100 parity checks against Equations~(12)--(18)
+  and~(21)--(35) of \citet{che2026gomuon}, and the two variants use disjoint
+  statistics and polar routines (per-step EMA + fixed ridge + 10-step BF16 NS
+  in \texttt{go\_muon\_control} versus sparse $K=4$ OAS + $\beta_B=0.97$ +
+  exact compact-SVD polar in \texttt{go\_muon\_paper}). Yet their full-budget
+  trajectories track each other tightly across all 5{,}120 updates and finish
+  within $\relGoPaperMinusCtrlFinalSel{}$ nats of each other.
+\item \textbf{Quarter-power ($\alpha = 1/4$) preconditioning plus global
+  Frobenius grafting attenuates active-direction step size once spectra
+  sharpen.}
+  During the first $\approx 100$ updates, when activation and cotangent spectra
+  are still nearly isotropic, \texttt{go\_muon\_control} outperforms Muon by up
+  to $\relGoCtrlEarlyMinSOne{}$ nats (update $\relGoCtrlEarlyMinStepSOne{}$ on
+  Seed~1; $\relGoCtrlEarlyMinSTwo{}$ at update $\relGoCtrlEarlyMinStepSTwo{}$ on
+  Seed~2; Figure~\ref{fig:related-training}b). As covariance condition numbers
+  grow, however, GO-MUON loses its lead rapidly and crosses above Muon near
+  update $\relGoCtrlCrossStepSOne{}$ (Seed~1; update
+  $\relGoCtrlCrossStepSTwo{}$ on Seed~2) --- \emph{more than 800 updates before
+  linear LR decay begins} --- already trailing by
+  $\relGoCtrlStepTwoFiveOneSel{}$ nats on held-out selection at update~251.
+  Mechanistically, GO-MUON raises both $A$ and $B$ to the $-\frac{1}{4}$ power
+  outside the polar map (double the outer exponent $1/8$ of both \taxid{WT-MLP}
+  and Mousse) and then globally rescales $D_0 = B^{-1/4}Q(C)A^{-1/4}$ to
+  Frobenius norm $\sqrt{\min(m,n)}$. By Proposition~5 of \citet{che2026gomuon},
+  this allows singular-value spread up to $[\kappa(A)\kappa(B)]^{1/4}$ and
+  worst-case source-alignment attenuation $[\kappa(A)\kappa(B)]^{-1/4}$: global
+  Frobenius normalization spends the update budget on small-eigenvalue
+  directions and shrinks effective step sizes along high-variance active
+  directions. Notably, \citet{zhang2026mousse} independently reported that
+  $\alpha = 1/4$ degrades language-model training under matched-power Frobenius
+  grafting, motivating Mousse's spectral tempering to $\alpha = 1/8$.
+\item \textbf{Upper-boundary learning-rate censoring ($\eta = 0.032$) starves
+  GO-MUON.}
+  In the small-transformer benchmarks of \citet{che2026gomuon} (Table~2),
+  GO-MUON required $4\times$--$8\times$ higher peak matrix learning rates than
+  Muon ($0.08$--$0.16$ versus $0.018$--$0.020$) to offset Frobenius-graft
+  attenuation on active directions. In our Stage-1 screen, all six arms were
+  censored at the upper grid point $\eta = 0.032$, and GO-MUON's deficit versus
+  Muon narrowed monotonically as $\eta$ increased
+  ($\relGoCtrlShortLrZero{} \to \relGoCtrlShortLrOne{} \to
+  \relGoCtrlShortLrTwo{}$ for \texttt{go\_muon\_control};
+  $\relGoPaperShortLrZero{} \to \relGoPaperShortLrOne{} \to
+  \relGoPaperShortLrTwo{}$ for \texttt{go\_muon\_paper};
+  Figure~\ref{fig:related-training}c).
+\item \textbf{Isotropic weight decay ($\lambda = 0.1$) and large-sample OAS
+  weakening.}
+  Equation~(35) of \citet{che2026gomuon} omits weight decay, whereas our
+  controlled protocol applies isotropic $\lambda = 0.1$ decay to every matrix
+  arm, increasing shrinkage competition against Frobenius-attenuated active
+  steps. In addition, at $N = 36{,}608$ sampled tokens per update (versus
+  $2{,}048$ in \citet{che2026gomuon}), OAS shrinkage scales as
+  $\lambda_{\text{OAS}} = O(d/N)$ with no fixed ridge, leaving near-null
+  eigenvalues less regularized and consistent with \texttt{go\_muon\_paper}
+  slightly trailing \texttt{go\_muon\_control} (especially in Window~1:
+  $\relGoPaperWinOneMean{}$ versus $\relGoCtrlWinOneMean{}$).
+\end{enumerate}
+
+\begin{finding}[GO-MUON's constant-LR reversal and boundary censoring do not
+establish inferiority of a fully tuned GO-MUON]
+At the boundary-selected $\eta = 0.032$ under isotropic $\lambda = 0.1$ decay,
+\taxid{WT-MLP} improves final selection loss by $\relWtFinalSelDeltaMean{}$
+nats over \texttt{muon\_control}, \taxid{Mousse-Ctrl} is near-tied
+($\relMousseCtrlFinalSelDeltaMean{}$), and both GO-MUON variants finish worse
+($\relGoCtrlFinalSelDeltaMean{}$ and $\relGoPaperFinalSelDeltaMean{}$) despite
+opening a $\relGoCtrlEarlyMinSOne{}$-nat lead in the first 60 updates. Because
+the crossover occurs near update $\relGoCtrlCrossStepSOne{}$ during the flat-LR
+plateau, all six arms hit the $0.032$ grid ceiling, and GO-MUON's deficit
+shrank monotonically with learning rate, these runs diagnose an interaction
+between quarter-power Frobenius grafting, LR censoring, and isotropic decay ---
+they do \emph{not} establish that a fully tuned GO-MUON underperforms Muon.
+\end{finding}
+
+\subsection{Full-budget confirmation, overtraining (\texorpdfstring{$4\times$}{4x} Chinchilla), and \texorpdfstring{$520\text{M}$}{520M} scaling}
+\label{sec:confirmation}
+
+To resolve the four open questions left by Sections~\ref{sec:results}--\ref{sec:tuning}
+--- full-budget learning-rate optimality around $0.0226$, same-runner
+\texttt{fast\_lag} null attribution, fresh post-selection multi-seed replication
+across all four core arms (\taxid{Muon}, \taxid{MuonT}, \taxid{OD-All},
+\taxid{WT-MLP-Lag}), and generalization across token horizon ($4\times$
+Chinchilla) and model scale ($520\text{M}$ non-embedding parameters) --- we
+executed an isolated \confTotalRuns{}-run \texttt{fast\_lag} confirmation and
+scaling campaign across four uncontended eight-A100 nodes, paired with
+\confPalomaCount{} post-hoc evaluations spanning all 16 Paloma subsets.
+Table~\ref{tab:confirmation} and Figure~\ref{fig:confirmation} summarize every
+phase, reporting \emph{both} final-checkpoint metrics and multi-checkpoint
+late-stage matched-LR averages (the 11-evaluation second-half mean of
+Section~\ref{sec:protocol} plus autocorrelation-inflated paired per-update
+training deltas across $2{,}560$--$10{,}240$ updates).
+
+\begin{table}[t]
+\centering
+\caption{Master summary of the \confTotalRuns{}-run \texttt{fast\_lag}
+confirmation and scaling campaign (negative deltas are better; all deltas are
+paired within regime against the listed \taxid{MuonT} reference row, which
+reports absolute losses). \textbf{Late-11 $\Delta$Sel} averages all 11
+second-half held-out evaluations ($\text{step} > T/2$, covering $\approx 8.65\text{M}$
+held-out selection tokens) with per-checkpoint win counts; \textbf{2nd-Half
+$\Delta$Train$\pm$SE} is the lag-1 autocorrelation-inflated paired per-update
+training difference over the entire second half ($2{,}560$, $10{,}240$, or
+$5{,}120$ consecutive updates). \textbf{16-Dom Paloma $\Delta$} reports the
+macro mean across all 16 Paloma domains with domain (or seed) win counts.
+\textbf{Step\% / GiB} uses full-run post-warmup median step times across all
+$5{,}120$--$20{,}480$ updates. In Phase~2, Gate~1 locked \taxid{MuonT} to
+$\eta=0.016$ while keeping \taxid{OD-All}/\taxid{WT-MLP-Lag} at $\eta=0.0226$;
+mid-decay averages are omitted there because the $41\%$ hotter LR induces
+higher transient mid-decay loss before converging lower at step $5{,}120$.}
+\label{tab:confirmation}
+\scriptsize\setlength{\tabcolsep}{3.1pt}
+\resizebox{\textwidth}{!}{\input{results/table_confirmation}}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}
+\begin{groupplot}[
+  paperplot,
+  group style={group size=3 by 1, horizontal sep=1.85cm},
+  height=5.6cm,
+]
+\nextgroupplot[
+  width=5.35cm,
+  title={(a) Full-budget $130\text{M}$ LR bracket},
+  xlabel={Matrix learning rate $\eta$},
+  ylabel={Final selection loss (nats)},
+  xmode=log, log basis x=2,
+  xmin=0.0145, xmax=0.0355, ymin=3.228, ymax=3.255,
+  scaled y ticks=false,
+  ytick={3.230,3.235,3.240,3.245,3.250},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  xtick={0.016,0.02262741696,0.032},
+  xticklabels={.016,.023,.032},
+  legend style={at={(0.98,0.98)}, anchor=north east, font=\tiny, inner sep=1.8pt},
+  every axis plot/.append style={line width=1.0pt, mark size=1.9pt},
+]
+\addplot[color=famRef!70, dash dot, mark=triangle*] table[x=lr, y=muon] {figs/conf_lr_grid.dat};
+\addlegendentry{\taxid{Muon}}
+\addplot[color=famRef, mark=oplus*] table[x=lr, y=muont] {figs/conf_lr_grid.dat};
+\addlegendentry{\taxid{MuonT}}
+\addplot[color=famOD, densely dashed, mark=diamond*] table[x=lr, y=od_all] {figs/conf_lr_grid.dat};
+\addlegendentry{\taxid{OD-All}}
+\addplot[color=famWT, line width=1.15pt, mark=star, mark size=2.6pt] table[x=lr, y=wt_mlp_lag] {figs/conf_lr_grid.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP-Lag}}}
+\addplot[only marks, color=famNull, mark=square*, mark size=2.1pt] table[x=lr, y=null_wt] {figs/conf_lr_grid.dat};
+\addlegendentry{\taxid{Null-WT}}
+
+\nextgroupplot[
+  width=5.65cm,
+  title={(b) Matched-LR $\Delta$Sel trajectory},
+  xlabel={Training progress ($t / T$)},
+  ylabel={$\Delta$ Selection vs.\ \taxid{MuonT} (nats)},
+  xmin=0.04, xmax=1.02, ymin=-0.0092, ymax=0.0022,
+  scaled y ticks=false,
+  ytick={-0.008,-0.006,-0.004,-0.002,0,0.002},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  legend style={at={(0.98,0.03)}, anchor=south east, font=\tiny, inner sep=1.6pt},
+  every axis plot/.append style={line width=0.95pt, mark size=1.4pt},
+]
+\fill[famWT!5] (axis cs:0.50,-0.0092) rectangle (axis cs:1.02,0);
+\draw[pagemuted!80, dashed, line width=0.55pt] (axis cs:0.04,0) -- (axis cs:1.02,0);
+\draw[pagemuted!60, densely dotted, line width=0.55pt] (axis cs:0.50,-0.0092) -- (axis cs:0.50,0.0022);
+\addplot[color=famWT, line width=1.1pt, mark=o] table[x=progress, y=wt_130_1x] {figs/conf_traj_delta.dat};
+\addlegendentry{\taxid{WT} $130\text{M}$ $1\times$}
+\addplot[color=famDT, line width=1.1pt, mark=square*] table[x=progress, y=wt_130_4x] {figs/conf_traj_delta.dat};
+\addlegendentry{\taxid{WT} $130\text{M}$ $4\times$}
+\addplot[color=famAbl, line width=1.15pt, mark=star, mark size=2.2pt] table[x=progress, y=wt_520_1x] {figs/conf_traj_delta.dat};
+\addlegendentry{\taxid{WT} $520\text{M}$ $1\times$}
+\addplot[color=famOD, densely dashed, mark=diamond] table[x=progress, y=od_130_4x] {figs/conf_traj_delta.dat};
+\addlegendentry{\taxid{OD} $130\text{M}$ $4\times$}
+\addplot[color=famNull, densely dotted, line width=1.1pt, mark=triangle] table[x=progress, y=od_520_1x] {figs/conf_traj_delta.dat};
+\addlegendentry{\taxid{OD} $520\text{M}$ $1\times$}
+
+\nextgroupplot[
+  width=5.15cm,
+  ybar=1.8pt, bar width=6.5pt,
+  title={(c) 16-Domain Paloma $\Delta$},
+  ylabel={$\Delta$ Paloma macro vs.\ \taxid{MuonT} (nats)},
+  xmin=-0.55, xmax=2.55, ymin=-0.0072, ymax=0.0135,
+  xtick={0,1,2},
+  xticklabels={
+    {\shortstack{$130\text{M}$ $1\times$\\ {\tiny(3 seeds)}}},
+    {\shortstack{$130\text{M}$ $4\times$\\ {\tiny(80 TPP)}}},
+    {\shortstack{$520\text{M}$ $1\times$\\ {\tiny(20 TPP)}}}
+  },
+  xticklabel style={font=\tiny},
+  scaled y ticks=false,
+  ytick={-0.006,-0.003,0,0.003,0.006,0.009,0.012},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=3},
+  legend style={at={(0.98,0.98)}, anchor=north east, font=\tiny, inner sep=1.6pt},
+]
+\draw[pagemuted!80, line width=0.55pt] (axis cs:-0.55,0) -- (axis cs:2.55,0);
+\addplot[fill=famRef!60, draw=famRef] table[x=idx, y=muon] {figs/conf_paloma.dat};
+\addlegendentry{\taxid{Muon}}
+\addplot[fill=famOD!75, draw=famOD] table[x=idx, y=od_all] {figs/conf_paloma.dat};
+\addlegendentry{\taxid{OD-All}}
+\addplot[fill=famWT!85, draw=famWT] table[x=idx, y=wt_mlp_lag] {figs/conf_paloma.dat};
+\addlegendentry{\textbf{\taxid{WT-MLP-Lag}}}
+\end{groupplot}
+\end{tikzpicture}%
+}
+\caption{Confirmation and scaling campaign across \confTotalRuns{}
+\texttt{fast\_lag} runs and \confPalomaCount{} 16-domain Paloma evaluations.
+\textbf{(a)} Phase~1 full-budget $130\text{M}$ ($1\times$ Chinchilla) LR
+bracket around $0.0226$: \taxid{WT-MLP-Lag} beats \taxid{MuonT} at every
+matched rate while \texttt{fast\_lag} \taxid{Null-WT} sits on \taxid{MuonT}
+($\confNullFinalSelDelta{}$ final selection).
+\textbf{(b)} Matched-LR $\Delta$ selection trajectories across all 21
+post-step-1 evaluations (shaded region marks the 11-point second-half reporting
+window, $t/T > 0.5$): \taxid{WT-MLP-Lag} stays strictly negative on $11/11$
+second-half evaluations at $130\text{M}$ $1\times$, $130\text{M}$ $4\times$, and
+$520\text{M}$ $1\times$, whereas diagonal-only \taxid{OD-All} fades slightly
+above zero at $520\text{M}$.
+\textbf{(c)} Post-hoc 16-domain Paloma macro-mean $\Delta$ against
+\taxid{MuonT}: \taxid{WT-MLP-Lag} wins $3/3$ fresh seeds at $130\text{M}$
+$1\times$ ($\confPTwoWtPalomaDeltaMean{}$), $\confPThreeWtPalomaWins{}/16$
+domains at $130\text{M}$ $4\times$ ($\confPThreeWtPalomaDelta{}$), and
+$\confPFourWtPalomaWins{}/16$ domains at $520\text{M}$ $1\times$
+($\confPFourWtPalomaDelta{}$).}
+\label{fig:confirmation}
+\end{figure}
+
+Four concrete findings emerge from the \confTotalRuns{} confirmation and scaling
+runs:
+\begin{enumerate}
+\item \textbf{Full-budget LR bracket and \texttt{fast\_lag} \taxid{Null-WT}
+  close Items~1 and~2 (Phase~1, 8 runs).}
+  Bracketing $0.0226$ on $\{0.016, 0.0226, 0.032\}$ at full 5{,}120-update
+  budget confirms that $0.032$ degrades every arm while $0.016$--$0.0226$ forms
+  the true interior basin (Figure~\ref{fig:confirmation}a). The
+  \texttt{fast\_lag} \taxid{Null-WT} control sits within
+  $\confNullFinalSelDelta{}$ nats of \taxid{MuonT} at final step
+  ($\confNullLateSelDelta{}$ late-11 selection, $\confNullLateCfourDelta{}$
+  late-11 C4, $\confNullTrainWFive{}$ Window-5 paired train --- cutting legacy
+  Wave-3 \taxid{Null-WT}'s $-0.0020$ C4 artifact nearly threefold). At matched
+  rates, \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $11/11$ second-half
+  evaluations at both $\eta=0.016$ ($\confPOneZeroOneSixWtFinalSel{}$ final,
+  $\confPOneZeroOneSixWtLateSel{}$ late-11 selection,
+  $\confPOneZeroOneSixWtLateCfour{}$ late-11 C4,
+  $\confPOneZeroOneSixWtTrainHalf{} \pm \confPOneZeroOneSixWtTrainHalfSe{}$
+  second-half paired train) and $\eta=0.0226$ ($\confPOneZeroTwoTwoWtFinalSel{}$
+  final, $\confPOneZeroTwoTwoWtLateSel{}$ late-11;
+  $\confPOneZeroTwoTwoWtNetLateSel{}$ late-11 and
+  $\confPOneZeroTwoTwoWtNetFinalSel{}$ final net of \taxid{Null-WT}).
+\item \textbf{Post-selection three-seed confirmation and 16-domain Paloma
+  (Phase~2, 12 runs).}
+  Our pre-registered Gate~1 rule shifted \taxid{MuonT} to $0.016$ (which crossed
+  its $0.0010$-nat threshold by $-0.0012$) while leaving \taxid{OD-All} and
+  \taxid{WT-MLP-Lag} at pinned $0.0226$ --- an asymmetry strictly conservative
+  against \taxid{WT-MLP-Lag}, since $0.016$ also edged $0.0226$ on
+  \taxid{WT-MLP-Lag} by $-0.0008$ nats. Even against tuned \taxid{MuonT}
+  ($0.016$) across three fresh paired seeds (seeds~1, 2, 3), \taxid{WT-MLP-Lag}
+  ($0.0226$) wins $3/3$ seeds on every endpoint:
+  $\confPTwoWtSelDeltaMean{} \pm \confPTwoWtSelDeltaStd{}$ selection
+  ($\confPTwoWtSelVsMuonMean{}$ versus \taxid{Muon}),
+  $\confPTwoWtCfourDeltaMean{} \pm \confPTwoWtCfourDeltaStd{}$ C4, and
+  $\confPTwoWtPalomaDeltaMean{} \pm \confPTwoWtPalomaDeltaStd{}$ across all 16
+  Paloma domains ($\confPTwoWtPalomaVsMuonMean{}$ versus \taxid{Muon}) at
+  $+\confPTwoWtStepPct\%$ full-run median step time, whereas \taxid{OD-All}
+  narrows to $\confPTwoOdSelDeltaMean{}$ selection and
+  $\confPTwoOdPalomaDeltaMean{}$ Paloma ($2/3$ seeds).
+\item \textbf{Overtraining to $4\times$ Chinchilla ($80$ TPP, $10.74\text{B}$
+  tokens) preserves and widens the matched-LR margin (Phase~3A/3B, 6 runs).}
+  Scaling steps $4\times$ to $20{,}480$ with Marin's $4^{-0.3}$ token-horizon LR
+  law initially propagated Gate~1's $41\%$ LR mismatch into Wave~3A
+  ($\eta = 0.0149$ versus $0.0106$ for \taxid{MuonT}), penalizing hot-LR
+  \taxid{WT-MLP-Lag} ($\confPThreeHotWtFinalSel{}$ final selection). Matching
+  \taxid{OD-All} and \taxid{WT-MLP-Lag} to \taxid{MuonT}'s exact
+  $\eta = 0.0105561$ ($\eta_{\text{aux}} = 0.0031668$) in Wave~3B resolves this
+  confound cleanly: \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $11/11$
+  second-half evaluations ($\confPThreeWtLateSel{}$ late-11 and
+  $\confPThreeWtFinalSel{}$ final selection; $\confPThreeWtLateCfour{}$ late-11
+  and $\confPThreeWtFinalCfour{}$ final C4; $\confPThreeWtVsMuonFinalSel{}$
+  final selection versus \taxid{Muon}), achieves
+  $\confPThreeWtTrainHalf{} \pm \confPThreeWtTrainHalfSe{}$ across $10{,}240$
+  second-half training updates, and wins \textbf{$\confPThreeWtPalomaWins{}/16$
+  Paloma domains} ($\confPThreeWtPalomaDelta{}$ macro mean) at
+  $+\confPThreeWtStepPct\%$ step time. Diagonal-only \taxid{OD-All} retains half
+  as much gain ($\confPThreeOdFinalSel{}$ final, $\confPThreeOdLateSel{}$
+  late-11, $\confPThreeOdPalomaDelta{}$ Paloma, $\confPThreeOdPalomaWins{}/16$
+  domains).
+\item \textbf{Model scaling to $520\text{M}$ non-embedding ($799.6\text{M}$
+  total) separates \taxid{WT-MLP-Lag} from diagonal-only \taxid{OD-All}
+  (Phase~4, 4 runs).}
+  Using Toner's official pinned $520\text{M}$ $1\text{M}$-batch recipe
+  ($d=1024$, $d_{\text{mlp}}=4096$, $L=32$, $10{,}240$ linear-decay steps,
+  $10.74\text{B}$ tokens, $\eta_{\text{aux}}=0.0024$) with zero per-arm retuning
+  and strictly matched $\eta = 0.0226274$ across all three Toner-family arms
+  (reproducing upstream C4 references closely: $\confPFourMuonFinalCfourAbs{}$
+  for \taxid{Muon} and $\confPFourMuontFinalCfourAbs{}$ for \taxid{MuonT}),
+  \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $11/11$ second-half evaluations
+  ($21/21$ post-step-1 evaluations; Figure~\ref{fig:confirmation}b) by
+  $\confPFourWtLateSel{}$ late-11 ($\confPFourWtFinalSel{}$ final) selection,
+  $\confPFourWtLateCfour{}$ late-11 ($\confPFourWtFinalCfour{}$ final) C4,
+  $\confPFourWtTrainHalf{} \pm \confPFourWtTrainHalfSe{}$ across $5{,}120$
+  second-half updates, and $\confPFourWtPalomaDelta{}$ on 16-domain Paloma
+  (winning \textbf{$\confPFourWtPalomaWins{}/16$ domains};
+  $\confPFourWtVsMuonFinalSel{}$ final selection versus \taxid{Muon}) at
+  $+\confPFourWtStepPct\%$ step time ($\confPFourWtGib{}$ versus
+  $\confPFourMuontGib{}$\,GiB peak). In contrast, diagonal-only \taxid{OD-All}
+  fades slightly behind \taxid{MuonT} at $520\text{M}$
+  ($\confPFourOdFinalSel{}$ final / $\confPFourOdLateSel{}$ late-11 selection,
+  $\confPFourOdPalomaDelta{}$ Paloma, $\confPFourOdPalomaWins{}/16$ domains),
+  confirming that dense residual-stream output whitening ($d=1024$) drives
+  scaling robustness while pre-SwiGLU width-$4096$ outputs stay diagonal.
+\end{enumerate}
+
+\paragraph{Step-averaging sufficiency for the confirmation deltas.}
+Following Section~\ref{sec:protocol}, every matched-LR delta in
+Table~\ref{tab:confirmation} is verified across multiple averaging horizons
+rather than relying on a single checkpoint: (i) all 11 second-half held-out
+evaluations ($\approx 8.65\text{M}$ selection tokens and $\approx 10.6\text{M}$
+C4 tokens), whose between-evaluation standard errors are $0.00025$--$0.00038$
+nats ($8\times$--$18\times$ smaller than \taxid{WT-MLP-Lag}'s effect) and agree
+tightly with both the last-5 evaluation mean and final step; (ii) the full
+second-half paired per-update training series ($2{,}560$ updates at
+$130\text{M}$ $1\times$, $10{,}240$ updates at $130\text{M}$ $4\times$, and
+$5{,}120$ updates at $520\text{M}$ $1\times$), where lag-1 autocorrelation is
+small ($\rho_1 \in [0.04, 0.12]$) and inflated standard errors drop to
+$0.00002$--$0.00004$ nats ($|t| > 100$); and (iii) post-hoc 16-domain Paloma
+macro averages at final checkpoints.
+
+\begin{finding}[Asymmetric width-thresholded output normalization holds under
+full-budget tuning, fresh seeds, $4\times$ overtraining, and $520\text{M}$ scaling]
+Across all matched-LR regimes ($130\text{M}$ $1\times$, $130\text{M}$ $4\times$,
+and $520\text{M}$ $1\times$), \taxid{WT-MLP-Lag} beats \taxid{MuonT} on $100\%$
+of second-half held-out evaluations ($11/11$ in each), delivers
+$|t| > 100$ paired training separation over $2{,}560$--$10{,}240$ updates,
+replicates on $3/3$ fresh post-selection seeds, and wins
+$\confPThreeWtPalomaWins{}/16$ ($130\text{M}$ $4\times$) and
+$\confPFourWtPalomaWins{}/16$ ($520\text{M}$ $1\times$) Paloma domains, while
+diagonal-only \taxid{OD-All} loses its advantage at $520\text{M}$.
+\end{finding}

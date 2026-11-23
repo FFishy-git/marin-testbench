@@ -1,98 +1,91 @@
-\section{Final confirmation program}
+\section{Confirmation status and remaining mechanistic probes}
 \label{sec:program}
 
 Sections~\ref{sec:motivation}, \ref{sec:results}, and~\ref{sec:systems} settled
-four questions that previously stood between exploratory findings and a compact
-confirmation campaign:
+offline step-norm invariance (\mechMlpdiagGraftNorm{} norm ratio at
+$\mechMlpdiagGraftDeg^\circ$ rotation), pre- versus post-SwiGLU width-2048
+asymmetry (\texttt{wave\_\allowbreak sym\_\allowbreak fastlag}), and uncontended
+eight-A100 \texttt{fast\_lag} execution. The isolated \confTotalRuns{}-run
+confirmation and scaling campaign of Section~\ref{sec:confirmation} has now
+\emph{completed} the core empirical program originally planned around $0.0226$:
 \begin{enumerate}
-\item \textbf{Step-size versus direction (settled offline):} Checkpoint
-  direction-norm audits across all 224 matrices show that \mlpdiag{} and
-  \alldiag{} match \muont{}'s Frobenius step norm to \mechMlpdiagGraftNorm{}
-  and \mechLeftdiagGraftNorm{} while rotating updates by
-  $\mechMlpdiagGraftDeg^\circ$ and $\mechLeftdiagGraftDeg^\circ$
-  (Section~\ref{sec:mech-graft}).
-\item \textbf{Pre- versus post-SwiGLU width-2048 asymmetry} (settled in
-  \texttt{wave\_\allowbreak sym\_\allowbreak fastlag}): Pre-SwiGLU Hadamard decorrelation puts
-  \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
-  anisotropy on the diagonal of \texttt{out:gate,up}, whereas post-SwiGLU
-  \texttt{in:down} carries $56.6\%$ off-diagonal anisotropy; executing
-  \taxid{WT-Sym} and \taxid{WT-Sym-Lag} confirmed the predicted Window-1
-  conditioning penalty ($\symLagVsMlpLagWinOne{}$ nats vs.\ \taxid{WT-MLP-Lag})
-  and late-decay recovery to tied final C4 ($\symMlpLagCfourFinalAbs{}$;
-  Section~\ref{sec:sym-ablation}).
-\item \textbf{Uncontended eight-A100 \texttt{fast\_lag} wall-clock execution at
-  recipe LR (settled in \texttt{wave\_sym\_fastlag}):} Full-budget eight-rank DDP
-  execution confirmed $+\sysExecMlpLagVsMuontPct\%$ steady-step overhead on
-  \taxid{WT-MLP-Lag} ($\sysExecMlpLagGib$\,GiB) and $+\sysExecSymLagVsMuontPct\%$
-  on \taxid{WT-Sym-Lag} ($\sysExecSymLagGib$\,GiB), with \taxid{WT-Sym-Lag}
-  beating both \taxid{MuonT} and \taxid{Muon} in wall-clock time to
-  $\text{C4}\le 3.52$ ($\sysCrossSymLagThreeFiveTwoS$\,s;
-  Section~\ref{sec:systems}).
+\item \textbf{Full-budget LR bracket around $0.0226$ (completed, Phase~1):}
+  Bracketing $\{0.016, 0.0226, 0.032\}$ at 5{,}120 updates confirmed the
+  interior optimum and showed \taxid{WT-MLP-Lag} beating \taxid{MuonT} on
+  $11/11$ second-half evaluations at both $0.016$
+  ($\confPOneZeroOneSixWtLateSel{}$) and $0.0226$
+  ($\confPOneZeroTwoTwoWtLateSel{}$).
+\item \textbf{Same-runner \texttt{fast\_lag} matched null (completed, Phase~1):}
+  \taxid{Null-WT} (\nullmlp{}) on \texttt{fast\_lag} landed within
+  $\confNullFinalSelDelta{}$ final ($\confNullLateSelDelta{}$ late-11) selection
+  nats of \taxid{MuonT}, confirming $\confPOneZeroTwoTwoWtNetLateSel{}$ late-11
+  net geometry gain.
+\item \textbf{Fresh post-selection 3-seed confirmation (completed, Phase~2):}
+  Paired seeds~1, 2, and~3 confirmed \taxid{WT-MLP-Lag} on $3/3$ seeds
+  ($\confPTwoWtSelDeltaMean{}$ selection, $\confPTwoWtCfourDeltaMean{}$ C4,
+  $\confPTwoWtPalomaDeltaMean{}$ across 16 Paloma domains) at
+  $+\confPTwoWtStepPct\%$ step time.
+\item \textbf{Overtraining ($4\times$ Chinchilla, $80$ TPP) and $520\text{M}$
+  scaling with 16-domain Paloma (completed, Phases~3--5):}
+  Matched-LR \taxid{WT-MLP-Lag} beat \taxid{MuonT} on $11/11$ late evaluations
+  and $\confPThreeWtPalomaWins{}/16$ Paloma domains at $130\text{M}$ $4\times$
+  ($\confPThreeWtFinalSel{}$ final selection, $\confPThreeWtPalomaDelta{}$
+  Paloma), and on $11/11$ late evaluations and $\confPFourWtPalomaWins{}/16$
+  Paloma domains at $520\text{M}$ $1\times$ ($\confPFourWtFinalSel{}$ final
+  selection, $\confPFourWtPalomaDelta{}$ Paloma), where \taxid{OD-All} faded.
 \end{enumerate}
 
-What remains is a tightly scoped confirmation program centered on the full-budget
-learning-rate curve around $0.0226$ (reusing the completed $0.0226$
-\texttt{wave\_sym\_fastlag} anchors), a same-wave \texttt{fast\_lag} matched
-null, and out-of-sample seed replication. Table~\ref{tab:program} lists the
-remaining runs in priority order ($\approx 1.7$\,hours or $13.5$\,GPU-hours per
-run).
+Table~\ref{tab:program} tracks the completed confirmation items alongside the
+narrow mechanistic follow-ups that remain optional for future work.
 
 \begin{table}[t]
 \centering
-\caption{Remaining confirmation program on the \texttt{fast\_lag} runner, after
-completion of the recipe-rate ($0.0226$) uncontended eight-A100
-\texttt{wave\_sym\_fastlag} anchors. Items 1--3 close full-budget tuning and
-same-wave \texttt{fast\_lag} attribution in 11 runs; Item~4 is gated on Item~1
-confirming a net-of-null tuned win.}
+\caption{Status of the confirmation program on the \texttt{fast\_lag} runner.
+All empirical tuning, null-attribution, replication, overtraining, and
+$520\text{M}$ scaling gates are complete (Section~\ref{sec:confirmation}); three
+narrow mechanistic probes remain optional follow-up work.}
 \label{tab:program}
 \footnotesize
-\begin{tabular}{@{}p{0.34\textwidth}p{0.50\textwidth}r@{}}
+\begin{tabular}{@{}p{0.34\textwidth}p{0.46\textwidth}r@{}}
 \toprule
-Experiment & What it decides & Runs \\
+Experiment & What it decides & Status / Runs \\
 \midrule
-\textbf{1. Complete the full-budget LR curve around $0.0226$.} Run
-$\eta \in \{0.016, 0.032, 0.045\}$ at 5{,}120 updates for \taxid{MuonT} and
-\texttt{fast\_lag} \taxid{WT-MLP-Lag} (reusing \texttt{wave\_sym\_fastlag} at
-$0.0226$), plus \taxid{WT-Sym-Lag} or \taxid{OD-All} at $\{0.016, 0.032\}$. &
-Effect size and wall-clock crossing margin under fair full-budget tuning in the
-actual optimal basin, avoiding Wave~12's $0.064 / 0.0905$ over-stepping cliff. & 8 \\
+\textbf{1. Full-budget LR bracket around $0.0226$ \& \texttt{fast\_lag}
+\taxid{Null-WT}} (Phase~1). &
+Interior optimal basin, matched-LR margin, and same-runner causal attribution. &
+\textbf{Done} (8) \\
 \addlinespace
-\textbf{2. Same-wave \texttt{fast\_lag} matched null at the winning rate.}
-Execute \texttt{fast\_lag} \taxid{Null-WT} (\nullmlp{}) at the rate selected in
-Item~1 (or $0.0226$). &
-Exact same-runner, same-rate causal attribution of geometry minus execution path
-for the ${}^{\ddagger}$ rows of Table~\ref{tab:main}. & 1 \\
+\textbf{2. Fresh 3-seed paired confirmation} on seeds 1, 2, 3 across all four
+core arms + 16-domain Paloma (Phase~2). &
+Out-of-sample seed replication and multi-domain generalization at $130\text{M}$. &
+\textbf{Done} (12) \\
 \addlinespace
-\textbf{3. Live norm-grafted trajectory check} and \textbf{4-step held-diagonal
-freshness ablation} at the Item~1 rate. &
-Trajectory-level confirmation of the offline checkpoint audits in
-Sections~\ref{sec:motivation} and~\ref{sec:mech-graft} (separating residual
-four-step staleness from coordinate alignment). & 2 \\
+\textbf{3. $4\times$ Chinchilla ($80$ TPP) \& $520\text{M}$ scaling} +
+16-domain Paloma (Phases~3A, 3B, 4). &
+Persistence under overtraining and $4\times$ non-embedding parameter scaling. &
+\textbf{Done} (10) \\
 \addlinespace
-\textbf{4. Fresh paired-seed confirmation} on seeds 3/4/5, reserved from
-exploration, with predeclared launch-anchored time-to-target. &
-Out-of-sample seed replication and confirmatory wall-clock efficiency for
-\taxid{WT-MLP-Lag} and \taxid{WT-Sym-Lag}. & 6 \\
+\textbf{4. Live norm-grafted trajectory replay} and \textbf{4-step
+held-diagonal freshness ablation}. &
+Trajectory-level confirmation of Section~\ref{sec:mech-graft} and separation of
+inner, outer, and decay terms in Section~\ref{sec:sym-root-fidelity}. &
+Optional (2) \\
 \addlinespace
-\textbf{Kronecker curvature correlation check} (offline on checkpoints). &
+\textbf{5. Kronecker curvature correlation check} (offline on checkpoints). &
 Whether $B \otimes C$ ranks update directions in agreement with empirical
-per-example squared directional derivatives. & \textbf{0} \\
+per-example squared directional derivatives. &
+Optional (\textbf{0}) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Why Item 1 centers on \texorpdfstring{$0.0226$}{0.0226} rather than \texorpdfstring{$0.064$}{0.064}}
+\subsection{Why full-budget confirmation centered on \texorpdfstring{$0.0226$}{0.0226} rather than \texorpdfstring{$0.064$}{0.064}}
 
 Section~\ref{sec:tuning} showed that $\eta = 0.064$ degraded full-budget
-\muont{} by \waveTwelveMuontSelDiff{} nats relative to $0.0226$. Centering a
-full-budget sweep around $0.064$ --- or running a matched null at rate $0.064$
-for \texttt{outer\_\allowbreak leftdiag\_\allowbreak fused}, whose Wave-10
-net-of-null margin at $0.0226$ was already only $-0.00044$ nats
-(Appendix~\ref{app:systems}) --- would spend compute in an
-over-stepped regime on a weak outer-only geometry. Bracketing the completed
-$0.0226$ \texttt{wave\_sym\_fastlag} anchor with $\{0.016, 0.032, 0.045\}$
-directly locates the interior full-budget minimum of both \muont{} and our
-primary \texttt{fast\_lag} candidates.
+\muont{} by \waveTwelveMuontSelDiff{} nats relative to $0.0226$. Bracketing the
+completed $0.0226$ anchor with $\{0.016, 0.032\}$ in Phase~1 directly confirmed
+that the full-budget optimum sits inside $[0.016, 0.0226]$ for every arm
+(Figure~\ref{fig:confirmation}a), avoiding Wave~12's over-stepped regime.
 
 \subsection{Remaining offline curvature check}
 
