@@ -1,0 +1,124 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anil et~al.(2020)Anil, Gupta, Koren, Regan, and
+  Singer]{anil2020scalable}
+Rohan Anil, Vineet Gupta, Tomer Koren, Kevin Regan, and Yoram Singer.
+\newblock Scalable second order optimization for deep learning.
+\newblock \emph{arXiv preprint arXiv:2002.09018}, 2020.
+
+\bibitem[Che(2026)]{che2026gomuon}
+Tong Che.
+\newblock Second-order {Muon} done right: A principled marriage of spectral
+  geometry and curvature.
+\newblock \emph{arXiv preprint arXiv:2608.09763}, 2026.
+
+\bibitem[Choi et~al.(2019)Choi, Shallue, Nado, Lee, Maddison, and
+  Dahl]{choi2019empirical}
+Dami Choi, Christopher~J. Shallue, Zachary Nado, Jaehoon Lee, Chris~J.
+  Maddison, and George~E. Dahl.
+\newblock On empirical comparisons of optimizers for deep learning.
+\newblock \emph{arXiv preprint arXiv:1910.05446}, 2019.
+
+\bibitem[Dang et~al.(2026)Dang, Wen, and Malladi]{dang2026batchsize}
+Xingyu Dang, Kaiyue Wen, and Sadhika Malladi.
+\newblock The best optimizer depends on batch size.
+\newblock \emph{arXiv preprint arXiv:2610.08975}, 2026.
+
+\bibitem[Du and Su(2026)]{du2026newtonmuon}
+Zhehang Du and Weijie Su.
+\newblock The {Newton-Muon} optimizer.
+\newblock \emph{arXiv preprint arXiv:2604.01472}, 2026.
+
+\bibitem[Goyal and Ramkumar(2026)]{goyal2026spectrally}
+Vishrut Goyal and Rohan Ramkumar.
+\newblock Spectrally targeted {Muon}.
+\newblock \emph{arXiv preprint arXiv:2610.10965}, 2026.
+
+\bibitem[Gupta et~al.(2018)Gupta, Koren, and Singer]{gupta2018shampoo}
+Vineet Gupta, Tomer Koren, and Yoram Singer.
+\newblock Shampoo: Preconditioned stochastic tensor optimization.
+\newblock In \emph{Proceedings of the 35th International Conference on Machine
+  Learning (ICML)}, pages 1842--1850, 2018.
+
+\bibitem[Henry et~al.(2019)Henry, Tang, and Heinecke]{henry2019leveraging}
+Greg Henry, Ping Tak~Peter Tang, and Alexander Heinecke.
+\newblock Leveraging the bfloat16 artificial intelligence datatype for
+  higher-precision computations.
+\newblock \emph{arXiv preprint arXiv:1904.06376}, 2019.
+
+\bibitem[Jordan et~al.(2024)Jordan, Jin, Boza, You, Cesista, Newhouse, and
+  Bernstein]{jordan2024muon}
+Keller Jordan, Yuchen Jin, Vlado Boza, Jiacheng You, Franz Cesista, Laker
+  Newhouse, and Jeremy Bernstein.
+\newblock Muon: An optimizer for hidden layers in neural networks.
+\newblock \url{https://kellerjordan.github.io/posts/muon/}, 2024.
+\newblock Technical blog post and reference implementation.
+
+\bibitem[Kaddour et~al.(2023)Kaddour, Key, Nawrot, Minervini, and
+  Kusner]{kaddour2023nodata}
+Jean Kaddour, Oscar Key, Piotr Nawrot, Pasquale Minervini, and Matt~J. Kusner.
+\newblock No train no gain: Revisiting efficient training algorithms for
+  transformer-based language models.
+\newblock In \emph{Advances in Neural Information Processing Systems 36
+  (NeurIPS)}, 2023.
+
+\bibitem[Kunstner et~al.(2019)Kunstner, Hennig, and
+  Balles]{kunstner2019limitations}
+Frederik Kunstner, Philipp Hennig, and Lukas Balles.
+\newblock Limitations of the empirical {Fisher} approximation for natural
+  gradient descent.
+\newblock In \emph{Advances in Neural Information Processing Systems 32
+  (NeurIPS)}, 2019.
+
+\bibitem[Martens and Grosse(2015)]{martens2015kfac}
+James Martens and Roger Grosse.
+\newblock Optimizing neural networks with {Kronecker}-factored approximate
+  curvature.
+\newblock In \emph{Proceedings of the 32nd International Conference on Machine
+  Learning (ICML)}, pages 2408--2417, 2015.
+
+\bibitem[Mohamadi et~al.(2026)Mohamadi, Wen, Wang, and Li]{mohamadi2026toner}
+Mohamad~Amin Mohamadi, Kaiyue Wen, Tianhao Wang, and Zhiyuan Li.
+\newblock Toner: Improving {Muon} and {AdamW} with input geometry.
+\newblock \url{https://mohamad-amin.github.io/blog/toner}, 2026.
+\newblock Author technical article and pinned reference repository
+  (\texttt{dab7f377}).
+
+\bibitem[Schmidt et~al.(2021)Schmidt, Schneider, and
+  Hennig]{schmidt2021crowded}
+Robin~M. Schmidt, Frank Schneider, and Philipp Hennig.
+\newblock Descending through a crowded valley --- benchmarking deep learning
+  optimizers.
+\newblock In \emph{Proceedings of the 38th International Conference on Machine
+  Learning (ICML)}, pages 9367--9376, 2021.
+
+\bibitem[Shumaylov et~al.(2026)Shumaylov, Da~Costa, Zaika, Mucs{\'a}nyi,
+  Massucco, Gelberg, Sch{\"o}nlieb, Gal, and Hennig]{shumaylov2026freon}
+Zakhar Shumaylov, Natha{\"e}l Da~Costa, Peter Zaika, B{\'a}lint Mucs{\'a}nyi,
+  Alex Massucco, Yoav Gelberg, Carola-Bibiane Sch{\"o}nlieb, Yarin Gal, and
+  Philipp Hennig.
+\newblock {Muon} is not that special: Random or inverted spectra work just as
+  well.
+\newblock \emph{arXiv preprint arXiv:2605.11181}, 2026.
+
+\bibitem[Vyas et~al.(2024)Vyas, Morwani, Zhao, Shapira, Brandfonbrener, Janson,
+  and Kakade]{vyas2024soap}
+Nikhil Vyas, Depen Morwani, Rosie Zhao, Itai Shapira, David Brandfonbrener,
+  Lucas Janson, and Sham Kakade.
+\newblock {SOAP}: Improving and stabilizing {Shampoo} using {Adam}.
+\newblock \emph{arXiv preprint arXiv:2409.11321}, 2024.
+
+\bibitem[Zhang et~al.(2026)Zhang, Xing, Huang, Lv, Zhou, Qiu, Guo, and
+  Chen]{zhang2026mousse}
+Yechen Zhang, Shuhao Xing, Junhao Huang, Kai Lv, Yunhua Zhou, Xipeng Qiu,
+  Qipeng Guo, and Kai Chen.
+\newblock Mousse: Rectifying the geometry of {Muon} with curvature-aware
+  preconditioning.
+\newblock \emph{arXiv preprint arXiv:2603.09697}, 2026.
+
+\end{thebibliography}

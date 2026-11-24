@@ -47,6 +47,11 @@ def build_config(
     lr: float,
     auxiliary_lr: float | None = None,
     microbatch: int,
+    world_size: int | None = None,
+    chunk: int = 0,
+    begin: str | None = None,
+    host_workers: int | None = None,
+    host_threads: int | None = None,
     chinchilla_multiplier: int = 1,
     eval_every: int | None = None,
     checkpoint_every: int | None = None,
@@ -71,6 +76,8 @@ def build_config(
 
     config["training"]["seed"] = seed
     config["training"]["micro_batch_size"] = microbatch
+    if world_size is not None:
+        config["training"]["world_size"] = world_size
     if chinchilla_multiplier != 1:
         config["training"]["steps"] *= chinchilla_multiplier
         config["training"]["tokens"] *= chinchilla_multiplier
@@ -83,7 +90,13 @@ def build_config(
         config["optimizer"]["auxiliary_lr"] = auxiliary_lr
 
     if "root" in config:
-        config["root"]["chunk"] = 0
+        config["root"]["chunk"] = chunk
+        if begin is not None:
+            config["root"]["begin"] = begin
+        if host_workers is not None:
+            config["root"]["host_workers"] = host_workers
+        if host_threads is not None:
+            config["root"]["host_threads"] = host_threads
 
     total = microbatch * config["training"]["world_size"]
     if config["training"]["global_batch_sequences"] % total != 0:
@@ -91,6 +104,9 @@ def build_config(
             f"Microbatch {microbatch} * world {config['training']['world_size']} does not divide "
             f"global_batch_sequences {config['training']['global_batch_sequences']}"
         )
+    accumulation = config["training"]["global_batch_sequences"] // total
+    if chunk and accumulation % chunk != 0:
+        raise ValueError(f"root.chunk={chunk} must divide accumulation={accumulation}")
 
     steps = config["training"]["steps"]
     if config["schedule"]["warmup_steps"] + config["schedule"]["stable_steps"] + config["schedule"]["decay_steps"] != steps:
@@ -105,7 +121,7 @@ def build_config(
         "diagnostic_every": eval_every if eval_every is not None else config["runtime"]["eval_every"],
         "expected_model_parameters": EXPECTED_PARAMS[model_size],
         "hardware_adaptation": (
-            f"A100 FA2; world size 8; microbatch {microbatch}; root.chunk=0; "
+            f"A100 FA2; world size {config['training']['world_size']}; microbatch {microbatch}; root.chunk={chunk}; "
             f"model={model_size}, chinchilla={chinchilla_multiplier}x"
         ),
     }
@@ -203,7 +219,14 @@ def generate_phase3(out_dir: Path, lrs: dict[str, float]) -> dict[str, list[dict
     return {"wave3a": entries}
 
 
-def generate_phase4(out_dir: Path, microbatch_520m: int) -> dict[str, list[dict]]:
+def generate_phase4(
+    out_dir: Path,
+    microbatch_520m: int,
+    *,
+    chunk_520m: int = 0,
+    host_workers_520m: int | None = None,
+    host_threads_520m: int | None = None,
+) -> dict[str, list[dict]]:
     lrs_520m = {
         "muon": 0.016,
         "muont": 0.02262741696,
@@ -221,6 +244,9 @@ def generate_phase4(out_dir: Path, microbatch_520m: int) -> dict[str, list[dict]
             lr=lrs_520m[arm_key],
             auxiliary_lr=0.0024,
             microbatch=microbatch_520m,
+            chunk=chunk_520m,
+            host_workers=host_workers_520m,
+            host_threads=host_threads_520m,
             chinchilla_multiplier=1,
             eval_every=500,
             checkpoint_every=2560,
@@ -239,6 +265,9 @@ def main() -> None:
     parser.add_argument("--lr-od-all", type=float, default=PINNED_130M_LR["od_all"])
     parser.add_argument("--lr-wt-mlp-lag", type=float, default=PINNED_130M_LR["wt_mlp_lag"])
     parser.add_argument("--microbatch-520m", type=int, default=2)
+    parser.add_argument("--chunk-520m", type=int, default=2)
+    parser.add_argument("--host-workers-520m", type=int, default=4)
+    parser.add_argument("--host-threads-520m", type=int, default=6)
     parser.add_argument("--phases", nargs="+", choices=("1", "2", "3", "4"), default=["1", "2", "3", "4"])
     args = parser.parse_args()
 
@@ -257,7 +286,15 @@ def main() -> None:
     if "3" in args.phases:
         manifest.update(generate_phase3(args.out, lrs))
     if "4" in args.phases:
-        manifest.update(generate_phase4(args.out, args.microbatch_520m))
+        manifest.update(
+            generate_phase4(
+                args.out,
+                args.microbatch_520m,
+                chunk_520m=args.chunk_520m,
+                host_workers_520m=args.host_workers_520m,
+                host_threads_520m=args.host_threads_520m,
+            )
+        )
     write_json(manifest_path, manifest)
     total_runs = sum(len(v) for v in manifest.values())
     print(f"Wrote {total_runs} run configs across {len(manifest)} waves to {args.out}")

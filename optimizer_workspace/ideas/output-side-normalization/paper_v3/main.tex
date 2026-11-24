@@ -1,0 +1,94 @@
+% Paper v3: Ground-up refinement of style, deductive logic, and visual hierarchy.
+% Build: pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+\ifdefined\pdftexversion\pdfoutput=1\fi
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, amsthm, mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{nicefrac}
+\usepackage{pifont}
+\usepackage[table]{xcolor}
+\usepackage[round]{natbib}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{xurl}
+\usepackage{paperstyle}
+
+\pagestyle{paper}
+\papershorttitle{Where Output-Cotangent Preconditioning Matters in Muon-Type Optimizers}
+\graphicspath{{figs/}}
+\urlstyle{tt}
+\interfootnotelinepenalty=10000
+
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.80}
+
+% Mathematical notation macros
+\newcommand{\Tr}{{\mathsf{T}}}
+\newcommand{\Nten}{\mathcal{N}_{10}}
+\newcommand{\unitrms}{\operatorname{unitRMS}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Diag}{\operatorname{Diag}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dm}{d_{\mathrm{model}}}
+\newcommand{\dff}{d_{\mathrm{ff}}}
+\newcommand{\Lsel}{\mathcal{L}_{\mathrm{sel}}}
+\newcommand{\Lc}{\mathcal{L}_{\mathrm{C4}}}
+\newcommand{\Lpal}{\mathcal{L}_{\mathrm{Paloma}}}
+
+% Consistent method names
+\newcommand{\mname}[1]{#1}
+\definecolor{colWT}{HTML}{1B4F9C}
+\definecolor{colOD}{HTML}{0E7C7B}
+\definecolor{colNull}{HTML}{C87D20}
+\definecolor{colBad}{HTML}{C0392B}
+\definecolor{rowtint}{HTML}{F2F6FC}
+
+\newcommand{\cmark}{\textcolor{colOD}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{colBad}{\ding{55}}}
+
+\title{Where Output-Cotangent Preconditioning Matters in Muon-Type Optimizers: Width-Thresholded Geometry and Asynchronous Execution}
+\author{Optimizer Research Team}
+\paperaffiliations{Preprint $\cdot$ Complete Reproducibility Archive: 168 Executed Training \& Benchmark Runs on $8\text{--}32\times\text{A100}$}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Orthogonalized-momentum optimizers (\mname{Muon}) benefit substantially from preconditioning on layer \emph{input} activation second moments (\mname{MuonT}), raising a foundational question: since a linear layer's weight gradient is $G = \sum \delta x^{\Tr}$, does preconditioning on \emph{output-cotangent} second moments $B = \E[\delta\delta^{\Tr}]$ provide complementary geometric signal in Transformer pretraining?
+Auditing all 11 input and output second moments across a 32-layer Transformer along unpreconditioned \mname{Muon}, input-whitened \mname{MuonT}, and active two-sided \mname{WT-MLP-Lag} trajectories reveals a sharp, optimizer-invariant role- and width-dependent dichotomy.
+Pre-SwiGLU MLP expansion outputs (\texttt{gate}, \texttt{up}, width $\dff = 4\dm$) concentrate $>91\%$ of their Frobenius energy and $78\%\text{--}91\%$ of their departure-from-identity anisotropy on the coordinate diagonal while consuming $96.2\%$ of dense $O(d^3)$ output eigendecomposition FLOPs; conversely, hidden-width outputs (\texttt{q}, \texttt{k}, \texttt{v}, \texttt{o}, \texttt{down}, width $\dm$)---especially residual-stream writers (\texttt{o}, \texttt{down}, $\le 1.0\%$ diagonal anisotropy)---are overwhelmingly rotational and drift up to $16\times$--$32\times$ faster in subspace than forward activations, triggering $3{,}714\times$ more post-warmup exact-eigendecomposition fallbacks along \mname{MuonT}.
+Guided by these two empirical laws, we propose \mname{WT-MLP-Lag}, which pairs dense \mname{MuonT} input whitening with \emph{width-thresholded} output preconditioning---dense spectral inverse roots $(-1/2,\,-1/8)$ at width $\dm$ and exact per-step diagonal scaling at width $\dff$---and hides critical-path cotangent reduction and root tracking behind the next step via a one-update asynchronous lag, grouped Triton backward capture, chunked row-buffer reuse, and non-blocking batched fallback eigendecompositions, reducing two-sided step-time overhead from $+39\%$ to $+6.8\%\text{--}8.2\%$ over \mname{Muon} across \texttt{130M} and \texttt{520M}, of which only $+3.3\%\text{--}5.3\%$ sits above input-only \mname{MuonT}.
+Across 168 archived runs (133 complete trainings and 35 matched timing benchmarks), matched execution-path null controls ($|\Delta\Lsel| = 0.0003$ nats) and full-budget learning-rate sweeps isolate genuine geometric improvements: against \mname{Muon}, \mname{WT-MLP-Lag} recovers $-0.0153$ held-out nats on all $3/3$ fresh post-selection seeds at \texttt{130M} ($2.68\text{B}$ tokens), $-0.0142$ held-out and $-0.0168$ 16-domain Paloma nats under $4\times$ Chinchilla overtraining ($80$ tokens/parameter, $10.74\text{B}$ tokens, $16/16$ domains won), and $-0.0093$ held-out and $-0.0089$ Paloma nats zero-shot at \texttt{520M} ($10.74\text{B}$ tokens, $15/16$ domains won)---adding a further $28\%$, $38\%$, and $43\%$ on top of what input-only \mname{MuonT} itself recovers, and beating tuned \mname{MuonT} directly by $-0.0034$, $-0.0040$, and $-0.0028$ nats. Purely diagonal output preconditioning (\mname{OD-All}) instead falls back onto \mname{MuonT} at \texttt{520M} while costing more than it.
+Counterfactual direction diagnostics verify that output factors act via $17^\circ$--$23^\circ$ subspace rotation rather than implicit step-size inflation ($-1.5\%$ direction norm), outperforming recent curvature-aware polar methods (\mname{GO-MUON}, \mname{Mousse}) at fixed token budgets while delineating the exact quality--wall-clock Pareto frontier.
+\end{abstract}
+
+\input{sections/01_intro}
+\input{sections/02_diagnosis}
+\input{sections/03_method}
+\input{sections/04_protocol}
+\input{sections/05_scaling}
+\input{sections/06_analysis}
+\input{sections/07_related_conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\clearpage
+\appendix
+\crefalias{section}{appendix}
+\input{sections/99_appendix}
+
+\end{document}

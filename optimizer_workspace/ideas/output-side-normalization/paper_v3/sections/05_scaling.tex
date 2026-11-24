@@ -1,0 +1,124 @@
+\section{Confirmatory and Scaling Results}
+\label{sec:scaling}
+
+With execution-path parity (\mname{Null-WT}) and full-budget learning-rate behavior established on \texttt{seed 0}, we evaluate our four core methods---\mname{Muon}, \mname{MuonT}, pure-diagonal \mname{OD-All}, and proposed \mname{WT-MLP-Lag}---on the frozen \texttt{fast\_lag} codebase across three orthogonal scaling axes:
+\textbf{(1)} strictly post-selection paired multi-seed replication (\texttt{130M}, $1\times$ Chinchilla, fresh \texttt{seeds 1, 2, 3}),
+\textbf{(2)} $4\times$ Chinchilla token-horizon overtraining (\texttt{130M}, $80$ TPP $= 10.74\text{B}$ tokens), and
+\textbf{(3)} $4\times$ non-embedding parameter / $2\times$ width scaling (\texttt{520M}, $d=1{,}024$, $10.74\text{B}$ tokens), plus a $1\text{M}$-token batch check.
+\Cref{tab:main_scaling} synthesizes all headline metrics across regimes.
+
+\begin{table}[t]
+  \centering
+  \caption{\textbf{Master confirmatory and scaling results across model sizes, token horizons, and evaluation suites} on the unified \texttt{fast\_lag} runner. $\Delta$ columns report differences relative to same-regime \mname{Muon} (negative means lower cross-entropy loss in nats); the penultimate column repeats the final-$\Lsel$ difference against same-regime \mname{MuonT}, the strongest prior method, since that is the comparison the method is designed to improve on. ``Late Mean $\Delta\Lsel$'' averages every evaluation checkpoint in the second half of training ($11$ per run) with checkpoint win counts in parentheses. ``Paloma 16-Dom.'' reports the unweighted macro mean across all 16 Paloma subsets with domain win counts vs.\ \mname{Muon}. ``Step (s), $\Delta t$'' across all four phases reports unified optimized steady-state mid-training benchmark latencies ($8\times\text{A100}$, $\text{mb}=4$ at \texttt{130M} [\Cref{tab:bench19}]; $32\times\text{A100}$ RDMA, $\text{mb}=2, \texttt{chunk}=2$ at \texttt{520M}, or $4.642 / 4.894 / 4.986 / 5.322\text{ s}$ on $1\times 8\text{ A100}$ [\Cref{tab:bench520m}]). $^\dagger$In Phase 2, pre-registered Gate 1 locked \mname{MuonT} to $0.016$ and \mname{OD-All}/\mname{WT-MLP-Lag} to $0.02263$ (conservative against \mname{WT-MLP-Lag}; mid-decay LRs therefore differ).}
+  \label{tab:main_scaling}
+  \vspace{2pt}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{@{}llrrrrrrr@{}}
+    \toprule
+    Regime \& Budget & Method & Matrix $\eta$ & Final $\Lsel$ ($\Delta$) & Late Mean $\Delta\Lsel$ (Wins) & Final $\Lc$ ($\Delta$) & Paloma 16-Dom.\ ($\Delta$, Wins) & $\Delta\Lsel$ vs.\ \mname{MuonT} & Step (s), $\Delta t$ \\
+    \midrule
+    \multicolumn{9}{@{}l}{\emph{Phase 1: \texttt{130M} $1\times$ Chinchilla ($20$ TPP, $2.68\text{B}$ tok, \texttt{seed 0}, matched LRs \& falsification control)}} \\
+    \multirow{3}{*}{Matched $0.016$}
+      & \mname{Muon}       & $0.01600$ & $3.2461$ ($+0.0000$) & $+0.0000$ (---)     & $3.4618$ ($+0.0000$) & --- & $+0.0119$ & $1.081$, $0.0\%$ \\
+      & \mname{MuonT}      & $0.01600$ & $3.2342$ ($-0.0119$) & $-0.0234$ ($11/11$) & $3.4511$ ($-0.0107$) & --- & $+0.0000$ & $1.097$, $+1.5\%$ \\
+      \rowcolor{rowtint}
+      & \textcolor{colWT}{\mname{WT-MLP-Lag}} & $0.01600$ & \textbf{3.2303} (\textbf{$-$0.0158}) & \textbf{$-$0.0281} (\textbf{11/11}) & \textbf{3.4472} (\textbf{$-$0.0146}) & --- & \textbf{$-$0.0038} & $1.155$, $+6.8\%$ \\
+    \addlinespace[2pt]
+    \multirow{5}{*}{Matched $0.0226$}
+      & \mname{Muon}       & $0.02263$ & $3.2524$ ($+0.0000$) & $+0.0000$ (---)     & $3.4675$ ($+0.0000$) & --- & $+0.0170$ & $1.081$, $0.0\%$ \\
+      & \mname{MuonT}      & $0.02263$ & $3.2354$ ($-0.0170$) & $-0.0301$ ($11/11$) & $3.4511$ ($-0.0163$) & --- & $+0.0000$ & $1.097$, $+1.5\%$ \\
+      & \mname{Null-WT}    & $0.02263$ & $3.2351$ ($-0.0173$) & $-0.0309$ ($11/11$) & $3.4506$ ($-0.0169$) & --- & $-0.0003$ & $1.231$, $+13.9\%$ \\
+      & \mname{OD-All}     & $0.02263$ & $3.2333$ ($-0.0191$) & $-0.0340$ ($11/11$) & $3.4489$ ($-0.0185$) & --- & $-0.0021$ & $1.121$, $+3.7\%$ \\
+      \rowcolor{rowtint}
+      & \textcolor{colWT}{\mname{WT-MLP-Lag}} & $0.02263$ & \textbf{3.2311} (\textbf{$-$0.0212}) & \textbf{$-$0.0348} (\textbf{11/11}) & \textbf{3.4491} (\textbf{$-$0.0184}) & --- & \textbf{$-$0.0043} & $1.155$, $+6.8\%$ \\
+    \midrule
+    \multicolumn{9}{@{}l}{\emph{Phase 2: \texttt{130M} $1\times$ Chinchilla ($20$ TPP, $2.68\text{B}$ tok, fresh paired \texttt{seeds 1, 2, 3}, mean $\pm$ SD)$^\dagger$}} \\
+      & \mname{Muon}       & $0.01600$ & $3.2035$ ($+0.0000$) & \multirow{4}{*}{\emph{diff.\ $\eta(t)$$^\dagger$}} & $3.4640$ ($+0.0000$) & $3.4164$ ($+0.0000$, ---)              & $+0.0119$ & $1.081$, $0.0\%$ \\
+      & \mname{MuonT}      & $0.01600$ & $3.1916$ ($-0.0119 \pm 0.0014$, $3/3$) & & $3.4523$ ($-0.0118$) & $3.4049$ ($-0.0115$, $3/3$)            & $+0.0000$ & $1.097$, $+1.5\%$ \\
+      & \mname{OD-All}     & $0.02263$ & $3.1911$ ($-0.0125 \pm 0.0014$, $3/3$) & & $3.4493$ ($-0.0147$) & $3.4040$ ($-0.0124$, $3/3$)            & $-0.0005$ & $1.121$, $+3.7\%$ \\
+      \rowcolor{rowtint}
+      & \textcolor{colWT}{\mname{WT-MLP-Lag}} & $0.02263$ & \textbf{3.1883} (\textbf{$-$0.0153 $\pm$ 0.0001}, \textbf{3/3}) & & \textbf{3.4488} (\textbf{$-$0.0153}) & \textbf{3.4009} (\textbf{$-$0.0155, 3/3}) & \textbf{$-$0.0034} & $1.155$, $+6.8\%$ \\
+    \midrule
+    \multicolumn{9}{@{}l}{\emph{Phase 3: \texttt{130M} $4\times$ Chinchilla Overtraining ($80$ TPP, $10.74\text{B}$ tok, $20{,}480$ steps, \texttt{seed 0}, matched $\eta = 0.016 \cdot 4^{-0.3}$)}} \\
+      & \mname{Muon}       & $0.01056$ & $3.0778$ ($+0.0000$) & $+0.0000$ (---)     & $3.2989$ ($+0.0000$) & $3.2479$ ($+0.0000$, ---)     & $+0.0103$ & $1.081$, $0.0\%$ \\
+      & \mname{MuonT}      & $0.01056$ & $3.0675$ ($-0.0103$) & $-0.0223$ ($11/11$) & $3.2886$ ($-0.0103$) & $3.2368$ ($-0.0111$, $15/16$) & $+0.0000$ & $1.097$, $+1.5\%$ \\
+      & \mname{OD-All}     & $0.01056$ & $3.0656$ ($-0.0122$) & $-0.0239$ ($11/11$) & $3.2861$ ($-0.0128$) & $3.2342$ ($-0.0137$, $16/16$) & $-0.0019$ & $1.121$, $+3.7\%$ \\
+      \rowcolor{rowtint}
+      & \textcolor{colWT}{\mname{WT-MLP-Lag}} & $0.01056$ & \textbf{3.0636} (\textbf{$-$0.0142}) & \textbf{$-$0.0268} (\textbf{11/11}) & \textbf{3.2848} (\textbf{$-$0.0141}) & \textbf{3.2312} (\textbf{$-$0.0168, 16/16}) & \textbf{$-$0.0040} & $1.155$, $+6.8\%$ \\
+    \midrule
+    \multicolumn{9}{@{}l}{\emph{Phase 4: \texttt{520M} $1\times$ Chinchilla Width Scaling ($20$ TPP, $10.74\text{B}$ tok, $1\text{M}$ batch, $d=1{,}024$, \texttt{seed 0}, official pinned $\eta$)}} \\
+      & \mname{Muon}       & $0.01600$ & $2.8528$ ($+0.0000$) & $+0.0000$ (---)    & $3.0769$ ($+0.0000$) & $3.0291$ ($+0.0000$, ---)     & $+0.0065$ & $1.322$, $0.0\%$ \\
+      & \mname{MuonT}      & $0.02263$ & $2.8463$ ($-0.0065$) & $-0.0019$ ($8/11$) & $3.0704$ ($-0.0065$) & $3.0256$ ($-0.0035$, $15/16$) & $+0.0000$ & $1.385$, $+4.8\%$ \\
+      & \mname{OD-All}     & $0.02263$ & $2.8469$ ($-0.0059$) & $-0.0013$ ($6/11$) & $3.0708$ ($-0.0061$) & $3.0261$ ($-0.0030$, $14/16$) & $+0.0006$ & $1.406$, $+6.4\%$ \\
+      \rowcolor{rowtint}
+      & \textcolor{colWT}{\mname{WT-MLP-Lag}} & $0.02263$ & \textbf{2.8435} (\textbf{$-$0.0092}) & \textbf{$-$0.0049} (\textbf{11/11}) & \textbf{3.0682} (\textbf{$-$0.0087}) & \textbf{3.0202} (\textbf{$-$0.0089, 15/16}) & \textbf{$-$0.0028} & $1.430$, $+8.2\%$ \\
+    \bottomrule
+  \end{tabular}%
+  }
+\end{table}
+
+\subsection{Post-Selection Paired Multi-Seed Confirmation at \texttt{130M}}
+\label{sec:phase2}
+
+Before launching fresh seeds in Phase 2, our pre-registered Phase 1 selection rule defaulted each arm to Marin's pinned learning rate ($0.016$ for \mname{Muon}; $0.02263$ for \mname{MuonT}, \mname{OD-All}, and \mname{WT-MLP-Lag}) unless another grid point improved final $\Lsel$ by $>0.0010$ nats.
+On \texttt{seed 0}, lowering $\eta$ to $0.016$ improved \mname{MuonT} by $-0.00123$ nats (virtually tied on C4 at $-0.00006$, reflecting a flat valley around $\eta \approx 0.018\text{--}0.020$) and \mname{WT-MLP-Lag} by $-0.00078$ nats.
+Because $-0.00123$ crossed the $0.0010$ threshold while $-0.00078$ fell just short, Gate 1 locked \mname{MuonT} to $0.016$ while keeping \mname{OD-All} and \mname{WT-MLP-Lag} at $0.02263$---imposing a strictly conservative handicap against \mname{WT-MLP-Lag}.
+
+Even against tuned \mname{MuonT} ($\eta = 0.016$) under this handicap, \mname{WT-MLP-Lag} wins all $3/3$ fresh post-selection seeds (\texttt{seeds 1, 2, 3}) across every evaluation benchmark (\Cref{tab:main_scaling}, \Cref{fig:scaling_traj}a):
+\begin{itemize}[leftmargin=1.5em, itemsep=1.5pt, topsep=2pt]
+  \item \textbf{Held-out mixture ($\Lsel$):} Paired $\Delta\Lsel = -0.01528 \pm 0.00007$ nats against \mname{Muon} ($3/3$ seeds), which adds $28\%$ beyond \mname{MuonT}'s own $-0.01191 \pm 0.00140$ gain over \mname{Muon}. Against tuned \mname{MuonT} directly, $-0.00337 \pm 0.00145$ nats ($-0.00287$, $-0.00223$, and $-0.00500$ across seeds $1, 2, 3$).
+  \item \textbf{External C4 ($\Lc$):} Paired $\Delta\Lc = -0.01529 \pm 0.00180$ nats against \mname{Muon} and $-0.00350 \pm 0.00083$ against \mname{MuonT} ($3/3$ seeds), matching our earlier 3-seed synchronous \mname{WT-MLP} pilot ($-0.00455 \pm 0.00148$ vs.\ untuned \mname{MuonT}) while cutting step-time overhead against \mname{MuonT} from $+22.5\%$ to $+5.3\%$ ($+6.8\%$ over \mname{Muon}).
+  \item \textbf{16-domain Paloma ($\Lpal$):} Paired macro $\Delta\Lpal = -0.01550 \pm 0.00154$ nats against \mname{Muon} and $-0.00401 \pm 0.00270$ against \mname{MuonT} ($-0.00435$, $-0.00115$, and $-0.00653$ across seeds; $3/3$ in both cases).
+\end{itemize}
+By contrast, pure-diagonal \mname{OD-All} reaches $-0.01246 \pm 0.00136$ on $\Lsel$ against \mname{Muon}---barely past \mname{MuonT}'s $-0.01191$---and once \mname{MuonT} is tuned to $\eta = 0.016$ it adds only $-0.00054 \pm 0.00050$ on $\Lsel$ and $-0.00089 \pm 0.00498$ on 16-domain Paloma ($2/3$ seeds) on top of it.
+Furthermore, doubling global batch size to $1\text{M}$ tokens ($2{,}560$ steps, $2.68\text{B}$ tokens) preserves the gain ($\Delta\Lsel = -0.00363$, $\Delta\Lc = -0.00396$).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig5_scaling_trajectories.pdf}
+  \caption{\textbf{Multi-seed confirmation, $4\times$ Chinchilla overtraining, and \texttt{520M} width scaling.}
+  \textbf{(a)} Across fresh paired \texttt{seeds 1, 2, 3} at \texttt{130M} ($2.68\text{B}$ tokens), paired loss reduction against same-seed \mname{Muon} for all three arms (individual seeds as open circles). \mname{WT-MLP-Lag} recovers $-0.0153$ to $-0.0155$ nats where input-only \mname{MuonT} recovers $-0.0115$ to $-0.0119$, and beats tuned \mname{MuonT} on $3/3$ seeds across $\Lsel$, $\Lc$, and 16-domain Paloma.
+  \textbf{(b, c)} Trajectories are plotted against same-regime \mname{MuonT} rather than \mname{Muon}, because the \mname{Muon} gap ($+10.3$ and $+6.5 \times 10^{-3}$, grey dashed) is large enough to compress the differences of interest to invisibility; \mname{Muon} is shown as a curve for scale. \textbf{(b)} Under $4\times$ Chinchilla overtraining ($80$ TPP, $10.74\text{B}$ tokens), matched-LR \mname{WT-MLP-Lag} beats \mname{MuonT} at all $11$ second-half checkpoints (shaded region, mean $-0.00444$ nats), whereas running $41\%$ hotter ($\sqrt{2}\times$, coral dotted curve) induces a transient mid-decay penalty that masks the geometric benefit.
+  \textbf{(c)} Scaling width $2\times$ to \texttt{520M} ($d=1{,}024$, $10.74\text{B}$ tokens, official pinned $\eta=0.02263$) leaves pure-diagonal \mname{OD-All} behind \mname{MuonT} ($+0.00058$ final, though still $-0.00588$ against \mname{Muon}), whereas \mname{WT-MLP-Lag} stays strictly below \mname{MuonT} at all $11$ second-half checkpoints (mean $-0.00309$ nats).}
+  \label{fig:scaling_traj}
+\end{figure}
+
+\subsection{Overtraining Horizon Scaling: $4\times$ Chinchilla ($80$ TPP, $10.74\text{B}$ Tokens)}
+\label{sec:phase3}
+
+A critical test for any preconditioner is whether its fixed-token advantage vanishes when a fixed model is heavily overtrained~\citep{kaddour2023nodata}.
+In Phase 3, we train \texttt{130M} for $20{,}480$ updates ($10.74\text{B}$ tokens $= 80.0$ non-embedding TPP), scaling both matrix and auxiliary learning rates by Marin's token-horizon power law $\eta(4T_0) = 4^{-0.3}\eta^*(T_0) \approx 0.6598\,\eta^*(T_0)$.
+
+\paragraph{Resolving an instructive $\sqrt{2}$ learning-rate confound.}
+Directly scaling Phase 2's asymmetric Gate-1 learning rates by $4^{-0.3}$ initially ran \mname{MuonT} at $\eta = 0.01056$ and \mname{OD-All}/\mname{WT-MLP-Lag} $41\%$ hotter at $\eta = 0.01493$ (Wave 3A; coral dotted curve in \Cref{fig:scaling_traj}b).
+In the overtrained $80$-TPP regime where optimal step sizes shift downward, running $41\%$ hotter penalized \mname{WT-MLP-Lag} by $+0.020$ nats mid-decay and left it $+0.0020$ nats behind cooler \mname{MuonT} at step $20{,}480$.
+Running the exact matched-LR follow-up at $\eta = 0.01056$ (Wave 3B; solid cobalt curve in \Cref{fig:scaling_traj}b) lowered \mname{WT-MLP-Lag}'s loss by $-0.00596$ nats ($3.06955 \to 3.06359$), revealing that overtraining to $80$ TPP does not diminish \mname{WT-MLP-Lag}'s advantage at all:
+at matched LR, \mname{WT-MLP-Lag} improves on \mname{Muon} by $-0.01423$ final $\Lsel$---adding $38\%$ beyond \mname{MuonT}'s own $-0.01028$---and on \mname{MuonT} by a further $-0.00395$; it wins every one of the $11$ second-half checkpoints against both (mean $\Delta\Lsel = -0.02682$ vs.\ \mname{Muon} and $-0.00444$ vs.\ \mname{MuonT}; $\Delta\Lc = -0.01407$ and $-0.00430$; dense per-step paired train $\Delta = -0.0041 \pm 0.00002$ against \mname{MuonT}), and wins all $16/16$ out-of-distribution Paloma domains against \mname{Muon} (macro $\Delta\Lpal = -0.01678$ nats) and against \mname{MuonT} (macro $-0.00566$; \Cref{fig:paloma}a)!
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig6_paloma_domains.pdf}
+  \caption{\textbf{Out-of-distribution generalization across all 16 Paloma benchmark domains.}
+  Horizontal bars connect pure-diagonal \mname{OD-All} ($\blacktriangle$) and width-thresholded \mname{WT-MLP-Lag} ($\bullet$) relative to same-regime matched-LR \mname{MuonT} (vertical dashed line at $0$); \mname{MuonT} is used as the reference here, rather than \mname{Muon}, so that the per-domain differences between the two output treatments remain visible. Against \mname{Muon}, \mname{WT-MLP-Lag} wins $16/16$ domains at $4\times$ (macro $-16.78 \times 10^{-3}$ nats) and $15/16$ at \texttt{520M} (macro $-8.93 \times 10^{-3}$).
+  \textbf{(a)} At \texttt{130M} $4\times$ Chinchilla ($80$ TPP, $10.74\text{B}$ tokens), \mname{WT-MLP-Lag} improves over \mname{MuonT} on every single domain ($16/16$, macro $\Delta = -5.66 \times 10^{-3}$ nats).
+  \textbf{(b)} At \texttt{520M} ($d=1{,}024$, $10.74\text{B}$ tokens), \mname{OD-All} scatters around zero ($6/16$ wins, $+0.47 \times 10^{-3}$ macro; it remains ahead of \mname{Muon}, just no longer ahead of \mname{MuonT}), whereas \mname{WT-MLP-Lag} wins $15/16$ domains (macro $\Delta = -5.45 \times 10^{-3}$ nats).}
+  \label{fig:paloma}
+\end{figure}
+
+\subsection{Width Scaling to \texttt{520M} ($d = 1{,}024$): Why Dense $\dm$ Geometry Matters}
+\label{sec:phase4}
+
+Phase 4 tests whether output-side preconditioning transfers zero-shot across a $4\times$ jump in non-embedding parameters ($2\times$ width: $\dm = 1{,}024, \dff = 4{,}096$, $799.6\text{M}$ total parameters) over $10.74\text{B}$ tokens ($1\text{M}$ batch, $10{,}240$ steps).
+To eliminate hyperparameter-tuning degrees of freedom, \mname{MuonT}, \mname{OD-All}, and \mname{WT-MLP-Lag} all run at Toner's exact official pinned \texttt{520M/1M} configuration ($\eta = 0.02263$, auxiliary LR $0.0024$, linear decay from step $0$).
+First, our $8\times\text{A100}$ baselines reproduce Toner's published H100 validation references to within $0.0005$ nats ($\Lc = 3.07694$ vs.\ ref $3.07648$ for \mname{Muon}; $3.07044$ vs.\ ref $3.07071$ for \mname{MuonT}).
+
+Second, \texttt{520M} delivers a decisive separation between purely diagonal and width-thresholded output geometry (\Cref{tab:main_scaling}, \Cref{fig:scaling_traj}c, \Cref{fig:paloma}b):
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, topsep=2pt]
+  \item \textbf{Pure-diagonal \mname{OD-All} loses its margin at $d = 1{,}024$:} its gain over \mname{Muon} falls to $-0.00588$ final $\Lsel$, short of \mname{MuonT}'s own $-0.00645$, so that against \mname{MuonT} it finishes slightly \emph{worse} on every metric ($\Delta\Lsel = +0.00058$, second-half mean $+0.00062$, $\Delta\Lc = +0.00041$, 16-domain Paloma $\Delta\Lpal = +0.00047$ with $6/16$ domains won). Its step-time overhead over \mname{Muon}, meanwhile, is $+6.4\%$ against \mname{MuonT}'s $+4.8\%$: strictly dominated (\Cref{fig:overview}b).
+  \item \textbf{\mname{WT-MLP-Lag} scales zero-shot across metrics and domains:} \mname{WT-MLP-Lag} achieves $\Lsel = 2.84354$, $-0.00925$ against \mname{Muon}---adding $43\%$ on top of \mname{MuonT}'s $-0.00645$---and $-0.00280$ against \mname{MuonT} itself. It wins all $11$ second-half checkpoints against both ($22/22$ total evaluations against \mname{Muon}; late mean $-0.00492$ vs.\ \mname{Muon} and $-0.00309$ vs.\ \mname{MuonT}), improves $\Lc$ by $-0.00871$ and $-0.00221$ respectively, and reaches $\Delta\Lpal = -0.00893$ nats over \mname{Muon} ($15/16$ domains) and $-0.00545$ over \mname{MuonT} ($15/16$ domains; only \texttt{Gab} is positive, where \mname{OD-All} degrades $+0.0112$).
+\end{itemize}
+This divergence directly confirms \Cref{sec:diagnosis}'s structural prediction: as residual width doubles from $512$ to $1{,}024$, coordinate-wise cotangent variance on residual writers (\texttt{out:o, down}) remains flat ($\mathrm{DiagAniso} < 1\%$), rendering diagonal output scaling vacuous while dense $\dm \times \dm$ spectral roots continue to capture cross-head and residual correlation structure.
+
+\begin{takeaway}[Scaling Behavior of Output-Cotangent Preconditioning]
+Measured against \mname{Muon}, width-thresholded \mname{WT-MLP-Lag} delivers $-0.0153$, $-0.0142$, and $-0.0093$ nats across fresh paired seeds (\texttt{130M}), $80$-TPP overtraining, and \texttt{520M} width scaling---adding a further $28\%$, $38\%$, and $43\%$ on top of what input-only \mname{MuonT} already recovers, and winning $16/16$ and $15/16$ Paloma domains---precisely where purely diagonal output scaling (\mname{OD-All}) loses its signal.
+\end{takeaway}

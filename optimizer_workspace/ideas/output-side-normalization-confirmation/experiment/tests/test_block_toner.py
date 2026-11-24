@@ -57,6 +57,10 @@ def test_arm_output_sides_partition_block_kinds():
         "inner_outer_mlpdiag_lag": (("q", "k", "v", "o", "down"), ("gate", "up")),
         "inner_outer_sym_mlpdiag": (("q", "k", "v", "o", "down"), ("gate", "up")),
         "inner_outer_sym_mlpdiag_lag": (("q", "k", "v", "o", "down"), ("gate", "up")),
+        "outer_leftdiag_upstream_fused": ((), ("q", "k", "v", "o", "gate", "up", "down")),
+        "null_leftdiag_upstream_fused": ((), ("q", "k", "v", "o", "gate", "up", "down")),
+        "outer_left_down": (("down",), ()),
+        "down_hybrid": (("down",), ()),
     }
     assert set(expected) == set(BLOCK_ARMS)
     for arm, (full, diagonal) in expected.items():
@@ -64,9 +68,16 @@ def test_arm_output_sides_partition_block_kinds():
         assert BLOCK_ARMS[arm].output_kinds(Side.DIAGONAL) == diagonal
         assert set(full) | set(diagonal) <= set(BLOCK_KINDS)
         assert not set(full) & set(diagonal)
-    # Only the null control withholds left factors; only outer_left_all drops the inner left factor.
-    assert [n for n, a in BLOCK_ARMS.items() if not a.apply_left] == ["null_all", "null_mlpdiag"]
-    assert [n for n, a in BLOCK_ARMS.items() if not a.apply_left_inner] == ["outer_left_all"]
+    assert [n for n, a in BLOCK_ARMS.items() if not a.apply_left] == [
+        "null_all",
+        "null_leftdiag_upstream_fused",
+        "null_mlpdiag",
+    ]
+    assert [n for n, a in BLOCK_ARMS.items() if not a.apply_left_inner] == [
+        "outer_leftdiag_upstream_fused",
+        "outer_left_all",
+        "outer_left_down",
+    ]
     # Lag is defined only against a dense output engine, since a diagonal side has no launch to hide.
     lagged = [n for n, a in BLOCK_ARMS.items() if a.lag_left]
     assert lagged == ["inner_outer_all_lag", "inner_outer_mlpdiag_lag", "inner_outer_sym_mlpdiag_lag"]
@@ -89,6 +100,10 @@ def test_arm_input_sides_partition_input_kinds():
         "inner_outer_mlpdiag_lag": (("attn", "o", "mlp", "down"), ()),
         "inner_outer_sym_mlpdiag": (("attn", "o", "mlp"), ("down",)),
         "inner_outer_sym_mlpdiag_lag": (("attn", "o", "mlp"), ("down",)),
+        "outer_leftdiag_upstream_fused": (("attn", "o", "mlp", "down"), ()),
+        "null_leftdiag_upstream_fused": (("attn", "o", "mlp", "down"), ()),
+        "outer_left_down": (("attn", "o", "mlp", "down"), ()),
+        "down_hybrid": (("attn", "o", "mlp"), ()),
     }
     assert set(expected_in) == set(BLOCK_ARMS)
     for arm, (full, diagonal) in expected_in.items():
@@ -441,3 +456,23 @@ def test_distributed_diagonal_moments_pool_all_rank_rows(tmp_path):
         state = torch.load(tmp_path / f"diagonal_{rank}.pt", weights_only=True)
         torch.testing.assert_close(state["moment"][3], torch.full((1, 3), 0.5 * (2 * 1 + 2 * 4) / 4))
         torch.testing.assert_close(state["moment"][4], torch.full((1, 4), 0.5 * (2 * 4 + 2 * 9) / 4))
+
+
+def test_chunked_diagonal_moments_match_unchunked():
+    g = torch.Generator().manual_seed(77)
+    full_rows = {"a": torch.randn(8, 6, generator=g).to(torch.bfloat16)}
+    full_mom = DiagonalMoments(
+        full_rows, decay=0.8, damping=0.001, inner_power=0.5, outer_power=0.125, rows_total=8, world=1, device="cpu"
+    )
+    full_mom.update()
+
+    chunk_buf = {"a": torch.zeros(4, 6, dtype=torch.bfloat16)}
+    chunk_mom = DiagonalMoments(
+        chunk_buf, decay=0.8, damping=0.001, inner_power=0.5, outer_power=0.125, rows_total=8, world=1, device="cpu"
+    )
+    chunk_buf["a"].copy_(full_rows["a"][:4])
+    chunk_mom.accum_chunk()
+    chunk_buf["a"].copy_(full_rows["a"][4:])
+    chunk_mom.update()
+    torch.testing.assert_close(chunk_mom.moment[6], full_mom.moment[6], rtol=1e-6, atol=1e-6)
+

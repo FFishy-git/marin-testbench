@@ -3,6 +3,7 @@
 
 """Keep Toner's fast input updates; specialize the down group or every block matrix."""
 
+import types
 from types import SimpleNamespace
 
 import torch
@@ -10,7 +11,14 @@ from reproduce.marin.optimizer import build_optimizers, fast_arguments
 from toner.fast import muon as MU
 from toner.fast.engine import FastTonerCore, gather_uneven
 
-from .block_toner import BLOCK_ARMS, BlockToner
+from .block_toner import (
+    BLOCK_ARMS,
+    BlockToner,
+    configure_numa_host_args,
+    finish_roots_batched,
+    prewarm_repair_shapes,
+    roots_2bit,
+)
 from .toner_state import engine_state, restore_engine
 
 
@@ -156,6 +164,30 @@ def build(model, config, output, *, positions, rows_per_microbatch, capacity, ro
         )
         return _with_auxiliary(model, config, fast)
     if output is None:
+        if config["optimizer"]["name"] in ("muont", "adamt"):
+            from toner.fast import roots
+
+            if config["statistics"]["damping"] != roots.EPS:
+                raise ValueError("This recorded fast backend requires damping=0.001")
+            args = fast_arguments(config)
+            args.toner_stats_ctas = int(config.get("root", {}).get("stats_ctas", 0))
+            args = configure_numa_host_args(args, device, role="input")
+            fast = FastTonerCore(
+                list(model.body.blocks),
+                dict(model.named_parameters()),
+                config["optimizer"]["name"],
+                hid=config["model"]["hidden"],
+                mlp=config["model"]["mlp"],
+                rows_total=rows_total,
+                args=args,
+                world=world,
+                rank=rank,
+                device=device,
+            )
+            fast._roots = types.MethodType(roots_2bit, fast)
+            fast._finish_roots = types.MethodType(finish_roots_batched, fast)
+            prewarm_repair_shapes(fast)
+            return _with_auxiliary(model, config, fast)
         return build_optimizers(model, config, rows_total=rows_total, world=world, rank=rank, device=device)
     fast = DownToner(model, config, output, rows_total=rows_total, world=world, rank=rank, device=device)
     return _with_auxiliary(model, config, fast)

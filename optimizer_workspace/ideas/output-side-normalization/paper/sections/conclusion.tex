@@ -1,34 +1,41 @@
 \section{Conclusion}
 
-We audited input and output-cotangent second moments across a baseline \muont{}
-trajectory, derived a $2\times 2$ family of asymmetric and symmetric
-width-thresholded two-sided updates, and evaluated \nOptimizerArms{} optimizer
-configurations across \nDistinctRuns{} distinct exploratory $2.68\text{B}$-token
-trajectories (\nRunDirs{} completed run directories), 28 short-schedule
-learning-rate trials, a 30-trial related-baseline study, and an isolated
-\confTotalRuns{}-run \texttt{fast\_lag} confirmation and scaling campaign
-spanning full-budget LR bracketing, three fresh post-selection seeds, $4\times$
-Chinchilla overtraining ($80$ TPP), $520\text{M}$ ($799.6\text{M}$ total) model
-scaling, and \confPalomaCount{} 16-domain Paloma evaluations.
+We audited input and output-cotangent second moments across \taxid{Muon},
+\taxid{MuonT}, and \taxid{WT-MLP-Lag} trajectories, derived a $2\times 2$ family
+of asymmetric and symmetric width-thresholded two-sided updates, and evaluated
+\nOptimizerArms{} optimizer configurations across \nDistinctRuns{} distinct
+exploratory $2.68\text{B}$-token trajectories (\nRunDirs{} completed run
+directories), 28 short-schedule learning-rate trials, a 30-trial
+related-baseline study, and an isolated \confTotalRuns{}-run \texttt{fast\_lag}
+confirmation and scaling campaign spanning full-budget LR bracketing, three
+fresh post-selection seeds, $4\times$ Chinchilla overtraining ($80$ TPP),
+$520\text{M}$ ($799.6\text{M}$ total) model scaling, and \confPalomaCount{}
+16-domain Paloma evaluations.
 
 Five findings define the scope and design of output-side normalization in
 Muon-type optimizers:
 \begin{enumerate}
 \item \textbf{Architectural covariance split and cotangent drift.}
-  Across all 32 layers and eight checkpoints ($0.13\text{B}$--$2.68\text{B}$
-  tokens) of baseline \muont{}, pre-SwiGLU width-2048 cotangents
-  (\texttt{gate}, \texttt{up}) are zero-mean Hadamard products whose
-  off-diagonal correlations sit on the sampling floor (median RMS
-  \motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
-  \motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
-  anisotropy on the diagonal (\motOutGateExpVarLMedPct\% and
-  \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$, rising to \mechOutGateExpVarLPct\%
-  and \mechOutUpExpVarLPct\% under active two-sided preconditioning), whereas
-  residual width-512 cotangents (\texttt{o}, \texttt{down}) are $>99\%$
-  rotational, post-SwiGLU width-2048 \texttt{in:down} retains $56.6\%$
-  off-diagonal anisotropy, and cotangent eigenspaces
-  drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed
-  inputs ($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact fallbacks).
+  Across all 32 layers of vanilla \taxid{Muon}, baseline \muont{} (eight
+  checkpoints, $0.13\text{B}$--$2.68\text{B}$ tokens), and active
+  \taxid{WT-MLP-Lag}, pre-SwiGLU width-2048 cotangents (\texttt{gate},
+  \texttt{up}) are zero-mean Hadamard products whose off-diagonal correlations
+  sit on the sampling floor (median RMS
+  \motWtOutGateCorrRmsMed{}--\motMuonOutGateCorrRmsMed{} and
+  \motMuonOutUpCorrRmsMed{}--\motWtOutUpCorrRmsMed{}), putting
+  \motMuonOutGateDiagAnisoMedPct\%--\motWtOutGateDiagAnisoMedPct\% and
+  \motMuonOutUpDiagAnisoMedPct\%--\motWtOutUpDiagAnisoMedPct\% of centered
+  anisotropy on the diagonal (\motOutGateExpVarLMedPct\%--\motMuonOutGateExpVarLMedPct\%
+  and \motOutUpExpVarLMedPct\%--\motMuonOutUpExpVarLMedPct\% of $\|L - I\|_F^2$,
+  with \motWtOutGateExpVarLMedPct\% and \motWtOutUpExpVarLMedPct\% on
+  \taxid{WT-MLP-Lag}), whereas residual width-512 cotangents (\texttt{o},
+  \texttt{down}) are $\ge 99\%$ rotational, post-SwiGLU width-2048
+  \texttt{in:down} retains
+  \motInDownOffdiagAnisoMedPct\%--\motMuonInDownOffdiagAnisoMedPct\%
+  off-diagonal anisotropy, and cotangent eigenspaces drift up to
+  $\motMuonDriftRatioOutVVsInAttn\times$--$\motDriftRatioOutVVsInAttn\times$
+  faster than RMSNormed inputs ($\motFbOutTotal{}$ versus $\motFbInTotal{}$
+  exact fallbacks along \taxid{MuonT}).
 \item \textbf{Width-thresholded complementarity, step rotation, and asymmetric
   training performance.}
   Output moments help on top of input whitening ($\mlpdiagsel{}$ nats held-out

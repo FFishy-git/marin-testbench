@@ -46,21 +46,26 @@ Three main findings structure the paper, centered on our $2\times 2$
 \begin{enumerate}
 \item \textbf{Hadamard decorrelation and cotangent drift explain why asymmetric
   width-thresholding and one-step lag fit transformers.}
-  Auditing all 352 input and cotangent EMA moments across 32 layers and eight
-  checkpoints ($0.13\text{B}$--$2.68\text{B}$ tokens) of a baseline
-  \taxid{MuonT} (\muont{}) trajectory shows that pre-SwiGLU width-2048
-  cotangents (\texttt{gate}, \texttt{up}) have off-diagonal correlations pinned
-  to the single-step sampling floor (median RMS \motOutGateCorrRmsMed{} and
-  \motOutUpCorrRmsMed{}), putting \motOutGateDiagAnisoMedPct\% and
-  \motOutUpDiagAnisoMedPct\% of centered moment anisotropy on the diagonal
-  (\motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L - I\|_F^2$),
+  Auditing all 352 input and cotangent EMA moments across 32 layers of vanilla
+  \taxid{Muon}, baseline \taxid{MuonT} (eight checkpoints,
+  $0.13\text{B}$--$2.68\text{B}$ tokens), and active \taxid{WT-MLP-Lag} shows
+  that pre-SwiGLU width-2048 cotangents (\texttt{gate}, \texttt{up}) have
+  off-diagonal correlations pinned to the single-step sampling floor across all
+  three trajectories (median RMS
+  \motWtOutGateCorrRmsMed{}--\motMuonOutGateCorrRmsMed{} and
+  \motMuonOutUpCorrRmsMed{}--\motWtOutUpCorrRmsMed{}), putting
+  \motMuonOutGateDiagAnisoMedPct\%--\motWtOutGateDiagAnisoMedPct\% and
+  \motMuonOutUpDiagAnisoMedPct\%--\motWtOutUpDiagAnisoMedPct\% of centered
+  moment anisotropy on the diagonal
+  (\motOutUpExpVarLMedPct\%--\motMuonOutGateExpVarLMedPct\% of $\|L - I\|_F^2$),
   whereas residual-stream width-512 cotangents (\texttt{o}, \texttt{down}) are
-  $>99\%$ rotational, post-SwiGLU width-2048 \texttt{in:down} retains $56.6\%$
-  off-diagonal anisotropy, and cotangent
-  eigenspaces drift $5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than
-  RMSNormed inputs, triggering $\motFbOutTotal{}$ exact eigendecomposition
-  fallbacks across eight GPUs versus $\motFbInTotal{}$ on inputs
-  (Section~\ref{sec:motivation}).
+  $\ge 99\%$ rotational, post-SwiGLU width-2048 \texttt{in:down} retains
+  \motInDownOffdiagAnisoMedPct\%--\motMuonInDownOffdiagAnisoMedPct\%
+  off-diagonal anisotropy, and cotangent eigenspaces drift up to
+  $\motMuonDriftRatioOutVVsInAttn\times$--$\motDriftRatioOutVVsInAttn\times$
+  faster than RMSNormed inputs, triggering $\motFbOutTotal{}$ exact
+  eigendecomposition fallbacks across eight GPUs versus $\motFbInTotal{}$ on
+  inputs along baseline \taxid{MuonT} (Section~\ref{sec:motivation}).
 
 \item \textbf{Output whitening complements input whitening through directional
   rotation; symmetric width-2048 diagonalization incurs an early training cost.}

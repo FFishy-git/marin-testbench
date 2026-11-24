@@ -2,11 +2,12 @@
 \label{sec:motivation}
 
 Before choosing which factors of \eqref{eq:family} to form or approximate, we
-ask a prior empirical question on the baseline \muont{} trajectory itself:
-\emph{what do the input second moments $C_t=\mathbb E[xx^{\Tr}]$ and the unused
-output-cotangent second moments $B_t=\mathbb E[\delta\delta^{\Tr}]$ actually
-look like across a transformer during training, and how fast do their
-eigenspaces move?}
+ask a prior empirical question across unpreconditioned, input-whitened, and
+two-sided preconditioned training: \emph{what do the input second moments
+$C_t=\mathbb E[xx^{\Tr}]$ and the output-cotangent second moments
+$B_t=\mathbb E[\delta\delta^{\Tr}]$ actually look like across a transformer, how
+fast do their eigenspaces move, and does active preconditioning alter that
+geometry?}
 
 In a standard Llama-style block with seven linear projections
 ($q,k,v,o,\text{gate},\text{up},\text{down}$), shared consumed activations yield
@@ -16,13 +17,25 @@ four input moments per layer (\texttt{in:attn} for $q,k,v$, \texttt{in:o}, and
 across $32$ layers), whereas distinct backward paths yield seven output moments
 per layer (\texttt{out:q}, \texttt{out:k}, \texttt{out:v}, \texttt{out:o}, and
 \texttt{out:down} at $d=512$; \texttt{out:gate} and \texttt{out:up} pre-SwiGLU
-at $d=2048$, for $224$ matrices). Setting $L=\hat L=I$ while running the pooled
-capture and cached-root machinery (\nullall{}, detailed in
-Section~\ref{sec:method-controls}) executes pure input-side \muont{} updates
-while recording all $352$ FP32 EMA moments ($\beta=0.938$, $N_t=36{,}608$
-sampled tokens per update) and their cached eigenbases every $250$ updates
-across the full $2.68\text{B}$-token ($5{,}120$-update) trajectory, completely
-unconfounded by output preconditioning.
+at $d=2048$, for $224$ matrices). To separate architectural invariants from
+optimizer-induced adaptation, we audit all $352$ full $d\times d$ FP32 EMA
+moments ($\beta=0.938$, $N_t=36{,}608$ sampled tokens per update) on three
+matched seed-$0$, $0.5\text{M}$-token trajectories: (i)~vanilla \taxid{Muon}
+(\texttt{wave0/muon}, $\eta=0.016$), replayed passively for $500$ updates from
+the saved update-$2{,}000$ checkpoint through updates $2{,}250$ and $2{,}500$
+with exact zero loss and weight divergence ($\beta^{250}=1.1\times 10^{-7}$ and
+$\beta^{500}=1.3\times 10^{-14}$ residual initialization weight); (ii)~baseline
+input-side \taxid{MuonT} (\nullall{}, $\eta=0.0226$, $L=\hat L=I$,
+Section~\ref{sec:method-controls}), which records all $352$ moments and cached
+eigenbases every $250$ updates across the full $2.68\text{B}$-token
+($5{,}120$-update) trajectory without output preconditioning; and (iii)~active
+width-thresholded two-sided \taxid{WT-MLP-Lag} (\mlpdiaglag{}, $\eta=0.0226$,
+abbreviated \taxid{WT} in Table~\ref{tab:motivation}), replayed for $500$
+updates from update $2{,}000$ through $2{,}250$ and $2{,}500$ on the
+\texttt{fast\_lag} runner while passively recording full $2048\times 2048$
+\texttt{out:gate,up} matrices alongside the active dense groups (matching the
+active 1D diagonal accumulators to $\le 4.0\times 10^{-5}$ relative $\ell_2$
+error across all eight ranks).
 
 \subsection{Both sides are ill-conditioned, but their anisotropy lives in different coordinates}
 \label{sec:mot-aniso}
@@ -70,94 +83,134 @@ complementary quantities:
 
 \begin{table}[t]
 \centering
-\caption{Motivating covariance and subspace-drift audit of baseline input-side
-\muont{} (\nullall{}, $L=\hat L=I$, $352$ FP32 EMA matrices across all $32$
-layers). Columns $1$--$6$ report $32$-layer medians at mid-training (update
-$2{,}500$, $1.31\text{B}$ tokens) so boundary layers $\text{L0}$--$\text{L3}$ do
-not distort bulk summaries; $32$-layer means and $8$-checkpoint trajectory
-averages ($0.13\text{B}$--$2.68\text{B}$ tokens) are reported in the text and
-plotted in Figure~\ref{fig:motivation}. The final column ($\mathrm{Drift}_{16}$)
-is the $32$-layer mean $250$-update top-$16$ Grassmann subspace drift between
-updates $2{,}250$ and $2{,}500$ (Section~\ref{sec:mot-drift}).}
+\caption{Motivating covariance and subspace-drift audit across three
+trajectories ($352$ FP32 EMA matrices across all $32$ layers per checkpoint):
+unpreconditioned \taxid{Muon} (\texttt{wave0/muon}), baseline input-whitened
+\taxid{MuonT} (\nullall{}, $L=\hat L=I$), and active width-thresholded two-sided
+\taxid{WT-MLP-Lag} (\taxid{WT}, \mlpdiaglag{}). Metric groups $1$--$6$ report
+$32$-layer medians at mid-training (update $2{,}500$, $1.31\text{B}$ tokens) so
+boundary layers $\text{L0}$--$\text{L3}$ do not distort bulk summaries; the
+final group ($\mathrm{Drift}_{16}$) reports the $32$-layer mean $250$-update
+top-$16$ Grassmann subspace drift between updates $2{,}250$ and $2{,}500$
+(Section~\ref{sec:mot-drift}). Eight-checkpoint full-trajectory series
+($0.13\text{B}$--$2.68\text{B}$ tokens) for baseline \taxid{MuonT} appear in
+Figure~\ref{fig:motivation}.}
 \label{tab:motivation}
-\footnotesize\setlength{\tabcolsep}{4.8pt}
+\footnotesize\setlength{\tabcolsep}{2.2pt}
 \resizebox{\textwidth}{!}{\input{results/table_motivation}}
 \end{table}
 
 Table~\ref{tab:motivation} and Figure~\ref{fig:motivation} (top row and
-bottom-left) expose three distinct covariance regimes that persist across the
-entire $2.68\text{B}$-token training run:
+bottom-left) expose three distinct covariance regimes that hold across all three
+optimizer trajectories (\taxid{Muon} / \taxid{MuonT} / \taxid{WT-MLP-Lag}) and
+persist across the entire $2.68\text{B}$-token training run:
 
 \begin{itemize}
 \item \textbf{Width-2048 pre-SwiGLU cotangents (\texttt{out:gate},
-  \texttt{out:up}) are coordinate-anisotropic and off-diagonally decorrelated.}
-  Across the $32$ layers at update $2{,}500$, $B_{\text{gate}}$ and
-  $B_{\text{up}}$ concentrate \motOutGateDiagEMedPct\% and
-  \motOutUpDiagEMedPct\% of $\|B\|_F^2$ on their diagonal ($32$-layer means
-  \motOutGateDiagEMeanPct\% and \motOutUpDiagEMeanPct\%). Their median
-  off-diagonal correlation RMS is \motOutGateCorrRmsMed{} and
-  \motOutUpCorrRmsMed{} (bulk Layers $4$--$31$ means:
+  \texttt{out:up}) are coordinate-anisotropic and off-diagonally decorrelated
+  across all three optimizers.}
+  At update $2{,}500$, $B_{\text{gate}}$ and $B_{\text{up}}$ concentrate
+  \motMuonOutGateDiagEMedPct\% / \motOutGateDiagEMedPct\% /
+  \motWtOutGateDiagEMedPct\% and \motMuonOutUpDiagEMedPct\% /
+  \motOutUpDiagEMedPct\% / \motWtOutUpDiagEMedPct\% of $\|B\|_F^2$ on their
+  diagonal (\taxid{Muon} / \taxid{MuonT} / \taxid{WT}; \taxid{MuonT} $32$-layer
+  means \motOutGateDiagEMeanPct\% and \motOutUpDiagEMeanPct\%). Their median
+  off-diagonal correlation RMS is \motMuonOutGateCorrRmsMed{} /
+  \motOutGateCorrRmsMed{} / \motWtOutGateCorrRmsMed{} on \texttt{out:gate} and
+  \motMuonOutUpCorrRmsMed{} / \motOutUpCorrRmsMed{} / \motWtOutUpCorrRmsMed{} on
+  \texttt{out:up} (\taxid{MuonT} bulk Layers $4$--$31$ means:
   \motOutGateBulkCorrRmsMean{} and \motOutUpBulkCorrRmsMean{}; $8$-checkpoint
   trajectory medians: \motOutGateTrajCorrRmsMed{} and
   \motOutUpTrajCorrRmsMed{}), sitting directly on the single-update sampling
-  noise floor $N_t^{-1/2} = \motNoiseFloorCorrRms{}$ from $0.13\text{B}$ to
-  $2.68\text{B}$ tokens (Figure~\ref{fig:motivation}, bottom-left). Crucially,
-  after subtracting $I_d$, \motOutGateDiagAnisoMedPct\% and
-  \motOutUpDiagAnisoMedPct\% of $\|\tilde B - I_d\|_F^2$ still resides on the
-  diagonal (bulk medians \motOutGateBulkDiagAnisoMedPct\% and
-  \motOutUpBulkDiagAnisoMedPct\%; $32$-layer means \motOutGateDiagAnisoMeanPct\%
-  and \motOutUpDiagAnisoMeanPct\%), because individual MLP channels exhibit
-  large variance spread: mean $\mathrm{CV}_{\diag}$ is \motOutGateDiagCvMean{}
-  and \motOutUpDiagCvMean{} (growing from \motOutGateEarlyCvMean{} at update
-  $250$ to a peak of \motOutGatePeakCvMean{} at update $3{,}500$), with
-  max-to-mean channel ratios averaging $\motOutGateDiagMaxMean\times$ and
-  $\motOutUpDiagMaxMean\times$ and reaching $\motOutGateDiagMaxPeak\times$ and
-  $\motOutUpDiagMaxPeak\times$ in boundary blocks. Consequently, exact diagonal
-  roots $L_{\diag}$ align with dense $L=A^{-1/2}$ at median cosine
-  \motOutGateCosLMed{} and \motOutUpCosLMed{} and explain
-  \motOutGateExpVarLMedPct\% and \motOutUpExpVarLMedPct\% of $\|L-I_d\|_F^2$
-  (means \motOutGateExpVarLMeanPct\% and \motOutUpExpVarLMeanPct\%; trajectory
+  noise floor $N_t^{-1/2} = \motNoiseFloorCorrRms{}$ whether or not inputs or
+  outputs are preconditioned (Figure~\ref{fig:motivation}, bottom-left).
+  Crucially, after subtracting $I_d$, \motMuonOutGateDiagAnisoMedPct\% /
+  \motOutGateDiagAnisoMedPct\% / \motWtOutGateDiagAnisoMedPct\% and
+  \motMuonOutUpDiagAnisoMedPct\% / \motOutUpDiagAnisoMedPct\% /
+  \motWtOutUpDiagAnisoMedPct\% of $\|\tilde B - I_d\|_F^2$ still resides on the
+  diagonal (\taxid{MuonT} bulk medians \motOutGateBulkDiagAnisoMedPct\% and
+  \motOutUpBulkDiagAnisoMedPct\%, $32$-layer means \motOutGateDiagAnisoMeanPct\%
+  and \motOutUpDiagAnisoMeanPct\%). On baseline \taxid{MuonT}, mean
+  $\mathrm{CV}_{\diag}$ is \motOutGateDiagCvMean{} and \motOutUpDiagCvMean{}
+  (growing from \motOutGateEarlyCvMean{} at update $250$ to
+  \motOutGatePeakCvMean{} at update $3{,}500$, with max-to-mean channel ratios
+  averaging $\motOutGateDiagMaxMean\times$ and $\motOutUpDiagMaxMean\times$ and
+  reaching $\motOutGateDiagMaxPeak\times$ and $\motOutUpDiagMaxPeak\times$ in
+  boundary blocks); under active \taxid{WT-MLP-Lag}, inline diagonal output
+  normalization induces zero off-diagonal coupling while deepening per-channel
+  variance specialization (median $\mathrm{CV}_{\diag}$ rising from
+  \motMuonOutGateDiagCvMed{} / \motOutGateDiagCvMed{} to
+  \motWtOutGateDiagCvMed{} on \texttt{out:gate} and from
+  \motMuonOutUpDiagCvMed{} / \motOutUpDiagCvMed{} to \motWtOutUpDiagCvMed{} on
+  \texttt{out:up}). Exact diagonal roots $L_{\diag}$ align with dense
+  $L=A^{-1/2}$ at median cosine \motMuonOutGateCosLMed{} / \motOutGateCosLMed{}
+  / \motWtOutGateCosLMed{} and \motMuonOutUpCosLMed{} / \motOutUpCosLMed{} /
+  \motWtOutUpCosLMed{}, explaining \motMuonOutGateExpVarLMedPct\% /
+  \motOutGateExpVarLMedPct\% / \motWtOutGateExpVarLMedPct\% and
+  \motMuonOutUpExpVarLMedPct\% / \motOutUpExpVarLMedPct\% /
+  \motWtOutUpExpVarLMedPct\% of $\|L-I_d\|_F^2$ (\taxid{MuonT} trajectory
   averages \motOutGateTrajExpVarLMedPct\% and \motOutUpTrajExpVarLMedPct\%),
-  whereas omitting preconditioning ($L=I_d$) incurs more than double the
-  relative error (\motOutGateDropErrLMean{} and \motOutUpDropErrLMean{} versus
-  \motOutGateRelErrLMean{} and \motOutUpRelErrLMean{}).
+  whereas omitting preconditioning ($L=I_d$) on \taxid{MuonT} incurs more than
+  double the relative error (\motOutGateDropErrLMean{} and
+  \motOutUpDropErrLMean{} versus \motOutGateRelErrLMean{} and
+  \motOutUpRelErrLMean{}).
 
 \item \textbf{Width-512 residual-stream cotangents (\texttt{out:o},
-  \texttt{out:down}) are $>99\%$ rotational.} Because \texttt{o} and
-  \texttt{down} add directly into the shared residual stream, their per-channel
-  cotangent variances are nearly uniform ($\mathrm{CV}_{\diag} = \motOutODiagCvMed{}$
-  and $\motOutDownDiagCvMed{}$ median, $\motOutODiagCvMean{}$ and
-  $\motOutDownDiagCvMean{}$ mean). Although raw $\mathrm{DiagE}$ appears high
-  (\motOutODiagEMedPct\% and \motOutDownDiagEMedPct\%) due to a large isotropic
-  floor ($\mathrm{erank}/d = \motOutOErankMedPct\%$ and
-  $\motOutDownErankMedPct\%$), subtracting $I_d$ collapses
-  $\mathrm{DiagAniso}$ to \motOutODiagAnisoMedPct\% and
-  \motOutDownDiagAnisoMedPct\% across the entire trajectory
+  \texttt{out:down}) are $\ge 99\%$ rotational under every trajectory.} Because
+  \texttt{o} and \texttt{down} add directly into the shared residual stream,
+  their per-channel cotangent variances remain nearly uniform across all three
+  optimizers ($\mathrm{CV}_{\diag} = \motMuonOutODiagCvMed{} /
+  \motOutODiagCvMed{} / \motWtOutODiagCvMed{}$ on \texttt{out:o} and
+  $\motMuonOutDownDiagCvMed{} / \motOutDownDiagCvMed{} /
+  \motWtOutDownDiagCvMed{}$ on \texttt{out:down}). Although raw $\mathrm{DiagE}$
+  appears high (\motMuonOutODiagEMedPct\% / \motOutODiagEMedPct\% /
+  \motWtOutODiagEMedPct\% and \motMuonOutDownDiagEMedPct\% /
+  \motOutDownDiagEMedPct\% / \motWtOutDownDiagEMedPct\%) due to a large
+  isotropic floor ($\mathrm{erank}/d = \motWtOutDownErankMedPct\%$--$\motOutOErankMedPct\%$),
+  subtracting $I_d$ collapses $\mathrm{DiagAniso}$ to
+  \motMuonOutODiagAnisoMedPct\% / \motOutODiagAnisoMedPct\% /
+  \motWtOutODiagAnisoMedPct\% and \motMuonOutDownDiagAnisoMedPct\% /
+  \motOutDownDiagAnisoMedPct\% / \motWtOutDownDiagAnisoMedPct\%
   (Figure~\ref{fig:motivation}, top-right), and $L_{\diag}$ explains only
-  \motOutOExpVarLMedPct\% and \motOutDownExpVarLMedPct\% of $\|L-I_d\|_F^2$
-  (means \motOutOExpVarLMeanPct\% and \motOutDownExpVarLMeanPct\%). Attention
-  cotangents sit between these extremes: \texttt{out:q} and \texttt{out:k} carry
-  substantial head/RoPE coordinate spread ($R^2 = \motOutQExpVarLMedPct\%$ and
-  $\motOutKExpVarLMedPct\%$), while \texttt{out:v} is predominantly rotational
-  ($R^2 = \motOutVExpVarLMedPct\%$).
+  \motMuonOutOExpVarLMedPct\% / \motOutOExpVarLMedPct\% /
+  \motWtOutOExpVarLMedPct\% and \motMuonOutDownExpVarLMedPct\% /
+  \motOutDownExpVarLMedPct\% / \motWtOutDownExpVarLMedPct\% of $\|L-I_d\|_F^2$.
+  Attention cotangents sit between these extremes on every run: \texttt{out:q}
+  and \texttt{out:k} carry substantial head/RoPE coordinate spread ($R^2 =
+  \motMuonOutQExpVarLMedPct\% / \motOutQExpVarLMedPct\% /
+  \motWtOutQExpVarLMedPct\%$ and $\motMuonOutKExpVarLMedPct\% /
+  \motOutKExpVarLMedPct\% / \motWtOutKExpVarLMedPct\%$), while \texttt{out:v}
+  remains predominantly rotational ($R^2 = \motMuonOutVExpVarLMedPct\% /
+  \motOutVExpVarLMedPct\% / \motWtOutVExpVarLMedPct\%$).
 
-\item \textbf{Right-input moments ($C_t$) are strongly coupled off-diagonal,
-  including at width 2048.} Preceded by RMSNorm or attention mixing, width-$512$
-  inputs (\texttt{in:attn}, \texttt{in:o}, \texttt{in:mlp}) have low effective
-  rank ($\motInAttnErankMedPct\%$--$\motInMlpErankMedPct\%$), strong
-  cross-channel correlations ($\rho_{\mathrm{rms}} = \motInMlpCorrRmsMed{}$--$\motInOCorrRmsMed{}$,
-  $30\times$--$40\times$ above \texttt{out:gate}), and only
-  $\motInMlpDiagAnisoMedPct\%$--$\motInODiagAnisoMedPct\%$ centered diagonal
-  anisotropy ($98\%$--$99\%$ off-diagonal). Even at width $2048$, post-SwiGLU
-  \texttt{in:down} behaves quite differently from pre-SwiGLU \texttt{out:gate}
-  and \texttt{out:up}: despite massive neuron scale spread (mean
-  $\mathrm{CV}_{\diag}$ growing from \motInDownEarlyCvMean{} to
-  \motInDownFinalCvMean{}, giving high $R^2(A^{-1/2}) = \motInDownExpVarLMedPct\%$
-  alongside coordinate variance heterogeneity), its $\mathrm{erank}/d$ is only
-  \motInDownErankMedPct\%, $\rho_{\mathrm{rms}}$ is \motInDownCorrRmsMed{}
-  ($6.8\times$ \texttt{out:gate}'s RMS, or $46\times$ higher correlation energy
-  per coordinate), and $56.6\%$ of $\|\tilde C_{\text{down}}-I_d\|_F^2$ lies off
-  the diagonal ($\mathrm{DiagAniso} = \motInDownDiagAnisoMedPct\%$).
+\item \textbf{Right-input moments ($C_t$) are strongly coupled off-diagonal on
+  every trajectory, including at width 2048.} Preceded by RMSNorm, width-$512$
+  \texttt{in:attn} and \texttt{in:mlp} carry only
+  $\motWtInMlpDiagAnisoMedPct\%$--$\motMuonInAttnDiagAnisoMedPct\%$ centered
+  diagonal anisotropy across all three runs ($98.6\%$--$99.3\%$ off-diagonal;
+  attention-mixed \texttt{in:o} sits at \motMuonInODiagAnisoMedPct\% on
+  \taxid{Muon} and \motInODiagAnisoMedPct\% / \motWtInODiagAnisoMedPct\% under
+  input whitening), while active right-input whitening sharpens activation rank
+  (\texttt{in:attn} $\mathrm{erank}/d$: \motMuonInAttnErankMedPct\% on
+  \taxid{Muon} versus \motInAttnErankMedPct\% / \motWtInAttnErankMedPct\% on
+  \taxid{MuonT} / \taxid{WT}) and strengthens cross-channel correlations
+  ($\rho_{\mathrm{rms}}$: \motMuonInAttnCorrRmsMed{} versus
+  \motInAttnCorrRmsMed{} / \motWtInAttnCorrRmsMed{}, $30\times$--$43\times$
+  above \texttt{out:gate}). At width $2048$, post-SwiGLU \texttt{in:down}
+  behaves starkly differently from pre-SwiGLU \texttt{out:gate,up} across all
+  three trajectories: even on vanilla \taxid{Muon} where coordinate scale spread
+  is moderate ($\mathrm{CV}_{\diag} = \motMuonInDownDiagCvMed{}$, versus
+  \motInDownDiagCvMed{} on \taxid{MuonT} and \motWtInDownDiagCvMed{} on
+  \taxid{WT}, with \taxid{MuonT} mean $\mathrm{CV}_{\diag}$ growing from
+  \motInDownEarlyCvMean{} to \motInDownFinalCvMean{}), $\rho_{\mathrm{rms}}$ is
+  \motMuonInDownCorrRmsMed{} / \motInDownCorrRmsMed{} / \motWtInDownCorrRmsMed{}
+  ($5.1\times$--$7.5\times$ \texttt{out:gate}'s RMS), and the majority of
+  $\|\tilde C_{\text{down}}-I_d\|_F^2$ lies off the diagonal on every run
+  (\motMuonInDownOffdiagAnisoMedPct\% off-diagonal on \taxid{Muon},
+  \motInDownOffdiagAnisoMedPct\% on \taxid{MuonT}, and
+  \motWtInDownOffdiagAnisoMedPct\% on \taxid{WT-MLP-Lag}, despite high Frobenius
+  root scores $R^2(A^{-1/2}) = \motMuonInDownExpVarLMedPct\% /
+  \motInDownExpVarLMedPct\% / \motWtInDownExpVarLMedPct\%$).
 \end{itemize}
 
 \begin{finding}[Hadamard decorrelation explains the pre- versus post-SwiGLU split at width 2048]
@@ -313,9 +366,9 @@ was engineered for forward activations $x_t$, which are stabilized by RMSNorm.
 Backward cotangents $\delta_t$ enjoy no such normalization and depend on
 changing downstream weights and token-level loss residuals.
 
-To quantify how fast the two sides rotate along the \muont{} trajectory, we
-measure the top-$k$ Grassmann subspace drift between consecutive checkpoints
-$\Delta t = 250$ updates apart,
+To quantify how fast the two sides rotate across \taxid{Muon}, \taxid{MuonT},
+and \taxid{WT-MLP-Lag}, we measure the top-$k$ Grassmann subspace drift between
+consecutive checkpoints $\Delta t = 250$ updates apart,
 \begin{equation}
 \label{eq:grassmann}
 \mathrm{Drift}_k(t_1, t_2)
@@ -323,20 +376,37 @@ $\Delta t = 250$ updates apart,
 \end{equation}
 where $V_{1:k}(t)\in\mathbb R^{d\times k}$ spans the $k$ principal eigenvectors
 of $\tilde M_t$. Across all $32$ layers between updates $2{,}250$ and $2{,}500$
-(last column of Table~\ref{tab:motivation}), RMSNormed input subspaces barely
-move: $\mathrm{Drift}_{16}$ is \motInAttnDriftTopSixteenMean{} on
-\texttt{in:attn} and \motInMlpDriftTopSixteenMean{} on \texttt{in:mlp}
-($\mathrm{Drift}_{32} = \motInAttnDriftTopThirtyTwoMean{}$ and
-$\motInMlpDriftTopThirtyTwoMean{}$), and \motInODriftTopSixteenMean{}--\motInDownDriftTopSixteenMean{}
-on \texttt{in:o} and \texttt{in:down}. Left-cotangent subspaces rotate
-$5\times$ to $\motDriftRatioOutVVsInAttn\times$ faster:
-$\mathrm{Drift}_{16}$ reaches \motOutQDriftTopSixteenMean{} and
-\motOutKDriftTopSixteenMean{} on \texttt{out:q} and \texttt{out:k},
-\motOutUpDriftTopSixteenMean{} and \motOutGateDriftTopSixteenMean{} on
-\texttt{out:up} and \texttt{out:gate} ($\motDriftRatioOutUpVsInAttn\times$ and
-$\motDriftRatioOutGateVsInAttn\times$ \texttt{in:attn}), and
-\motOutVDriftTopSixteenMean{} on \texttt{out:v} ($\mathrm{Drift}_{32} = \motOutVDriftTopThirtyTwoMean{}$).
-The same gap holds in early training (updates $250\to 500$:
+(last column group of Table~\ref{tab:motivation}), RMSNormed input subspaces
+move slowly even on unpreconditioned \taxid{Muon} ($\mathrm{Drift}_{16} =
+\motMuonInAttnDriftTopSixteenMean{}$ on \texttt{in:attn} and
+$\motMuonInMlpDriftTopSixteenMean{}$ on \texttt{in:mlp}) and halve in drift
+once right-input whitening is active: $\mathrm{Drift}_{16}$ drops to
+\motInAttnDriftTopSixteenMean{} / \motWtInAttnDriftTopSixteenMean{} on
+\texttt{in:attn} and \motInMlpDriftTopSixteenMean{} /
+\motWtInMlpDriftTopSixteenMean{} on \texttt{in:mlp} (\taxid{MuonT} /
+\taxid{WT}; $\mathrm{Drift}_{32} = \motInAttnDriftTopThirtyTwoMean{}$ and
+$\motInMlpDriftTopThirtyTwoMean{}$ on \taxid{MuonT}), while \texttt{in:o} and
+\texttt{in:down} sit at \motMuonInODriftTopSixteenMean{} /
+\motInODriftTopSixteenMean{} / \motWtInODriftTopSixteenMean{} and
+\motMuonInDownDriftTopSixteenMean{} / \motInDownDriftTopSixteenMean{} /
+\motWtInDownDriftTopSixteenMean{}. Left-cotangent subspaces rotate an order of
+magnitude faster across all three trajectories: $\mathrm{Drift}_{16}$ reaches
+\motMuonOutQDriftTopSixteenMean{} / \motOutQDriftTopSixteenMean{} /
+\motWtOutQDriftTopSixteenMean{} on \texttt{out:q} and
+\motMuonOutKDriftTopSixteenMean{} / \motOutKDriftTopSixteenMean{} /
+\motWtOutKDriftTopSixteenMean{} on \texttt{out:k}, slows from
+\motMuonOutUpDriftTopSixteenMean{} and \motMuonOutGateDriftTopSixteenMean{}
+(\taxid{Muon}) to \motOutUpDriftTopSixteenMean{} and
+\motOutGateDriftTopSixteenMean{} (\taxid{MuonT}, $\motDriftRatioOutUpVsInAttn\times$
+and $\motDriftRatioOutGateVsInAttn\times$ \texttt{in:attn}) and
+\motWtOutUpDriftTopSixteenMean{} and \motWtOutGateDriftTopSixteenMean{} under
+active \taxid{WT-MLP-Lag}, and peaks on \texttt{out:v} at
+\motMuonOutVDriftTopSixteenMean{} / \motOutVDriftTopSixteenMean{} /
+\motWtOutVDriftTopSixteenMean{} ($\motMuonDriftRatioOutVVsInAttn\times$,
+$\motDriftRatioOutVVsInAttn\times$, and $\motWtDriftRatioOutVVsInAttn\times$
+\texttt{in:attn} on \taxid{Muon}, \taxid{MuonT}, and \taxid{WT-MLP-Lag};
+\taxid{MuonT} $\mathrm{Drift}_{32} = \motOutVDriftTopThirtyTwoMean{}$).
+Along the full \taxid{MuonT} trajectory, the same gap holds in early training (updates $250\to 500$:
 \motOutGateEarlyDriftTopSixteen{} on \texttt{out:gate} versus
 \motInAttnEarlyDriftTopSixteen{} on \texttt{in:attn}) and late training (updates
 $4{,}250\to 4{,}500$: \motOutVLateDriftTopSixteen{} on \texttt{out:v} versus
@@ -383,30 +453,34 @@ choices before any candidate optimizer is trained:
 
 \begin{enumerate}
 \item \textbf{Keep width-512 input whitening dense, and treat width-2048
-  \texttt{in:down} as a distinct quality--speed trade-off.} Between $98\%$
-  and $99\%$ of width-$512$ input anisotropy --- and $56.6\%$ of post-SwiGLU
-  \texttt{in:down}'s --- lies off the coordinate diagonal. Dropping or
-  diagonalizing width-$512$ inputs forfeits the primary domain conditioning of
+  \texttt{in:down} as a distinct quality--speed trade-off.} Across \taxid{Muon},
+  \taxid{MuonT}, and \taxid{WT-MLP-Lag}, $98.6\%$--$99.3\%$ of RMSNormed
+  width-$512$ input anisotropy --- and
+  $\motInDownOffdiagAnisoMedPct\%$--$\motMuonInDownOffdiagAnisoMedPct\%$ of
+  post-SwiGLU \texttt{in:down}'s --- lies off the coordinate diagonal. Dropping
+  or diagonalizing width-$512$ inputs forfeits the primary domain conditioning of
   the finite polynomial map $\Nten$; diagonalizing \texttt{in:down} alongside
   \texttt{out:gate,up} (\taxid{WT-Sym}) eliminates all width-$2048$ dense Gram
   and eigendecomposition work on \emph{both} sides, but unlike pre-SwiGLU
-  outputs it discards real off-diagonal $\mu\mu^{\Tr}$ structure.
+  outputs it discards substantial off-diagonal structure.
 \item \textbf{Threshold output richness by width (\taxid{WT-MLP} / \mlpdiag{}),
   with pure diagonals (\taxid{OD-All} / \alldiag{}) as the
   zero-eigendecomposition limit.} The two width-$2048$ pre-SwiGLU cotangents
   (\texttt{out:gate}, \texttt{out:up}) account for $96.2\%$ of output $O(d^3)$
   eigendecomposition work and $86.5\%$ of $O(d^2)$ Gram work, yet Hadamard
   decorrelation pins their off-diagonal correlations to the $N_t^{-1/2}$
-  sampling floor while leaving strong per-neuron scale spread. Replacing their
-  dense spectral roots with exact, age-zero elementwise diagonals captures
-  $\approx 76\%$--$82\%$ of $\|L-I_d\|_F^2$ on baseline trajectories without
-  fitting $2.1\times 10^6$ noisy off-diagonals per matrix or clogging host
-  worker threads. Conversely, width-$512$ residual-stream cotangents
-  (\texttt{out:o}, \texttt{out:down}) are $>99\%$ rotational ($R^2 =
-  \motOutOExpVarLMedPct\%$), motivating dense spectral roots at width $512$
-  (\taxid{WT-MLP}), while diagonalizing all seven outputs (\taxid{OD-All})
-  defines an eigendecomposition-free speed bound via \texttt{gate},
-  \texttt{up}, \texttt{q}, and \texttt{k}.
+  sampling floor across all three optimizers while leaving strong per-neuron
+  scale spread. Replacing their dense spectral roots with exact, age-zero
+  elementwise diagonals captures
+  $\motOutUpExpVarLMedPct\%$--$\motMuonOutGateExpVarLMedPct\%$ of
+  $\|L-I_d\|_F^2$ across \taxid{Muon}, \taxid{MuonT}, and \taxid{WT-MLP-Lag}
+  without fitting $2.1\times 10^6$ noisy off-diagonals per matrix or clogging
+  host worker threads. Conversely, width-$512$ residual-stream cotangents
+  (\texttt{out:o}, \texttt{out:down}) are $\ge 99\%$ rotational ($R^2 =
+  \motOutOExpVarLMedPct\%$--$\motMuonOutOExpVarLMedPct\%$), motivating dense
+  spectral roots at width $512$ (\taxid{WT-MLP}), while diagonalizing all seven
+  outputs (\taxid{OD-All}) defines an eigendecomposition-free speed bound via
+  \texttt{gate}, \texttt{up}, \texttt{q}, and \texttt{k}.
 \item \textbf{Lag output factors by one update on an asynchronous side stream
   (\taxid{WT-MLP-Lag}, \taxid{WT-Sym-Lag}).} Diagonalizing width-$2048$ outputs
   eliminates the largest host bottlenecks, but fast subspace drift on width-$512$

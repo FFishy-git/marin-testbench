@@ -27,8 +27,76 @@ from .bootstrap import verify_snapshot
 from .capture import OutputMoments, build_model, captures_input
 from .data_access import require_receipt
 from .factors import OutputSettings
-from .optimizer import build, toner_engines
+from .optimizer import build, restore_fast, toner_engines
 from .records import atomic_json, checkpoint_identity, manifest, restore_checkpoint, save_checkpoint, utc_now
+
+
+def _slice_engine_state(saved_eng: dict, sub: int, ratio: int) -> dict:
+    groups = {}
+    for gname, g in saved_eng["groups"].items():
+        per_old = g["C"].shape[0]
+        per_new = per_old // ratio
+        lo, hi = sub * per_new, (sub + 1) * per_new
+        groups[gname] = {
+            "C": g["C"][lo:hi],
+            "tol": g["tol"][lo:hi],
+            "basis_step": g["basis_step"][lo:hi],
+            "warm": False,
+            "SB": None if g["SB"] is None else g["SB"][lo:hi],
+            "S2": None if g["S2"] is None else g["S2"][lo:hi],
+            "pending": g["pending"][lo:hi],
+        }
+    mom = {}
+    for shape, vals in saved_eng["momentum"].items():
+        mom[shape] = {}
+        for k, t in vals.items():
+            m_new = t.shape[0] // ratio
+            mom[shape][k] = t[sub * m_new : (sub + 1) * m_new]
+    return {**saved_eng, "groups": groups, "momentum": mom}
+
+
+def _restore_bench_midtrain_state(ckpt_dir: Path, optimizers, fast, *, rank: int, world: int) -> None:
+    comp_path = ckpt_dir / "complete.json"
+    if not comp_path.exists():
+        return
+    saved_world = int(json.loads(comp_path.read_text()).get("world", 0))
+    if saved_world == world:
+        st = torch.load(ckpt_dir / f"rank_{rank}.pt", map_location="cpu", weights_only=False)
+        for opt, saved in zip(optimizers, st["optimizers"], strict=True):
+            if opt is not fast and saved is not None:
+                blrs = [g["base_lr"] for g in opt.param_groups]
+                opt.load_state_dict(saved)
+                for g, blr in zip(opt.param_groups, blrs, strict=True):
+                    g["base_lr"] = blr
+        if fast is not None and st.get("fast") is not None:
+            restore_fast(fast, st["fast"])
+        return
+    if world > saved_world and world % saved_world == 0 and fast is not None:
+        ratio = world // saved_world
+        q, sub = divmod(rank, ratio)
+        st = torch.load(ckpt_dir / f"rank_{q}.pt", map_location="cpu", weights_only=False)
+        fs = st.get("fast")
+        if fs is None:
+            return
+        if isinstance(fast, BlockToner):
+            owned_layers = set()
+            lo_l = sum(fast.layer_counts[:rank])
+            owned_layers.update(range(lo_l, lo_l + fast.layer_counts[rank]))
+            sliced = {
+                "lagged": {k: v for k, v in fs.get("lagged", {}).items() if k[0] in owned_layers},
+                "input": None if fs["input"] is None else _slice_engine_state(fs["input"], sub, ratio),
+                "output": None if fs["output"] is None else _slice_engine_state(fs["output"], sub, ratio),
+                "input_diagonal": fs["input_diagonal"],
+                "output_diagonal": fs["output_diagonal"],
+                "momentum": {
+                    sh: t[sub * (t.shape[0] // ratio) : (sub + 1) * (t.shape[0] // ratio)]
+                    for sh, t in fs["momentum"].items()
+                },
+                "steps": fs["steps"],
+            }
+            restore_fast(fast, sliced)
+        else:
+            restore_fast(fast, _slice_engine_state(fs, sub, ratio))
 
 
 def main():
@@ -41,6 +109,7 @@ def main():
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--max-steps", type=int, help="Execution check; keeps full reference schedule.")
     parser.add_argument("--init-model-from", type=Path, help="Load initial model weights from a saved checkpoint directory.")
+    parser.add_argument("--init-state", action="store_true", help="Also restore optimizer and Toner statistics/basis state from --init-model-from.")
     parser.add_argument("--bench-midtrain", action="store_true", help="Benchmark mid-training steps without eval or checkpoint IO.")
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
@@ -76,17 +145,20 @@ def main():
         raise ValueError("Global batch does not divide into full microbatches")
     arm = config["experiment"]["arm"]
     capture = config["optimizer"]["name"] == "muont"
-    positions, rows = None, 0
+    positions, rows, chunk = None, 0, accumulation
     if capture:
         statistics = config["statistics"]
         positions = sample_positions(seq, statistics["head"], statistics["stride"])
         rows = micro * len(positions)
-        if config["root"]["chunk"] != 0:
-            raise ValueError("Output runner currently requires full accumulation buffers")
+        chunk = config["root"]["chunk"] or accumulation
+        if accumulation % chunk != 0:
+            raise ValueError("Statistic chunks must divide the accumulated microbatches")
+        if chunk != accumulation and arm not in ("muont", *BLOCK_ARMS):
+            raise ValueError("Non-block output runner currently requires full accumulation buffers")
     model = build_model(
         config,
         positions=positions,
-        row_capacity=accumulation * rows,
+        row_capacity=chunk * rows,
         rows_per_microbatch=rows,
         device=device,
     )
@@ -116,7 +188,7 @@ def main():
         output,
         positions=positions,
         rows_per_microbatch=rows,
-        capacity=accumulation * rows,
+        capacity=chunk * rows,
         rows_total=accumulation * rows * world,
         world=world,
         rank=rank,
@@ -127,6 +199,8 @@ def main():
         start_step = restore_checkpoint(
             args.resume, model, optimizers, fast, output, config=config, rank=rank, world=world, identity=identity
         )
+    elif args.init_model_from is not None and args.init_state:
+        _restore_bench_midtrain_state(args.init_model_from, optimizers, fast, rank=rank, world=world)
     compile_mode = runtime["compile"]
     body = (
         model.body
@@ -167,8 +241,10 @@ def main():
             armed["value"] = False
             fast.begin()
 
+    begin_mode = config.get("root", {}).get("begin", "head") if fast else "head"
     if fast:
-        model.head.weight.register_post_accumulate_grad_hook(begin_hook)
+        if begin_mode == "head":
+            model.head.weight.register_post_accumulate_grad_hook(begin_hook)
         if isinstance(fast, BlockToner):
             fast.defer_finite_check = True
     mixture = MarinMixture(
@@ -251,15 +327,38 @@ def main():
                 if world > 1:
                     run.require_backward_grad_sync = index == accumulation - 1
                 if fast and captures_input(arm):
-                    model.body.stat_at.copy_(torch.arange(index * rows, (index + 1) * rows, device=device))
+                    if chunk < accumulation and index > 0 and index % chunk == 0:
+                        fast.chunk_wait()
+                    slot = index % chunk
+                    model.body.stat_at.copy_(torch.arange(slot * rows, (slot + 1) * rows, device=device))
                 if isinstance(fast, BlockToner):
-                    fast.select_microbatch(index)
+                    fast.select_microbatch(index, chunk=chunk)
                 start = eff_step * batch + (rank * accumulation + index) * micro
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     loss = run(*to_device(mixture.batch(start, micro)))
+                if (
+                    fast
+                    and captures_input(arm)
+                    and chunk < accumulation
+                    and (index + 1) % chunk == 0
+                    and index < accumulation - 1
+                ):
+                    fast.chunk_stats()
                 if fast and index == accumulation - 1:
-                    armed["value"] = True
+                    if begin_mode == "head":
+                        armed["value"] = True
+                    else:
+                        fast.begin()
+                if isinstance(fast, BlockToner):
+                    fast.before_microbatch_backward(index, chunk=chunk)
                 (loss / accumulation).backward()
+                if (
+                    isinstance(fast, BlockToner)
+                    and chunk < accumulation
+                    and (index + 1) % chunk == 0
+                    and index < accumulation - 1
+                ):
+                    fast.chunk_output_stats()
                 loss_sum += loss.detach() / accumulation
             if isinstance(fast, BlockToner):
                 fast.finish_backward()

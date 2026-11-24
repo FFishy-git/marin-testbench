@@ -1,6 +1,6 @@
 # Output-Side Normalization in MuonT — Systematic Taxonomy, Motivating Audit & 8xA100 Fast-Lag Report
 
-This report summarizes the systematic 5-slot operator taxonomy (`19` configurations across `37` distinct full-budget trajectories / `45` completed run directories), full-trajectory motivating covariance and subspace-drift audit on baseline `MuonT` (`wave1/null_all`), $2\times 2$ asymmetric-versus-symmetric width-thresholded evaluation (`WT-MLP`, `WT-MLP-Lag`, `WT-Sym`, `WT-Sym-Lag`), post-training step-geometry verification, Wave-12 horizon-shift audit, and executed 4-node uncontended 8xA100 `fast_lag` results (`wave_sym_fastlag`) integrated into `main.tex`.
+This report summarizes the systematic 5-slot operator taxonomy (`19` configurations across `37` distinct full-budget trajectories / `45` completed run directories), 3-trajectory motivating covariance and subspace-drift audit (`Muon`, `MuonT`, and `WT-MLP-Lag`), $2\times 2$ asymmetric-versus-symmetric width-thresholded evaluation (`WT-MLP`, `WT-MLP-Lag`, `WT-Sym`, `WT-Sym-Lag`), post-training step-geometry verification, Wave-12 horizon-shift audit, and executed 4-node uncontended 8xA100 `fast_lag` results (`wave_sym_fastlag`) integrated into `main.tex`.
 
 ---
 
@@ -20,23 +20,23 @@ Every configuration is specified by $\mathcal{A}(R_{512}, R_{2048} \mid L_{512},
 
 ---
 
-## 1. Full-Trajectory Motivating Analysis Before Method (`sections/motivation.tex`, Section 3)
+## 1. Three-Trajectory Motivating Analysis Before Method (`sections/motivation.tex`, Section 3)
 
-Auditing all **32 layers (8 ranks, 352 FP32 EMA matrices per checkpoint)** across **10 checkpoints (`steps 250..5120`, `0.13B–2.68B` tokens)** of `wave1/null_all` ($L = \hat L = I$, pure input-side `MuonT` updates) establishes the design deductively:
+Auditing all **32 layers (8 ranks, 352 FP32 EMA matrices per checkpoint)** across **vanilla `Muon`** (`wave0/muon`, exact 500-step passive replay `2000 -> 2250 -> 2500` with `0.0` loss/weight divergence), **baseline `MuonT`** (`wave1/null_all`, $L = \hat L = I$, 10 checkpoints `steps 250..5120`), and **active `WT-MLP-Lag`** (`wave_sym_fastlag/inner_outer_mlpdiag_lag`, 500-step passive width-2048 output replay matching active 1D diagonals to `4.04e-5` relative L2 error) establishes the design deductively (`Muon / MuonT / WT-MLP-Lag` at step `2500`, `Drift_16` over `2250 -> 2500`):
 
 | Moment | $d$ | $\mathrm{erank}/d$ (%) | $\mathrm{CV}_{\text{diag}}$ | $\rho_{\text{rms}}$ | $\mathrm{DiagE}$ (%) | $\mathrm{DiagAniso}$ (%) | $R^2(A^{-1/2})$ (%) | $\mathrm{Drift}_{16}$ (`2250→2500`) |
-| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `in:attn` ($q,k,v$) | 512 | `17.9` | `0.84` | `0.2031` | `3.5` | `1.0` | `10.6` | `0.021` |
-| `in:o` | 512 | `20.8` | `0.75` | `0.2120` | `5.3` | `1.8` | `22.5` | `0.094` |
-| `in:mlp` (`gate,up`) | 512 | `21.6` | `0.64` | `0.1959` | `3.7` | `0.8` | `6.0` | `0.021` |
-| `in:down` (post-SwiGLU) | 2048 | `29.1` | `2.92` | `0.0346` | `47.3` | **`43.4`** (`56.6%` off-diag) | `79.4` | `0.106` |
-| `out:q` | 512 | `38.5` | `0.97` | `0.0641` | `30.0` | `18.0` | `62.4` | `0.140` |
-| `out:k` | 512 | `23.7` | `1.50` | `0.0774` | `20.5` | `14.4` | `71.8` | `0.165` |
-| `out:v` | 512 | `50.4` | `0.58` | `0.0560` | `41.4` | `12.2` | `31.2` | `0.662` |
-| `out:o` (residual) | 512 | `85.3` | `0.06` | `0.0301` | `68.0` | **`0.8`** | **`1.2`** | `0.134` |
-| `out:down` (residual) | 512 | `84.6` | `0.07` | `0.0312` | `66.3` | **`0.8`** | **`1.2`** | `0.107` |
-| **`out:gate` (pre-SwiGLU)** | **2048** | **`87.1`** | **`0.59`** (`1.49` mean) | **`0.0051`** | **`94.9`** | **`82.0`** | **`82.2`** | **`0.240`** |
-| **`out:up` (pre-SwiGLU)** | **2048** | **`82.5`** | **`0.75`** (`1.17` mean) | **`0.0073`** | **`91.2`** | **`78.1`** | **`75.9`** | **`0.215`** |
+| :--- | ---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `in:attn` ($q,k,v$) | 512 | `30.0 / 17.9 / 18.0` | `0.63 / 0.84 / 0.76` | `0.1465 / 0.2031 / 0.2066` | `5.8 / 3.5 / 3.1` | `1.4 / 1.0 / 0.8` | `8.2 / 10.6 / 10.1` | `0.041 / 0.021 / 0.023` |
+| `in:o` | 512 | `37.9 / 20.8 / 23.4` | `0.77 / 0.75 / 0.77` | `0.0968 / 0.2120 / 0.2001` | `25.0 / 5.3 / 6.5` | `9.8 / 1.8 / 1.8` | `30.1 / 22.5 / 26.5` | `0.107 / 0.094 / 0.108` |
+| `in:mlp` (`gate,up`) | 512 | `33.8 / 21.6 / 19.5` | `0.48 / 0.64 / 0.62` | `0.1410 / 0.1959 / 0.2024` | `6.2 / 3.7 / 3.2` | `1.0 / 0.8 / 0.7` | `4.9 / 6.0 / 6.7` | `0.046 / 0.021 / 0.025` |
+| `in:down` (post-SwiGLU) | 2048 | `67.1 / 29.1 / 35.6` | `0.71 / 2.92 / 2.33` | `0.0283 / 0.0346 / 0.0359` | `37.9 / 47.3 / 38.8` | **`20.3 / 43.4 / 34.7`** | `91.3 / 79.4 / 78.7` | `0.186 / 0.106 / 0.087` |
+| `out:q` | 512 | `38.5 / 38.5 / 29.3` | `1.04 / 0.97 / 1.14` | `0.0615 / 0.0641 / 0.0732` | `27.5 / 30.0 / 20.1` | `16.4 / 18.0 / 13.3` | `64.8 / 62.4 / 66.0` | `0.150 / 0.140 / 0.110` |
+| `out:k` | 512 | `24.4 / 23.7 / 13.0` | `1.45 / 1.50 / 1.87` | `0.0746 / 0.0774 / 0.0779` | `21.7 / 20.5 / 18.0` | `15.5 / 14.4 / 14.7` | `77.6 / 71.8 / 78.6` | `0.178 / 0.165 / 0.147` |
+| `out:v` | 512 | `47.0 / 50.4 / 41.5` | `0.63 / 0.58 / 0.57` | `0.0600 / 0.0560 / 0.0749` | `36.7 / 41.4 / 26.4` | `11.5 / 12.2 / 6.8` | `38.6 / 31.2 / 19.9` | `0.664 / 0.662 / 0.586` |
+| `out:o` (residual) | 512 | `83.3 / 85.3 / 78.2` | `0.09 / 0.06 / 0.10` | `0.0307 / 0.0301 / 0.0393` | `67.1 / 68.0 / 55.4` | **`1.0 / 0.8 / 0.8`** | **`3.6 / 1.2 / 2.3`** | `0.164 / 0.134 / 0.103` |
+| `out:down` (residual) | 512 | `84.3 / 84.6 / 77.9` | `0.08 / 0.07 / 0.09` | `0.0315 / 0.0312 / 0.0403` | `65.9 / 66.3 / 53.8` | **`0.9 / 0.8 / 0.8`** | **`2.3 / 1.2 / 1.4`** | `0.123 / 0.107 / 0.072` |
+| **`out:gate` (pre-SwiGLU)** | **2048** | `88.2 / 87.1 / 72.8` | `0.55 / 0.59 / 1.32` | **`0.0055 / 0.0051 / 0.0048`** | `94.9 / 94.9 / 94.1` | **`80.6 / 82.0 / 89.5`** | **`98.8 / 82.2 / 94.9`** | `0.292 / 0.240 / 0.159` |
+| **`out:up` (pre-SwiGLU)** | **2048** | `83.8 / 82.5 / 47.3` | `0.68 / 0.75 / 2.83` | **`0.0068 / 0.0073 / 0.0082`** | `91.9 / 91.2 / 92.4` | **`77.9 / 78.1 / 90.8`** | **`98.2 / 75.9 / 91.9`** | `0.251 / 0.215 / 0.130` |
 
 ---
 

@@ -1,0 +1,60 @@
+\section{Pretraining Protocol and Eliminating Benchmarking Confounds}
+\label{sec:protocol}
+
+Optimizer comparisons in LLM pretraining are notoriously vulnerable to subtle experimental confounds: unmatched numerical code paths, short-horizon hyperparameter proxies that fail to transfer to full schedules, and single-checkpoint evaluation noise~\citep{choi2019empirical, schmidt2021crowded, kaddour2023nodata, dang2026batchsize}.
+Before presenting our multi-seed and scaling results, we detail our controlled pretraining testbed (\Cref{sec:testbed}) and establish two mandatory falsification gates (\Cref{sec:falsification}) that validate every claim in \Cref{sec:scaling}.
+
+\subsection{Architectures, Data Mixture, and Multi-Metric Evaluation}
+\label{sec:testbed}
+
+\paragraph{Model scales and pretraining recipes.}
+All experiments follow the pinned Marin PyTorch pretraining suite of \citet{mohamadi2026toner}, adapted deterministically to nodes of $8\times$NVIDIA A100-SXM4-40GB GPUs (PyTorch 2.10, CUDA 12.9, FlashAttention-2, \texttt{torch.compile} with \texttt{allow\_tf32=False} and deterministic algorithms; every release passes a 24-step continuous vs.\ 22+2 checkpoint-resume gate across all 8 ranks).
+We study two Llama-style pre-RMSNorm SwiGLU Transformer scales with untied embeddings and vocabulary $128{,}256$ (\texttt{Meta-Llama-3.1-8B} tokenizer, sequence length $4{,}096$ with document-isolated causal attention):
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, topsep=2pt]
+  \item \textbf{\texttt{130M} scale} ($L=32$, $\dm=512$, $\dff=2{,}048$, $H=8$ heads; $134.3\text{M}$ non-embedding matrix/norm parameters, $265.6\text{M}$ total parameters): trained at global batch $0.5\text{M}$ tokens ($128$ sequences, $524{,}288$ tokens/step) for either $1\times$ Chinchilla ($20$ tokens per non-embedding parameter [TPP] $= 5{,}120$ steps $= 2.68\text{B}$ tokens; $1{,}024$ stable + $4{,}096$ linear-decay steps; auxiliary AdamW LR $0.0048$) or $4\times$ Chinchilla overtraining ($80$ TPP $= 20{,}480$ steps $= 10.74\text{B}$ tokens; $4{,}096$ stable + $16{,}384$ linear-decay steps), plus a $1\text{M}$-token batch check ($2{,}560$ steps).
+  \item \textbf{\texttt{520M} scale} ($L=32$, $\dm=1{,}024$, $\dff=4{,}096$, $H=16$ heads; $536.9\text{M}$ non-embedding parameters [$4\times$ \texttt{130M}, $2\times$ width], $799.6\text{M}$ total parameters): trained at $1\times$ Chinchilla ($20$ TPP $= 10.74\text{B}$ tokens) using Toner's official $1\text{M}$-token batch recipe ($256$ sequences/step, $10{,}240$ linear-decay steps, auxiliary AdamW LR $0.0024$).
+\end{itemize}
+Training consumes a verified $25.39\text{B}$-token corpus combining DCLM ($92.6\%$), StarCoderData ($6.1\%$), and Proof-Pile-2 ($1.3\%$).
+Within any fixed seed, global sequence IDs assign identical token batches in identical order to every optimizer arm.
+
+\paragraph{Evaluation suite and why held-out multi-checkpoint means are essential.}
+Relying solely on training loss or a single final validation snapshot can misrank closely spaced optimizers: across our exploratory runs, dense output arms fit recently consumed training tokens slightly more aggressively than \mname{WT-MLP} ($-0.0007$ nats lower final-window training loss, $\text{SE}=0.00004$) while generalizing slightly \emph{worse} on held-out data ($+0.0007$ nats).
+We therefore evaluate every confirmatory and scaling run on three strictly held-out benchmarks:
+\begin{enumerate}[leftmargin=1.6em, itemsep=1.5pt, topsep=2pt]
+  \item \textbf{In-distribution held-out mixture ($\Lsel$, primary selection metric):} Mixture-weighted cross-entropy across $64$ reserved $4{,}096$-token windows per training source ($\sim 786\text{K}$ tokens/eval), reported both at the final step and as the late-stage multi-checkpoint mean across all $10$--$12$ second-half evaluations ($\sim 8.6\text{M}$--$9.4\text{M}$ tokens). Because held-out windows are permuted by \texttt{seed}, cross-seed comparisons always use \emph{within-seed paired differences}.
+  \item \textbf{External C4 validation ($\Lc$):} Fixed $966\text{K}$-token Paloma \texttt{c4\_en} validation loss logged throughout training across all seeds and scales.
+  \item \textbf{16-domain out-of-distribution Paloma ($\Lpal$):} Post-hoc evaluation across all 16 tokenized Paloma benchmark domains, reporting both the unweighted 16-domain macro mean and domain win counts.
+\end{enumerate}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig4_confounds_lr_null.pdf}
+  \caption{\textbf{Eliminating hyperparameter and execution-path confounds (\texttt{130M}, seed 0).}
+  \textbf{(a)} Screening matrix learning rates on a $6\%$-budget ($320$-step, $0.17\text{B}$-token) short schedule shifts apparent optima $3\times$--$4\times$ higher ($0.064$--$0.0905$); transferring those LRs to the full $5{,}120$-step horizon degrades \mname{MuonT} itself by $+0.1001$ nats late $\Lsel$ ($+0.042$ final) and pushes \mname{OD-All} over a $+0.087$-nat stability cliff.
+  \textbf{(b)} Full-budget ($5{,}120$-step, $2.68\text{B}$-token) LR bracketing over $\{0.016, 0.0226, 0.032\}$ locates the true flat optimum basin and confirms that \mname{WT-MLP-Lag} outperforms \mname{MuonT} at every matched LR ($-0.0038$ to $-0.0043$ nats), while same-wave \mname{Null-WT} ($\star$) matches \mname{MuonT} to $-0.0003$ nats.
+  \textbf{(c)} Across all 10 late-stage checkpoints ($\text{steps } 3{,}001\text{--}5{,}120$), \mname{Null-WT} stays tightly around zero while \mname{WT-MLP-Lag} wins $10/10$ checkpoints at both $\eta=0.016$ and $\eta=0.0226$.}
+  \label{fig:confounds}
+\end{figure}
+
+\subsection{Two Mandatory Falsification Gates}
+\label{sec:falsification}
+
+\paragraph{Gate 1: Matched execution-path null controls (\mname{Null-WT}).}
+Adding output preconditioning modifies backward hooks, tensor stacking, and GEMM association order, which under BF16/FP32 finite-step Newton--Schulz can perturb trajectories even when mathematical equations match~\citep{henry2019leveraging}.
+Indeed, in early exploratory waves where candidate arms used a separate per-matrix update path, \mname{Null-Dense} differed from upstream \mname{MuonT} by $-0.0012$ nats---nearly as large as a narrow \texttt{down}-only pilot ($-0.0013$ nats), proving that without a matched null control, path drift can masquerade as an algorithmic improvement!
+On our unified \texttt{fast\_lag} codebase (\Cref{fig:confounds}b,c), running \mname{Null-WT}---which executes \mname{WT-MLP}'s exact backward capture, distributed pooling, and root engines, then substitutes $L = \hat{L} = I$ in \Cref{eq:update}---yields final $\Lsel = 3.23510$ vs.\ \mname{MuonT}'s $3.23540$ ($\Delta = -0.00030$ nats, well inside our pre-registered $\pm 0.0005$-nat falsification gate; late mean $\Delta = -0.00073$).
+Thus $>93\%$ of \mname{WT-MLP-Lag}'s $-0.00429$-nat final improvement at matched $\eta = 0.0226$ arises strictly from applying the output cotangent factors.
+
+\paragraph{Gate 2: Full-budget LR bracketing vs.\ the short-horizon proxy cliff.}
+To test whether cheap short-schedule sweeps can tune matrix learning rates $\eta$, we ran a 7-point $\sqrt{2}$-spaced sweep ($\eta \in [0.016, 0.128]$, $28$ runs) using standalone $320$-step ($0.17\text{B}$-token, $6\%$ budget) 20\%-stable / 80\%-decay schedules, then transferred the winning LRs to full $5{,}120$-step runs (\Cref{fig:confounds}a; detailed table in \Cref{app:appendix_lr}).
+Short schedules fail catastrophically as hyperparameter proxies: rapid $256$-step linear cooldown rewards aggressive early step sizes ($\eta = 0.064$ for \mname{MuonT}, $0.0905$ for \mname{OD-All}) that severely over-step during a $5{,}120$-step run, degrading \mname{MuonT} itself by $+0.1001$ nats in late-half $\Lsel$ ($3.3754 \to 3.4755$; final $\Lsel$ $3.2354 \to 3.2775$) and causing a $+0.0424$-nat full-budget regression on \mname{OD-All} at $\eta = 0.0905$.
+
+Consequently, we perform full-budget ($2.68\text{B}$-token) $\sqrt{2}$ LR bracketing over $\eta \in \{0.016,\allowbreak 0.02263,\allowbreak 0.032\}$ (where $0.016$ and $0.02263 = 0.016\sqrt{2}$ are Marin's pinned optima for \mname{Muon} and \mname{MuonT}, with auxiliary AdamW fixed at $0.0048$; \Cref{fig:confounds}b).
+Three clean facts emerge:
+(i) \mname{Muon} degrades immediately at $0.02263$ ($+0.00626$ nats), confirming that input whitening genuinely shifts the stable LR basin rightward;
+(ii) \mname{MuonT}, \mname{OD-All}, and \mname{WT-MLP-Lag} share a flat optimal valley across $0.016\text{--}0.02263$ and degrade cleanly at $0.032$ ($+0.0044$ to $+0.0071$ nats); and
+(iii) \mname{WT-MLP-Lag} beats \mname{MuonT} at every single matched LR: by $-0.00384$ final / $-0.00466$ late-mean nats ($10/10$ checkpoints) at $\eta = 0.016$, by $-0.00429$ final / $-0.00457$ late-mean nats ($10/10$ checkpoints) at $\eta = 0.02263$, and by $-0.00423$ final nats ($9/10$ checkpoints) at $\eta = 0.032$ (\Cref{fig:confounds}c).
+
+\begin{takeaway}[Benchmarking Discipline for Second-Order Polar Optimizers]
+Short-schedule ($6\%$-budget) LR proxies overestimate optimal full-budget learning rates by $3\times$--$4\times$, inducing $+0.04\text{--}0.10$-nat regressions that dwarf real optimizer differences. Full-budget LR bracketing paired with same-wave identity-factor controls (\mname{Null-WT}, $|\Delta\Lsel| = 0.0003$ nats) cleanly isolates output-side geometric gains across the entire optimal LR valley.
+\end{takeaway}

@@ -138,7 +138,7 @@ python -I scripts/check_numbers.py  # every prose numeral against computed JSON 
 | `results/measured_8gpu_timings.json` | Matched eight-A100 Table 5/Figure 3 costs and separately labeled full-budget timing audit |
 | `results/run_numbers.tex`, `results/evidence_numbers.tex` | Per-run macros (`37` distinct trajectories / `45` dirs / `19` arms) |
 | `results/derived_numbers.tex` | Cross-study, Wave-12 horizon & $2\times 2$ `WT` comparison macros |
-| `results/motivation_numbers.tex`, `results/table_motivation.tex` | Section 3 motivating 6+1 covariance & subspace-drift audit (`wave1/null_all`) |
+| `results/motivation_trajectories.json`, `results/motivation_numbers.tex`, `results/table_motivation.tex` | Section 3 3-trajectory motivating 6+1 covariance & subspace-drift audit (`Muon`, `MuonT`, `WT-MLP-Lag`) |
 | `results/mechanism_numbers.tex` | Section 6.7 post-training norm-grafting & active-run invariance macros |
 | `results/systems_numbers.tex`, `results/table_systems.tex`, `results/table_crossings.tex` | Section 7 stage + executed 8xA100 `fast_lag` latency, memory & uncensored C4 crossing tables |
 | `results/table_main.tex`, `results/table_windows.tex`, `results/table_duplicates.tex` | Master seed-0 table, 5-window paired evolution & duplicate-group tables |

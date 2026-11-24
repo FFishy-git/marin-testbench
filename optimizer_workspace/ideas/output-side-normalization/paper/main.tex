@@ -184,18 +184,25 @@
 Muon-type optimizers orthogonalize weight momentum and, in preconditioned
 variants (\taxid{MuonT}), whiten it against the layer's \emph{input} second
 moment while leaving the \emph{output-cotangent} second moment unused. Auditing
-all 352 input and cotangent EMA moments across 32 layers and eight checkpoints
-($0.13\text{B}$--$2.68\text{B}$ tokens) of baseline \taxid{MuonT} explains why
-naive dense two-sided whitening is poorly matched to a transformer: pre-SwiGLU
-width-2048 cotangents (\texttt{gate}, \texttt{up}) are zero-mean Hadamard
-products whose off-diagonal correlations hug the sampling floor (median RMS
-\motOutGateCorrRmsMed{} and \motOutUpCorrRmsMed{}), putting
-\motOutGateDiagAnisoMedPct\% and \motOutUpDiagAnisoMedPct\% of centered
+all 352 input and cotangent EMA moments across 32 layers of vanilla
+\taxid{Muon}, baseline \taxid{MuonT} (eight checkpoints,
+$0.13\text{B}$--$2.68\text{B}$ tokens), and active \taxid{WT-MLP-Lag} explains
+why naive dense two-sided whitening is poorly matched to a transformer:
+pre-SwiGLU width-2048 cotangents (\texttt{gate}, \texttt{up}) are zero-mean
+Hadamard products whose off-diagonal correlations hug the sampling floor across
+all three trajectories (median RMS
+\motWtOutGateCorrRmsMed{}--\motMuonOutGateCorrRmsMed{} and
+\motMuonOutUpCorrRmsMed{}--\motWtOutUpCorrRmsMed{}), putting
+\motMuonOutGateDiagAnisoMedPct\%--\motWtOutGateDiagAnisoMedPct\% and
+\motMuonOutUpDiagAnisoMedPct\%--\motWtOutUpDiagAnisoMedPct\% of centered
 anisotropy on the diagonal, whereas residual width-512 cotangents (\texttt{o},
-\texttt{down}) are $>99\%$ rotational, post-SwiGLU width-2048 inputs
-(\texttt{in:down}) carry $56.6\%$ off-diagonal anisotropy, and cotangent eigenspaces drift
-$5\times$--$\motDriftRatioOutVVsInAttn\times$ faster than RMSNormed inputs
-($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact eigendecomposition fallbacks).
+\texttt{down}) are $\ge 99\%$ rotational, post-SwiGLU width-2048 inputs
+(\texttt{in:down}) carry
+\motInDownOffdiagAnisoMedPct\%--\motMuonInDownOffdiagAnisoMedPct\% off-diagonal
+anisotropy, and cotangent eigenspaces drift up to
+$\motMuonDriftRatioOutVVsInAttn\times$--$\motDriftRatioOutVVsInAttn\times$
+faster than RMSNormed inputs ($\motFbOutTotal{}$ versus $\motFbInTotal{}$ exact
+eigendecomposition fallbacks on baseline \taxid{MuonT}).
 Evaluating \nOptimizerArms{} configurations across \nDistinctRuns{} full-budget
 trajectories on a pinned 265M-parameter transformer ($2.68\text{B}$ tokens, eight
 A100s per run), asymmetric width-thresholding (\taxid{WT-MLP} / \mlpdiag{}, dense

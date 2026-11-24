@@ -9,8 +9,13 @@ host-refresh machinery. Lagged arms overlap dense root candidates, repairs, exac
 and factor splitting asynchronously on a side stream across updates.
 """
 
+import contextlib
+import copy
+import os
+import types
 from dataclasses import dataclass
 from enum import StrEnum
+from pathlib import Path
 from types import SimpleNamespace
 
 import torch
@@ -183,16 +188,336 @@ def attach_output_rows(blocks, kinds, positions, *, rows_per_microbatch, capacit
     return rows, at
 
 
+def _exact_root_eager(lam: torch.Tensor, V: torch.Tensor, n: int, p: float, B2: torch.Tensor) -> torch.Tensor:
+    x = lam.clamp_min(0)
+    x = x / x.mean(-1, keepdim=True)
+    f = (x + PR.EPS).pow(-p)
+    A2 = PR._cols_hi(V * f[..., None, :])
+    if PR._sym_ok(n) and V.dim() == 3:
+        return PR.mm16_sym(A2, B2, False)
+    R = PR.mm16(A2, B2, False)
+    return 0.5 * (R + R.mT)
+
+
+def _batched_exact_fallback(engine, g, R, still: list[int]) -> None:
+    """Solve all fallback statistics in one unpadded batched eigendecomposition with zero dynamo recompiles."""
+    s = len(still)
+    if not s:
+        return
+    still_idx = torch.tensor(still, dtype=torch.int64, device=engine.device)
+    C_sub = g.C.index_select(0, still_idx)
+    lam_x, V = torch.linalg.eigh(0.5 * (C_sub + C_sub.mT))
+    g.tol.index_copy_(0, still_idx, engine._tolerance(lam_x))
+
+    B2 = PR._rows_lo(V.mT.contiguous())
+    if engine.split:
+        R[0].index_copy_(0, still_idx, _exact_root_eager(lam_x, V, g.n, engine.p_in, B2))
+        if R[1] is not R[0]:
+            R[1].index_copy_(0, still_idx, _exact_root_eager(lam_x, V, g.n, engine.p_out, B2))
+    else:
+        R.index_copy_(0, still_idx, _exact_root_eager(lam_x, V, g.n, PR.ALPHA, B2))
+
+    Vc = V.contiguous()
+    g.basis.SB.index_copy_(0, still_idx, PR._rows_lo(Vc))
+    g.basis.S2.index_copy_(0, still_idx, PR._cols_hi(Vc))
+
+
+@torch.no_grad()
+def prewarm_repair_shapes(engine) -> None:
+    """Pre-compile power-of-two repair batch shapes on all ranks at startup to prevent mid-run DDP stalls."""
+    if torch.device(engine.device).type != "cuda" or engine.args.toner_repair_rounds <= 0:
+        return
+    seen: set[tuple[int, int]] = set()
+    for g in engine.groups.values():
+        if not g.per:
+            continue
+        max_k = 1 << (g.per - 1).bit_length()
+        k = 1
+        while k <= max_k:
+            if (k, g.n) not in seen:
+                seen.add((k, g.n))
+                B_d = torch.eye(g.n, dtype=torch.float32, device=engine.device).unsqueeze(0).expand(k, -1, -1).contiguous()
+                lam_d = torch.ones(k, g.n, dtype=torch.float32, device=engine.device)
+                O_d = torch.zeros(k, g.n, g.n, dtype=torch.float32, device=engine.device)
+                dl_d = torch.full((k,), 1e-3, dtype=torch.float32, device=engine.device)
+                S2_d = torch.zeros(k, g.n, 2 * g.n, dtype=torch.float16, device=engine.device)
+                lam_o, O_o, _, _, _ = engine.froot.froot_more(B_d, (lam_d, O_d, dl_d), 2, engine.args.toner_freeze)
+                sub_b = PR.Basis.of_splits(S2_d)
+                if engine.split:
+                    PR.form_powers(sub_b, lam_o, O_o)
+                else:
+                    PR.form(sub_b, lam_o, O_o)
+                del B_d, lam_d, O_d, dl_d, S2_d, lam_o, O_o
+            k <<= 1
+    torch.cuda.synchronize(engine.device)
+
+
+def _launch_engine_repairs(engine) -> bool:
+    """Stage 1: inspect flags_host and enqueue masked repair rounds on engine.side with zero .tolist() syncs."""
+    a = engine.args
+    if getattr(engine, "ev_flags", None) is not None:
+        engine.ev_flags.synchronize()
+    flags = engine.flags_host.tolist()
+    roots, o, todo = {}, 0, []
+    for name, g in engine.groups.items():
+        R, B, _, state = engine.cand[name]
+        # Flag encoding: 0 = converged, 1 = repairable (rho <= rho_max), 2 = hopeless (rho > rho_max).
+        bad_all = [j for j in range(g.per) if flags[o + j]]
+        repairable = [j for j in range(g.per) if flags[o + j] == 1]
+        hopeless = [j for j in range(g.per) if flags[o + j] >= 2]
+        roots[name] = R
+        if bad_all:
+            todo.append((g, R, B, state, bad_all, repairable, hopeless))
+        o += g.per
+
+    engine._pending_roots = roots
+    if not todo:
+        engine._repair_todo = []
+        engine.ev_repairs = None
+        return False
+
+    is_cuda = torch.device(engine.device).type == "cuda"
+    ctx = torch.cuda.stream(engine.side) if is_cuda else contextlib.nullcontext()
+    total_rep = sum(len(rep) for _, _, _, _, _, rep, _ in todo)
+    if total_rep > 0 and (
+        getattr(engine, "repair_done_host", None) is None or engine.repair_done_host.numel() < total_rep
+    ):
+        engine.repair_done_host = torch.zeros(max(1, total_rep), dtype=torch.uint8, pin_memory=is_cuda)
+
+    done_chunks = []
+    rep_slices = []
+    rep_offset = 0
+    rounds = a.toner_repair_rounds
+    with ctx:
+        for g, R, B, state, bad_all, repairable, hopeless in todo:
+            m = len(repairable)
+            if m == 0 or state is None or rounds <= 0:
+                rep_slices.append((g, R, bad_all, repairable, hopeless, rep_offset, 0))
+                continue
+            k = 1 << (m - 1).bit_length()
+            pad = repairable + repairable[-1:] * (k - m)
+            idx = torch.tensor(pad, dtype=torch.int64, device=engine.device)
+            idx_u = idx[:m]
+            B_sub = B.index_select(0, idx)
+            sub_basis = PR.Basis.of_splits(g.basis.S2.index_select(0, idx))
+            tol_sub = g.tol.index_select(0, idx)
+            st = tuple(t.index_select(0, idx) for t in state)
+            valid = torch.arange(k, device=engine.device) < m
+            active = valid.clone()
+            done = torch.zeros(k, dtype=torch.bool, device=engine.device)
+
+            for _ in range(rounds):
+                lam, O, rho, est, dl = engine.froot.froot_more(B_sub, st, 2, a.toner_freeze)
+                if engine.split:
+                    Rp2, est_s = PR.form_powers(sub_basis, lam, O)
+                    R2_in, R2_out = Rp2[engine.p_in], Rp2[engine.p_out]
+                    ok = (
+                        (rho <= a.toner_rho_max)
+                        & ~engine._split_over(est, est_s, tol_sub)
+                        & torch.isfinite(lam).all(-1)
+                    )
+                else:
+                    R2_in = PR.form(sub_basis, lam, O)
+                    R2_out = R2_in
+                    ok = (rho <= a.toner_rho_max) & (est <= tol_sub) & torch.isfinite(lam).all(-1)
+                rhok = rho <= a.toner_rho_max
+                newly_ok = active & ok
+                m_ok = newly_ok[:m, None, None]
+                if engine.split:
+                    R[0].index_copy_(0, idx_u, torch.where(m_ok, R2_in[:m], R[0].index_select(0, idx_u)))
+                    if R[1] is not R[0]:
+                        R[1].index_copy_(0, idx_u, torch.where(m_ok, R2_out[:m], R[1].index_select(0, idx_u)))
+                else:
+                    R.index_copy_(0, idx_u, torch.where(m_ok, R2_in[:m], R.index_select(0, idx_u)))
+                done |= newly_ok
+                active = active & ~ok & rhok
+                st = (lam, O, dl)
+
+            done_chunks.append(done[:m].to(torch.uint8))
+            rep_slices.append((g, R, bad_all, repairable, hopeless, rep_offset, m))
+            rep_offset += m
+
+        if done_chunks:
+            cat_done = torch.cat(done_chunks)
+            engine.repair_done_host[: cat_done.numel()].copy_(cat_done, non_blocking=is_cuda)
+            if is_cuda:
+                engine.ev_repairs = torch.cuda.Event()
+                engine.ev_repairs.record(engine.side)
+            else:
+                engine.ev_repairs = None
+        else:
+            engine.ev_repairs = None
+
+    engine._repair_todo = rep_slices
+    return True
+
+
+def _finish_engine_fallbacks(engine):
+    """Stage 2: read repair outcomes and solve all remaining fallbacks via one batched eigendecomposition."""
+    if getattr(engine, "ev_repairs", None) is not None:
+        engine.ev_repairs.synchronize()
+        engine.ev_repairs = None
+
+    roots = engine._pending_roots
+    rep_slices = engine._repair_todo
+    engine._pending_roots = None
+    engine._repair_todo = None
+    if not rep_slices:
+        return roots
+
+    total_m = sum(m for _, _, _, _, _, _, m in rep_slices)
+    done_list = engine.repair_done_host[:total_m].tolist() if total_m > 0 else []
+    is_cuda = torch.device(engine.device).type == "cuda"
+    ctx = torch.cuda.stream(engine.side) if is_cuda else contextlib.nullcontext()
+    with ctx:
+        for g, R, bad_all, repairable, hopeless, off, m in rep_slices:
+            if m > 0:
+                sub_done = done_list[off : off + m]
+                engine.extra += sum(1 for d in sub_done if d)
+                failed_rep = [repairable[i] for i in range(m) if not sub_done[i]]
+            else:
+                failed_rep = list(repairable)
+            still = failed_rep + list(hopeless)
+            if still:
+                engine.fallbacks += len(still)
+                _batched_exact_fallback(engine, g, R, still)
+                for j in still:
+                    g.basis_step[j] = engine.steps
+            if engine.refresh_flagged:
+                still_set = set(still)
+                for j in bad_all:
+                    if j not in still_set and g.pending[j] is None:
+                        engine._submit_refresh(g, j)
+    return roots
+
+
+def finish_roots_batched(engine):
+    """Batched, zero-roundtrip replacement for FastTonerCore._finish_roots."""
+    a = engine.args
+    if getattr(engine, "_repair_todo", None) is None:
+        had_todo = _launch_engine_repairs(engine)
+    else:
+        had_todo = bool(engine._repair_todo)
+    roots = _finish_engine_fallbacks(engine)
+    if torch.device(engine.device).type == "cuda":
+        if had_todo:
+            engine.main_stream.wait_stream(engine.side)
+        else:
+            engine.main_stream.wait_event(engine.ev_done)
+    if a.toner_check_every and engine.steps % a.toner_check_every == 0:
+        for name, Rr in roots.items():
+            g = engine.groups[name]
+            if not g.per:
+                continue
+            if engine.split:
+                _, Rxp = PR.exact_eigh_powers(g.C)
+                pairs = [(name, Rr[0], Rxp[engine.p_in]), (name + "_out", Rr[1], Rxp[engine.p_out])]
+            else:
+                _, Rx = PR.exact_eigh(g.C)
+                pairs = [(name, Rr, Rx)]
+            for key, R, Rx in pairs:
+                rel = (R - Rx).norm(dim=(-2, -1)) / Rx.norm(dim=(-2, -1))
+                Cn = g.C / g.C.diagonal(dim1=-2, dim2=-1).sum(-1)[:, None, None]
+                d = R - Rx
+                ec = (
+                    ((d @ Cn @ d.mT).diagonal(dim1=-2, dim2=-1).sum(-1) / (Rx @ Cn @ Rx.mT).diagonal(dim1=-2, dim2=-1).sum(-1))
+                    .clamp_min(0)
+                    .sqrt()
+                )
+                engine.check[key] = (rel.max().item(), rel.median().item(), ec.max().item())
+    return roots
+
+
+def roots_2bit(engine, g):
+    """Root candidates with 2-bit flag encoding (0 = converged, 1 = repairable, 2 = hopeless rho > rho_max)."""
+    a = engine.args
+    B, _ = PR.basis_transform(g.C, g.basis)
+    lam, O, rho, est, state = engine.froot.froot_state(B, engine.iters, a.toner_freeze)
+    hopeless = rho > a.toner_rho_max
+    if engine.split:
+        Rp, est_s = PR.form_powers(g.basis, lam, O)
+        bad = hopeless | engine._split_over(est, est_s, g.tol) | ~torch.isfinite(lam).all(-1)
+        status = bad.to(torch.uint8) + (bad & hopeless).to(torch.uint8)
+        return (Rp[engine.p_in], Rp[engine.p_out]), B, status, state
+    bad = hopeless | ~(est <= g.tol) | ~torch.isfinite(lam).all(-1)
+    status = bad.to(torch.uint8) + (bad & hopeless).to(torch.uint8)
+    return PR.form(g.basis, lam, O), B, status, state
+
+
+def _parse_cpulist(spec: str) -> list[int]:
+    cpus: list[int] = []
+    for part in spec.strip().split(","):
+        if not part:
+            continue
+        if "-" in part:
+            lo, hi = part.split("-", 1)
+            cpus.extend(range(int(lo), int(hi) + 1))
+        else:
+            cpus.append(int(part))
+    return cpus
+
+
+try:
+    _INITIAL_AFFINITY: set[int] | None = set(os.sched_getaffinity(0))
+except OSError:
+    _INITIAL_AFFINITY = None
+
+
+def configure_numa_host_args(args, device, *, role: str = "input"):
+    """Isolate background host eigendecomposition workers onto NUMA-local cores away from main/NCCL threads."""
+    out = copy.copy(args)
+    if torch.device(device).type != "cuda" or getattr(out, "toner_host_cores", ""):
+        if role == "output":
+            out.toner_host_workers = min(3, max(1, int(out.toner_host_workers)))
+            out.toner_host_threads = min(2, max(1, int(out.toner_host_threads)))
+        return out
+    dev_idx = torch.device(device).index
+    if dev_idx is None:
+        dev_idx = torch.cuda.current_device()
+    cpulist_path = Path(f"/sys/devices/system/node/node{dev_idx}/cpulist")
+    try:
+        raw_cpus = _parse_cpulist(cpulist_path.read_text())
+        numa_cpus = [c for c in raw_cpus if _INITIAL_AFFINITY is None or c in _INITIAL_AFFINITY]
+    except OSError:
+        numa_cpus = []
+    if len(numa_cpus) >= 16:
+        half = len(numa_cpus) // 2
+        phys = numa_cpus[:half]
+        sibs = numa_cpus[half:]
+        # Reserve phys[:4] (+ sibs[:4]) exclusively for the rank's PyTorch main thread & NCCL proxy threads.
+        try:
+            main_cores = set(phys[:4] + sibs[:4])
+            if main_cores:
+                os.sched_setaffinity(0, main_cores)
+        except OSError:
+            pass
+        bg_pool = phys[4:] + sibs[4:]
+        if role == "input":
+            in_pool = bg_pool[: min(12, max(6, len(bg_pool) * 2 // 3))]
+            out.toner_host_cores = ",".join(str(c) for c in in_pool)
+            out.toner_host_workers = min(2, max(1, int(out.toner_host_workers)))
+            out.toner_host_threads = max(2, min(6, len(in_pool) // max(1, out.toner_host_workers)))
+        else:
+            split_idx = min(12, max(6, len(bg_pool) * 2 // 3))
+            out_pool = bg_pool[split_idx:] or bg_pool[-6:]
+            out.toner_host_cores = ",".join(str(c) for c in out_pool)
+            out.toner_host_workers = min(3, max(2, len(out_pool) // 2))
+            out.toner_host_threads = max(1, min(2, len(out_pool) // max(1, out.toner_host_workers)))
+    elif role == "output":
+        out.toner_host_workers = min(3, max(1, int(out.toner_host_workers)))
+        out.toner_host_threads = min(2, max(1, int(out.toner_host_threads)))
+    return out
+
+
 class OutputToner(FastTonerCore):
     """Toner's pooled statistics, cached roots, and host refresh over output-cotangent rows."""
 
     def __init__(self, rows, kinds, *, layers, hidden, mlp, rows_total, args, world, rank, device, lagged=False):
-        # The parent constructor builds input groups from block buffers. Give it empty one-column
-        # placeholders, then install the output groups before any statistic, root, or refresh runs.
+        out_args = configure_numa_host_args(args, device, role="output")
         placeholder = torch.empty(0, 1, dtype=torch.bfloat16, device=device)
         blocks = [SimpleNamespace(**{f"input_rows_{kind}": placeholder for kind in INPUT_KINDS})] * layers
         super().__init__(
-            blocks, {}, "muont", hid=1, mlp=1, rows_total=rows_total, args=args, world=world, rank=rank, device=device
+            blocks, {}, "muont", hid=1, mlp=1, rows_total=rows_total, args=out_args, world=world, rank=rank, device=device
         )
         if lagged:
             # Lagged output work has a full update (~1s) to complete; keep normal priority so it
@@ -218,7 +543,21 @@ class OutputToner(FastTonerCore):
         for group in self.groups.values():
             group.host_tol = torch.empty(group.per, 3, pin_memory=True)
             group.tol = torch.full((group.per, 3), 1e-4, device=device)
-        self.flags_host = torch.zeros(sum(g.per for g in self.groups.values()), dtype=torch.uint8, pin_memory=True)
+        total_per = sum(g.per for g in self.groups.values())
+        self.flags_host = torch.zeros(total_per, dtype=torch.uint8, pin_memory=True)
+        self.repair_done_host = torch.zeros(max(1, total_per), dtype=torch.uint8, pin_memory=True)
+        self.ev_repairs = None
+        self._repair_todo = None
+        self._pending_roots = None
+
+    def _roots(self, g):
+        return roots_2bit(self, g)
+
+    def begin(self):
+        self._repair_todo = None
+        self._pending_roots = None
+        self.ev_repairs = None
+        return super().begin()
 
     def _stats(self):
         """Compute packed Grams, record row-buffer consumption immediately, then reduce-scatter and EMA."""
@@ -246,86 +585,24 @@ class OutputToner(FastTonerCore):
         self.weight = b * self.weight + (1 - b)
         self.chunks = 0
 
+    def poll_repairs_nonblocking(self) -> bool:
+        """Advance Stage 1 -> Stage 2 without blocking the Python main thread; return True when ready to finalize."""
+        if not self.begun:
+            return False
+        if self._repair_todo is None:
+            if not self.ev_flags.query():
+                return False
+            _launch_engine_repairs(self)
+        return self.ev_repairs is None or self.ev_repairs.query()
+
     def finish_roots_on_side(self):
-        """Finish flagged root repairs and exact fallbacks purely on self.side without stalling main_stream."""
-        a = self.args
-        self.ev_flags.synchronize()
-        flags = self.flags_host.tolist()
-        roots, o, todo = {}, 0, []
-        for name, g in self.groups.items():
-            R, B, _, state = self.cand[name]
-            bad = [j for j in range(g.per) if flags[o + j]]
-            o += g.per
-            roots[name] = R
-            if bad:
-                todo.append((g, R, B, state, bad))
-        if todo:
-            with torch.cuda.stream(self.side):
-                for g, R, B, state, still in todo:
-                    flagged = list(still)
-                    cur, hopeless = None, []
-                    for _ in range(a.toner_repair_rounds if state is not None else 0):
-                        k = 1 << (len(still) - 1).bit_length()
-                        pad = still + still[-1:] * (k - len(still))
-                        idx = torch.tensor(pad, device=self.device)
-                        if cur is None:
-                            st = tuple(t.index_select(0, idx) for t in state)
-                        else:
-                            pos = torch.tensor([cur[0].index(j) for j in pad], device=self.device)
-                            st = tuple(t.index_select(0, pos) for t in cur[1])
-                        lam, O, rho, est, dl = self.froot.froot_more(B.index_select(0, idx), st, 2, a.toner_freeze)
-                        if self.split:
-                            Rp2, est_s = PR.form_powers(
-                                PR.Basis.of_splits(g.basis.S2.index_select(0, idx)), lam, O
-                            )
-                            R2 = (Rp2[self.p_in], Rp2[self.p_out])
-                            okl = (
-                                (rho <= a.toner_rho_max)
-                                & ~self._split_over(est, est_s, g.tol.index_select(0, idx))
-                                & torch.isfinite(lam).all(-1)
-                            ).tolist()
-                        else:
-                            R2 = PR.form(PR.Basis.of_splits(g.basis.S2.index_select(0, idx)), lam, O)
-                            okl = (
-                                (rho <= a.toner_rho_max)
-                                & (est <= g.tol.index_select(0, idx))
-                                & torch.isfinite(lam).all(-1)
-                            ).tolist()
-                        rhok = (rho <= a.toner_rho_max).tolist()
-                        for i, j in enumerate(still):
-                            if okl[i]:
-                                if self.split:
-                                    R[0][j].copy_(R2[0][i])
-                                    if R[1] is not R[0]:
-                                        R[1][j].copy_(R2[1][i])
-                                else:
-                                    R[j].copy_(R2[i])
-                        self.extra += sum(okl[: len(still)])
-                        hopeless += [j for i, j in enumerate(still) if not okl[i] and not rhok[i]]
-                        cur = (pad, (lam, O, dl))
-                        still = [j for i, j in enumerate(still) if not okl[i] and rhok[i]]
-                        if not still:
-                            break
-                    still = still + hopeless
-                    for j in still:
-                        self.fallbacks += 1
-                        if self.split:
-                            (V, Rxp), lam_x = PR.exact_eigh_powers(g.C[j : j + 1], True)
-                            g.tol[j : j + 1].copy_(self._tolerance(lam_x))
-                            R[0][j].copy_(Rxp[self.p_in][0])
-                            if R[1] is not R[0]:
-                                R[1][j].copy_(Rxp[self.p_out][0])
-                        else:
-                            (V, Rx), lam_x = PR.exact_eigh(g.C[j : j + 1], True)
-                            g.tol[j : j + 1].copy_(self._tolerance(lam_x))
-                            R[j].copy_(Rx[0])
-                        g.basis.install(j, V[0])
-                        g.basis_step[j] = self.steps
-                    if self.refresh_flagged:
-                        for j in flagged:
-                            if j not in still and g.pending[j] is None:
-                                self._submit_refresh(g, j)
-        return roots
+        """Finish flagged root repairs and batched exact fallbacks purely on self.side without stalling main_stream."""
+        if self._repair_todo is None:
+            _launch_engine_repairs(self)
+        return _finish_engine_fallbacks(self)
+
+    def _finish_roots(self):
+        return finish_roots_batched(self)
 
 
 class DiagonalMoments:
@@ -358,11 +635,12 @@ class DiagonalMoments:
                 self.keys.setdefault(buffer.shape[-1], []).append(key)
         self.moment = {width: torch.zeros(len(keys), width, device=device) for width, keys in self.keys.items()}
         self._scratch = {}
+        self._chunk_sums: dict[int, torch.Tensor] = {}
         self.weight = 0.0
         self.pg = dist.new_group(backend=dist.get_backend()) if world > 1 else None
 
     @torch.no_grad()
-    def local_sums(self):
+    def _raw_local_sums(self):
         sums = {}
         for width, keys in self.keys.items():
             if self.inline is not None and self.inline.is_active(width):
@@ -375,6 +653,26 @@ class DiagonalMoments:
                     sums[width] = reduce_row_squares(buffers, self._scratch[width])
                 else:
                     sums[width] = torch.stack([b.float().square().sum(0) for b in buffers])
+        return sums
+
+    @torch.no_grad()
+    def accum_chunk(self):
+        """Accumulate row-buffer squares for a completed chunk prior to buffer reuse."""
+        for width, cur in self._raw_local_sums().items():
+            if self.inline is not None and self.inline.is_active(width):
+                continue
+            if width in self._chunk_sums:
+                self._chunk_sums[width].add_(cur)
+            else:
+                self._chunk_sums[width] = cur.clone()
+
+    @torch.no_grad()
+    def local_sums(self):
+        sums = self._raw_local_sums()
+        if self._chunk_sums:
+            for width, prev in self._chunk_sums.items():
+                sums[width] = prev.add_(sums[width])
+            self._chunk_sums.clear()
         return sums
 
     @torch.no_grad()
@@ -692,6 +990,7 @@ class BlockToner:
         _check_output_settings(config)
         self.arm = BLOCK_ARMS[config["experiment"]["arm"]]
         self.args = fast_arguments(config)
+        self.args.toner_stats_ctas = int(config.get("root", {}).get("stats_ctas", 0))
         self.world, self.rank, self.device = world, rank, device
         self._fast_cuda = torch.device(device).type == "cuda"
         blocks = list(model.body.blocks)
@@ -728,6 +1027,8 @@ class BlockToner:
         )
         self._step_scalars_cpu = torch.zeros(2, dtype=torch.float32).pin_memory() if self._fast_cuda else None
 
+        in_args = configure_numa_host_args(self.args, device, role="input")
+        in_engine = {"rows_total": rows_total, "args": in_args, "world": world, "rank": rank, "device": device}
         engine = {"rows_total": rows_total, "args": self.args, "world": world, "rank": rank, "device": device}
         input_full_kinds = self.arm.input_kinds(Side.FULL)
         input_diag_kinds = self.arm.input_kinds(Side.DIAGONAL)
@@ -742,17 +1043,21 @@ class BlockToner:
                 )
                 for b in blocks
             ]
-            self.input = FastTonerCore(input_blocks, {}, "muont", hid=hidden, mlp=hidden, **engine)
+            self.input = FastTonerCore(input_blocks, {}, "muont", hid=hidden, mlp=hidden, **in_engine)
             del self.input.groups["f"]
             self.input.flags_host = torch.zeros(
                 sum(g.per for g in self.input.groups.values()), dtype=torch.uint8, pin_memory=True
             )
         elif input_full_kinds == INPUT_KINDS:
-            self.input = FastTonerCore(blocks, {}, "muont", hid=hidden, mlp=mlp, **engine)
+            self.input = FastTonerCore(blocks, {}, "muont", hid=hidden, mlp=mlp, **in_engine)
         elif not input_full_kinds:
             self.input = None
         else:
             raise ValueError(f"Unsupported dense input kinds: {input_full_kinds}")
+        if self.input is not None:
+            self.input._roots = types.MethodType(roots_2bit, self.input)
+            self.input._finish_roots = types.MethodType(finish_roots_batched, self.input)
+            prewarm_repair_shapes(self.input)
 
         full, diagonal_kinds = self.arm.output_kinds(Side.FULL), self.arm.output_kinds(Side.DIAGONAL)
         self.output = (
@@ -768,6 +1073,8 @@ class BlockToner:
             if full
             else None
         )
+        if self.output is not None:
+            prewarm_repair_shapes(self.output)
         diagonal = {
             "decay": statistics["momentum"],
             "damping": statistics["damping"],
@@ -840,6 +1147,7 @@ class BlockToner:
                 self.output.side if self.output is not None else torch.cuda.Stream(device=device, priority=0)
             )
             self._ev_input_diag_ready = torch.cuda.Event()
+            self._ev_in_diag_chunk = None
             self._ev_rows_consumed = torch.cuda.Event()
             self._ev_lagged_ready = torch.cuda.Event()
             self._rows_guard_active = False
@@ -880,32 +1188,72 @@ class BlockToner:
     def engines(self):
         return [engine for engine in (self.input, self.output) if engine is not None]
 
-    def select_microbatch(self, index):
+    def _poll_lagged_nonblocking(self):
+        if not self._fast_cuda or not self.arm.lag_left:
+            return
+        has_work = (self.output is not None and self.output.begun) or bool(self.pending_diagonal)
+        if not has_work:
+            return
+        if self.output is not None and self.output.begun:
+            if not self.output.poll_repairs_nonblocking():
+                return
+        self.lagged = self._collect_lagged()
+
+    def chunk_wait(self):
+        """Wait for prior input chunk consumption before overwriting input row buffers."""
+        if self.input is not None:
+            self.input.chunk_wait()
+        if self._fast_cuda and self._ev_in_diag_chunk is not None:
+            self._main_stream.wait_event(self._ev_in_diag_chunk)
+
+    def chunk_stats(self):
+        """Accumulate partial input Grams / diagonal squares for a completed input chunk."""
+        if self.input is not None:
+            self.input.chunk_stats()
+        if self.input_diagonal is not None:
+            if self._fast_cuda:
+                ev = torch.cuda.Event()
+                ev.record(self._main_stream)
+                with torch.cuda.stream(self._input_side_stream):
+                    self._input_side_stream.wait_event(ev)
+                    self.input_diagonal.accum_chunk()
+                    self._ev_in_diag_chunk = torch.cuda.Event()
+                    self._ev_in_diag_chunk.record(self._input_side_stream)
+            else:
+                self.input_diagonal.accum_chunk()
+
+    def before_microbatch_backward(self, index: int, *, chunk: int | None = None):
+        """Ensure output row buffers are free right before backward writes cotangent rows."""
+        if not self._fast_cuda:
+            return
+        if index == 0 and self._rows_guard_active:
+            self._main_stream.wait_event(self._ev_rows_consumed)
+            self._rows_guard_active = False
+        if chunk is not None and index > 0 and index % chunk == 0 and self.output is not None:
+            self.output.chunk_wait()
+
+    def chunk_output_stats(self):
+        """Accumulate partial output Grams after a chunk's last microbatch backward."""
+        self._poll_lagged_nonblocking()
+        if self.output is not None:
+            self.output.chunk_stats()
+
+    def select_microbatch(self, index, *, chunk: int | None = None):
         if self._fast_cuda and index == 0:
-            if self._rows_guard_active:
-                self._main_stream.wait_event(self._ev_rows_consumed)
-                self._rows_guard_active = False
             if self._inline_diag is not None:
                 self._inline_diag.zero_()
+        slot = index if chunk is None else (index % chunk)
         if self._row_off is not None:
-            if self._fast_cuda and index < self._host_row_offsets.numel():
-                self._row_off.copy_(self._host_row_offsets[index], non_blocking=True)
+            if self._fast_cuda and slot < self._host_row_offsets.numel():
+                self._row_off.copy_(self._host_row_offsets[slot], non_blocking=True)
             else:
-                self._row_off.fill_(index * self.rows_per_microbatch)
+                self._row_off.fill_(slot * self.rows_per_microbatch)
         elif self.output_at is not None:
-            start = index * self.rows_per_microbatch
+            start = slot * self.rows_per_microbatch
             self.output_at.copy_(torch.arange(start, start + self.rows_per_microbatch, device=self.device))
 
-        # Opportunistically finish previous step's flagged output repairs/fallbacks + factor splits on
-        # _side_stream once microbatch 0's forward+backward (~235 ms GPU work) is already running on main_stream.
-        if (
-            self._fast_cuda
-            and self.arm.lag_left
-            and index >= 1
-            and ((self.output is not None and self.output.begun) or self.pending_diagonal)
-            and (self.output is None or not self.output.begun or self.output.ev_flags.query())
-        ):
-            self.lagged = self._collect_lagged()
+        if index >= 1:
+            self._poll_lagged_nonblocking()
 
     def _begin_input_diagonal(self):
         ev_fwd = torch.cuda.Event()
@@ -1114,32 +1462,50 @@ class BlockToner:
         if use_prepped_lag:
             self._main_stream.wait_event(self._ev_lagged_ready)
 
+        prepped_input = {}
         if fast_cuda:
             self._step_scalars_cpu[0] = group["lr"]
             self._step_scalars_cpu[1] = group["weight_decay"]
             lr_t, wd_t = self._step_scalars_cpu.to(self.device, non_blocking=True).unbind(0)
+            if input_roots is not None:
+                for g_name, (ri_grp, ro_grp) in input_roots.items():
+                    if ri_grp.numel():
+                        prepped_input[g_name] = (
+                            _prepare_side_factor(ri_grp, side="right", normalize_rms=False, compiled=True),
+                            _prepare_side_factor(ro_grp, side="right", normalize_rms=True, compiled=True),
+                        )
 
         works, finite = [], []
         for shape, per_rank in self.shape_groups:
             momentum = self.momentum[shape]
             mine = per_rank[self.rank]
             if mine:
-                if input_roots is not None and shape in self._input_gather_spec:
+                if fast_cuda and shape in self._input_gather_spec and self._input_gather_spec[shape][0] in prepped_input:
                     g_name, g_idx = self._input_gather_spec[shape]
-                    ri_grp, ro_grp = input_roots[g_name]
+                    ri_grp_p, ro_grp_p = prepped_input[g_name]
                     if g_idx is None:
-                        right_inner, right_outer = ri_grp, ro_grp
+                        ri_prep, ro_prep = ri_grp_p, ro_grp_p
                     else:
-                        right_inner = ri_grp.index_select(0, g_idx)
-                        right_outer = ro_grp.index_select(0, g_idx)
+                        ri_prep = ri_grp_p.index_select(0, g_idx)
+                        ro_prep = ro_grp_p.index_select(0, g_idx)
                 else:
-                    right_pairs = [right.get((layer, INPUT_KIND[kind]), (None, None)) for layer, kind, _ in mine]
-                    right_inner = stack_factors([p[0] for p in right_pairs], leading=len(mine), width=shape[1])
-                    right_outer = stack_factors([p[1] for p in right_pairs], leading=len(mine), width=shape[1])
+                    if input_roots is not None and shape in self._input_gather_spec:
+                        g_name, g_idx = self._input_gather_spec[shape]
+                        ri_grp, ro_grp = input_roots[g_name]
+                        if g_idx is None:
+                            right_inner, right_outer = ri_grp, ro_grp
+                        else:
+                            right_inner = ri_grp.index_select(0, g_idx)
+                            right_outer = ro_grp.index_select(0, g_idx)
+                    else:
+                        right_pairs = [right.get((layer, INPUT_KIND[kind]), (None, None)) for layer, kind, _ in mine]
+                        right_inner = stack_factors([p[0] for p in right_pairs], leading=len(mine), width=shape[1])
+                        right_outer = stack_factors([p[1] for p in right_pairs], leading=len(mine), width=shape[1])
+                    if fast_cuda:
+                        ri_prep = _prepare_side_factor(right_inner, side="right", normalize_rms=False, compiled=True)
+                        ro_prep = _prepare_side_factor(right_outer, side="right", normalize_rms=True, compiled=True)
 
                 if fast_cuda:
-                    ri_prep = _prepare_side_factor(right_inner, side="right", normalize_rms=False, compiled=True)
-                    ro_prep = _prepare_side_factor(right_outer, side="right", normalize_rms=True, compiled=True)
                     if use_prepped_lag:
                         li_prep, lo_prep = self._lagged_prepared.get(shape, (None, None))
                     elif output_roots is not None and shape in self._output_gather_spec:
@@ -1208,23 +1574,29 @@ class BlockToner:
 
         finite_vec = torch.stack(finite)
         defer = bool(getattr(self, "defer_finite_check", False)) and fast_cuda
+        zero_scalar = None
         if defer:
             self._last_finite_checks = finite_vec
             all_ok = finite_vec.all()
+            zero_scalar = torch.zeros((), dtype=torch.float32, device=self.device)
         else:
             checks = finite_vec.tolist()
             if not all(checks):
                 bad = [shape for (shape, _), ok in zip(self.shape_groups, checks, strict=True) if not ok]
                 raise FloatingPointError(f"Nonfinite block update for shapes {bad}")
 
-        for per_rank, work, gathered in works:
+        for idx_w in range(len(works)):
+            per_rank, work, gathered = works[idx_w]
+            works[idx_w] = None
             if work is not None:
                 work.wait()
             for entries, updates in zip(per_rank, gathered, strict=True):
                 if entries:
                     if defer:
-                        updates = torch.where(all_ok, updates, torch.zeros((), dtype=updates.dtype, device=updates.device))
+                        z = zero_scalar if updates.dtype == torch.float32 else torch.zeros((), dtype=updates.dtype, device=updates.device)
+                        torch.where(all_ok, updates, z, out=updates)
                     torch._foreach_add_([parameter for _, _, parameter in entries], list(updates.unbind(0)))
+            del gathered
         for engine in self.engines:
             engine.steps += 1
             engine.t += 1

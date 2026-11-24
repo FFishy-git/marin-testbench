@@ -418,22 +418,28 @@ and C4 evaluations.}
 \label{sec:sym-root-fidelity}
 
 The three width-$2048$ groups diagonalized by \taxid{WT-Sym} have the highest
-inner-root $R^2$ values in Table~\ref{tab:motivation}: \texttt{out:gate}
-($\motOutGateExpVarLMedPct\%$), \texttt{in:down}
-($\motInDownExpVarLMedPct\%$), and \texttt{out:up}
-($\motOutUpExpVarLMedPct\%$). All width-$512$ sides remain dense.
+inner-root $R^2$ values in Table~\ref{tab:motivation} across all three audited
+trajectories (\taxid{Muon} / \taxid{MuonT} / \taxid{WT-MLP-Lag}):
+\texttt{out:gate} ($\motMuonOutGateExpVarLMedPct\% / \motOutGateExpVarLMedPct\%
+/ \motWtOutGateExpVarLMedPct\%$), \texttt{in:down}
+($\motMuonInDownExpVarLMedPct\% / \motInDownExpVarLMedPct\% /
+\motWtInDownExpVarLMedPct\%$), and \texttt{out:up}
+($\motMuonOutUpExpVarLMedPct\% / \motOutUpExpVarLMedPct\% /
+\motWtOutUpExpVarLMedPct\%$). All width-$512$ sides remain dense.
 The same factor choices apply to the lagged variants; the two plotted recipes
 differ only in whether \texttt{in:down}'s factors are dense or diagonal.
-These scores are $32$-layer medians at update $2{,}500$ of baseline
-\taxid{MuonT}.
+These scores are $32$-layer medians at update $2{,}500$.
 This makes symmetric diagonalization a reasonable economy to test, but
 $R^2$ measures Frobenius agreement with an inverse-root matrix. It does not
 measure the error in the realized optimizer direction or the resulting loss.
 For \texttt{in:down}, large coordinate scale variation coexists with
-$56.6\%$ off-diagonal moment anisotropy; its median off-diagonal correlation
-RMS is \motInDownCorrRmsMed{}, versus \motOutGateCorrRmsMed{} for
-\texttt{out:gate}. A high aggregate root score can therefore coexist with
-correlations that could still matter to the update.
+$\motInDownOffdiagAnisoMedPct\%$--$\motMuonInDownOffdiagAnisoMedPct\%$
+off-diagonal moment anisotropy across \taxid{Muon}, \taxid{MuonT}, and
+\taxid{WT-MLP-Lag}; its median off-diagonal correlation RMS is
+\motMuonInDownCorrRmsMed{} / \motInDownCorrRmsMed{} / \motWtInDownCorrRmsMed{},
+versus \motMuonOutGateCorrRmsMed{} / \motOutGateCorrRmsMed{} /
+\motWtOutGateCorrRmsMed{} for \texttt{out:gate}. A high aggregate root score can
+therefore coexist with correlations that could still matter to the update.
 
 In the two-sided update \eqref{eq:family}, writing $R_{\diag}$ for the diagonal
 input root, the pre-orthogonalization
