@@ -1,0 +1,20 @@
+\begin{table}[tbp]\centering\footnotesize
+\setlength{\tabcolsep}{5.2pt}
+\caption{\textbf{Short-schedule (320-step) versus full-budget (5,120-step) matrix learning-rate sweeps at 130M (seed 0).} Entries are final held-out losses $\Lsel$ in nats; bold marks each row's minimum within that horizon. All four core full-budget curves achieve an interior minimum at $0.0160$, whereas the compressed 320-step schedule shifts apparent optima $4\text{--}6\times$ higher.}\label{tab:lr_cliff}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrr@{}}
+\toprule
+Method & 0.0113 & 0.0160 & 0.0226 & 0.0320 & 0.0453 & 0.0640 & 0.0905 & 0.1280 \\
+\midrule
+\addlinespace[2pt]\multicolumn{9}{@{}l}{\textit{Short-schedule proxy sweep: 320 steps (0.17B tokens, seed 0)}}\\
+MuonT & --- & 4.5661 & 4.4221 & 4.3347 & 4.2720 & \textbf{4.2510} & 4.2533 & 4.3021 \\
+OD-All & --- & 4.5787 & 4.4312 & 4.3326 & 4.2577 & 4.2339 & \textbf{4.2314} & 4.2693 \\
+OD-Outer & --- & 4.5854 & 4.4417 & 4.3337 & 4.2702 & 4.2442 & \textbf{4.2367} & 4.2798 \\
+OD-Outer-F & --- & 4.5887 & 4.4412 & 4.3346 & 4.2748 & \textbf{4.2411} & 4.2436 & 4.2878 \\
+\addlinespace[5pt]\multicolumn{9}{@{}l}{\textit{Full-budget verification: 5,120 steps (2.68B tokens, seed 0)}}\\
+Muon & 3.2496 & \textbf{3.2461} & 3.2524 & 3.2667 & --- & --- & --- & --- \\
+MuonT & 3.2404 & \textbf{3.2342} & 3.2354 & 3.2398 & --- & 3.2775 & --- & --- \\
+OD-All & 3.2383 & \textbf{3.2318} & 3.2333 & 3.2403 & --- & --- & 3.3200 & --- \\
+OD-Outer-F & --- & --- & \textbf{3.2318} & --- & --- & 3.2752 & --- & --- \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 3.2363 & \textbf{3.2303} & 3.2311 & 3.2356 & --- & --- & --- & --- \\
+\bottomrule\end{tabularx}
+\end{table}

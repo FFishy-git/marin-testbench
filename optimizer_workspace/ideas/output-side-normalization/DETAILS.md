@@ -7512,7 +7512,7 @@ No original keeper, controller, validator or monitor was restarted.
 <!-- BEGIN AUTOMATED WAVE LEDGER -->
 ## Automated Wave Ledger
 
-Refreshed 2026-11-25 01:45:15, Asia/Shanghai, from saved artifacts.
+Refreshed 2026-11-25 23:01:29, Asia/Shanghai, from saved artifacts.
 Observation and cloud-verification times below are the receipt times, not new live checks.
 Loss deltas are candidate minus reference; negative is better. Late evaluation means
 cover the final half of pairwise common observed tokens, not a completed budget
@@ -26716,3 +26716,219 @@ existing `PVC/.endeavor-update.lock`, preserving prior prefixes,
 timestamps and unrelated dirty content. No source, configuration,
 helper, operational file, allocation, upload, commit or publication
 is changed.
+
+
+### November 25 Output-Drift Diagnostic Receipts
+
+Diagnostic root:
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/diagnostics/output-drift-trajectories-20261125`.
+The final manifest contains 62 checkpoint probes (42 seed-0 130M, 12 fresh
+130M seeds 1--3, eight seed-0 520M). Training EMA analysis reads 336
+checkpoint shards. Final summaries contain 23,296 fixed-data layer/interval/
+replicate observations and 6,400 training-EMA observations, including the
+separate 120-step 130M tail. No missing probes or duplicate observation keys
+were found. Checkpoint size/mtime receipts and configuration remain in the
+NPZ metadata; checkpoint mtimes still match at the final audit.
+
+The GPU allocation command was
+`python run_probe_allocation.py --manifest probe_manifest.json --workers 8
+--name full`, with those paths resolved under the diagnostic root. Its
+wrapper PID was 3202028; eight workers were 3202036--3202043. All workers
+finished successfully, the wrapper exited zero, and `full_allocation.json`
+records `status: complete` and `keeper_restore: 0` at
+2026-11-25T07:56:57.524196+00:00. The restore log reports keeper parent
+3225020 healthy. Original logs are `full_worker0.log` through
+`full_worker7.log`; the allocation wrapper preserves the released keeper's
+process generations and uses the existing identity-safe cleanup and node
+lock. Probe computation ran on eight A100-SXM4-40GB GPUs with PyTorch 2.10.0;
+all checkpoints use the same compiled BF16/FA2 probe path.
+
+Manifest SHA-256: `ccf02aeba4bdc4011547bdfcfbb7614fc05e2a23fb66ed38ce2dc43d5b7fe309`.
+Probe tokens SHA-256:
+`9faa42473155fd0dabc6c5bc088b9ab05bb09451070d15240eb7ed0f831673dd`.
+Frozen source copies are in `source/`. The source basis is the frozen
+`sym-mlpdiag-fastlag-20261120` candidate and Toner revision
+`dab7f3777c75e740536df822f50ffa1d929a340c`; the working Marin HEAD is
+`398c460d5548a61db215588ac1e509f7f5ef8820`, with uncommitted manuscript/scripts.
+The initial cached pilot `130M_MuonT_000250` lacks the later model/capture
+hash fields. All other 61 probes report one matching model hash and one
+matching capture hash. Script metadata/formatting changed during execution;
+per-checkpoint script hashes describe the file when metadata was collected,
+not necessarily the process-start source. The mathematical probe operations
+and candidate path are unchanged.
+
+`analysis_validation.json` records the final row/identity checks and direct
+projection-form checks. Maximum FP64 eigensolve relative residual is
+2.531e-15; after FP32 basis storage, sampled projection-form
+agreement is within 4.821e-09 and identity drift within
+1.445e-08. `drift_summary.json` retains raw observations;
+`paper_v3/tables/output_drift_metrics.json` contains the compact source and
+aggregation record (SHA-256 `da35ad7c15ab84a5e78bbecf518a12c918684fc50b439d27b663cbb86e1897b3`).
+The scientific interpretation and scope are in the November 25 ENDEAVOR entry.
+
+
+### November 25 Muon-Baseline Diagnostic Receipts
+
+The diagnostic root remains
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/diagnostics/output-drift-trajectories-20261125`.
+`probe_manifest_muon.json` adds 31 probes: 21 seed-0 130M checkpoints,
+six fresh 130M checkpoints across seeds 1--3, and four seed-0 520M
+checkpoints. `probe_manifest_all_methods.json` contains all 93 probes
+across 15 completed training runs. The original 62-probe manifest and
+allocation receipts are preserved. `muon_source_run_audit.json` records
+the source run configurations, learning rates, completion status, and
+model/data source hashes. Muon seed 0 comes from `runs/wave0/muon` at
+130M and `campaigns/confirmation-20261121/runs/wave4a/muon_520m_1x_seed0`
+at 520M; fresh seeds come from the confirmation campaign's wave2a/b/c.
+
+The allocation command, executed with `DIAG` equal to the directory above,
+was:
+
+```bash
+uv run --offline --no-project --python /opt/conda/envs/torch-base/bin/python python \
+  "$DIAG/run_muon_probe_allocation.py" \
+  --manifest "$DIAG/probe_manifest_muon.json" --workers 8 --name muon
+```
+
+The wrapper PID was 3232797; worker PIDs were 3232845--3232852. All
+workers and the wrapper exited zero. `muon_allocation.json` records
+`status: complete` and `keeper_restore: 0` at
+2026-11-25T08:27:41.661974+00:00 (16:27:41 Asia/Shanghai). The restored
+keeper parent is 3248289. The shared node lock and generation-aware
+keeper procedure were reused. Logs are `muon_worker0.log` through
+`muon_worker7.log`. Probes used eight A100-SXM4-40GB GPUs and the same
+compiled BF16/FA2 path, with no optimizer updates.
+
+Each checkpoint uses the same two disjoint fixed sets of 16 windows,
+4,576 sampled cotangent rows per set and moment, and all seven roles
+across 32 layers. The probe-token SHA-256 remains
+`9faa42473155fd0dabc6c5bc088b9ab05bb09451070d15240eb7ed0f831673dd`.
+All 31 Muon probes used the frozen `source_muon/probe_drift_checkpoints.py`,
+SHA-256 `24e38edf184fe1b72183d52b90c7ffc1381d721f006cac28e9f6c6b2cd921641`.
+This source was unchanged during execution. Final analysis and plotting
+sources, with their hashes in `muon_source_receipt.json`, are preserved
+alongside it. The model/capture path, Toner revision, and dirty Marin
+revision remain as recorded in the preceding diagnostic entry.
+
+Muon manifest SHA-256:
+`637b4bbaefdb43359b1535735cac44c8d56752d65921f040d7f47779987c0112`.
+Combined manifest SHA-256:
+`d6ec45e6333e8cb04509ec0d7b0d1c0a0e5fa9f8ccff006dfdb2dcccc6fb99c0`.
+Compact summary `paper_v3/tables/output_drift_metrics.json.gz` SHA-256:
+`549c3e62952681f7376a2d98490ebbbee8d03620c5b7ed336b085f9e9d26ca48`.
+The superseded uncompressed compact summary is preserved exactly as
+`output_drift_metrics_before_muon.json` in the diagnostic root, and in
+`/root/tmp_paper_tools/paper_v3_before_muon_drift_20261125/` with the
+complete pre-extension paper. `drift_summary_muon.json` contains the
+full combined observations; `drift_summary.json` remains unchanged.
+
+`muon_analysis_validation.json` records 34,944 fixed-data observations,
+all 23,296 original observations exactly unchanged, and the original
+6,400 EMA observations. It verifies no missing probes or duplicate keys,
+unchanged checkpoint mtimes, finite losses, matching probe data/positions,
+matched model/training/runtime/schedule/data configuration fields, and
+the reduction formula. The maximum FP64 relative eigensolve residual is
+2.530510239177855e-15. The validation source is preserved at
+`source_muon/validate_muon_drift.py`. Muon-specific learning rates are
+recorded separately and differ from the preconditioned methods for seed 0.
+
+The main reduction is `100 * (1 - mean(method) / mean(Muon))`, averaging
+equally over paired layers, probe sets, equal-length intervals, and,
+for all-role results, roles before taking the ratio. WT reductions are
+16.68196% at 130M and 18.88581% at 520M; MuonT reductions are -2.89536%
+and +1.93091%. Value-projection WT reductions are negative at both
+sizes. At the common rate 0.016, fresh-seed WT reductions are 18.07322%,
+18.98522%, and 19.32457%; MuonT reductions are 4.49340%, 5.38826%, and
+0.03558%. All seven WT roles favor WT over Muon in every fresh seed.
+The dense 130M average excludes the separate 120-step tail, and the
+520M comparison omits the first quarter. No Muon EMA was fabricated.
+The baseline extension supports descriptive fixed-data subspace findings,
+with no claim of independent layer/interval replications, population
+eigenspace recovery, causal loss improvement, or safe root-refresh changes.
+
+The final manuscript builds to 36 pages without LaTeX warnings or
+overfull/underfull boxes. Section 7 begins on page 16, Table 10 is on
+page 19, and Figures 9--10 are on pages 20--21. Equations (3), (12), and
+(13) retain their numbers. Rendered section, table, and figure pages were
+checked, and a contextless reader review clarified definitions and scope.
+`muon_manuscript_validation.json` records page labels, final artifact
+hashes, and unchanged Figure 1--8 PDFs relative to the pre-extension
+backup. Scoped manuscript/script/data lint passes through
+`infra/pre-commit.py`; its log and the LaTeX log are preserved as
+`muon_manuscript_lint.log` and `muon_manuscript_latex.log`. The existing
+ENDEAVOR/DETAILS logs exceed the repository file-size limit before this
+append; their prefixes and unrelated work are preserved under the shared
+`.endeavor-update.lock`. No commit, upload, or publication was performed.
+
+
+### November 25 520M Learning-Rate Campaign Launch Receipts
+
+Shared campaign root:
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-520m-20261125`.
+The isolated `workspace/experiment/` and pinned Toner snapshot match all
+42 source hashes in the existing `confirmation-20261121/runs/wave4a`
+run manifests. Source was copied from the preserved lr-bracket workspace;
+no numerical runner edits were made. `manifest.json` records exact source,
+config, data, environment and reference identities. `preflight.json`
+verifies all four nodes' eight A100s, keeper generations, and runtime.
+`lint.json` records passing required scoped lint on worker/monitor scripts.
+
+Each detached allocation runs, from the campaign workspace:
+
+```text
+/opt/conda/envs/torch-base/bin/python campaign/allocation.py   --state <root>/allocations/<name>.state.json   --log <root>/allocations/<name>.log --   /opt/conda/envs/torch-base/bin/python -u campaign/worker.py --name <name>
+```
+
+The worker launches the preserved trainer with eight ranks, first using
+`reference_configs/<arm>.json --max-steps 8` under `smoke/<arm>`, then
+`configs/<name>.json` under `runs/<name>`, followed by `campaign/eval_paloma.py`.
+The full run is fresh and does not resume the reference replay checkpoint.
+All invocations and stdout/stderr are retained in allocation logs.
+
+| Node | Run | Allocation PID | Start ticks |
+| --- | --- | ---: | ---: |
+| 28.216.17.9 | muon_520m_1x_seed0_lr0p0226 | 3385354 | 994660971 |
+| 28.216.17.80 | muont_520m_1x_seed0_lr0p016 | 1337586 | 1688391826 |
+| 28.216.17.144 | od_all_520m_1x_seed0_lr0p016 | 1303059 | 1544001278 |
+| 28.216.17.139 | wt_mlp_lag_520m_1x_seed0_lr0p016 | 1372347 | 1251963694 |
+
+The monitor PID is 3385422 on node .9. `progress.json` is the latest
+observation, `progress.jsonl` is the minute-by-minute history,
+`workers/<name>.json` records stage and errors, and `smoke/<arm>/parity.json`
+records the replay result. `launch.json` stores exact allocation argv,
+PID, start ticks, and log paths; `campaign_source_sha256.json` pins the
+allocation/worker/evaluator/monitor code. Successful completion writes
+`completion.json`, `results.json`, and `RESULTS.md` after all workers and
+keeper-restoration receipts are complete. GPU process observation is in
+`gpu_observation.json`. Checkpoints remain at every 2,560 updates.
+
+
+The 21:17 launch follow-up verifies all four reference replays match
+exactly: eight train-loss differences and the initial selection-loss
+difference are zero for each optimizer. `parity_all.json` aggregates the
+individual receipts. All four workers have entered their fresh full-budget
+training stage. The new worker and monitor passed all scoped code checks.
+The existing ENDEAVOR/DETAILS documents exceeded the 500KB file-size check
+before this turn (HEAD: 852,754 and 1,724,323 bytes respectively); their
+other scoped checks pass. Historical document content was preserved.
+
+
+At 2026-11-25T13:20:27.318872+00:00 the four new-LR trajectories are advancing with
+finite train losses (completed steps: muon 33, muont 24, od_all 20, wt_mlp_lag 17). All four executed configs
+and 42-source manifests match their requested identities; all runs are
+fresh, with resume=null. The live GPU audit confirms eight training ranks
+on each node and 100% utilization on all 32 GPUs at observation time.
+The monitor passed a second 60-second cycle. Launch verification and
+full GPU process identities are saved in launch_verified.json and
+full_training_gpu_observation.json. Training and evaluation remain pending.
+
+
+The first monitor process (3385422) exited on a transient shared-filesystem
+FileNotFoundError while reading an atomically replaced status record. Only
+the monitor was changed to retry that specific read failure; its replacement
+PID is 3391574, start ticks 994690652, launched at 21:19:10 Asia/Shanghai.
+Training allocations and runner code were not restarted or changed.
+monitor_restart.json records the replacement source hash and reason;
+monitor_retry_lint.json records all scoped code checks passing. The
+replacement has completed two observation cycles without error. The
+original monitor.log and source hash receipt remain preserved.

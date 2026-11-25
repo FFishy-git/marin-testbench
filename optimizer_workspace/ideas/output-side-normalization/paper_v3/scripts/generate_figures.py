@@ -74,7 +74,7 @@ COL = {
     "bad_tint": "#FDF0EE",   # Soft stall fill
     "neutral_bar": "#94A3B8",# Secondary neutral bars
     "neutral_lt": "#CBD5E1", # Dominated / background bars
-    "rot_fill": "#DCE5F0",   # Subtle rotational complement in 100% stacked bar
+    "offdiag_fill": "#DCE5F0",  # Off-diagonal complement in 100% stacked bar
     "green": "#1F7A54",      # Sampling-noise floor reference
 }
 
@@ -195,91 +195,85 @@ def build_fig1():
     m25 = mech["motivation_trajectories"]["muon"]["step_002500"]
     t520 = json.load(open(RES_DIR / "measured_520m_timings.json"))["final_ws32_mb2_c2"]
 
-    fig = plt.figure(figsize=(6.5, 3.34))
-    gs = fig.add_gridspec(1, 4, width_ratios=[1.16, 0.30, 0.10, 1.10], wspace=0.11)
-    ax1, axc, ax2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1]), fig.add_subplot(gs[3])
+    fig = plt.figure(figsize=(6.5, 2.9))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.26, 0.19, 1.0], wspace=0.0)
+    ax1, ax2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[2])
+    fig.subplots_adjust(left=0.012, right=0.985, bottom=0.145, top=0.905)
+    # Panel (a) has no x-axis, so let its rows run down to panel (b)'s tick-label band.
+    bb = ax1.get_position()
+    ax1.set_position([bb.x0, 0.075, bb.width, bb.y1 - 0.075])
 
-    # --- Panel (a): where each moment's departure from identity lives ---
+    # --- Panel (a): where each moment's departure from identity lives, and what it costs ---
     outs = [
-        ("out_gate", "out:gate", 2048, COST_DFF, True),
-        ("out_up", "out:up", 2048, COST_DFF, True),
-        ("out_q", "out:q", 512, COST_DM, False),
-        ("out_k", "out:k", 512, COST_DM, False),
-        ("out_v", "out:v", 512, COST_DM, False),
-        ("out_down", "out:down", 512, COST_DM, False),
-        ("out_o", "out:o", 512, COST_DM, False),
+        ("out_gate", "gate", 2048, COST_DFF, True),
+        ("out_up", "up", 2048, COST_DFF, True),
+        ("out_q", "q", 512, COST_DM, False),
+        ("out_k", "k", 512, COST_DM, False),
+        ("out_v", "v", 512, COST_DM, False),
+        ("out_down", "down", 512, COST_DM, False),
+        ("out_o", "o", 512, COST_DM, False),
     ]
     ins = [
-        ("in_down", "in:down", 2048, COST_DFF, False),
-        ("in_o", "in:o", 512, COST_DM, False),
-        ("in_attn", "in:attn", 512, COST_DM, False),
-        ("in_mlp", "in:mlp", 512, COST_DM, False),
+        ("in_down", "down", 2048, COST_DFF, False),
+        ("in_o", "o", 512, COST_DM, False),
+        ("in_attn", "attn", 512, COST_DM, False),
+        ("in_mlp", "mlp", 512, COST_DM, False),
     ]
     rows = outs + ins
-    y = np.concatenate([np.arange(len(outs))[::-1] + len(ins) + 1.3, np.arange(len(ins))[::-1]])
+    y_out_hdr, y_in_hdr = -1.15, -1.15 - len(outs) - 1.45
+    y = np.concatenate([y_out_hdr - 1.0 - np.arange(len(outs)), y_in_hdr - 1.0 - np.arange(len(ins))])
     coord = np.array([m25[k]["diag_aniso_pct"]["median"] for k, _, _, _, _ in rows])
     cost = np.array([c for _, _, _, c, _ in rows]) * 100.0
-    diagonalized = [d for _, _, _, _, d in rows]
-    div_y, top = len(ins) + 0.65, y[0] + 1.55
 
-    style_ax(ax1, grid_axis="x", hide_left=True)
-    ax1.set_xlim(0, 100)
-    ax1.set_ylim(-0.75, top)
-    bh = 0.6
-    ax1.barh(y, coord, height=bh, color=COL["od"], zorder=3)
-    ax1.barh(y, 100.0 - coord, left=coord, height=bh, color=COL["rot_fill"], zorder=3)
-    ax1.set_yticks(y)
-    ax1.set_yticklabels([f"{lbl} ({w})" for _, lbl, w, _, _ in rows], fontsize=6.1)
-    ax1.tick_params(axis="y", length=0, pad=1.5)
-    for tick, (_, _, w, _, _) in zip(ax1.get_yticklabels(), rows):
-        tick.set_color(COL["ink"] if w == 2048 else COL["sub"])
-        tick.set_fontweight("bold" if w == 2048 else "normal")
+    # Column anchors in data units: name | width | 0..100 track | value | cost pill.
+    X_NAME, X_W, X_VAL, X_COST, X_R = -47.0, -7.0, 104.5, 134.0, 160.0
+    ax1.set_xlim(X_NAME - 1.5, X_R)
+    ax1.set_ylim(y[-1] - 0.75, 0.45)
+    ax1.axis("off")
 
-    for yi, c in zip(y, coord):
-        inside = c > 14.0
-        ax1.text(c - 1.6 if inside else c + 1.6, yi, f"{c:.1f}%", fontsize=5.7, fontweight="bold",
-                 color="white" if inside else COL["od"], ha="right" if inside else "left",
-                 va="center", zorder=5)
+    # Soft card behind the moments WT-MLP-Lag diagonalizes (corners corrected for aspect).
+    bb = ax1.get_position()
+    x_per_in = (X_R - X_NAME + 1.5) / (bb.width * fig.get_figwidth())
+    y_per_in = (0.45 - y[-1] + 0.75) / (bb.height * fig.get_figheight())
+    ax1.add_patch(FancyBboxPatch((X_NAME - 1.5, y[1] - 0.5), X_R - X_NAME + 1.5, 2 * 1.0 - 0.0,
+                                 boxstyle="round,pad=0,rounding_size=2.2",
+                                 mutation_aspect=y_per_in / x_per_in,
+                                 fc=COL["od_tint"], ec="none", zorder=0))
 
-    ax1.axhline(div_y, color=COL["spine"], linestyle="--", lw=0.6, zorder=2)
-    tr = ax1.get_yaxis_transform()
-    ax1.text(-0.015, y[0] + 0.78, "Outputs $B_t$", transform=tr,
-             fontsize=6.0, fontweight="bold", color=COL["ink"], ha="right", va="center")
-    ax1.text(-0.015, y[len(outs)] + 0.78, "Inputs $C_t$", transform=tr,
-             fontsize=6.0, fontweight="bold", color=COL["ink"], ha="right", va="center")
+    hdr = dict(fontsize=6.3, color=COL["muted"], va="center")
+    ax1.text(X_W, 0, "width", ha="right", **hdr)
+    ax1.text(0, 0, "Diagonal share of $\\|\\tilde{F} - I\\|_F^2$", ha="left", **hdr)
+    ax1.text(X_COST, 0, "eig. cost", ha="center", **hdr)
+    ax1.plot([X_NAME, X_R - 1.5], [-0.5, -0.5], color=COL["panel_edge"], lw=0.6, solid_capstyle="butt")
+    for yg, lab in ((y_out_hdr, "OUTPUTS  $B_t$"), (y_in_hdr, "INPUTS  $C_t$")):
+        ax1.text(X_NAME, yg, lab, fontsize=6.0, fontweight="bold", color=COL["sub"], ha="left", va="center")
 
-    ax1.set_xticks([0, 25, 50, 75, 100])
-    ax1.set_xticklabels(["0", "25", "50", "75", "100%"])
-    ax1.set_xlabel("Share of $\\|\\tilde{A} - I\\|_F^2$ a diagonal can represent")
-    ax1.text(1.0, top - 0.42, "coordinate", fontsize=6.0, fontweight="bold", color=COL["od"],
-             ha="left", va="center")
-    ax1.text(99.0, top - 0.42, "rotational", fontsize=6.0, fontweight="bold", color=COL["sub"],
-             ha="right", va="center")
-    panel_title(ax1, "(a)", "All 11 second moments: geometry and cost")
-
-    # Companion column: share of total dense eigendecomposition cost (all 11 moments = 100%).
-    style_ax(axc, grid_axis="x", hide_left=True)
-    axc.set_xlim(0, 44.5)
-    axc.set_ylim(-0.75, top)
-    axc.barh(y, cost, height=bh, zorder=3,
-             color=[COL["od"] if d else (COL["wt_soft"] if c > 10 else COL["neutral_lt"])
-                    for c, d in zip(cost, diagonalized)])
-    for yi, c, d in zip(y, cost, diagonalized):
-        if c > 10:
-            axc.text(c - 1.1, yi, f"{c:.1f}", fontsize=5.4, fontweight="bold", color="white",
-                     ha="right", va="center", zorder=5)
+    lw_bar = 4.2
+    for yi, c, k, (_, name, w, _, diag) in zip(y, coord, cost, rows):
+        wide = w == 2048
+        ink = COL["ink"] if wide else COL["sub"]
+        ax1.text(X_NAME, yi, name, fontsize=7.2, color=ink, fontweight="bold" if wide else "normal",
+                 ha="left", va="center")
+        ax1.text(X_W, yi, f"{w:,}", fontsize=6.4, color=ink if wide else COL["muted"],
+                 ha="right", va="center")
+        ax1.plot([0, 100], [yi, yi], color="#E8EDF2", lw=lw_bar, solid_capstyle="round", zorder=2)
+        ax1.plot([0, max(c, 0.01)], [yi, yi], color=COL["od"], lw=lw_bar, solid_capstyle="round", zorder=3)
+        ax1.text(X_VAL, yi, f"{c:.1f}%", fontsize=6.6, color=COL["od"] if c > 5 else COL["muted"],
+                 fontweight="bold" if c > 50 else "normal", ha="left", va="center")
+        if k > 10:
+            ax1.text(X_COST, yi, f"{k:.0f}%", fontsize=6.4, fontweight="bold", color="white",
+                     ha="center", va="center",
+                     bbox=dict(boxstyle="round,pad=0.28,rounding_size=0.55", lw=0,
+                               fc=COL["od"] if diag else COL["neutral_bar"]))
         else:
-            axc.text(c + 1.0, yi, f"{c:.1f}", fontsize=5.3, color=COL["muted"], ha="left", va="center")
-    axc.axhline(div_y, color=COL["spine"], linestyle="--", lw=0.6, zorder=2)
-    axc.set_xticks([])
-    axc.set_yticks([])
-    axc.set_xlabel("$O(d^3)$ cost\n(% of total)", fontsize=6.0, labelpad=3.0, linespacing=1.3)
-    axc.plot([35.0, 37.8, 37.8, 35.0], [y[0] + 0.42, y[0] + 0.42, y[1] - 0.42, y[1] - 0.42],
-             color=COL["od"], lw=0.7, clip_on=False)
-    axc.text(39.2, 0.5 * (y[0] + y[1]), f"{cost[0] + cost[1]:.1f}%", fontsize=5.6, fontweight="bold",
-             color=COL["od"], ha="left", va="center", rotation=90)
+            ax1.text(X_COST, yi, f"{k:.1f}%", fontsize=6.0, color=COL["neutral_bar"], ha="center", va="center")
+    ax1.text(X_COST + 13.0, 0.5 * (y[0] + y[1]), f"{cost[0] + cost[1]:.0f}%", fontsize=6.6, fontweight="bold",
+             color=COL["od"], ha="left", va="center")
+    ax1.plot([X_COST + 9.5, X_COST + 11.3, X_COST + 11.3, X_COST + 9.5],
+             [y[0] + 0.25, y[0] + 0.25, y[1] - 0.25, y[1] - 0.25], color=COL["od"], lw=0.6,
+             solid_joinstyle="round", solid_capstyle="round")
 
-    # --- Panel (b): 520M quality-cost frontier, anchored at Muon ---
+    # --- Panel (b): 520M quality-cost trade-off, anchored at Muon ---
     def _gains(arm):
         rows = load_jsonl_gz(f"campaigns/confirmation-20261121/runs/wave4a/{arm}_520m_1x_seed0/metrics_from_000000.jsonl.gz")
         st, _, vals = eval_series(rows)
@@ -293,47 +287,53 @@ def build_fig1():
     g_pal = {k: (pal["muon"] - v) * 1e3 for k, v in pal.items()}
     ox = {k: (t520[k]["median_s"] / t520["muon"]["median_s"] - 1.0) * 100.0 for k in sel}
 
-    style_ax(ax2, grid_axis="both")
+    style_ax(ax2, grid_axis="y", hide_left=True)
+    ax2.spines["bottom"].set_visible(False)
+    ax2.tick_params(axis="x", length=0)
+    ax2.axhline(0.0, color=COL["spine"], lw=0.6, zorder=1)
     frontier = ["muon", "muont", "wt_mlp_lag"]
-    ax2.plot([ox[k] for k in frontier], [g_sel[k] for k in frontier], "-", color=COL["wt"],
-             lw=1.0, alpha=0.45, zorder=2)
-    ax2.plot([ox[k] for k in frontier], [g_pal[k] for k in frontier], ":", color=COL["wt_mid"],
-             lw=1.0, alpha=0.55, zorder=2)
+    link = "#C9D2DC"
+    ax2.plot([ox[k] for k in frontier], [g_sel[k] for k in frontier], "-", color=link, lw=1.0,
+             solid_capstyle="round", solid_joinstyle="round", zorder=2)
+    ax2.plot([ox[k] for k in frontier], [g_pal[k] for k in frontier], "--", color=link, lw=1.0,
+             dashes=(2.5, 2.0), zorder=2)
 
     marks = {"muon": COL["muon"], "muont": COL["muont"], "od_all": COL["od"], "wt_mlp_lag": COL["wt"]}
     for k, c in marks.items():
-        ax2.plot([ox[k], ox[k]], [g_sel[k], g_pal[k]], color=c, lw=0.6, alpha=0.5, zorder=3)
-        ax2.scatter([ox[k]], [g_sel[k]], s=30, c=c, marker="o", edgecolors="white", linewidths=0.6, zorder=5)
-        ax2.scatter([ox[k]], [g_pal[k]], s=30, facecolors="white", edgecolors=c, marker="D",
-                    linewidths=0.9, zorder=5)
+        ax2.plot([ox[k], ox[k]], [g_sel[k], g_pal[k]], color=c, lw=3.2, alpha=0.16,
+                 solid_capstyle="round", zorder=3)
+        ax2.scatter([ox[k]], [g_sel[k]], s=30, c=c, marker="o", edgecolors="white", linewidths=0.8, zorder=5)
+        ax2.scatter([ox[k]], [g_pal[k]], s=26, facecolors="white", edgecolors=c, marker="o",
+                    linewidths=1.3, zorder=5)
 
-    ax2.text(ox["wt_mlp_lag"] - 0.35, g_pal["wt_mlp_lag"] + 0.15, "WT-MLP-Lag", fontsize=6.4,
-             fontweight="bold", color=COL["wt"], ha="right", va="bottom")
-    ax2.text(ox["muont"] - 0.3, g_pal["muont"] + 0.2, "MuonT", fontsize=6.3, fontweight="bold",
-             color=COL["muont"], ha="right", va="bottom")
-    ax2.text(ox["muon"] + 0.3, 0.25, "Muon (reference)", fontsize=6.3, fontweight="bold",
-             color=COL["muon"], ha="left", va="bottom")
-    ax2.annotate("OD-All: costlier than\nMuonT, gains less", xy=(ox["od_all"] + 0.1, g_sel["od_all"] - 0.05),
-                 xytext=(ox["od_all"] + 0.85, 0.80), fontsize=5.6, fontweight="bold", color=COL["od"],
-                 ha="left", va="center", linespacing=1.2,
-                 arrowprops=dict(arrowstyle="->", color=COL["od"], lw=0.65, shrinkA=1, shrinkB=2))
+    lab = dict(fontsize=7.1, fontweight="bold", va="center")
+    ax2.text(ox["wt_mlp_lag"] - 0.42, g_pal["wt_mlp_lag"], "WT-MLP-Lag", color=COL["wt"], ha="right", **lab)
+    ax2.text(ox["muont"] - 0.42, g_pal["muont"], "MuonT", color=COL["muont"], ha="right", **lab)
+    ax2.text(ox["od_all"] + 0.42, 0.5 * (g_sel["od_all"] + g_pal["od_all"]), "OD-All", color=COL["od"],
+             ha="left", **lab)
+    ax2.text(ox["muon"] + 0.42, -0.6, "Muon", color=COL["muon"], ha="left", **lab)
 
-    ax2.scatter([], [], s=28, c=COL["muted"], marker="o", edgecolors="white", linewidths=0.6,
+    ax2.scatter([], [], s=26, c=COL["sub"], marker="o", edgecolors="white", linewidths=0.8,
                 label="Held-out mixture")
-    ax2.scatter([], [], s=28, facecolors="white", edgecolors=COL["muted"], marker="D", linewidths=0.9,
-                label="Paloma, 16 domains")
-    ax2.legend(loc="upper left", bbox_to_anchor=(-0.015, 1.015), fontsize=5.8,
-               handletextpad=0.3, labelspacing=0.22)
+    ax2.scatter([], [], s=22, facecolors="white", edgecolors=COL["sub"], marker="o", linewidths=1.3,
+                label="Paloma (16 domains)")
+    ax2.legend(loc="upper left", bbox_to_anchor=(0.0, 1.0), fontsize=6.6, borderaxespad=0.2,
+               handletextpad=0.2, labelspacing=0.35, labelcolor=COL["sub"])
 
-    ax2.axhline(0.0, color=COL["spine"], linestyle=":", lw=0.6, zorder=1)
-    ax2.axvline(0.0, color=COL["spine"], linestyle=":", lw=0.6, zorder=1)
-    ax2.set_xlim(-1.0, 12.4)
-    ax2.set_ylim(-1.2, 11.0)
-    ax2.set_xlabel("Step-time overhead vs. Muon (%), $32\\times$A100")
-    ax2.set_ylabel("Loss reduction vs. Muon ($\\times 10^{-3}$ nats, $\\uparrow$)")
-    panel_title(ax2, "(b)", "520M quality--cost frontier ($d = 1024$)")
+    ax2.set_xlim(-0.8, 10.4)
+    ax2.set_ylim(-1.3, 11.4)
+    ax2.set_xticks([0, 2, 4, 6, 8, 10])
+    ax2.set_xticklabels(["0", "2", "4", "6", "8", "10%"])
+    ax2.set_yticks([0, 2, 4, 6, 8, 10])
+    ax2.set_xlabel("Median step-time overhead vs. Muon", labelpad=4)
+    ax2.set_ylabel("Loss reduction vs. Muon (10$^{-3}$ nats)", labelpad=4)
+    # Both panel titles share one baseline above panel (b).
+    title = dict(fontsize=8.4, fontweight="bold", color=COL["ink"], va="baseline")
+    y_title = mpl.transforms.offset_copy(ax2.transAxes, fig=fig, y=6, units="points")
+    ax2.text(0.0, 1.0, "(b)  520M quality vs. cost, 32$\\times$A100", transform=y_title, ha="left", **title)
+    ax1.text(X_NAME, 1.0, "(a)  Second-moment geometry and cost", ha="left",
+             transform=mpl.transforms.blended_transform_factory(ax1.transData, y_title), **title)
 
-    fig.subplots_adjust(left=0.135, right=0.988, bottom=0.175, top=0.895)
     fig.savefig(OUT_DIR / "fig1_overview.pdf")
     plt.close(fig)
 
@@ -352,139 +352,121 @@ def build_fig2():
     mdrift_wt = mt["wt_mlp_lag"]["grassmann_drift_2250_to_2500"]
     fb_steps = mech["motivation_null_all"]["fallback_totals_8rank"]
 
-    order = [
-        ("in_attn", "in:attn (512)"),
-        ("in_o", "in:o (512)"),
-        ("in_mlp", "in:mlp (512)"),
-        ("in_down", "in:down (2048)"),
-        ("out_o", "out:o (512)"),
-        ("out_down", "out:down (512)"),
-        ("out_v", "out:v (512)"),
-        ("out_k", "out:k (512)"),
-        ("out_q", "out:q (512)"),
-        ("out_up", "out:up (2048)"),
-        ("out_gate", "out:gate (2048)"),
-    ]
+    # Same rows and ordering as Figure 1(a).
+    outs = [("out_gate", "gate", 2048), ("out_up", "up", 2048), ("out_q", "q", 512), ("out_k", "k", 512),
+            ("out_v", "v", 512), ("out_down", "down", 512), ("out_o", "o", 512)]
+    ins = [("in_down", "down", 2048), ("in_o", "o", 512), ("in_attn", "attn", 512), ("in_mlp", "mlp", 512)]
+    rows = outs + ins
+    y_out_hdr, y_in_hdr = -1.0, -1.0 - len(outs) - 1.3
+    y = np.concatenate([y_out_hdr - 1.0 - np.arange(len(outs)), y_in_hdr - 1.0 - np.arange(len(ins))])
 
-    fig, (ax1, ax2, ax3) = plt.subplots(
-        1, 3, figsize=(6.5, 2.86), gridspec_kw={"width_ratios": [1.16, 0.94, 1.00], "wspace": 0.30}
-    )
+    trajs = ["Muon", "MuonT", "WT-MLP-Lag"]
+    da = np.array([[src[k]["diag_aniso_pct"]["median"] for k, _, _ in rows] for src in (m25_muon, m25, m25_wt)])
+    dr = np.array([[src[k]["drift_top16"]["mean"] for k, _, _ in rows] for src in (mdrift_muon, mdrift, mdrift_wt)])
 
-    y = np.arange(len(order))
-    da_muon = np.array([m25_muon[k]["diag_aniso_pct"]["median"] for k, _ in order])
-    da_muont = np.array([m25[k]["diag_aniso_pct"]["median"] for k, _ in order])
-    da_wt = np.array([m25_wt[k]["diag_aniso_pct"]["median"] for k, _ in order])
+    fig = plt.figure(figsize=(6.5, 2.8))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.86, 0.42, 1.0], wspace=0.0)
+    axT, ax3 = fig.add_subplot(gs[0]), fig.add_subplot(gs[2])
+    fig.subplots_adjust(left=0.012, right=0.985, bottom=0.15, top=0.835)
+    bb = axT.get_position()
+    axT.set_position([bb.x0, 0.035, bb.width, 0.875 - 0.035])
 
-    # --- Panel (a): 3-Trajectory Diagonal Anisotropy Bars ---
-    style_ax(ax1, grid_axis="x", hide_left=True)
-    ax1.axhspan(8.55, 10.45, color=COL["od_tint"], alpha=0.75, zorder=0)
-    bh = 0.23
-    ax1.barh(y + bh, da_muon, height=bh * 0.92, color=COL["muon"], zorder=3, label="Muon")
-    ax1.barh(y, da_muont, height=bh * 0.92, color=COL["muont"], zorder=3, label="MuonT")
-    ax1.barh(y - bh, da_wt, height=bh * 0.92, color=COL["wt"], zorder=3, label="WT-MLP-Lag")
+    # Equal x/y data units so rounded cells stay round.
+    bb = axT.get_position()
+    w_in, h_in = bb.width * fig.get_figwidth(), bb.height * fig.get_figheight()
+    y_top, y_bot = 0.6, y[-1] - 0.6
+    unit = h_in / (y_top - y_bot)
+    axT.set_ylim(y_bot, y_top)
+    axT.set_xlim(0, w_in / unit)
+    axT.axis("off")
 
-    # Clean section divider between Inputs (0..3) and Outputs (4..10)
-    ax1.axhline(3.5, color=COL["muted"], linestyle="--", linewidth=0.6, zorder=4)
-    ax1.text(98.5, 3.05, "Inputs $C_t$", fontsize=5.6, fontweight="bold", color=COL["sub"], ha="right", va="top")
-    ax1.text(98.5, 3.95, "Outputs $B_t$", fontsize=5.6, fontweight="bold", color=COL["sub"], ha="right", va="bottom")
+    X_NAME, X_W = 0.0, 3.75
+    GAP, XA, SEP = 0.14, 4.2, 0.7
+    CW = (w_in / unit - 0.2 - XA - SEP - 4 * GAP) / 6  # fill the table panel exactly
+    XB = XA + 3 * CW + 2 * GAP + SEP
+    cmapA = mpl.colors.LinearSegmentedColormap.from_list("diag", ["#F3F8F8", "#9FD0CD", COL["od"], "#08504F"])
+    cmapB = mpl.colors.LinearSegmentedColormap.from_list("drift", ["#F4F6FB", "#A9BFE0", COL["wt"], "#10305F"])
 
-    for idx in (3, 4, 5, 9, 10):
-        vmax = max(da_muon[idx], da_muont[idx], da_wt[idx])
-        vmin = min(da_muon[idx], da_muont[idx], da_wt[idx])
-        if idx in (9, 10):
-            ax1.text(vmin - 2.0, idx, f"{vmin:.1f}–{vmax:.1f}%", fontsize=5.1, color="white",
-                     fontweight="bold", ha="right", va="center", zorder=5)
-        elif idx in (4, 5):
-            ax1.text(vmax + 1.8, idx, f"{vmin:.1f}–{vmax:.1f}%", fontsize=5.4, color=COL["wt"],
-                     fontweight="bold", ha="left", va="center", zorder=5)
-        else:
-            ax1.text(vmax + 1.8, idx, f"{vmin:.0f}–{vmax:.0f}%", fontsize=5.4, color=COL["sub"],
-                     ha="left", va="center", zorder=5)
+    def heat(x0, vals, cmap, vmax, fmt, white_above):
+        for j in range(3):
+            xc = x0 + j * (CW + GAP)
+            for i, yi in enumerate(y):
+                v = vals[j, i]
+                t = min(v / vmax, 1.0)
+                axT.add_patch(FancyBboxPatch((xc, yi - 0.43), CW, 0.86, boxstyle="round,pad=0,rounding_size=0.18",
+                                             fc=cmap(0.04 + 0.96 * t), ec="none", zorder=2))
+                axT.text(xc + CW / 2, yi, fmt(v), fontsize=6.4, ha="center", va="center", zorder=3,
+                         color="white" if t > white_above else COL["ink"])
+            axT.text(xc + CW / 2, 0.0, trajs[j], fontsize=6.0, ha="center", va="center",
+                     color=COL["wt"] if j == 2 else COL["sub"], fontweight="bold" if j == 2 else "normal")
 
-    ax1.set_yticks(y)
-    ax1.set_yticklabels([lbl for _, lbl in order], fontsize=6.4)
-    for tick, (k, _) in zip(ax1.get_yticklabels(), order):
-        if k in ("out_gate", "out_up"):
-            tick.set_fontweight("bold")
-            tick.set_color(COL["od"])
-        elif k in ("out_o", "out_down"):
-            tick.set_fontweight("bold")
-            tick.set_color(COL["wt"])
-    ax1.set_xlim(0, 100)
-    ax1.set_ylim(-0.65, len(order) - 0.15)
-    ax1.set_xlabel("Diagonal anisotropy $\\mathrm{DiagAniso}$ (%)")
-    panel_title(ax1, "(a)", "Coordinate vs. rotational", pad=13)
-    ax1.legend(loc="lower left", bbox_to_anchor=(-0.02, 1.005), ncol=3, fontsize=5.4,
-               handlelength=0.85, handletextpad=0.28, columnspacing=0.65)
+    hdr = dict(fontsize=6.3, color=COL["muted"], va="center")
+    axT.text(X_W, 0.0, "width", ha="right", **hdr)
+    for yg, lab in ((y_out_hdr, "OUTPUTS  $B_t$"), (y_in_hdr, "INPUTS  $C_t$")):
+        axT.text(X_NAME, yg, lab, fontsize=6.0, fontweight="bold", color=COL["sub"], ha="left", va="center")
+    for yi, (_, name, w) in zip(y, rows):
+        wide = w == 2048
+        ink = COL["ink"] if wide else COL["sub"]
+        axT.text(X_NAME, yi, name, fontsize=7.2, color=ink, fontweight="bold" if wide else "normal",
+                 ha="left", va="center")
+        axT.text(X_W, yi, f"{w:,}", fontsize=6.4, color=ink if wide else COL["muted"], ha="right", va="center")
 
-    # --- Panel (b): 3-Trajectory Subspace Grassmann Drift ---
-    style_ax(ax2, grid_axis="x", hide_left=True)
-    dr_m = np.array([mdrift_muon[k]["drift_top16"]["mean"] for k, _ in order])
-    dr_mt = np.array([mdrift[k]["drift_top16"]["mean"] for k, _ in order])
-    dr_wt = np.array([mdrift_wt[k]["drift_top16"]["mean"] for k, _ in order])
+    heat(XA, da, cmapA, 100.0, lambda v: f"{v:.0f}" if v >= 10 else f"{v:.1f}", 0.5)
+    heat(XB, dr, cmapB, 0.7, lambda v: f"{v:.2f}".lstrip("0"), 0.45)
+    axT.plot([X_NAME, XB + 3 * CW + 2 * GAP], [-0.55, -0.55], color=COL["panel_edge"], lw=0.6,
+             solid_capstyle="butt")
 
-    ax2.axhspan(8.55, 10.45, color=COL["od_tint"], alpha=0.75, zorder=0)
-    ax2.axhline(3.5, color=COL["muted"], linestyle="--", linewidth=0.6, zorder=1)
-    ax2.axvline(0.0, color=COL["spine"], linewidth=0.55, zorder=1)
-    for i in range(len(order)):
-        ax2.plot([0, 0.78], [i, i], color="#F3F5F8", lw=0.45, zorder=0)
-        ax2.plot([0, dr_m[i]], [i + bh, i + bh], color=COL["muon"], lw=0.85, zorder=2)
-        ax2.plot([0, dr_mt[i]], [i, i], color=COL["muont"], lw=0.85, zorder=2)
-        ax2.plot([0, dr_wt[i]], [i - bh, i - bh], color=COL["wt"], lw=0.85, zorder=2)
-    ax2.scatter(dr_m, y + bh, s=11, c=COL["muon"], zorder=4, edgecolors="white", linewidths=0.35)
-    ax2.scatter(dr_mt, y, s=11, c=COL["muont"], zorder=4, edgecolors="white", linewidths=0.35)
-    ax2.scatter(dr_wt, y - bh, s=11, c=COL["wt"], zorder=4, edgecolors="white", linewidths=0.35)
-
-    ax2.annotate(
-        "16–32× faster\nthan in:attn",
-        xy=(dr_mt[6], 6.0), xytext=(0.48, 7.65),
-        fontsize=5.6, fontweight="bold", color=COL["wt"], ha="center", va="center", linespacing=1.15,
-        arrowprops=dict(arrowstyle="->", color=COL["wt"], lw=0.6, shrinkA=1, shrinkB=3),
-        path_effects=HALO
-    )
-
-    ax2.set_yticks(y)
-    ax2.set_yticklabels(["" for _ in order])
-    ax2.set_xlim(0, 0.78)
-    ax2.set_ylim(-0.65, len(order) - 0.15)
-    ax2.set_xticks([0.0, 0.2, 0.4, 0.6])
-    ax2.set_xlabel("250-step Grassmann $\\mathrm{Drift}_{16}$")
-    panel_title(ax2, "(b)", "Subspace drift", pad=13)
-    ax2.text(0.0, 1.02, "32-layer mean (2250→2500)", transform=ax2.transAxes, fontsize=5.4, color=COL["muted"])
-
-    # --- Panel (c): All 10 Logged Checkpoints for Exact-Root Fallbacks ---
-    style_ax(ax3, grid_axis="y")
+    # --- Panel (c): cumulative exact-root fallbacks in the dense-output diagnostic run ---
     t_steps = [250, 500, 1000, 1750, 2250, 2500, 3500, 4250, 4500, 5120]
-    toks_b = [fb_steps[f"step_{s:06d}"]["tokens_B"] for s in t_steps]
-    in_fb = [fb_steps[f"step_{s:06d}"]["input_fallbacks_8rank"] / 1000.0 for s in t_steps]
-    out_fb = [fb_steps[f"step_{s:06d}"]["output_fallbacks_8rank"] / 1000.0 for s in t_steps]
+    toks_b = np.array([fb_steps[f"step_{s:06d}"]["tokens_B"] for s in t_steps])
+    in_fb = np.array([fb_steps[f"step_{s:06d}"]["input_fallbacks_8rank"] for s in t_steps]) / 1000.0
+    out_fb = np.array([fb_steps[f"step_{s:06d}"]["output_fallbacks_8rank"] for s in t_steps]) / 1000.0
 
+    style_ax(ax3, grid_axis="y", hide_left=True)
+    ax3.axhline(0.0, color=COL["spine"], lw=0.55, zorder=1)
     ax3.axvspan(0, toks_b[0], color="#F1F5F9", alpha=0.9, zorder=0)
-    ax3.fill_between(toks_b, in_fb, out_fb, color=COL["bad"], alpha=0.06, zorder=1)
-    ax3.plot(toks_b, out_fb, "-o", color=COL["bad"], lw=1.6, markersize=2.8, zorder=4)
-    ax3.plot(toks_b, in_fb, "-s", color=COL["muont"], lw=1.35, markersize=2.5, zorder=3)
+    ax3.fill_between(toks_b, in_fb, out_fb, color=COL["bad"], alpha=0.06, lw=0, zorder=1)
+    ax3.plot(toks_b, out_fb, "-o", color=COL["bad"], lw=1.5, markersize=3.0, markeredgewidth=0,
+             solid_capstyle="round", zorder=4)
+    ax3.plot(toks_b, in_fb, "-s", color=COL["muont"], lw=1.3, markersize=2.6, markeredgewidth=0,
+             solid_capstyle="round", zorder=3)
 
-    # Direct inline labeling (zero legend box clutter & zero curve crossing)
-    ax3.text(0.18, 108.5, "Dense outputs $B_t$\n107.9k total (22.1 eigh/step)",
-             fontsize=5.8, fontweight="bold", color=COL["bad"], ha="left", va="top", linespacing=1.18, path_effects=HALO)
+    # Direct labels: bold series name, regular-weight detail line underneath.
+    name = dict(fontsize=7.0, fontweight="bold", ha="left", va="baseline")
+    note = dict(fontsize=6.2, ha="left", va="baseline")
+    ax3.text(0.2, 103.0, "Dense outputs $B_t$", color=COL["bad"], **name)
+    ax3.text(0.2, 95.5, f"{out_fb[-1]:.1f}k total, 22.1 eigh / step", color=COL["bad"], **note)
+    ax3.text(1.12, 13.5, "Dense inputs $C_t$", color=COL["muont"], **name)
+    ax3.text(1.12, 6.0, f"{in_fb[-1] * 1000:,.0f} total, 29 post-warmup", color=COL["sub"], **note)
     ax3.annotate(
         "3,714× post-warmup\nfallback rate",
-        xy=(1.835, 79.3), xytext=(2.10, 44.0),
-        fontsize=5.6, color=COL["bad"], fontweight="bold", ha="center", va="center", linespacing=1.15,
-        arrowprops=dict(arrowstyle="->", color=COL["bad"], lw=0.6, shrinkA=2, shrinkB=3),
-        path_effects=HALO
+        xy=(toks_b[6] + 0.03, out_fb[6] - 2.5), xytext=(2.12, 46.0),
+        fontsize=6.2, color=COL["bad"], ha="center", va="center", linespacing=1.2,
+        arrowprops=dict(arrowstyle="-|>", mutation_scale=5, color=COL["bad"], lw=0.6, shrinkA=3, shrinkB=3),
     )
-    ax3.text(2.76, 5.5, "Dense inputs $C_t$: 369 (29 post-warmup)",
-             fontsize=5.5, fontweight="bold", color=COL["muont"], ha="right", va="bottom", path_effects=HALO_SM)
 
     ax3.set_xlim(0, 2.82)
     ax3.set_ylim(-4, 117)
-    ax3.set_xlabel("Training tokens (B)")
-    ax3.set_ylabel("Cumulative 8-GPU fallbacks ($\\times 10^3$)")
-    panel_title(ax3, "(c)", "Exact-root fallbacks", pad=13)
-    ax3.text(0.0, 1.02, "Cached-eigenbasis tracker", transform=ax3.transAxes, fontsize=5.6, color=COL["muted"])
+    ax3.set_xticks([0, 0.5, 1.0, 1.5, 2.0, 2.5])
+    ax3.set_xticklabels(["0", "0.5", "1.0", "1.5", "2.0", "2.5B"])
+    ax3.set_xlabel("Training tokens", labelpad=3)
+    ax3.set_ylabel("Cumulative 8-GPU fallbacks ($\\times 10^3$)", labelpad=3)
+    # Subtitle sits on the table's column-header row.
+    y_hdr = fig.transFigure.inverted().transform(axT.transData.transform((0, 0.0)))[1]
+    ax3.text(0.0, y_hdr, "Cached-eigenbasis tracker, dense-output run", fontsize=6.0, color=COL["muted"],
+             ha="left", va="center",
+             transform=mpl.transforms.blended_transform_factory(ax3.transAxes, fig.transFigure))
 
-    fig.subplots_adjust(left=0.145, right=0.99, bottom=0.165, top=0.835, wspace=0.28)
+    # Panel titles share one baseline.
+    title = dict(fontsize=8.4, fontweight="bold", color=COL["ink"], va="baseline")
+    y_title = 0.932
+    fig.text(X_NAME, y_title, "(a)  Diagonal share (%)", ha="left",
+             transform=mpl.transforms.blended_transform_factory(axT.transData, fig.transFigure), **title)
+    fig.text(XB, y_title, "(b)  Top-16 subspace drift", ha="left",
+             transform=mpl.transforms.blended_transform_factory(axT.transData, fig.transFigure), **title)
+    fig.text(0, y_title, "(c)  Exact-root fallbacks", ha="left",
+             transform=mpl.transforms.blended_transform_factory(ax3.transAxes, fig.transFigure), **title)
+
     fig.savefig(OUT_DIR / "fig2_structural_audit.pdf")
     plt.close(fig)
 
@@ -586,7 +568,7 @@ def build_fig3():
     band_y, band_h = top - 34.5, 18.6
     _width_band(
         ax, 0.8, 60.4, band_y, band_h, COL["wt"], COL["wt_tint"],
-        "Outputs of width $d_{\\mathrm{model}}$ = 512 / 1024  ·  rotational",
+        "Outputs of width $d_{\\mathrm{model}}$ = 512 / 1024  ·  off-diagonal anisotropy",
         "$\\Rightarrow$  dense spectral inverse roots, cached-basis tracker, held one step",
         [("$W_q$", "18%"), ("$W_k$", "14%"), ("$W_v$", "12%"),
          ("$W_o$", "0.8%"), ("$W_{\\mathrm{down}}$", "0.8%")],
@@ -595,7 +577,7 @@ def build_fig3():
     )
     _width_band(
         ax, 63.0, 36.2, band_y, band_h, COL["od"], COL["od_tint"],
-        "Width $d_{\\mathrm{ff}}$ = 2048 / 4096  ·  coordinate-dominated",
+        "Width $d_{\\mathrm{ff}}$ = 2048 / 4096  ·  mostly diagonal",
         "$\\Rightarrow$  exact diagonal scaling, every step",
         [("$W_{\\mathrm{gate}}$", "82%"), ("$W_{\\mathrm{up}}$", "78%")],
         "$L = \\mathrm{Diag}(a(B)^{-1/2})$,  inline Triton",
@@ -690,6 +672,7 @@ def build_fig3():
 # ===========================================================================
 def build_fig4():
     lr_sum = json.load(open(RES_DIR / "lr_summary.json"))
+    lr_brk = json.load(open(RES_DIR / "lr_bracket_summary.json"))["seed0_grid"]
 
     fig = plt.figure(figsize=(6.5, 2.66))
     gs = fig.add_gridspec(1, 3, width_ratios=[1.05, 1.0, 1.06], wspace=0.33,
@@ -723,31 +706,33 @@ def build_fig4():
     ax1_top.set_yticks([4.3, 4.5])
     panel_title(ax1_top, "(a)", "Short-horizon proxy cliff", pad=6.5)
 
-    # Bottom panel: 5,120-step full budget (2.68B)
-    mt_full_lr = [0.016, 0.0226274, 0.032, 0.064]
-    mt_full_sel = [3.23417, 3.23540, 3.23981, 3.27754]
-    od_full_lr = [0.0226274, 0.032, 0.09051]
-    od_full_sel = [3.23327, 3.24034, 3.31995]
-    wt_full_lr = [0.016, 0.0226274, 0.032]
-    wt_full_sel = [3.23033, 3.23111, 3.23558]
+    # Bottom panel: 5,120-step full budget (2.68B) across complete bracket
+    tags4 = ["0p0113", "0p016", "0p0226", "0p032"]
+    lrs4 = [lr_brk["muont"][t]["lr"] for t in tags4]
+    mt_full_lr = [*lrs4, 0.064]
+    mt_full_sel = [*[lr_brk["muont"][t]["selection_loss"] for t in tags4], 3.27754]
+    od_full_lr = [*lrs4, 0.09051]
+    od_full_sel = [*[lr_brk["od_all"][t]["selection_loss"] for t in tags4], 3.31995]
+    wt_full_lr = list(lrs4)
+    wt_full_sel = [lr_brk["wt_mlp_lag"][t]["selection_loss"] for t in tags4]
 
     ax1_bot.axvline(0.064, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
     ax1_bot.axvline(0.09051, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
-    ax1_bot.plot(mt_full_lr, mt_full_sel, "-o", color=COL["muont"], lw=1.35, markersize=3.0, label="MuonT")
-    ax1_bot.plot(od_full_lr, od_full_sel, "-^", color=COL["od"], lw=1.3, markersize=3.1, label="OD-All")
-    ax1_bot.plot(wt_full_lr, wt_full_sel, "-s", color=COL["wt"], lw=1.65, markersize=3.1, label="WT-MLP-Lag")
+    ax1_bot.plot(mt_full_lr, mt_full_sel, "-o", color=COL["muont"], lw=1.35, markersize=2.8, label="MuonT")
+    ax1_bot.plot(od_full_lr, od_full_sel, "-^", color=COL["od"], lw=1.3, markersize=2.9, label="OD-All")
+    ax1_bot.plot(wt_full_lr, wt_full_sel, "-s", color=COL["wt"], lw=1.65, markersize=2.9, label="WT-MLP-Lag")
 
     ax1_bot.annotate(
-        "Proxy optima crash\nat 2.68B (+0.042–0.087)",
-        xy=(0.064, 3.280), xytext=(0.0148, 3.306),
-        fontsize=5.6, fontweight="bold", color=COL["bad"], ha="left", va="center", linespacing=1.12,
+        "Proxy optima crash\nat 2.68B (+0.043–0.088)",
+        xy=(0.064, 3.280), xytext=(0.0108, 3.306),
+        fontsize=5.5, fontweight="bold", color=COL["bad"], ha="left", va="center", linespacing=1.12,
         arrowprops=dict(arrowstyle="->", color=COL["bad"], lw=0.65, shrinkA=1, shrinkB=2),
         path_effects=HALO
     )
-    ax1_bot.text(0.015, 3.268, "5,120-step full", fontsize=5.5, fontweight="bold", color=COL["sub"])
+    ax1_bot.text(0.0110, 3.268, "5,120-step full", fontsize=5.5, fontweight="bold", color=COL["sub"])
 
     clean_log_xaxis(ax1_bot, [0.016, 0.032, 0.064, 0.128], ["0.016", "0.032", "0.064", "0.128"])
-    ax1_top.set_xlim(0.0138, 0.145)
+    ax1_top.set_xlim(0.0098, 0.145)
     ax1_bot.set_ylim(3.223, 3.332)
     ax1_bot.set_yticks([3.24, 3.28, 3.32])
     ax1_bot.set_xlabel("Matrix learning rate $\\eta$ (log)")
@@ -759,38 +744,39 @@ def build_fig4():
     ax1_top.plot([-d, +d], [-d, +d], transform=ax1_top.transAxes, color=COL["spine"], lw=0.65, clip_on=False)
     ax1_bot.plot([-d, +d], [1 - d, 1 + d], transform=ax1_bot.transAxes, color=COL["spine"], lw=0.65, clip_on=False)
 
-    # --- Panel (b): Full-Budget LR Sweep ---
+    # --- Panel (b): Complete 4-Arm × 4-LR Full-Budget Bracket ---
     ax2 = fig.add_subplot(gs[1])
     style_ax(ax2, grid_axis="y")
 
-    ax2.plot([0.016, 0.0226274], [3.24610, 3.25236], "--o", color=COL["muon"], lw=1.2,
-             markersize=3.4, markerfacecolor="white", markeredgewidth=0.9, label="Muon")
-    ax2.plot([0.016, 0.0226274, 0.032], [3.23417, 3.23540, 3.23981], "-o", color=COL["muont"],
-             lw=1.45, markersize=3.4, label="MuonT")
-    ax2.plot([0.0226274, 0.032], [3.23327, 3.24034], "-^", color=COL["od"],
-             lw=1.35, markersize=3.5, label="OD-All")
-    ax2.plot([0.016, 0.0226274, 0.032], [3.23033, 3.23111, 3.23558], "-s", color=COL["wt"],
-             lw=1.75, markersize=3.6, label="WT-MLP-Lag")
-    ax2.scatter([0.0226274], [3.23510], s=48, c=COL["null"], marker="*", zorder=6, label="Null-WT (−0.0003)")
+    mu_sel = [lr_brk["muon"][t]["selection_loss"] for t in tags4]
+    mt_sel = [lr_brk["muont"][t]["selection_loss"] for t in tags4]
+    od_sel = [lr_brk["od_all"][t]["selection_loss"] for t in tags4]
+    wt_sel = [lr_brk["wt_mlp_lag"][t]["selection_loss"] for t in tags4]
 
-    # Vertical paired delta guides between MuonT and WT-MLP-Lag
-    for lr_x, y_mt, y_wt, txt in [
-        (0.016, 3.23417, 3.23033, "−3.8"),
-        (0.0226274, 3.23540, 3.23111, "−4.3"),
-        (0.032, 3.23981, 3.23558, "−4.2"),
-    ]:
+    ax2.axvline(0.016, color=COL["wt"], linestyle="--", lw=0.55, alpha=0.35, zorder=1)
+    ax2.plot(lrs4, mu_sel, "--o", color=COL["muon"], lw=1.2,
+             markersize=3.2, markerfacecolor="white", markeredgewidth=0.9, label="Muon")
+    ax2.plot(lrs4, mt_sel, "-o", color=COL["muont"], lw=1.45, markersize=3.2, label="MuonT")
+    ax2.plot(lrs4, od_sel, "-^", color=COL["od"], lw=1.35, markersize=3.3, label="OD-All")
+    ax2.plot(lrs4, wt_sel, "-s", color=COL["wt"], lw=1.75, markersize=3.4, label="WT-MLP-Lag")
+    ax2.scatter([0.0226274], [3.23510], s=44, c=COL["null"], marker="*", zorder=6, label="Null-WT (−0.3)")
+
+    # Vertical paired delta guides between MuonT and WT-MLP-Lag across all 4 LRs
+    for lr_x, y_mt, y_wt in zip(lrs4, mt_sel, wt_sel):
+        txt = f"−{(y_mt - y_wt) * 1e3:.1f}"
         ax2.plot([lr_x, lr_x], [y_wt + 0.0004, y_mt - 0.0004], color=COL["wt"], lw=0.6, linestyle=":", alpha=0.75)
-        ax2.text(lr_x, y_wt - 0.0011, txt, fontsize=5.8, fontweight="bold", color=COL["wt"], ha="center", va="top", path_effects=HALO_SM)
-    ax2.text(0.0226274, 3.2266, "($\\times 10^{-3}$ nats vs. MuonT)", fontsize=5.3, color=COL["muted"], ha="center")
+        ax2.text(lr_x, y_wt - 0.0010, txt, fontsize=5.5, fontweight="bold", color=COL["wt"], ha="center", va="top", path_effects=HALO_SM)
+    ax2.text(0.0190, 3.2255, "($\\times 10^{-3}$ nats vs. MuonT)", fontsize=5.1, color=COL["muted"], ha="center")
 
-    clean_log_xaxis(ax2, [0.016, 0.0226274, 0.032], ["0.016", "0.0226", "0.032"])
-    ax2.set_xlim(0.0142, 0.0355)
-    ax2.set_ylim(3.2255, 3.2555)
+    clean_log_xaxis(ax2, lrs4, [".0113", ".016", ".0226", ".032"])
+    ax2.set_xlim(0.0099, 0.0362)
+    ax2.set_ylim(3.2242, 3.2715)
+    ax2.set_yticks([3.23, 3.24, 3.25, 3.26, 3.27])
     ax2.set_xlabel("Full-budget matrix LR $\\eta$")
     ax2.set_ylabel("Final selection loss (nats)")
-    panel_title(ax2, "(b)", "Full-budget LR sweep")
-    ax2.legend(loc="upper left", bbox_to_anchor=(-0.02, 1.01), fontsize=5.5,
-               handlelength=1.15, handletextpad=0.35, labelspacing=0.16)
+    panel_title(ax2, "(b)", "Full-budget LR bracket")
+    ax2.legend(loc="upper left", bbox_to_anchor=(-0.02, 1.02), fontsize=5.2, ncol=2,
+               handlelength=1.05, handletextpad=0.3, columnspacing=0.6, labelspacing=0.15)
 
     # --- Panel (c): Null Falsification Gate & Late Checkpoints ---
     ax3 = fig.add_subplot(gs[2])
@@ -822,7 +808,7 @@ def build_fig4():
     ax3.plot(tk, (v_wt016[mask] - v_mt016[mask]) * 1e3, "--", color=COL["wt_mid"], lw=1.25, label="WT-Lag (.016)")
     ax3.plot(tk, (v_wt226[mask] - v_mt226[mask]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.7, label="WT-Lag (.0226)")
 
-    ax3.text(2.14, -8.35, "WT-MLP-Lag: 10/10 late wins", fontsize=5.8, fontweight="bold",
+    ax3.text(2.14, -8.35, "WT-MLP-Lag: 11/11 late wins", fontsize=5.8, fontweight="bold",
              color=COL["wt"], ha="center", va="center", path_effects=HALO)
     ax3.set_xlim(1.38, 2.76)
     ax3.set_ylim(-9.3, 4.4)
@@ -845,9 +831,10 @@ def build_fig5():
     fig, (ax1, ax2, ax3) = plt.subplots(
         1, 3, figsize=(6.5, 2.72), gridspec_kw={"width_ratios": [1.02, 1.05, 1.05], "wspace": 0.33}
     )
-    p2 = json.load(open(RES_DIR / "confirmation_campaign.json"))["phase2_3seed"]
+    s123 = json.load(open(RES_DIR / "lr_bracket_summary.json"))["seeds123_summaries"]
+    p2 = {arm: s123[f"{arm}@0p016"] for arm in ("muon", "muont", "od_all", "wt_mlp_lag")}
 
-    # --- Panel (a): paired 3-seed reductions against Muon ---
+    # --- Panel (a): paired 3-seed reductions against Muon (all at matched optimal lr=0.016) ---
     style_ax(ax1, grid_axis="y")
     ax1.axhline(0.0, color=COL["muon"], linestyle="--", lw=0.75, zorder=2)
     ax1.text(2.42, 0.45, "Muon", fontsize=5.6, color=COL["muon"], ha="right", va="bottom")
@@ -869,14 +856,14 @@ def build_fig5():
     ax1.set_xticks(xm)
     ax1.set_xticklabels([l for _, l in metrics], fontsize=6.4)
     ax1.tick_params(axis="x", length=0)
-    ax1.set_ylim(-1.0, 21.5)
+    ax1.set_ylim(-1.0, 22.8)
     ax1.set_ylabel("Paired reduction vs. Muon ($\\times 10^{-3}$, $\\uparrow$)")
-    panel_title(ax1, "(a)", "130M 1$\\times$ (seeds 1--3)")
+    panel_title(ax1, "(a)", "130M 1$\\times$ (seeds 1–3)")
     ax1.legend(loc="upper left", bbox_to_anchor=(-0.02, 1.02), fontsize=5.6, ncol=3,
                handlelength=0.9, handletextpad=0.3, columnspacing=0.7)
-    ax1.text(1.0, 18.6, "WT-MLP-Lag wins 3/3 seeds on all three benchmarks",
-             fontsize=5.5, fontweight="bold", color=COL["wt"], ha="center", va="center",
-             path_effects=HALO_SM)
+    ax1.text(0.50, 0.855, "WT-MLP-Lag: 3/3 seed wins",
+             transform=ax1.transAxes, fontsize=5.6, fontweight="bold", color=COL["wt"],
+             ha="center", va="center", path_effects=HALO_SM)
 
     # --- Panel (b): 130M 4x Overtraining (Piecewise Unclipped Scale!) ---
     style_ax(ax2, grid_axis="y")
@@ -1390,8 +1377,8 @@ def build_fig8():
     ax4.text(0.35, -0.15, "Muon", fontsize=5.5, color=COL["muon"], ha="left", va="top")
     ax4.text(ox["muont"] - 0.3, g_pal["muont"] + 0.25, "MuonT", fontsize=5.6, fontweight="bold",
              color=COL["muont"], ha="right", va="bottom", path_effects=HALO_SM)
-    ax4.text(ox["wt_mlp_lag"] - 0.3, g_pal["wt_mlp_lag"] + 0.25, "WT-MLP-Lag", fontsize=5.5, fontweight="bold",
-             color=COL["wt"], ha="right", va="bottom", path_effects=HALO_SM)
+    ax4.text(ox["wt_mlp_lag"] + 0.40, g_pal["wt_mlp_lag"], "WT-MLP-Lag", fontsize=5.5, fontweight="bold",
+             color=COL["wt"], ha="left", va="center", path_effects=HALO_SM)
     ax4.annotate("OD-All: off the frontier\n(costlier than MuonT, lower gain)",
                  xy=(ox["od_all"] + 0.1, g_sel["od_all"]), xytext=(ox["od_all"] + 1.2, 0.55),
                  fontsize=5.2, fontweight="bold", color=COL["od"], ha="left", va="center", linespacing=1.12,

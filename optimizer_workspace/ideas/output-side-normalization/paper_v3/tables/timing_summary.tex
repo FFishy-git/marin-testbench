@@ -1,0 +1,22 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{6.5pt}
+\caption{\textbf{Step-time co-design waterfall and multi-node scaling (both median and mean estimators).} Overheads ($\Delta$) are relative to same-group MuonT using the matching estimator; Peak GiB is per-GPU peak allocated memory. Width thresholding and one-step lag cut median overhead 4$\times$ relative to synchronous dense outputs (DT-All), while retaining a slower mean tail from periodic basis repairs. Complete 130M and 520M configurations appear in \Cref{tab:bench19,tab:bench520m}.}\label{tab:timing_summary}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrr@{}}
+\toprule
+Configuration / Method & Median (s) & Median $\Delta$ & Mean (s) & Mean $\Delta$ & Peak GiB \\
+\midrule
+\addlinespace[2pt]\multicolumn{6}{@{}l}{\textit{130M co-design progression: 8 GPUs, 0.5M batch, matched checkpoint (steps 37--96)}}\\
+Muon & 1.081 & $-1.4\%$ & 1.079 & $-1.6\%$ & 18.97 \\
+MuonT (reference) & 1.097 & $+0.0\%$ & 1.097 & $+0.0\%$ & 20.54 \\
+OD-All (all outputs diagonal) & 1.121 & $+2.2\%$ & 1.120 & $+2.0\%$ & 20.55 \\
+DT-All (all outputs dense, sync) & 1.333 & $+21.6\%$ & 1.459 & $+33.0\%$ & 24.21 \\
+WT-MLP (width threshold, sync) & 1.221 & $+11.3\%$ & 1.250 & $+13.9\%$ & 21.52 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag (+ one-step lag)} & \textbf{1.155} & $\mathbf{+5.3\%}$ & \textbf{1.194} & $\mathbf{+8.9\%}$ & \textbf{21.60} \\
+\addlinespace[5pt]\multicolumn{6}{@{}l}{\textit{520M width and cluster scaling: 32 GPUs, 1.0M batch, chunked buffers}}\\
+Muon (matched ckpt) & 1.322 & $-4.5\%$ & 1.324 & $-4.8\%$ & 26.46 \\
+MuonT (matched ckpt, ref.) & 1.385 & $+0.0\%$ & 1.391 & $+0.0\%$ & 26.93 \\
+OD-All (matched ckpt) & 1.406 & $+1.5\%$ & 1.412 & $+1.5\%$ & 26.94 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag (matched ckpt)} & \textbf{1.430} & $\mathbf{+3.3\%}$ & \textbf{1.549} & $\mathbf{+11.4\%}$ & \textbf{27.88} \\
+WT-MLP-Lag (own warm state vs.\ warm MuonT) & 1.458 & $+5.6\%$ & 1.539 & $+11.1\%$ & 27.88 \\
+\bottomrule\end{tabularx}
+\end{table}

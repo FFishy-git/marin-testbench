@@ -1,0 +1,866 @@
+{
+  "muon_130m_1x_seed0_lr0p0057": {
+    "name": "muon_130m_1x_seed0_lr0p0057",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p0057.json"
+  },
+  "muont_130m_1x_seed0_lr0p0057": {
+    "name": "muont_130m_1x_seed0_lr0p0057",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p0057.json"
+  },
+  "od_all_130m_1x_seed0_lr0p0057": {
+    "name": "od_all_130m_1x_seed0_lr0p0057",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p0057.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p0057": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p0057",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p0057.json"
+  },
+  "muon_130m_1x_seed0_lr0p008": {
+    "name": "muon_130m_1x_seed0_lr0p008",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p008.json"
+  },
+  "muont_130m_1x_seed0_lr0p008": {
+    "name": "muont_130m_1x_seed0_lr0p008",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p008.json"
+  },
+  "od_all_130m_1x_seed0_lr0p008": {
+    "name": "od_all_130m_1x_seed0_lr0p008",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p008.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p008": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p008",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p008.json"
+  },
+  "muon_130m_1x_seed0_lr0p0113": {
+    "name": "muon_130m_1x_seed0_lr0p0113",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p0113.json"
+  },
+  "muont_130m_1x_seed0_lr0p0113": {
+    "name": "muont_130m_1x_seed0_lr0p0113",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p0113.json"
+  },
+  "od_all_130m_1x_seed0_lr0p0113": {
+    "name": "od_all_130m_1x_seed0_lr0p0113",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p0113.json"
+  },
+  "muon_130m_1x_seed0_lr0p016": {
+    "name": "muon_130m_1x_seed0_lr0p016",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p016.json"
+  },
+  "muont_130m_1x_seed0_lr0p016": {
+    "name": "muont_130m_1x_seed0_lr0p016",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p016.json"
+  },
+  "od_all_130m_1x_seed0_lr0p016": {
+    "name": "od_all_130m_1x_seed0_lr0p016",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p016.json"
+  },
+  "muon_130m_1x_seed0_lr0p0226": {
+    "name": "muon_130m_1x_seed0_lr0p0226",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p0226.json"
+  },
+  "muont_130m_1x_seed0_lr0p0226": {
+    "name": "muont_130m_1x_seed0_lr0p0226",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p0226.json"
+  },
+  "od_all_130m_1x_seed0_lr0p0226": {
+    "name": "od_all_130m_1x_seed0_lr0p0226",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p0226.json"
+  },
+  "muon_130m_1x_seed0_lr0p032": {
+    "name": "muon_130m_1x_seed0_lr0p032",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muon_130m_1x_seed0_lr0p032.json"
+  },
+  "muont_130m_1x_seed0_lr0p032": {
+    "name": "muont_130m_1x_seed0_lr0p032",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/muont_130m_1x_seed0_lr0p032.json"
+  },
+  "od_all_130m_1x_seed0_lr0p032": {
+    "name": "od_all_130m_1x_seed0_lr0p032",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/od_all_130m_1x_seed0_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p032.json"
+  },
+  "muon_130m_1x_seed1_lr0p0057": {
+    "name": "muon_130m_1x_seed1_lr0p0057",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p0057.json"
+  },
+  "muont_130m_1x_seed1_lr0p0057": {
+    "name": "muont_130m_1x_seed1_lr0p0057",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p0057.json"
+  },
+  "od_all_130m_1x_seed1_lr0p0057": {
+    "name": "od_all_130m_1x_seed1_lr0p0057",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p0057.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p0057": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p0057",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p0057.json"
+  },
+  "muon_130m_1x_seed1_lr0p008": {
+    "name": "muon_130m_1x_seed1_lr0p008",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p008.json"
+  },
+  "muont_130m_1x_seed1_lr0p008": {
+    "name": "muont_130m_1x_seed1_lr0p008",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p008.json"
+  },
+  "od_all_130m_1x_seed1_lr0p008": {
+    "name": "od_all_130m_1x_seed1_lr0p008",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p008.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p008": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p008",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p008.json"
+  },
+  "muon_130m_1x_seed1_lr0p0113": {
+    "name": "muon_130m_1x_seed1_lr0p0113",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p0113.json"
+  },
+  "muont_130m_1x_seed1_lr0p0113": {
+    "name": "muont_130m_1x_seed1_lr0p0113",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p0113.json"
+  },
+  "od_all_130m_1x_seed1_lr0p0113": {
+    "name": "od_all_130m_1x_seed1_lr0p0113",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p0113.json"
+  },
+  "muon_130m_1x_seed1_lr0p016": {
+    "name": "muon_130m_1x_seed1_lr0p016",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p016.json"
+  },
+  "muont_130m_1x_seed1_lr0p016": {
+    "name": "muont_130m_1x_seed1_lr0p016",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p016.json"
+  },
+  "od_all_130m_1x_seed1_lr0p016": {
+    "name": "od_all_130m_1x_seed1_lr0p016",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p016.json"
+  },
+  "muon_130m_1x_seed1_lr0p0226": {
+    "name": "muon_130m_1x_seed1_lr0p0226",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p0226.json"
+  },
+  "muont_130m_1x_seed1_lr0p0226": {
+    "name": "muont_130m_1x_seed1_lr0p0226",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p0226.json"
+  },
+  "od_all_130m_1x_seed1_lr0p0226": {
+    "name": "od_all_130m_1x_seed1_lr0p0226",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p0226.json"
+  },
+  "muon_130m_1x_seed1_lr0p032": {
+    "name": "muon_130m_1x_seed1_lr0p032",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muon_130m_1x_seed1_lr0p032.json"
+  },
+  "muont_130m_1x_seed1_lr0p032": {
+    "name": "muont_130m_1x_seed1_lr0p032",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/muont_130m_1x_seed1_lr0p032.json"
+  },
+  "od_all_130m_1x_seed1_lr0p032": {
+    "name": "od_all_130m_1x_seed1_lr0p032",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/od_all_130m_1x_seed1_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p032.json"
+  },
+  "muon_130m_1x_seed2_lr0p0057": {
+    "name": "muon_130m_1x_seed2_lr0p0057",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p0057.json"
+  },
+  "muont_130m_1x_seed2_lr0p0057": {
+    "name": "muont_130m_1x_seed2_lr0p0057",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p0057.json"
+  },
+  "od_all_130m_1x_seed2_lr0p0057": {
+    "name": "od_all_130m_1x_seed2_lr0p0057",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p0057.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p0057": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p0057",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p0057.json"
+  },
+  "muon_130m_1x_seed2_lr0p008": {
+    "name": "muon_130m_1x_seed2_lr0p008",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p008.json"
+  },
+  "muont_130m_1x_seed2_lr0p008": {
+    "name": "muont_130m_1x_seed2_lr0p008",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p008.json"
+  },
+  "od_all_130m_1x_seed2_lr0p008": {
+    "name": "od_all_130m_1x_seed2_lr0p008",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p008.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p008": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p008",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p008.json"
+  },
+  "muon_130m_1x_seed2_lr0p0113": {
+    "name": "muon_130m_1x_seed2_lr0p0113",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p0113.json"
+  },
+  "muont_130m_1x_seed2_lr0p0113": {
+    "name": "muont_130m_1x_seed2_lr0p0113",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p0113.json"
+  },
+  "od_all_130m_1x_seed2_lr0p0113": {
+    "name": "od_all_130m_1x_seed2_lr0p0113",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p0113.json"
+  },
+  "muon_130m_1x_seed2_lr0p016": {
+    "name": "muon_130m_1x_seed2_lr0p016",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p016.json"
+  },
+  "muont_130m_1x_seed2_lr0p016": {
+    "name": "muont_130m_1x_seed2_lr0p016",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p016.json"
+  },
+  "od_all_130m_1x_seed2_lr0p016": {
+    "name": "od_all_130m_1x_seed2_lr0p016",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p016.json"
+  },
+  "muon_130m_1x_seed2_lr0p0226": {
+    "name": "muon_130m_1x_seed2_lr0p0226",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p0226.json"
+  },
+  "muont_130m_1x_seed2_lr0p0226": {
+    "name": "muont_130m_1x_seed2_lr0p0226",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p0226.json"
+  },
+  "od_all_130m_1x_seed2_lr0p0226": {
+    "name": "od_all_130m_1x_seed2_lr0p0226",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p0226.json"
+  },
+  "muon_130m_1x_seed2_lr0p032": {
+    "name": "muon_130m_1x_seed2_lr0p032",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muon_130m_1x_seed2_lr0p032.json"
+  },
+  "muont_130m_1x_seed2_lr0p032": {
+    "name": "muont_130m_1x_seed2_lr0p032",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/muont_130m_1x_seed2_lr0p032.json"
+  },
+  "od_all_130m_1x_seed2_lr0p032": {
+    "name": "od_all_130m_1x_seed2_lr0p032",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/od_all_130m_1x_seed2_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p032.json"
+  },
+  "muon_130m_1x_seed3_lr0p0057": {
+    "name": "muon_130m_1x_seed3_lr0p0057",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p0057.json"
+  },
+  "muont_130m_1x_seed3_lr0p0057": {
+    "name": "muont_130m_1x_seed3_lr0p0057",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p0057.json"
+  },
+  "od_all_130m_1x_seed3_lr0p0057": {
+    "name": "od_all_130m_1x_seed3_lr0p0057",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p0057.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p0057": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p0057",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p0057",
+    "lr": 0.00565685424949238,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p0057.json"
+  },
+  "muon_130m_1x_seed3_lr0p008": {
+    "name": "muon_130m_1x_seed3_lr0p008",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p008.json"
+  },
+  "muont_130m_1x_seed3_lr0p008": {
+    "name": "muont_130m_1x_seed3_lr0p008",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p008.json"
+  },
+  "od_all_130m_1x_seed3_lr0p008": {
+    "name": "od_all_130m_1x_seed3_lr0p008",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p008.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p008": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p008",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p008",
+    "lr": 0.008,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p008.json"
+  },
+  "muon_130m_1x_seed3_lr0p0113": {
+    "name": "muon_130m_1x_seed3_lr0p0113",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p0113.json"
+  },
+  "muont_130m_1x_seed3_lr0p0113": {
+    "name": "muont_130m_1x_seed3_lr0p0113",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p0113.json"
+  },
+  "od_all_130m_1x_seed3_lr0p0113": {
+    "name": "od_all_130m_1x_seed3_lr0p0113",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p0113.json"
+  },
+  "muon_130m_1x_seed3_lr0p016": {
+    "name": "muon_130m_1x_seed3_lr0p016",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p016.json"
+  },
+  "muont_130m_1x_seed3_lr0p016": {
+    "name": "muont_130m_1x_seed3_lr0p016",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p016.json"
+  },
+  "od_all_130m_1x_seed3_lr0p016": {
+    "name": "od_all_130m_1x_seed3_lr0p016",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p016.json"
+  },
+  "muon_130m_1x_seed3_lr0p0226": {
+    "name": "muon_130m_1x_seed3_lr0p0226",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p0226.json"
+  },
+  "muont_130m_1x_seed3_lr0p0226": {
+    "name": "muont_130m_1x_seed3_lr0p0226",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p0226.json"
+  },
+  "od_all_130m_1x_seed3_lr0p0226": {
+    "name": "od_all_130m_1x_seed3_lr0p0226",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p0226.json"
+  },
+  "muon_130m_1x_seed3_lr0p032": {
+    "name": "muon_130m_1x_seed3_lr0p032",
+    "arm_key": "muon",
+    "arm": "muon",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muon_130m_1x_seed3_lr0p032.json"
+  },
+  "muont_130m_1x_seed3_lr0p032": {
+    "name": "muont_130m_1x_seed3_lr0p032",
+    "arm_key": "muont",
+    "arm": "muont",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/muont_130m_1x_seed3_lr0p032.json"
+  },
+  "od_all_130m_1x_seed3_lr0p032": {
+    "name": "od_all_130m_1x_seed3_lr0p032",
+    "arm_key": "od_all",
+    "arm": "inner_outer_leftdiag",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/od_all_130m_1x_seed3_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-lr-bracket/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p032.json"
+  }
+}

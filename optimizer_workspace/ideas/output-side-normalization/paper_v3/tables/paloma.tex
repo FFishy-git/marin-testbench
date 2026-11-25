@@ -1,0 +1,30 @@
+\begin{table}[tbp]\centering\small
+\setlength{\tabcolsep}{7.0pt}
+\caption{\textbf{Per-domain Paloma loss differences from MuonT across all 16 domains.} Entries are millinats ($\text{Method}-\text{MuonT}$; negative favors the method, bold marks the stronger output approximation within each regime). The 130M 20-TPP columns average paired differences across fresh seeds 1--3; 130M 80-TPP and 520M 20-TPP use single-seed matched-rate runs.}\label{tab:paloma_full}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrr@{}}
+\toprule
+& \multicolumn{2}{c}{130M, 20 TPP (3 seeds)} & \multicolumn{2}{c}{130M, 80 TPP} & \multicolumn{2}{c}{520M, 20 TPP} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Paloma domain & OD-All & WT-Lag & OD-All & WT-Lag & OD-All & WT-Lag \\
+\midrule
+C4-EN & $-0.85$ & $\mathbf{-3.86}$ & $-2.55$ & $\mathbf{-3.80}$ & $+0.39$ & $\mathbf{-2.19}$ \\
+C4 domains & $-0.98$ & $\mathbf{-3.78}$ & $-1.85$ & $\mathbf{-4.07}$ & $+0.56$ & $\mathbf{-1.66}$ \\
+mC4 & $+0.29$ & $\mathbf{-3.73}$ & $-1.08$ & $\mathbf{-2.66}$ & $-1.20$ & $\mathbf{-1.94}$ \\
+Dolma & $-1.12$ & $\mathbf{-4.13}$ & $-2.23$ & $\mathbf{-4.35}$ & $+0.16$ & $\mathbf{-2.66}$ \\
+RefinedWeb & $-1.10$ & $\mathbf{-3.96}$ & $-3.43$ & $\mathbf{-5.00}$ & $-0.79$ & $\mathbf{-3.79}$ \\
+RedPajama & $-0.73$ & $\mathbf{-2.81}$ & $-3.63$ & $\mathbf{-4.11}$ & $-1.33$ & $\mathbf{-2.75}$ \\
+Wikipedia & $-0.75$ & $\mathbf{-3.88}$ & $-2.51$ & $\mathbf{-4.80}$ & $+3.18$ & $\mathbf{-1.79}$ \\
+S2ORC & $-0.51$ & $\mathbf{-4.35}$ & $-3.11$ & $\mathbf{-4.78}$ & $-0.31$ & $\mathbf{-2.33}$ \\
+Programming & $+0.51$ & $\mathbf{-4.29}$ & $-0.77$ & $\mathbf{-0.91}$ & $+0.56$ & $\mathbf{-1.63}$ \\
+WikiText-103 & $\mathbf{+2.05}$ & $+2.84$ & $-6.14$ & $\mathbf{-11.00}$ & $\mathbf{-4.46}$ & $-4.06$ \\
+Penn Treebank & $\mathbf{-9.42}$ & $-1.52$ & $-15.72$ & $\mathbf{-19.42}$ & $+1.29$ & $\mathbf{-20.91}$ \\
+Subreddits & $+0.62$ & $\mathbf{-1.85}$ & $\mathbf{-3.34}$ & $-3.03$ & $+1.45$ & $\mathbf{-0.63}$ \\
+TwitterAAE & $-6.94$ & $\mathbf{-19.72}$ & $+18.06$ & $\mathbf{-2.21}$ & $+1.31$ & $\mathbf{-40.73}$ \\
+Manosphere & $-1.50$ & $\mathbf{-7.05}$ & $-0.57$ & $\mathbf{-1.46}$ & $\mathbf{-4.68}$ & $-2.83$ \\
+4chan & $+2.33$ & $\mathbf{-3.40}$ & $-7.74$ & $\mathbf{-9.18}$ & $+0.18$ & $\mathbf{-0.01}$ \\
+Gab & $-2.62$ & $\mathbf{-5.16}$ & $-4.86$ & $\mathbf{-9.87}$ & $+11.19$ & $\mathbf{+2.83}$ \\
+\midrule
+\rowcolor{rowtint}[0pt][0pt]\textbf{16-domain macro mean} & $-1.30$ & $\mathbf{-4.41}$ & $-2.59$ & $\mathbf{-5.66}$ & $+0.47$ & $\mathbf{-5.44}$ \\
+\textbf{Domains won vs.\ MuonT} & 11/16 & \textbf{15/16} & 15/16 & \textbf{16/16} & 6/16 & \textbf{15/16} \\
+\bottomrule\end{tabularx}
+\end{table}

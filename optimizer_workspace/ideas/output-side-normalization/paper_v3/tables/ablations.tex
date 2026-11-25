@@ -1,0 +1,26 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{5.2pt}
+\caption{\textbf{Factor-placement, exponent, and scheduling ablations at 130M (seed 0, 2.68B tokens).} Inputs and outputs list the $(\dm / \dff)$ operator assignment under the $(-1/2,-1/8)$ split unless noted; Muon uses $\eta=0.016$ and all other arms use $\eta=0.02263$. Loss columns report 11-checkpoint second-half mean differences (millinats) relative to each run's same-wave MuonT reference; Step $\Delta t$ is median step-time overhead in the unified 8-GPU benchmark (\Cref{tab:bench19}). All 19 exploratory arms and wave references appear in \Cref{tab:ablations_full}.}\label{tab:ablations}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xllcrrr@{}}
+\toprule
+Method & Inputs ($\dm / \dff$) & Outputs ($\dm / \dff$) & Lag & Late $\Delta\Lsel$ & Late $\Delta\Lc$ & Step $\Delta t$ \\
+\midrule
+\addlinespace[2pt]\multicolumn{7}{@{}l}{\textit{Reference baselines and execution-path control}}\\
+Muon & $I$ / $I$ & $I$ / $I$ & --- & $+5.50$ & $+5.34$ & $-1.4\%$ \\
+MuonT & Dense / Dense & $I$ / $I$ & --- & $+0.00$ & $+0.00$ & $+0.0\%$ \\
+Null-WT & Dense / Dense & $I$ / $I$ (solved) & 0 & $-0.65$ & $-2.04$ & $+12.3\%$ \\
+\addlinespace[4pt]\multicolumn{7}{@{}l}{\textit{Replacing or weakening input whitening}}\\
+Abl-BothDiag & Diag / Diag & Diag / Diag & 0 & $+18.01$ & $+17.69$ & $-0.4\%$ \\
+Abl-OutOnly & $I$ / $I$ & Dense / Dense & 0 & $+8.71$ & $+10.90$ & $+29.8\%$ \\
+WT-Sym-Lag & Dense / Diag & Dense / Diag & 1 & $-1.13$ & $-1.60$ & $+3.3\%$ \\
+\addlinespace[4pt]\multicolumn{7}{@{}l}{\textit{Output projection role and inner/outer exponent placement}}\\
+Abl-No2048 & Dense / Dense & Dense / $I$ & 0 & $-3.07$ & $-2.63$ & $+12.0\%$ \\
+Abl-OuterDense & Dense / Dense & $\hat L$ Dense ($L=I$) & 0 & $-3.98$ & $-4.77$ & $+26.4\%$ \\
+OD-All & Dense / Dense & Diag / Diag & 0 & $-4.50$ & $-3.61$ & $+2.2\%$ \\
+\addlinespace[4pt]\multicolumn{7}{@{}l}{\textit{Dense two-sided ceiling versus width thresholding and one-step lag}}\\
+DT-All & Dense / Dense & Dense / Dense & 0 & $-5.78$ & $-6.38$ & $+21.6\%$ \\
+DT-All-Lag & Dense / Dense & Dense / Dense & 1 & $-5.89$ & $-5.86$ & $+16.5\%$ \\
+WT-MLP & Dense / Dense & Dense / Diag & 0 & $\mathbf{-6.58}$ & $-6.08$ & $+11.3\%$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & Dense / Dense & Dense / Diag & 1 & $\mathbf{-5.68}$ & $\mathbf{-4.99}$ & $+5.3\%$ \\
+\bottomrule\end{tabularx}
+\end{table}

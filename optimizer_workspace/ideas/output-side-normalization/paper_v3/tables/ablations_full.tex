@@ -1,0 +1,34 @@
+\begin{table}[tbp]\centering\footnotesize
+\setlength{\tabcolsep}{3.6pt}
+\caption{\textbf{Complete 19-arm placement and operator ledger at 130M (seed 0, 2.68B tokens).} Cohort identifies the implementation wave providing each arm's paired MuonT reference (W0--W4, W10, or FastLag); loss columns are millinats from that reference (Late averages 11 second-half checkpoints; Train averages the final 537M tokens). Step $\Delta t$ is median overhead from the unified 8-GPU benchmark. Because earlier waves precede the unified confirmation runner, cross-wave differences are exploratory.}\label{tab:ablations_full}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xlllrrrrr@{}}
+\toprule
+& & ($\dm/\dff$) & ($\dm/\dff$) & \multicolumn{4}{c}{$\Delta$ vs.\ cohort MuonT (mnats)} & \\
+\cmidrule(lr){5-8}
+Method & Cohort & Inputs & Outputs & Final & Late & Late C4 & Train & Step $\Delta t$ \\
+\midrule
+\addlinespace[2pt]\multicolumn{9}{@{}l}{\textit{Reference baselines and execution-path control}}\\
+Muon & W0 & $I$ / $I$ & $I$ / $I$ & $+9.48$ & $+5.50$ & $+5.34$ & $+6.16$ & $-1.4\%$ \\
+MuonT & W0 & Dense / Dense & $I$ / $I$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.0\%$ \\
+Null-WT & W3 & Dense / Dense & $I$ / $I$ (solved) & $-1.33$ & $-0.65$ & $-2.04$ & $-0.69$ & $+12.3\%$ \\
+Null-Dense & W1 & Dense / Dense & $I$ / $I$ (solved) & $-1.17$ & $-1.29$ & $-2.30$ & $-1.36$ & $+25.7\%$ \\
+Null-OD & W10 & Dense / Dense & $I$ / $I$ (solved) & $-1.40$ & $-2.01$ & $-1.22$ & $-1.14$ & $+1.4\%$ \\
+\addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Replacing or weakening input whitening}}\\
+Abl-BothDiag & W1 & Diag / Diag & Diag / Diag & $+7.33$ & $+18.01$ & $+17.69$ & $+13.37$ & $-0.4\%$ \\
+Abl-OutOnly & W1 & $I$ / $I$ & Dense / Dense & $+3.25$ & $+8.71$ & $+10.90$ & $+7.87$ & $+29.8\%$ \\
+Abl-DownSwap & W0 & Dense / $I$ & $I$ (\texttt{down} Dense) & $+1.06$ & $+2.51$ & $+3.61$ & $+3.18$ & $+0.3\%$ \\
+WT-Sym & FastLag & Dense / Diag & Dense / Diag & $-2.99$ & $-2.52$ & $-2.03$ & $-1.26$ & $+9.3\%$ \\
+WT-Sym-Lag & FastLag & Dense / Diag & Dense / Diag & $-2.46$ & $-1.13$ & $-1.60$ & $-1.48$ & $+3.3\%$ \\
+\addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Output projection role and inner/outer exponent placement}}\\
+Abl-DownOnly & W0 & Dense / Dense & $\hat L_{\rm down}$ only & $-1.27$ & $-1.37$ & $-0.78$ & $-1.16$ & $+2.1\%$ \\
+OD-Outer & W10 & Dense / Dense & $\hat L$ Diag / $\hat L$ Diag & $-1.79$ & $-2.45$ & $-2.60$ & $-1.38$ & $+1.5\%$ \\
+Abl-No2048 & W2 & Dense / Dense & Dense / $I$ & $-3.11$ & $-3.07$ & $-2.63$ & $-2.13$ & $+12.0\%$ \\
+Abl-OuterDense & W2 & Dense / Dense & $\hat L$ Dense ($L=I$) & $-4.18$ & $-3.98$ & $-4.77$ & $-3.88$ & $+26.4\%$ \\
+OD-All & W2 & Dense / Dense & Diag / Diag & $-4.13$ & $-4.50$ & $-3.61$ & $-3.69$ & $+2.2\%$ \\
+\addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Dense two-sided ceiling versus width thresholding and one-step lag}}\\
+DT-All & W1 & Dense / Dense & Dense / Dense & $-6.14$ & $-5.78$ & $-6.38$ & $-4.97$ & $+21.6\%$ \\
+DT-All-Lag & W3 & Dense / Dense & Dense / Dense & $-6.21$ & $-5.89$ & $-5.86$ & $-5.73$ & $+16.5\%$ \\
+WT-MLP & W2 & Dense / Dense & Dense / Diag & $\mathbf{-6.89}$ & $\mathbf{-6.58}$ & $-6.08$ & $-5.06$ & $+11.3\%$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & W4 & Dense / Dense & Dense / Diag & $\mathbf{-6.56}$ & $\mathbf{-5.68}$ & $\mathbf{-4.99}$ & $\mathbf{-4.95}$ & $+5.3\%$ \\
+\bottomrule\end{tabularx}
+\end{table}

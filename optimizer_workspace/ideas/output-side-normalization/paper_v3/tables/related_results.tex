@@ -1,0 +1,15 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{4.2pt}
+\caption{\textbf{Two-sided polar baselines under a shared isotropic-decay recipe (130M, 2.68B tokens).} Entries average fresh seeds 1 and 2 at $\eta=0.032$ and $\lambda=0.1$ on the standalone synchronous harness. Held-out is final $\Lsel$ in nats; $\Delta$ columns are millinats from Muon (Late-11 averages the second-half checkpoints); Step is median seconds per update.}\label{tab:related}
+\begin{tabularx}{\textwidth}{@{}ll>{\raggedright\arraybackslash}Xrrrrr@{}}
+\toprule
+Method & Profile & Moments \& Exponents & Held-out & $\Delta\Lsel$ & Late-11 $\Delta$ & $\Delta\Lc$ & Step (s) \\
+\midrule
+Muon & Reference & None; $\Nten(U)$ & 3.2074 & $+0.00$ & $+0.00$ & $+0.00$ & 1.15 \\
+Mousse & Paper & $GG^{\Tr}, G^{\Tr}G$; $(-1/8,-1/8)$ + graft & 3.2102 & $+2.78$ & $+4.85$ & $+3.25$ & 1.13 \\
+Mousse & Controlled & $GG^{\Tr}, G^{\Tr}G$; $(-1/8,-1/8)$ + graft & 3.2064 & $-0.98$ & $+1.23$ & $-1.92$ & 1.20 \\
+GO-MUON & Controlled & $C, B$; $(-1/4,-1/4)$ + graft & 3.2384 & $+30.98$ & $+38.22$ & $+29.36$ & 1.59 \\
+GO-MUON & Paper & OAS $C, B$; SVD + graft & 3.2395 & $+32.08$ & $+39.71$ & $+30.48$ & 2.02 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP} & Width-thresh. & $C, B$ ($\dff$ diag); $(-1/2,-1/8)$ & \textbf{3.1975} & $\mathbf{-9.90}$ & $\mathbf{-7.14}$ & $\mathbf{-9.91}$ & 1.36 \\
+\bottomrule\end{tabularx}
+\end{table}

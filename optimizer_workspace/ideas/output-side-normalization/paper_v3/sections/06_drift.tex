@@ -1,0 +1,68 @@
+\section{Output-subspace drift relative to Muon}
+\label{sec:output_drift}
+
+WT-MLP-Lag (WT throughout this section) has 16.7\% lower mean output-subspace drift than Muon on the saved 130M seed-0 trajectory and 18.9\% lower drift at 520M. MuonT is 2.9\% higher than Muon at 130M and 1.9\% lower at 520M. These trajectory comparisons use different learning rates for Muon and the preconditioned methods; a separate common-rate three-seed check at 130M gives a WT reduction of $18.8\pm0.6\%$ (mean $\pm$ sample SD). Muon is the reference throughout the main fixed-data comparison, which extends the single-interval audit in \Cref{tab:diagnosis_summary} to both model sizes. Let $V_{p,t}\in\R^{d_p\times k}$ contain as columns the leading $k$ orthonormal output-moment eigenvectors for projection $p$, of output width $d_p$, at checkpoint $t$. The diagnostic from \cref{eq:subspace_drift} is
+\[
+ D_k(p;t_1,t_2)=1-\frac{\|V_{p,t_1}^{\Tr}V_{p,t_2}\|_F^2}{k}.
+\]
+It measures how much the leading cotangent subspace changes between checkpoints: zero means identical subspaces and one means orthogonal subspaces. We use $k=16$ unless stated otherwise. A smaller value means that the leading directions remain closer over the specified interval; it does not establish slower change of the full moment or of the inverse root.
+
+\subsection{Common-data measurements at both model sizes}
+
+To compare every output role on both models, we recompute moments with the model fixed at each saved checkpoint. Let $\mathcal S$ denote a fixed set of token positions and $z_{p,t}(s)$ the linear projection's output at position $s$. Its cotangent is $\delta_{p,t}(s)=\partial\mathcal L_t/\partial z_{p,t}(s)$, where $\mathcal L_t$ is mean cross-entropy over all scored targets in that position's window. We collect \texttt{q,k,v} before rotary transforms and \texttt{gate,up} before the activation and gating product; \texttt{o,down} are collected at the residual sums, whose incoming cotangents equal those of the corresponding projection outputs. The probe moment is
+\[
+ B^{\mathcal S}_{p,t}
+ =\frac{1}{|\mathcal S|}\sum_{s\in\mathcal S}
+ \delta_{p,t}(s)\delta_{p,t}(s)^{\Tr}.
+\]
+We compare the leading eigenspaces of $B^{\mathcal S}_{p,t}$ at adjacent checkpoints using the same $\mathcal S$. This holds probe data fixed while the trained model changes. It is a finite-sample checkpoint diagnostic, distinct from the training EMA, which combines changing minibatches and recent parameter states.
+
+Each of two disjoint probe sets contains sixteen 4,096-token windows: fourteen DCLM, one StarCoder, and one ProofPile, selected from the seed-0 held-out windows. These windows are guaranteed to be held out only for the seed-0 trajectories; for the fresh training seeds, they serve as common fixed probes. We sample zero-based positions $0,\ldots,31$ and $33,49,\ldots,4081$ in each window, yielding 286 rows per window and 4,576 per set and moment. Every checkpoint and optimizer uses the same windows, positions, and compiled BF16 forward/backward path. The collector multiplies all cotangents by the same $2^{16}$ before storing them; this common scaling leaves eigenspaces unchanged. Full moments are collected passively for all seven output roles in all 32 layers, with no optimizer updates. We compute drift within each probe set and average the resulting scores; the two sets are not combined into a single moment.
+
+The densely sampled seed-0 130M comparison covers 19 consecutive 250-step intervals from step 250 through 5,000, plus a separate 120-step tail to step 5,120. Muon, MuonT, and WT use their own saved model weights. Their training configurations share BF16, FA2 attention, compilation, and microbatch settings, while optimizer-specific statistics and update paths differ.
+
+The 520M comparison uses all four saved checkpoints, at steps 2,560, 5,120, 7,680, and 10,240, giving three 2,560-step intervals across the final three quarters of training. It cannot resolve 250-step drift or the first quarter. At both model sizes, the saved seed-0 Muon trajectory uses learning rate 0.016, while MuonT and WT use 0.02263. These comparisons describe the recorded training configurations; the different learning rates prevent attributing their differences solely to the optimizer.
+
+We also probe the 2,560--5,120 interval of three fresh 130M seeds with all three methods at the selected common rate 0.016, matched between optimizers in initialization seed, training-data order, and schedule. All comparisons use each optimizer's own trained checkpoints.
+
+We average drift equally over layers, equal-length intervals, and probe sets, and define the percentage reduction relative to Muon as $100(1-\overline D_{\rm method}/\overline D_{\rm Muon})$, for either MuonT or WT. A positive value means lower drift than Muon; a negative value means higher drift. For the all-role reductions, the overbars additionally average drift equally over the seven roles before taking the ratio.
+
+With Muon as the reference, the 130M mean top-16 drift is 0.463 for Muon, 0.476 for MuonT, and 0.386 for WT. WT therefore reduces all-role drift by 16.7\%, while MuonT has 2.9\% higher drift. For \texttt{q,k,v,o,down,gate,up}, WT's reductions are 16.2\%, 8.4\%, $-4.6\%$, 15.2\%, 12.1\%, 23.6\%, and 38.6\%. The corresponding counts of intervals with lower drift are 19, 19, 1, 19, 19, 17, and 18 out of 19. The value projection is therefore an exception to a uniform reduction from Muon. Gate and up also have early intervals with higher drift, despite lower averages. The shorter final 120-step interval favors WT over Muon in all seven roles and is excluded from the 250-step averages.
+
+At 520M, mean drift is 0.609 for Muon, 0.598 for MuonT, and 0.494 for WT. WT's reductions from Muon are 16.4\%, 10.7\%, $-2.3\%$, 19.1\%, 16.9\%, 25.3\%, and 40.5\% for \texttt{q,k,v,o,down,gate,up}. The six positive roles have lower drift in all three intervals; \texttt{v} has higher drift in all three. The largest reductions occur at \texttt{gate,up} in both models. These absolute scores use different checkpoint intervals and are not a width-scaling comparison.
+
+At the common rate 0.016, WT has lower drift than Muon for every role in all three fresh 130M seeds. All-role reductions are 18.1\%, 19.0\%, and 19.3\% for WT, compared with 4.5\%, 5.4\%, and 0.04\% for MuonT. Across seeds, the all-role reduction is $18.8\pm0.6\%$ for WT and $3.3\pm2.9\%$ for MuonT. The largest repeated reduction is at \texttt{up}, averaging 39.5\% across seeds. This comparison supports lower measured drift under WT beyond the learning-rate mismatch in the seed-0 trajectories. It covers one long interval per seed and does not establish the behavior of every 250-step interval.
+
+The incremental WT-versus-MuonT comparison gives all-role reductions of 19.0\% at 130M and 17.3\% at 520M. Each of the seven roles has lower drift, averaged over layers and probe sets, in every one of the 19 equal 130M intervals, three 520M intervals, and the separate 130M tail. Among the three common-rate fresh seeds, WT improves further over MuonT in six roles throughout; the value projection is small and mixed ($-0.2\%$, $+1.3\%$, $+2.6\%$). Muon is the reference for the percentages in \Cref{tab:output_drift,fig:output_drift,fig:output_drift_roles}.
+
+\input{tables/output_drift}
+
+\begin{figure}[tbp]
+ \centering\includegraphics[width=\textwidth]{fig9_output_drift.pdf}
+ \caption{\textbf{Temporal output-subspace diagnostics across training.}
+ \textbf{(a, b)} Fixed-data moments on Muon, MuonT, and WT checkpoints, averaged over seven output roles, 32 layers, and two probe sets. Shading spans the two probe-set means and is not a confidence interval. Intervals are 250 updates at 130M and 2,560 at 520M.
+ \textbf{(c, d)} Percentage reduction from Muon for each output role at the corresponding model size. Seed-0 learning rates are 0.016 for Muon and 0.02263 for MuonT/WT. Each model size uses one seed; the common-rate fresh-seed check appears in \Cref{tab:output_drift}.}
+ \label{fig:output_drift}
+\end{figure}
+
+\begin{figure}[tbp]
+ \centering\includegraphics[width=\textwidth]{fig10_drift_by_role.pdf}
+ \caption{\textbf{Fixed-data drift reduction at each saved interval, by projection role.} Each curve reports MuonT or WT relative to Muon at the same model size and interval, averaging 32 layers and two probe sets before taking the ratio. Zero denotes Muon and positive values denote lower drift. Dashed curves use 130M checkpoints and solid curves use 520M checkpoints. The horizontal coordinate is the interval's ending step divided by the total training budget. Checkpoint spacing differs across sizes, and seed-0 learning rates differ between Muon and the other methods as specified in \Cref{tab:output_drift}.}
+ \label{fig:output_drift_roles}
+\end{figure}
+
+\subsection{Uninterrupted 130M training moments}
+
+As a separate check, we compare the saved dense output moments from a passive MuonT control and WT-MLP-Lag at every 250-step checkpoint from step 250 through 5,000. The control records output EMAs but uses identity output factors; it is a separate run from the MuonT trajectory probed above. Both runs use seed 0, learning rate 0.02263, the same schedule, and EMA coefficient 0.938. Muon did not save output training moments, so a Muon baseline is unavailable for this EMA check. The comparison covers 19 consecutive intervals, 32 layers, and the five hidden-width outputs \texttt{q,k,v,o,down}. WT does not save full expansion-output moments, so \texttt{gate,up} are excluded from this EMA comparison. The final 5,000--5,120 interval is analyzed separately because it is shorter.
+
+Relative to the passive MuonT control, and averaged over intervals and layers, WT reduces top-16 drift by 16.3\%, 12.0\%, 11.4\%, 7.8\%, and 28.0\% for \texttt{q,k,v,o,down}, respectively. Layer-mean drift is lower in 17, 15, 19, 11, and 17 of the 19 intervals. The result is therefore strongest in coverage for \texttt{v} and in relative magnitude for \texttt{down}; it is not a reduction at every output and every training stage. In particular, \texttt{o} has higher drift early in training and lower drift later.
+
+These measurements also qualify the motivating replay result. The WT values in \Cref{tab:diagnosis_summary} come from the resumed trajectory described in \Cref{app:diagnostic_definitions}. On its uninterrupted trajectory, drift over steps 2,250--2,500 is 0.138 for \texttt{o} and 0.109 for \texttt{down}, compared with 0.134 and 0.107 on the passive MuonT control. The reduction observed in that replay window does not hold for those two original-checkpoint comparisons, even though their averages over training favor WT. The passive control uses per-matrix updates while WT uses batched updates with lagged output roots, so this comparison alone does not isolate output-side preconditioning causally.
+
+\subsection{Scope and sensitivity of the diagnostic}
+
+We repeat the subspace calculation at $k=8,32,64$ and record the relative boundary gap $(\lambda_k-\lambda_{k+1})/\lambda_k$ at both endpoints. For training EMAs, the \texttt{q,v,down} reductions remain positive at every tested $k$, but \texttt{o} reverses at $k=32,64$ and \texttt{k} reverses at $k=64$. Restricting top-16 comparisons to layer--interval pairs whose boundary gaps are at least 1\% at both endpoints and in both optimizers retains reductions for all five roles. Filtered means weight retained pairs equally. Thus the top-16 finding is not solely driven by the smallest boundary gaps, while the larger-subspace reversals limit any claim about the whole spectrum.
+
+For fixed-data seed-0 comparisons against Muon at both model sizes, WT retains positive average reductions for \texttt{q,k,o,down,gate,up} at $k=8,16,32,64$ in each probe set separately; \texttt{v} remains higher at every tested $k$. Thus the value-projection exception is not specific to the top-16 cutoff. A 1\% boundary-gap filter preserves those signs at $k=16$. We apply it separately within each probe set, retaining a layer--interval pair only when both endpoints pass in both methods, and weight all retained layer--interval--probe observations equally. Retention fractions, pooled across probe sets, range across roles from 47--93\% at 130M and 50--93\% at 520M. For the three fresh seeds at rate 0.016, WT has lower drift than Muon in all seven roles at every tested $k$, in each probe set separately. FP64 eigensolve residuals, $\|BV-V\Lambda\|_F/\|B\|_F$, are at most $2.6\times10^{-15}$ before storing bases in FP32.
+
+Layer and interval observations share training histories and are not independent experimental replications. The two probe sets assess sensitivity to data selection; the fresh training seeds address a different source of variation. Finite probe sets also limit recovery of population eigenspaces. For example, at 520M the top-16 distance between probe sets at the same checkpoint, averaged over all 32 layers and four checkpoints, is 0.941 for Muon's \texttt{gate}, 0.926 for MuonT's, and 0.720 for WT's. Agreement in the direction of the temporal comparison across sets does not imply that either set accurately recovers the population subspace, and we do not subtract this between-set distance from temporal drift. These measurements describe temporal orientation of leading cotangent directions. They do not establish that reduced drift causes the loss improvement, that all output geometry stabilizes, or that root solves can safely be refreshed less often.

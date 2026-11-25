@@ -1,0 +1,29 @@
+\begin{table}[tbp]\centering\footnotesize
+\setlength{\tabcolsep}{9.5pt}
+\caption{\textbf{Complete 520M timing and memory records across 8 and 32 A100 GPUs (1.0M batch, chunked buffers).} All rows report the complete recorded measurement window without outlier removal; own optimizer states restore each arm's converged step-5,120 moments and eigenbases. Overheads ($\Delta$) are relative to within-group MuonT.}\label{tab:bench520m}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrr@{}}
+\toprule
+Method & Median (s) & Median $\Delta$ & Mean (s) & Mean $\Delta$ & Peak GiB \\
+\midrule
+\addlinespace[2pt]\multicolumn{6}{@{}l}{\textit{8 GPUs, matched checkpoint, steps 37--96}}\\
+Muon & 4.6419 & $-5.2\%$ & 4.6456 & $-5.2\%$ & 26.46 \\
+MuonT & 4.8943 & $+0.0\%$ & 4.9010 & $+0.0\%$ & 29.05 \\
+OD-All & 4.9863 & $+1.9\%$ & 4.9902 & $+1.8\%$ & 29.06 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 5.3219 & $+8.7\%$ & 5.3181 & $+8.5\%$ & 30.73 \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{32 GPUs, matched checkpoint, steps 37--96}}\\
+Muon & 1.3222 & $-4.5\%$ & 1.3241 & $-4.8\%$ & 26.46 \\
+MuonT & 1.3851 & $+0.0\%$ & 1.3911 & $+0.0\%$ & 26.93 \\
+OD-All & 1.4063 & $+1.5\%$ & 1.4119 & $+1.5\%$ & 26.94 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 1.4305 & $+3.3\%$ & 1.5493 & $+11.4\%$ & 27.88 \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{32 GPUs, own optimizer states, steps 17--76}}\\
+Muon & 1.3124 & $-5.0\%$ & 1.3163 & $-5.0\%$ & 26.46 \\
+MuonT & 1.3809 & $+0.0\%$ & 1.3853 & $+0.0\%$ & 26.93 \\
+OD-All & 1.4203 & $+2.9\%$ & 1.4453 & $+4.3\%$ & 26.94 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 1.4578 & $+5.6\%$ & 1.5388 & $+11.1\%$ & 27.88 \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{8 GPUs, own optimizer states, steps 17--76}}\\
+Muon & 4.6383 & $-4.9\%$ & 4.6396 & $-5.3\%$ & 26.46 \\
+MuonT & 4.8779 & $+0.0\%$ & 4.8994 & $+0.0\%$ & 29.05 \\
+OD-All & 5.0287 & $+3.1\%$ & 5.0533 & $+3.1\%$ & 29.07 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 5.6081 & $+15.0\%$ & 5.6098 & $+14.5\%$ & 30.74 \\
+\bottomrule\end{tabularx}
+\end{table}

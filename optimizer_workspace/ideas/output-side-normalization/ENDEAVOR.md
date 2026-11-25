@@ -12364,7 +12364,7 @@ results do not establish a more efficient, better-performing optimizer.
 <!-- BEGIN AUTOMATED RESEARCH STATUS -->
 ## Recurring Experiment Status
 
-Refreshed 2026-11-25 01:45:15, Asia/Shanghai, from the same authenticated
+Refreshed 2026-11-25 23:01:29, Asia/Shanghai, from the same authenticated
 receipt-backed reports as the detailed ledger in [`DETAILS.md`](DETAILS.md).
 Receipt times below are historical observations, not fresh process or GPU checks.
 Only the two latest numbered wave reports and current diagnostic gates appear here.
@@ -13176,3 +13176,132 @@ not establish operations or tensor validity. No full result checkpoint
 tensors are reread and nothing is published. Final tables, paired deltas,
 receipt hashes, restoration identities and audit limits are in
 [`DETAILS.md`](DETAILS.md#november-21-1516-related-baseline-campaign-complete-and-restored).
+
+
+### November 25 Output-Subspace Trajectories at 130M and 520M
+
+The requested check of lower output drift under WT-MLP-Lag is complete on
+all available paired seed-0 checkpoints. Fixed-data probes give lower mean
+top-16 output-subspace drift for all seven roles in each of 19 consecutive
+250-step intervals at 130M and each of three 2,560-step intervals at 520M.
+Averaging equally across roles, layers, intervals and two probe sets before
+taking the relative reduction gives 19.0% at 130M (0.4763 to 0.3857) and
+17.3% at 520M (0.5977 to 0.4944). The strongest relative reductions are gate
+(23.0%, 24.3%) and up (38.6%, 39.7%). Both probe sets independently favor WT
+on average in every role at ranks 8, 16, 32 and 64 for both model sizes.
+A 1% boundary-gap filter retains positive top-16 reductions in every role.
+
+Three fresh paired 130M seeds at the shared rate 0.016 repeat the reduction
+for q/k/o/down/gate/up over steps 2,560--5,120. The value projection is mixed
+and small: -0.2%, +1.3%, +2.6%. Dense seed-0 trajectories use rate 0.02263.
+Training-EMA comparisons at 130M separately favor WT on average for all five
+available dense output roles, but include interval and larger-subspace
+reversals. The original WT checkpoints at 2,250--2,500 do not reproduce the
+o/down reductions in the earlier resumed WT diagnostic. Table 1 now states
+the replay scope explicitly.
+
+The 520M checkpoints cover steps 2,560--10,240 only: this is three coarse
+intervals spanning the final three quarters, not a 250-step full-trajectory
+measurement. Probe moments use two disjoint fixed sets of 16 windows,
+4,576 cotangent rows per set, all 32 layers, and each optimizer's own model
+weights. Between-set eigenspace distances remain large, so these are finite
+sample measurements and do not establish population eigenspaces, a causal
+explanation of loss gains, or a safe reduction in root refresh frequency.
+Layer/interval counts are not independent seed replications.
+
+The manuscript adds Section 7, Table 10, and Figures 9--10. Source,
+reproduction commands, and compact data are in
+[`paper_v3/README.md`](paper_v3/README.md#reproduce-the-output-drift-analysis).
+The 62 GPU checkpoint probes, 336 EMA shards, raw paired observations, and
+allocation receipts are preserved under the shared diagnostic directory
+`diagnostics/output-drift-trajectories-20261125`. GPU work completed and the
+local keeper was restored at 15:56:57 Asia/Shanghai. See the matching entry
+in [`DETAILS.md`](DETAILS.md#november-25-output-drift-diagnostic-receipts).
+
+
+### November 25 Muon Baseline for Output-Subspace Trajectories
+
+Section 7, Table 10, and Figures 9--10 now compare Muon, MuonT, and
+WT-MLP-Lag, using Muon as the baseline for the fixed-data measurements.
+The extension adds 31 Muon checkpoint probes to the existing 62, covering
+all available paired seed-0 checkpoints at 130M and 520M and the three
+fresh 130M seeds. Mean top-16 drift at 130M is 0.4629 for Muon, 0.4763
+for MuonT, and 0.3857 for WT; at 520M it is 0.6095, 0.5977, and 0.4944.
+WT's relative reductions from Muon are 16.7% and 18.9%, respectively.
+MuonT has 2.9% higher drift at 130M and 1.9% lower drift at 520M.
+
+The baseline changes the role-level conclusion: WT has lower mean drift
+in six roles at both sizes, but value-projection drift is 4.6% higher at
+130M and 2.3% higher at 520M. This sign pattern persists at ranks
+8/16/32/64 in each probe set, and under the top-16 1% boundary-gap filter.
+The saved seed-0 Muon runs use learning rate 0.016, whereas MuonT and WT
+use 0.02263, so those comparisons do not isolate the optimizer effect.
+In the three fresh 130M seeds with all methods at 0.016, WT has lower
+drift than Muon in every role. Its all-role reduction is 18.8% +/- 0.6%
+(mean +/- sample SD), compared with 3.3% +/- 2.9% for MuonT. These seeds
+provide one 2,560--5,120 interval each. The 520M evidence remains three
+2,560-step intervals over the final three quarters of training.
+
+The original WT-versus-MuonT reductions of 19.0% and 17.3% are preserved
+as an incremental comparison. Muon has no saved output training EMA;
+the EMA audit therefore retains its separate passive-MuonT reference.
+No training was added. All 23,296 original fixed-data observations are
+unchanged; the combined record contains 34,944 observations. The Muon
+probe allocation completed and restored the keeper at 16:27:41
+Asia/Shanghai on November 25, 2026. Reproduction commands and scope are
+in [paper_v3/README.md](paper_v3/README.md#reproduce-the-output-drift-analysis),
+with receipts in the matching
+[DETAILS entry](DETAILS.md#november-25-muon-baseline-diagnostic-receipts).
+
+
+### November 25 520M Learning-Rate Completion Campaign
+
+The user authorized the four missing optimizer/LR cells on all 32 A100s.
+The campaign launched on November 25, 2026 at 21:14 Asia/Shanghai: Muon
+at 0.02262741696 on node .9, MuonT at 0.016 on .80, OD-All at 0.016 on
+.144, and WT-MLP-Lag at 0.016 on .139. Each run uses eight A100-SXM4-40GB
+GPUs, seed 0, 10,240 updates, 1,048,576 tokens per update, and
+10,737,418,240 training tokens. Each config differs from its completed
+520M wave4a counterpart only in optimizer.lr; auxiliary LR, weight decay,
+schedule, batch, initialization, data, and checkpoint cadence are preserved.
+
+The campaign uses an isolated shared-filesystem workspace with all 42
+Python source hashes identical to the original wave4a manifests. The
+current confirmation workspace contains later timing changes and is not
+used for these runs. Each worker first replays eight steps at its reference
+LR and requires train-loss and initial heldout-loss agreement within 1e-5,
+then trains the new LR from initialization and evaluates all 16 Paloma
+domains. All four allocations are active and reference replay is in
+progress at this launch observation. No new LR conclusion is available.
+
+Final heldout selection_loss is the prespecified within-optimizer decision
+metric; C4, the last 11 heldout evaluations, Paloma, and whole trajectories
+are supporting evidence. This is a comparison of two rates at one seed;
+it does not establish a global optimum. Existing 520M checkpoints remain
+available for the other four cells and for later matched-LR drift analysis.
+
+A detached local monitor writes progress every 60 seconds and produces the
+eight-cell comparison once all training/evaluation jobs and keeper
+restorations succeed. Worker failures are preserved without automatic
+restarts. The host application exposes no follow-up scheduler in this
+session, so the monitor records state locally rather than promising a
+future chat notification. The campaign directory is
+`/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-520m-20261125`.
+See the matching DETAILS entry for commands and execution identities.
+
+
+At 21:17 Asia/Shanghai all four eight-step reference replays passed with
+zero absolute difference in every training loss and in the first heldout
+selection_loss. The four workers advanced into fresh full-budget training
+at their missing LRs. `parity_all.json` aggregates the four receipts and
+hashes. This validates replay consistency, not a training-quality finding.
+
+
+At 2026-11-25T13:20:27.318872+00:00 the four new-LR trajectories are advancing with
+finite train losses (completed steps: muon 33, muont 24, od_all 20, wt_mlp_lag 17). All four executed configs
+and 42-source manifests match their requested identities; all runs are
+fresh, with resume=null. The live GPU audit confirms eight training ranks
+on each node and 100% utilization on all 32 GPUs at observation time.
+The monitor passed a second 60-second cycle. Launch verification and
+full GPU process identities are saved in launch_verified.json and
+full_training_gpu_observation.json. Training and evaluation remain pending.

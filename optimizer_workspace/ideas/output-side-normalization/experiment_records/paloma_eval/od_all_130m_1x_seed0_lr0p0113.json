@@ -1,0 +1,30 @@
+{
+  "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-bracket-20261125/runs/od_all_130m_1x_seed0_lr0p0113",
+  "checkpoint": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/lr-bracket-20261125/runs/od_all_130m_1x_seed0_lr0p0113/checkpoints/step_005120",
+  "step": 5120,
+  "arm": "inner_outer_leftdiag",
+  "model_size": "130m",
+  "selection_loss": 3.238283914209365,
+  "paloma_macro_mean": 3.4114859176648764,
+  "scores": {
+    "heldout/dclm": 3.3377007958507656,
+    "heldout/proofpile": 2.2637205267818565,
+    "heldout/starcoder": 1.941551258494129,
+    "paloma/4chan_meta_sep": 2.7491181587018008,
+    "paloma/c4_100_domains": 3.3119868547281808,
+    "paloma/c4_en": 3.456907541510438,
+    "paloma/dolma-v1_5": 3.1409078159137187,
+    "paloma/dolma_100_programing_languages": 1.9071806500756696,
+    "paloma/dolma_100_subreddits": 3.6066553376806145,
+    "paloma/falcon-refinedweb": 3.5410795009406835,
+    "paloma/gab": 4.528031930991835,
+    "paloma/m2d2_s2orc_unsplit": 3.144531337650428,
+    "paloma/m2d2_wikipedia_unsplit": 3.192044299415078,
+    "paloma/manosphere_meta_sep": 3.5841586509286185,
+    "paloma/mc4": 3.1281839132156004,
+    "paloma/ptb": 3.7341568454946708,
+    "paloma/redpajama": 2.9996245587291224,
+    "paloma/twitterAAE_HELM_fixed": 5.305708277373534,
+    "paloma/wikitext_103": 3.253499009288032
+  }
+}

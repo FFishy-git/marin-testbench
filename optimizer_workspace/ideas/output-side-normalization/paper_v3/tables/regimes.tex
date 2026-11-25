@@ -1,0 +1,13 @@
+\begin{table}[tbp]\centering\small
+\setlength{\tabcolsep}{5.8pt}
+\caption{\textbf{Pretraining regimes.} Params counts non-embedding parameters; TPP is tokens per non-embedding parameter. Fresh-seed confirmation uses seeds 1--3 after learning-rate selection and execution-path checks on seed 0.}\label{tab:regimes}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrc@{}}
+\toprule
+Regime & Params & $\dm$ / $\dff$ & Tokens (TPP) & Batch / Steps & GPUs & Seeds \\
+\midrule
+130M controls \& LR bracket & 134M & 512 / 2,048 & 2.68B (20) & 0.5M / 5,120 & 8$\times$A100 & 0 \\
+130M confirmation & 134M & 512 / 2,048 & 2.68B (20) & 0.5M / 5,120 & 8$\times$A100 & 1, 2, 3 \\
+130M longer training & 134M & 512 / 2,048 & 10.74B (80) & 0.5M / 20,480 & 8$\times$A100 & 0 \\
+520M width transfer & 537M & 1,024 / 4,096 & 10.74B (20) & 1.0M / 10,240 & 32$\times$A100 & 0 \\
+\bottomrule\end{tabularx}
+\end{table}

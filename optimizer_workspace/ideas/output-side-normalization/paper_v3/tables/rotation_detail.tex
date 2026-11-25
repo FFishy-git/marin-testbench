@@ -1,0 +1,16 @@
+\begin{table}[tbp]\centering\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\caption{\textbf{Complete 130M inner/outer decomposition and spectral alignment probes (32-layer means, step 2,500).} Inner SVD and Inner $\Nten$ measure left-factor rotation under exact polar decomposition versus ten-step Newton--Schulz; Outer $\Nten$ isolates the post-polar $-1/8$ factor; Cosine compares the inner and outer update deltas (near zero on $m\le n$ projections, confirming orthogonal tangent/normal action). \texttt{bot80} win is the fraction of trailing 80\% $B_t$ modes gaining row alignment; $\mathrm{erank}$ compares pre-polar effective rank ($Z_0\to L Z_0$); $\mathcal Q_{\rm WT}/\mathcal Q_{\rm MT}$ and $\Phi_{\rm OD}/\Phi_{\rm MT}$ complete the quadratic surrogate ratios.}\label{tab:rotation_detail}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrrr@{}}
+\toprule
+Output & Inner SVD & Inner $\Nten$ & Outer $\Nten$ & Cosine & Hijack & \texttt{bot80} win & $\mathrm{erank}$ & $\mathcal Q_{\rm WT}/\mathcal Q_{\rm MT}$ & $\Phi_{\rm OD}/\Phi_{\rm MT}$ \\
+\midrule
+q & $13.4^\circ$ & $21.7^\circ$ & $7.5^\circ$ & $+0.016$ & $67.8\to2.8\%$ & 70.7\% & $65.5\to78.5\%$ & 0.667 & 1.056 \\
+k & $14.2^\circ$ & $21.7^\circ$ & $7.7^\circ$ & $+0.027$ & $64.2\to3.7\%$ & 78.6\% & $58.3\to76.3\%$ & 0.607 & 1.064 \\
+v & $16.8^\circ$ & $23.1^\circ$ & $8.3^\circ$ & $+0.000$ & $19.6\to1.1\%$ & 69.0\% & $64.9\to68.0\%$ & 0.663 & 1.098 \\
+o & $6.9^\circ$ & $15.1^\circ$ & $3.6^\circ$ & $+0.013$ & $30.4\to3.5\%$ & 71.4\% & $74.5\to77.6\%$ & 0.934 & 1.001 \\
+down & $2.8^\circ$ & $15.3^\circ$ & $3.5^\circ$ & $-0.002$ & $64.5\to2.8\%$ & 82.4\% & $92.7\to95.9\%$ & 0.895 & 0.998 \\
+gate & $10.1^\circ$ & $14.1^\circ$ & $3.1^\circ$ & $+0.579$ & $22.7\to3.1\%$ & 72.7\% & $94.5\to95.3\%$ & 0.767 & 1.292 \\
+up & $10.3^\circ$ & $14.7^\circ$ & $3.4^\circ$ & $+0.567$ & $33.7\to4.7\%$ & 70.7\% & $94.1\to95.2\%$ & 0.765 & 1.249 \\
+\bottomrule\end{tabularx}
+\end{table}

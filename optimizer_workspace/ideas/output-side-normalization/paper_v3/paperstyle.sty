@@ -1,138 +1,51 @@
-% Page style for Paper v3: AI-lab technical preprint typography (Latin Modern body & maths,
-% sans-serif headings & captions, clean hairline title block with tinted abstract card,
-% and subtle numbered finding boxes).
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{paperstyle}[2026/11/24 Refined page style for Paper v3]
-
-\newif\ifpaperstyle@warm
-\newif\ifpaperstyle@parskip \paperstyle@parskiptrue
-\newif\ifpaperstyle@palatino
-\newif\ifpaperstyle@palantir
-\DeclareOption{warm}{\paperstyle@warmtrue}
-\DeclareOption{noparskip}{\paperstyle@parskipfalse}
-\DeclareOption{palatino}{\paperstyle@palatinotrue}
-\DeclareOption{palantir}{\paperstyle@palantirtrue}
-\ProcessOptions\relax
-
+\ProvidesPackage{paperstyle}[2026/11/25 Research manuscript typography]
 \RequirePackage{xcolor}
-\RequirePackage{etoolbox}
-\RequirePackage{environ}
+\RequirePackage{tgheros}
+\RequirePackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\sfdefault}{qhv}
 \RequirePackage{titlesec}
 \RequirePackage{caption}
 \RequirePackage{fancyhdr}
-\RequirePackage[most]{tcolorbox}
+\RequirePackage{environ}
+\RequirePackage[skip=5.5pt plus 1pt minus 1pt]{parskip}
 \RequirePackage{hyperref}
-\RequirePackage{cleveref}
-
-\definecolor{pageink}{HTML}{1C2B33}
-\definecolor{pagemuted}{HTML}{5F6B73}
-\definecolor{pagelink}{HTML}{1B4F9C}
-\ifpaperstyle@warm
-  \definecolor{pagepanel}{HTML}{F7F3EF}
-  \definecolor{pageaccent}{HTML}{B4654A}
-\else
-  \definecolor{pagepanel}{HTML}{F2F5F9}
-  \definecolor{pageaccent}{HTML}{1B4F9C}
-\fi
-\definecolor{pagerule}{HTML}{D2D7DB}
-\colorlet{sectionblue}{pageink}
-\hypersetup{colorlinks=true, linkcolor=pagelink, citecolor=pagelink, urlcolor=pagelink}
-
-\ifpaperstyle@palatino\else
-  \RequirePackage{lmodern}
-\fi
-
-\providecommand*{\Inter@scale}{0.9}
-\IfFileExists{T1Inter-LF.fd}{\def\paperstyle@sf{Inter-LF}\def\paperstyle@sb{sb}}{%
-\IfFileExists{T1Inter-TLF.fd}{\def\paperstyle@sf{Inter-TLF}\def\paperstyle@sb{sb}}{%
-  \IfFileExists{T1SourceSansPro-TLF.fd}{\def\paperstyle@sf{SourceSansPro-TLF}\def\paperstyle@sb{sb}}{%
-    \def\paperstyle@sf{phv}\def\paperstyle@sb{b}}}}
-\renewcommand*{\sfdefault}{\paperstyle@sf}
-\newcommand*{\pagesf}{\fontfamily{\paperstyle@sf}\fontseries{m}\fontshape{n}\selectfont}
-\newcommand*{\pagesfsb}{\fontfamily{\paperstyle@sf}\fontseries{\paperstyle@sb}\fontshape{n}\selectfont}
-
-\ifpaperstyle@parskip
-  \RequirePackage[skip=4.5pt plus 1.5pt minus 1pt]{parskip}
-\fi
-
-\titleformat{\section}{\pagesfsb\Large\color{pageink}}{\textcolor{pageaccent}{\thesection}}{0.65em}{}
-\titleformat{\subsection}{\pagesfsb\large\color{pageink}}{\textcolor{pageaccent}{\thesubsection}}{0.65em}{}
-\titleformat{\subsubsection}{\pagesfsb\normalsize\color{pageink}}{\textcolor{pageaccent}{\thesubsubsection}}{0.65em}{}
-\titleformat{\paragraph}[runin]{\pagesfsb\normalsize\color{pageink}}{}{0pt}{}
-\titlespacing*{\section}{0pt}{14pt plus 3pt minus 2pt}{4.5pt plus 1.5pt}
-\titlespacing*{\subsection}{0pt}{10pt plus 2.5pt minus 1.5pt}{3.5pt plus 1pt}
-\titlespacing*{\subsubsection}{0pt}{8pt plus 2pt minus 1pt}{2.5pt plus 1pt}
-\titlespacing*{\paragraph}{0pt}{3.5pt plus 1.5pt minus 1pt}{0.65em}
-
-\DeclareCaptionLabelFormat{paperlabel}{{\pagesfsb\color{pageink}#1~#2}}
-\DeclareCaptionLabelSeparator{paperbar}{\enspace{\color{pagemuted!55}\rule[-0.18em]{0.6pt}{0.95em}}\enspace}
-\captionsetup{labelformat=paperlabel, labelsep=paperbar, font=small, singlelinecheck=false, justification=justified}
-
-\newtcolorbox[auto counter, crefname={takeaway}{takeaways}, Crefname={Takeaway}{Takeaways}]{takeaway}[1][]{%
-  enhanced, unbreakable, before skip=8pt, after skip=8pt, colback=pagepanel, frame hidden, boxrule=0pt, sharp corners,
-  borderline west={2.4pt}{0pt}{pageaccent}, left=11pt, right=11pt, top=6pt, bottom=6.5pt,
-  before upper={\noindent{\pagesfsb\color{pageaccent}Takeaway~\thetcbcounter}\ifblank{#1}{}{\enspace\textbf{#1.}}\enspace},
-}
-
-\let\paperstyle@short\@empty
-\newcommand{\papershorttitle}[1]{\gdef\paperstyle@short{#1}}
+\definecolor{pageink}{HTML}{202A35}
+\definecolor{pagemuted}{HTML}{586777}
+\definecolor{pageaccent}{HTML}{2459A6}
+\definecolor{pagerule}{HTML}{DCE3EB}
+\hypersetup{linkcolor=pageaccent,citecolor=pageaccent,urlcolor=pageaccent}
+\AtBeginDocument{\color{pageink}\fontsize{10.5}{14}\selectfont}
+\titleformat{\section}{\sffamily\bfseries\large\color{pageink}}{\textcolor{pageaccent}{\thesection}}{0.65em}{}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize\color{pageink}}{\textcolor{pageaccent}{\thesubsection}}{0.65em}{}
+\titleformat{\subsubsection}{\sffamily\bfseries\normalsize}{}{0pt}{}
+\titleformat{\paragraph}[runin]{\sffamily\bfseries\normalsize}{}{0pt}{}
+\titlespacing*{\section}{0pt}{17pt plus 3pt minus 2pt}{6pt}
+\titlespacing*{\subsection}{0pt}{12pt plus 2pt minus 1pt}{4pt}
+\titlespacing*{\paragraph}{0pt}{6pt}{0.65em}
+\captionsetup{font={small,sf},labelfont={bf,color=pageaccent},labelsep=period,justification=raggedright,singlelinecheck=false,skip=7pt}
+\captionsetup[table]{position=top}
+\setlength{\textfloatsep}{17pt plus 3pt minus 3pt}
+\setlength{\floatsep}{15pt plus 2pt minus 2pt}
+\setlength{\intextsep}{15pt plus 2pt minus 2pt}
+\renewcommand{\arraystretch}{1.18}
+\setlength{\tabcolsep}{5pt}
 \setlength{\headheight}{14pt}
-\fancypagestyle{paper}{%
-  \fancyhf{}%
-  \fancyhead[L]{\pagesf\footnotesize\color{pagemuted}\paperstyle@short}%
-  \fancyhead[R]{\pagesf\footnotesize\color{pagemuted}\thepage}%
-  \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}%
-}
-\fancypagestyle{paperfirst}{%
-  \fancyhf{}%
-  \fancyfoot[C]{\pagesf\footnotesize\color{pagemuted}\thepage}%
-  \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}%
-}
-
-\let\paperstyle@abstract\relax
-\let\paperstyle@affiliations\@empty
-\let\paperstyle@note\@empty
-\let\paperstyle@meta\@empty
-\newcommand{\paperaffiliations}[1]{\gdef\paperstyle@affiliations{#1}}
-\newcommand{\papernote}[1]{\gdef\paperstyle@note{#1}}
-\newcommand{\papermeta}[2]{\g@addto@macro\paperstyle@meta{\par{\pagesfsb #1:}\enspace #2}}
-
-\AtBeginDocument{\providecommand*{\textls}[2][]{#2}}
-\newcommand{\paperstyle@panel}{%
-  \thispagestyle{paperfirst}%
-  \setlength{\parindent}{0pt}%
-  \begingroup
-  \color{pageink}%
-  {\raggedright\pagesfsb\fontsize{18.5}{22.5}\selectfont\@title\par}%
-  \vskip 6pt
-  {\color{pagerule}\rule{\linewidth}{0.5pt}}\par
-  \vskip 6pt
-  {\raggedright
-    {\pagesfsb\normalsize\@author\par}%
-    \ifx\paperstyle@affiliations\@empty\else\vskip 2pt{\small\color{pagemuted}\paperstyle@affiliations\par}\fi
-    \ifx\paperstyle@note\@empty\else\vskip 2pt{\footnotesize\color{pagemuted}\paperstyle@note\par}\fi}%
-  \vskip 10pt
-  \begin{tcolorbox}[enhanced, frame hidden, boxrule=0pt, colback=pagepanel, arc=6pt, outer arc=6pt,
-      left=14pt, right=14pt, top=11pt, bottom=11pt, before skip=0pt, after skip=10pt]
-    \setlength{\parindent}{0pt}%
-    {\pagesfsb\fontsize{8}{10}\selectfont\color{pageaccent}\textls[140]{\MakeUppercase{Abstract}}\par}%
-    \vskip 5pt
-    {\small\color{pageink}\setlength{\parskip}{3.5pt}\paperstyle@abstract\par}%
-  \end{tcolorbox}%
-  \ifx\paperstyle@meta\@empty\else
-    {\raggedright\footnotesize\color{pagemuted}\setlength{\parskip}{1pt}\paperstyle@meta\par}%
-  \fi
-  \endgroup
-  \vskip 10pt
-}
-
-\newif\ifpaperstyle@titlepending
-\renewcommand{\maketitle}{%
-  \ifx\paperstyle@abstract\relax\global\paperstyle@titlependingtrue\else\paperstyle@panel\fi
-}
-\RenewEnviron{abstract}{%
-  \global\let\paperstyle@abstract\BODY
-  \ifpaperstyle@titlepending\global\paperstyle@titlependingfalse\paperstyle@panel\fi
-}
-
+\newcommand{\papershorttitle}[1]{\gdef\paperstyle@short{#1}}
+\newcommand{\paperaffiliations}[1]{\gdef\paperstyle@affiliation{#1}}
+\newcommand{\paperstyle@short}{}
+\newcommand{\paperstyle@affiliation}{}
+\fancypagestyle{paper}{\fancyhf{}\fancyhead[L]{\sffamily\footnotesize\color{pagemuted}\paperstyle@short}\fancyhead[R]{\sffamily\footnotesize\color{pagemuted}\thepage}\renewcommand{\headrulewidth}{0pt}}
+\fancypagestyle{paperfirst}{\fancyhf{}\fancyfoot[C]{\sffamily\footnotesize\color{pagemuted}\thepage}\renewcommand{\headrulewidth}{0pt}}
+\renewcommand{\maketitle}{\thispagestyle{paperfirst}\begingroup\raggedright
+{\color{pageaccent}\rule{35pt}{2.5pt}\par}\vspace{9pt}
+{\sffamily\bfseries\fontsize{24}{28}\selectfont\@title\par}\vspace{10pt}
+{\sffamily\fontsize{10}{13}\selectfont\@author\quad\textcolor{pagemuted}{\paperstyle@affiliation}\par}
+\vspace{13pt}\endgroup}
+\RenewEnviron{abstract}{\begingroup\noindent{\sffamily\bfseries\color{pageaccent}Abstract}\par\vspace{2pt}
+\fontsize{10}{13.2}\selectfont\BODY\par\vspace{10pt}{\color{pagerule}\hrule}\endgroup\vspace{6pt}}
+\renewcommand{\bibfont}{\fontsize{9}{11}\selectfont}
+\setlength{\bibsep}{3pt}
+\setlength{\@fptop}{0pt}
 \endinput

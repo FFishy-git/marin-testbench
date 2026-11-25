@@ -1,0 +1,110 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{jordan2024muon}
+\@writefile{toc}{\contentsline {section}{\numberline {1}The Whole Story in Plain English (Five Connected Steps)}{1}{section*.1}\protected@file@percent }
+\newlabel{sec:big_picture}{{1}{1}{The Whole Story in Plain English (Five Connected Steps)}{section*.1}{}}
+\newlabel{sec:big_picture@cref}{{[section][1][]1}{[1][1][]1}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {The five-step cause-and-effect chain behind output-side normalization (WT-MLP-Lag).} Reading from left to right answers \emph  {why axes matter in Muon} (Step~1), \emph  {what ``rotation'' means} (Step~2), \emph  {why normalization changes the axes instead of cancelling out} (Step~3), and \emph  {why the new axes train better both immediately and over hundreds of steps} (Steps~4--5).}}{2}{figure.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:roadmap}{{1}{2}{\textbf {The five-step cause-and-effect chain behind output-side normalization (\mname {WT-MLP-Lag}).} Reading from left to right answers \emph {why axes matter in \mname {Muon}} (Step~1), \emph {what ``rotation'' means} (Step~2), \emph {why normalization changes the axes instead of cancelling out} (Step~3), and \emph {why the new axes train better both immediately and over hundreds of steps} (Steps~4--5)}{figure.caption.2}{}}
+\newlabel{fig:roadmap@cref}{{[figure][1][]1}{[1][1][]2}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Building Blocks from Zero: Matrices, Ellipses, and Muon}{3}{section*.8}\protected@file@percent }
+\newlabel{sec:primer}{{2}{3}{Building Blocks from Zero: Matrices, Ellipses, and Muon}{section*.8}{}}
+\newlabel{sec:primer@cref}{{[section][2][]2}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Two Vectors Meet at Every Linear Layer: Input $x$ and Backward Error $\delta $}{3}{subsection*.9}\protected@file@percent }
+\newlabel{sec:x_and_delta}{{2.1}{3}{Two Vectors Meet at Every Linear Layer: Input \texorpdfstring {$x$}{x} and Backward Error \texorpdfstring {$\delta $}{delta}}{subsection*.9}{}}
+\newlabel{sec:x_and_delta@cref}{{[subsection][1][2]2.1}{[1][3][]3}{}{}{}}
+\newlabel{eq:grad_outer}{{1}{3}{Two Vectors Meet at Every Linear Layer: Input \texorpdfstring {$x$}{x} and Backward Error \texorpdfstring {$\delta $}{delta}}{equation*.12}{}}
+\newlabel{eq:grad_outer@cref}{{[equation][1][]1}{[1][3][]3}{}{}{}}
+\newlabel{eq:moments_simple}{{2}{3}{Two Vectors Meet at Every Linear Layer: Input \texorpdfstring {$x$}{x} and Backward Error \texorpdfstring {$\delta $}{delta}}{equation*.13}{}}
+\newlabel{eq:moments_simple@cref}{{[equation][2][]2}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Eigenvectors vs.\ Singular Vectors in One Picture}{3}{subsection*.15}\protected@file@percent }
+\newlabel{sec:eig_vs_svd}{{2.2}{3}{Eigenvectors vs.\ Singular Vectors in One Picture}{subsection*.15}{}}
+\newlabel{sec:eig_vs_svd@cref}{{[subsection][2][2]2.2}{[1][3][]3}{}{}{}}
+\newlabel{eq:eig}{{3}{3}{Eigenvectors vs.\ Singular Vectors in One Picture}{equation*.16}{}}
+\newlabel{eq:eig@cref}{{[equation][3][]3}{[1][3][]3}{}{}{}}
+\citation{jordan2024muon}
+\citation{mohamadi2026toner}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Visual primer on eigenvectors, singular vectors, and Muon.} \textbf  {(a)} Plotting backward error vectors $\delta $ over a batch forms an ellipse; the eigenvectors $q_1, q_2$ of $B = \mathbb  {E}[\delta \delta ^{{\mathsf  {T}}}]$ are simply the ellipse's perpendicular principal axes, and $\sqrt  {\beta _1}, \sqrt  {\beta _2}$ are its widths. \textbf  {(b)} A raw momentum matrix $M = U\Sigma V^{{\mathsf  {T}}}$ stretches one axis vastly more than another ($\sigma _1 \gg \sigma _2$, dashed red), starving quiet features; Muon's polar step $\operatorname  {polar}(M) = U V^{{\mathsf  {T}}}$ resets all stretches to $1$ (solid blue circle), making the choice of axes $(U, V)$ the entire update. \textbf  {(c)} Because $G = \DOTSB \sum@ \slimits@ \delta x^{{\mathsf  {T}}}$, input-only MuonT fixes the right-hand input ellipse $C$ while leaving the left-hand backward error ellipse $B$ unfixed.}}{4}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:primer}{{2}{4}{\textbf {Visual primer on eigenvectors, singular vectors, and \mname {Muon}.} \textbf {(a)} Plotting backward error vectors $\delta $ over a batch forms an ellipse; the eigenvectors $q_1, q_2$ of $B = \E [\delta \delta ^{\Tr }]$ are simply the ellipse's perpendicular principal axes, and $\sqrt {\beta _1}, \sqrt {\beta _2}$ are its widths. \textbf {(b)} A raw momentum matrix $M = U\Sigma V^{\Tr }$ stretches one axis vastly more than another ($\sigma _1 \gg \sigma _2$, dashed red), starving quiet features; \mname {Muon}'s polar step $\polar (M) = U V^{\Tr }$ resets all stretches to $1$ (solid blue circle), making the choice of axes $(U, V)$ the entire update. \textbf {(c)} Because $G = \sum \delta x^{\Tr }$, input-only \mname {MuonT} fixes the right-hand input ellipse $C$ while leaving the left-hand backward error ellipse $B$ unfixed}{figure.caption.14}{}}
+\newlabel{fig:primer@cref}{{[figure][2][]2}{[1][3][]4}{}{}{}}
+\newlabel{eq:svd}{{4}{4}{Eigenvectors vs.\ Singular Vectors in One Picture}{equation*.17}{}}
+\newlabel{eq:svd@cref}{{[equation][4][]4}{[1][4][]4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}What Muon Actually Does --- And Why Axes Are the Whole Game}{4}{subsection*.18}\protected@file@percent }
+\newlabel{sec:what_muon_does}{{2.3}{4}{What Muon Actually Does --- And Why Axes Are the Whole Game}{subsection*.18}{}}
+\newlabel{sec:what_muon_does@cref}{{[subsection][3][2]2.3}{[1][4][]4}{}{}{}}
+\newlabel{eq:polar_def}{{5}{4}{What Muon Actually Does --- And Why Axes Are the Whole Game}{equation*.19}{}}
+\newlabel{eq:polar_def@cref}{{[equation][5][]5}{[1][4][]4}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces \textbf  {The Plain-English Jargon Decoder.} Every specialized term in the main paper maps to a concrete 2D geometric picture.}}{5}{table.caption.21}\protected@file@percent }
+\newlabel{tab:decoder}{{1}{5}{\textbf {The Plain-English Jargon Decoder.} Every specialized term in the main paper maps to a concrete 2D geometric picture}{table.caption.21}{}}
+\newlabel{tab:decoder@cref}{{[table][1][]1}{[1][5][]5}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}What ``Rotation'' Means --- And Why Diagonal Scaling Goes Blind}{5}{section*.22}\protected@file@percent }
+\newlabel{sec:rotation_meaning}{{3}{5}{What ``Rotation'' Means --- And Why Diagonal Scaling Goes Blind}{section*.22}{}}
+\newlabel{sec:rotation_meaning@cref}{{[section][3][]3}{[1][5][]5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Why Transformers Produce Both Extremes (SwiGLU Gate vs.\ Residual Mixing Bowl)}{6}{subsection*.28}\protected@file@percent }
+\newlabel{sec:why_transformer_splits}{{3.1}{6}{Why Transformers Produce Both Extremes (SwiGLU Gate vs.\ Residual Mixing Bowl)}{subsection*.28}{}}
+\newlabel{sec:why_transformer_splits@cref}{{[subsection][1][3]3.1}{[1][6][]6}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{1. Why \texttt  {out:gate} and \texttt  {out:up} are axis-aligned (The SwiGLU Scrambler).}{6}{subsection*.28}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Axis-aligned vs.\ tilted error ovals---from 2D geometry to real \texttt  {130M} and \texttt  {520M} Transformers.} \textbf  {(a)} When the error oval aligns with neuron axes ($B_{\mathrm  {aligned}}$), shadows on Neuron~1 and Neuron~2 differ sharply ($1.96$ vs.\ $0.04$), so 1D diagonal scaling sees $100\%$ of the distortion. \textbf  {(b)} Tilting the exact same oval by $45^\circ $ ($B_{\mathrm  {tilted}}$) makes the Neuron~1 and Neuron~2 shadows \emph  {identical} ($B_{11}=B_{22}=1.00$), leaving diagonal scaling $100\%$ blind! \textbf  {(c)} Real Transformer output moments mirror both extremes: SwiGLU-gated \texttt  {out:gate, up} sit at $78\%\text  {--}82\%$ diagonal, whereas residual-stream \texttt  {out:o, down} sit below $1\%$ diagonal at \texttt  {130M} ($d=512$) and shrink further to $0.50\%$ at \texttt  {520M} ($d=1{,}024$)---with \texttt  {out:v} collapsing $12\times $ from $12.2\% \to 1.0\%$.}}{7}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:tilted}{{3}{7}{\textbf {Axis-aligned vs.\ tilted error ovals---from 2D geometry to real \texttt {130M} and \texttt {520M} Transformers.} \textbf {(a)} When the error oval aligns with neuron axes ($B_{\mathrm {aligned}}$), shadows on Neuron~1 and Neuron~2 differ sharply ($1.96$ vs.\ $0.04$), so 1D diagonal scaling sees $100\%$ of the distortion. \textbf {(b)} Tilting the exact same oval by $45^\circ $ ($B_{\mathrm {tilted}}$) makes the Neuron~1 and Neuron~2 shadows \emph {identical} ($B_{11}=B_{22}=1.00$), leaving diagonal scaling $100\%$ blind! \textbf {(c)} Real Transformer output moments mirror both extremes: SwiGLU-gated \texttt {out:gate, up} sit at $78\%\text {--}82\%$ diagonal, whereas residual-stream \texttt {out:o, down} sit below $1\%$ diagonal at \texttt {130M} ($d=512$) and shrink further to $0.50\%$ at \texttt {520M} ($d=1{,}024$)---with \texttt {out:v} collapsing $12\times $ from $12.2\% \to 1.0\%$}{figure.caption.27}{}}
+\newlabel{fig:tilted@cref}{{[figure][3][]3}{[1][6][]7}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{2. Why \texttt  {out:o} and \texttt  {out:down} are tilted---and why wider models blind diagonal scaling even further (The Residual Mixing Bowl).}{7}{subsection*.28}\protected@file@percent }
+\newlabel{eq:mixing_bowl}{{6}{7}{2. Why \texttt {out:o} and \texttt {out:down} are tilted---and why wider models blind diagonal scaling even further (The Residual Mixing Bowl)}{equation*.29}{}}
+\newlabel{eq:mixing_bowl@cref}{{[equation][6][]6}{[1][7][]7}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Why Normalization Changes the Axes (Why Polar Doesn't Undo It)}{8}{section*.30}\protected@file@percent }
+\newlabel{sec:hijacking}{{4}{8}{Why Normalization Changes the Axes (Why Polar Doesn't Undo It)}{section*.30}{}}
+\newlabel{sec:hijacking@cref}{{[section][4][]4}{[1][8][]8}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}A High-School-Trig Formula for $2\times 2$ Polar Orthogonalization}{8}{subsection*.31}\protected@file@percent }
+\newlabel{sec:2x2_trig}{{4.1}{8}{A High-School-Trig Formula for \texorpdfstring {$2\times 2$}{2x2} Polar Orthogonalization}{subsection*.31}{}}
+\newlabel{sec:2x2_trig@cref}{{[subsection][1][4]4.1}{[1][8][]8}{}{}{}}
+\newlabel{eq:tan_phi}{{7}{8}{A High-School-Trig Formula for \texorpdfstring {$2\times 2$}{2x2} Polar Orthogonalization}{equation*.32}{}}
+\newlabel{eq:tan_phi@cref}{{[equation][7][]7}{[1][8][]8}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Visualizing ``Loud-Channel Hijacking'' inside Muon's polar step---and its cure.} \textbf  {(a)} Clean feature matrix $M_{\mathrm  {true}}$ has perpendicular axes at $45^\circ $ ($\sigma _1=2.0$) and $135^\circ $ ($\sigma _2=0.5$). \textbf  {(b)} When Output Row~1 is $10\times $ louder in error noise ($Z_0$), both feature vectors get squashed toward the horizontal $x$-axis ($5.7^\circ $ and $174.3^\circ $). \textbf  {(c)} Forcing $90^\circ $ orthogonality via $\operatorname  {polar}(Z_0)$ lets loud Column~1 bully quiet Column~2 off course by $\mathbf  {26.2^\circ }$ ($18.85^\circ $, dashed red), whereas inner normalization $\operatorname  {polar}(L Z_0)$ restores the exact $45^\circ $ axes (solid blue). \textbf  {(d)} Across all 32 layers of a real \texttt  {130M} Transformer, top-16 noisy error directions hijack $30\%\text  {--}68\%$ of MuonT's top-16 pre-polar singular axes (red); applying $L = B^{-1/2}$ drops hijacking right onto the $3.1\%$ fair-chance baseline (blue).}}{9}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:hijacking}{{4}{9}{\textbf {Visualizing ``Loud-Channel Hijacking'' inside \mname {Muon}'s polar step---and its cure.} \textbf {(a)} Clean feature matrix $M_{\mathrm {true}}$ has perpendicular axes at $45^\circ $ ($\sigma _1=2.0$) and $135^\circ $ ($\sigma _2=0.5$). \textbf {(b)} When Output Row~1 is $10\times $ louder in error noise ($Z_0$), both feature vectors get squashed toward the horizontal $x$-axis ($5.7^\circ $ and $174.3^\circ $). \textbf {(c)} Forcing $90^\circ $ orthogonality via $\polar (Z_0)$ lets loud Column~1 bully quiet Column~2 off course by $\mathbf {26.2^\circ }$ ($18.85^\circ $, dashed red), whereas inner normalization $\polar (L Z_0)$ restores the exact $45^\circ $ axes (solid blue). \textbf {(d)} Across all 32 layers of a real \texttt {130M} Transformer, top-16 noisy error directions hijack $30\%\text {--}68\%$ of \mname {MuonT}'s top-16 pre-polar singular axes (red); applying $L = B^{-1/2}$ drops hijacking right onto the $3.1\%$ fair-chance baseline (blue)}{figure.caption.37}{}}
+\newlabel{fig:hijacking@cref}{{[figure][4][]4}{[1][9][]9}{}{}{}}
+\citation{shumaylov2026freon,goyal2026spectrally}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Connecting the $2\times 2$ Picture to Real Transformers and $\mathcal  {N}_{10}$}{10}{subsection*.38}\protected@file@percent }
+\newlabel{sec:hijack_transformer}{{4.2}{10}{Connecting the \texorpdfstring {$2\times 2$}{2x2} Picture to Real Transformers and \texorpdfstring {$\Nten $}{N10}}{subsection*.38}{}}
+\newlabel{sec:hijack_transformer@cref}{{[subsection][2][4]4.2}{[1][9][]10}{}{}{}}
+\newlabel{eq:general_rotation}{{8}{10}{Connecting the \texorpdfstring {$2\times 2$}{2x2} Picture to Real Transformers and \texorpdfstring {$\Nten $}{N10}}{equation*.39}{}}
+\newlabel{eq:general_rotation@cref}{{[equation][8][]8}{[1][9][]10}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Why the New Eigenvector System Trains Better}{10}{section*.40}\protected@file@percent }
+\newlabel{sec:why_better}{{5}{10}{Why the New Eigenvector System Trains Better}{section*.40}{}}
+\newlabel{sec:why_better@cref}{{[section][5][]5}{[1][10][]10}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Reason 1: Inner $L = B^{-1/2}$ Selects Axes by Correlation, Not Error Loudness}{10}{subsection*.42}\protected@file@percent }
+\newlabel{sec:reason_cca}{{5.1}{10}{Reason 1: Inner \texorpdfstring {$L = B^{-1/2}$}{L = B\^{}(-1/2)} Selects Axes by Correlation, Not Error Loudness}{subsection*.42}{}}
+\newlabel{sec:reason_cca@cref}{{[subsection][1][5]5.1}{[1][10][]10}{}{}{}}
+\newlabel{eq:loudness_vs_corr}{{9}{10}{Reason 1: Inner \texorpdfstring {$L = B^{-1/2}$}{L = B\^{}(-1/2)} Selects Axes by Correlation, Not Error Loudness}{equation*.43}{}}
+\newlabel{eq:loudness_vs_corr@cref}{{[equation][9][]9}{[1][10][]10}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Why the rotated update system wins---locally in steep canyons and globally across 250+ steps.} \textbf  {(a)} Inner $L = B^{-1/2}$ and outer $\hat  {L} = \operatorname  {unitRMS}(B^{-1/8})$ perform $90^\circ $-orthogonal jobs: \textbf  {(1)}~inner $L$ rotates \emph  {tangentially along the unit circle} to point away from loud error spikes toward true input--error correlation, while \textbf  {(2)}~outer $\hat  {L}$ reshapes step lengths \emph  {perpendicular to the circle}, shrinking steps into steep canyon walls ($\beta _1$) and lengthening steps along gentle valley floors ($\beta _2$). \textbf  {(b)} At \texttt  {520M} ($d_{\mathrm  {model}}=1{,}024$), dense WT-MLP-Lag boosts net downhill progress per unit canyon curvature ($\Phi _{B,C}$) by $1.59\times \text  {--}2.00\times $ on \texttt  {v, q, k} and $1.09\times \text  {--}1.10\times $ on residual \texttt  {o, down}, whereas diagonal OD-All flatlines at $1.00\times $ on residual writers. \textbf  {(c)} Over 250 training steps, avoiding canyon-wall overshoots slows backward error-oval spinning ($\mathrm  {Drift}_{16}$) by $11\%\text  {--}40\%$ across all seven layer types, allowing 20-step Nesterov momentum to accumulate cleanly.}}{11}{figure.caption.41}\protected@file@percent }
+\newlabel{fig:canyon}{{5}{11}{\textbf {Why the rotated update system wins---locally in steep canyons and globally across 250+ steps.} \textbf {(a)} Inner $L = B^{-1/2}$ and outer $\hat {L} = \unitrms (B^{-1/8})$ perform $90^\circ $-orthogonal jobs: \textbf {(1)}~inner $L$ rotates \emph {tangentially along the unit circle} to point away from loud error spikes toward true input--error correlation, while \textbf {(2)}~outer $\hat {L}$ reshapes step lengths \emph {perpendicular to the circle}, shrinking steps into steep canyon walls ($\beta _1$) and lengthening steps along gentle valley floors ($\beta _2$). \textbf {(b)} At \texttt {520M} ($\dm =1{,}024$), dense \mname {WT-MLP-Lag} boosts net downhill progress per unit canyon curvature ($\Phi _{B,C}$) by $1.59\times \text {--}2.00\times $ on \texttt {v, q, k} and $1.09\times \text {--}1.10\times $ on residual \texttt {o, down}, whereas diagonal \mname {OD-All} flatlines at $1.00\times $ on residual writers. \textbf {(c)} Over 250 training steps, avoiding canyon-wall overshoots slows backward error-oval spinning ($\mathrm {Drift}_{16}$) by $11\%\text {--}40\%$ across all seven layer types, allowing 20-step Nesterov momentum to accumulate cleanly}{figure.caption.41}{}}
+\newlabel{fig:canyon@cref}{{[figure][5][]5}{[1][10][]11}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Reason 2: Outer $\hat  {L} = \operatorname  {unitRMS}(B^{-1/8})$ Cushions Steep Canyon Walls ($90^\circ $ to Inner $L$)}{11}{subsection*.44}\protected@file@percent }
+\newlabel{sec:reason_outer}{{5.2}{11}{Reason 2: Outer \texorpdfstring {$\hat {L} = \unitrms (B^{-1/8})$}{L\_hat = unitRMS(B\^{}(-1/8))} Cushions Steep Canyon Walls (\texorpdfstring {$90^\circ $}{90 deg} to Inner \texorpdfstring {$L$}{L})}{subsection*.44}{}}
+\newlabel{sec:reason_outer@cref}{{[subsection][2][5]5.2}{[1][11][]11}{}{}{}}
+\citation{che2026gomuon}
+\@writefile{toc}{\contentsline {paragraph}{Why inner $L$ and outer $\hat  {L}$ are $90^\circ $ perpendicular---never redundant.}{12}{Item*.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why a gentle $-1/8$ outside instead of $-1/4$ (GO-MUON) or $-1/2$?}{12}{Item*.49}\protected@file@percent }
+\newlabel{eq:noise_amp}{{10}{12}{Why a gentle $-1/8$ outside instead of $-1/4$ (\mname {GO-MUON}) or $-1/2$?}{equation*.50}{}}
+\newlabel{eq:noise_amp@cref}{{[equation][10][]10}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Reason 3: Calmer Steps Stop Error Ovals from Spinning, Helping Momentum Add Up}{12}{subsection*.51}\protected@file@percent }
+\newlabel{sec:reason_drift}{{5.3}{12}{Reason 3: Calmer Steps Stop Error Ovals from Spinning, Helping Momentum Add Up}{subsection*.51}{}}
+\newlabel{sec:reason_drift@cref}{{[subsection][3][5]5.3}{[1][12][]12}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}One-Page Cheat Sheet: How Every Piece of WT-MLP-Lag Fits Together}{13}{section*.52}\protected@file@percent }
+\newlabel{sec:cheatsheet}{{6}{13}{One-Page Cheat Sheet: How Every Piece of WT-MLP-Lag Fits Together}{section*.52}{}}
+\newlabel{sec:cheatsheet@cref}{{[section][6][]6}{[1][13][]13}{}{}{}}
+\newlabel{eq:master_cheat}{{11}{13}{One-Page Cheat Sheet: How Every Piece of WT-MLP-Lag Fits Together}{equation*.53}{}}
+\newlabel{eq:master_cheat@cref}{{[equation][11][]11}{[1][13][]13}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces \textbf  {Complete Logic Map from Geometric Intuition to WT-MLP-Lag's Engineering Design.}}}{13}{table.caption.54}\protected@file@percent }
+\newlabel{tab:cheatsheet}{{2}{13}{\textbf {Complete Logic Map from Geometric Intuition to \mname {WT-MLP-Lag}'s Engineering Design.}}{table.caption.54}{}}
+\newlabel{tab:cheatsheet@cref}{{[table][2][]2}{[1][13][]13}{}{}{}}
+\bibstyle{plainnat}
+\bibdata{refs}
+\bibcite{che2026gomuon}{{1}{2026}{{Che}}{{}}}
+\bibcite{goyal2026spectrally}{{2}{2026}{{Goyal and Ramkumar}}{{}}}
+\bibcite{jordan2024muon}{{3}{2024}{{Jordan et~al.}}{{Jordan, Jin, Boza, You, Cesista, Newhouse, and Bernstein}}}
+\bibcite{mohamadi2026toner}{{4}{2026}{{Mohamadi et~al.}}{{Mohamadi, Wen, Wang, and Li}}}
+\bibcite{shumaylov2026freon}{{5}{2026}{{Shumaylov et~al.}}{{Shumaylov, Da~Costa, Zaika, Mucs{\'a}nyi, Massucco, Gelberg, Sch{\"o}nlieb, Gal, and Hennig}}}
+\gdef \@abspage@last{14}

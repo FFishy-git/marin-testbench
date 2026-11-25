@@ -1,0 +1,176 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{paperstyle}[2026/11/07 Paper page style]
+
+\newif\ifpaperstyle@warm
+\newif\ifpaperstyle@parskip \paperstyle@parskiptrue
+\newif\ifpaperstyle@palatino
+\newif\ifpaperstyle@palantir
+\DeclareOption{warm}{\paperstyle@warmtrue}
+\DeclareOption{noparskip}{\paperstyle@parskipfalse}
+\DeclareOption{palatino}{\paperstyle@palatinotrue}
+\DeclareOption{palantir}{\paperstyle@palantirtrue}
+\ProcessOptions\relax
+
+\RequirePackage{xcolor}
+\RequirePackage{etoolbox}
+\RequirePackage{environ}
+\RequirePackage{titlesec}
+\RequirePackage{caption}
+\RequirePackage{fancyhdr}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{hyperref}
+
+\definecolor{pageink}{HTML}{1C2B33}
+\definecolor{pagemuted}{HTML}{5F6B73}
+\definecolor{pagelink}{HTML}{2E5AA8}
+\ifpaperstyle@warm
+  \definecolor{pagepanel}{HTML}{F7F3EF}
+  \definecolor{pageaccent}{HTML}{B4654A}
+\else
+  \definecolor{pagepanel}{HTML}{F1F4F7}
+  \definecolor{pageaccent}{HTML}{2E5AA8}
+\fi
+\definecolor{pagerule}{HTML}{D2D7DB}
+\colorlet{sectionblue}{pageink}
+\hypersetup{linkcolor=pagelink, citecolor=pagelink, urlcolor=pagelink}
+
+\ifpaperstyle@palatino\else
+  \RequirePackage{lmodern}
+\fi
+
+\providecommand*{\Inter@scale}{0.9}
+\IfFileExists{T1Inter-LF.fd}{\def\paperstyle@sf{Inter-LF}\def\paperstyle@sb{sb}}{%
+\IfFileExists{T1Inter-TLF.fd}{\def\paperstyle@sf{Inter-TLF}\def\paperstyle@sb{sb}}{%
+  \IfFileExists{T1SourceSansPro-TLF.fd}{\def\paperstyle@sf{SourceSansPro-TLF}\def\paperstyle@sb{sb}}{%
+    \def\paperstyle@sf{phv}\def\paperstyle@sb{b}}}}
+\renewcommand*{\sfdefault}{\paperstyle@sf}
+\newcommand*{\pagesf}{\fontfamily{\paperstyle@sf}\fontseries{m}\fontshape{n}\selectfont}
+\newcommand*{\pagesfsb}{\fontfamily{\paperstyle@sf}\fontseries{\paperstyle@sb}\fontshape{n}\selectfont}
+
+\ifpaperstyle@parskip
+  \RequirePackage[skip=5pt plus 1.5pt minus 1pt]{parskip}
+\fi
+
+\titleformat{\section}{\pagesfsb\Large\color{pageink}}{\textcolor{pageaccent}{\thesection}}{0.65em}{}
+\titleformat{\subsection}{\pagesfsb\large\color{pageink}}{\textcolor{pageaccent}{\thesubsection}}{0.65em}{}
+\titleformat{\subsubsection}{\pagesfsb\normalsize\color{pageink}}{\textcolor{pageaccent}{\thesubsubsection}}{0.65em}{}
+\titleformat{\paragraph}[runin]{\pagesfsb\normalsize\color{pageink}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{15pt plus 4pt minus 2pt}{5pt plus 2pt}
+\titlespacing*{\subsection}{0pt}{11pt plus 3pt minus 2pt}{4pt plus 1pt}
+\titlespacing*{\subsubsection}{0pt}{9pt plus 3pt minus 2pt}{3pt plus 1pt}
+\titlespacing*{\paragraph}{0pt}{4pt plus 2pt minus 1pt}{0.75em}
+\patchcmd{\l@section}{\bfseries}{\pagesfsb}{}{}
+
+\DeclareCaptionLabelFormat{paperlabel}{{\pagesfsb\color{pageink}#1~#2}}
+\DeclareCaptionLabelSeparator{paperbar}{\enspace{\color{pagemuted!55}\rule[-0.18em]{0.6pt}{0.95em}}\enspace}
+\captionsetup{labelformat=paperlabel, labelsep=paperbar, font=small, singlelinecheck=false, justification=justified}
+
+\newtcolorbox[auto counter, crefname={finding}{findings}, Crefname={Finding}{Findings}]{keyfinding}[1][]{%
+  enhanced, unbreakable, before skip=9pt, after skip=9pt,
+  colback=pageaccent!8!white, colframe=pageaccent!35!white, boxrule=0.6pt,
+  arc=7pt, outer arc=7pt, left=12pt, right=12pt, top=8pt, bottom=8pt,
+  coltext=pageink,
+  before upper={\noindent{\pagesfsb\color{pageaccent}Key Takeaway~\thetcbcounter}\ifblank{#1}{}{\enspace\textbf{#1.}}\enspace},
+}
+
+\let\paperstyle@short\@empty
+\newcommand{\papershorttitle}[1]{\gdef\paperstyle@short{#1}}
+\setlength{\headheight}{14pt}
+\fancypagestyle{paper}{%
+  \fancyhf{}%
+  \fancyhead[L]{\pagesf\footnotesize\color{pagemuted}\paperstyle@short}%
+  \fancyhead[R]{\pagesf\footnotesize\color{pagemuted}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}%
+}
+\fancypagestyle{paperfirst}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\pagesf\footnotesize\color{pagemuted}\thepage}%
+  \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}%
+}
+
+\let\paperstyle@abstract\relax
+\let\paperstyle@affiliations\@empty
+\let\paperstyle@note\@empty
+\let\paperstyle@meta\@empty
+\let\paperstyle@logo\@empty
+\let\paperstyle@logos\@empty
+\newcommand{\paperaffiliations}[1]{\gdef\paperstyle@affiliations{#1}}
+\newcommand{\papernote}[1]{\gdef\paperstyle@note{#1}}
+\newcommand{\papermeta}[2]{\g@addto@macro\paperstyle@meta{\par{\pagesfsb #1:}\enspace #2}}
+\newcommand{\paperemail}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+\newcommand{\paperlogo}[1]{\gdef\paperstyle@logo{#1}}
+\newcommand{\paperlogos}[1]{\gdef\paperstyle@logos{#1}}
+\newcommand{\paperlogoitem}[2]{$\vcenter{\hbox{\includegraphics[height=#1]{#2}}}$}
+
+\newcommand{\paperstyle@panel}{%
+  \thispagestyle{paperfirst}%
+  \ifx\paperstyle@logos\@empty\else
+    \vspace*{-38pt}\noindent\hbox to \linewidth{\paperstyle@logos\hfil}\par\vskip 12pt
+  \fi
+  \begin{tcolorbox}[enhanced, frame hidden, boxrule=0pt, colback=pagepanel, arc=10pt, outer arc=10pt,
+      left=16pt, right=16pt, top=15pt, bottom=14pt, before skip=0pt, after skip=12pt,
+      grow to left by=1.5pt, grow to right by=1.5pt,
+      overlay={\ifx\paperstyle@logo\@empty\else
+        \node[anchor=south east, inner sep=0pt] at ([xshift=-16pt, yshift=14pt]frame.south east) {\paperstyle@logo};\fi}]
+    \setlength{\parindent}{0pt}%
+    {\raggedright\color{pageink}%
+      {\pagesfsb\fontsize{19}{24}\selectfont\@title\par}%
+      \vskip 8pt
+      {\pagesfsb\normalsize\@author\par}%
+      \ifx\paperstyle@affiliations\@empty\else\vskip 3pt{\small\paperstyle@affiliations\par}\fi
+      \ifx\paperstyle@note\@empty\else\vskip 2pt{\footnotesize\color{pagemuted}\paperstyle@note\par}\fi}%
+    \vskip 10pt
+    {\small\color{pageink}\setlength{\parskip}{4pt}\paperstyle@abstract\par}%
+    \ifx\paperstyle@meta\@empty\else
+      \vskip 8pt{\raggedright\footnotesize\color{pageink}\setlength{\parskip}{1pt}\paperstyle@meta\par}%
+    \fi
+  \end{tcolorbox}%
+}
+
+\AtBeginDocument{\providecommand*{\textls}[2][]{#2}}
+\ifpaperstyle@palantir
+\renewcommand{\paperstyle@panel}{%
+  \thispagestyle{paperfirst}%
+  \setlength{\parindent}{0pt}%
+  \ifx\paperstyle@logos\@empty\else
+    \vspace*{-38pt}\noindent\hbox to \linewidth{\paperstyle@logos\hfil}\par\vskip 14pt
+  \fi
+  \begingroup
+  \color{pageink}%
+  {\raggedright\pagesfsb\fontsize{19.2}{23}\selectfont\textls[-14]{\@title}\par}%
+  \vskip -5pt
+  {\color{pagerule}\rule{\linewidth}{0.4pt}}\par
+  \vskip 0pt
+  {\raggedright
+    {\pagesfsb\normalsize\@author\par}%
+    \ifx\paperstyle@affiliations\@empty\else\vskip 2pt{\small\color{pagemuted}\paperstyle@affiliations\par}\fi
+    \ifx\paperstyle@note\@empty\else\vskip 2pt{\footnotesize\color{pagemuted}\paperstyle@note\par}\fi}%
+  \vskip 13pt
+  \begin{tcolorbox}[enhanced, frame hidden, boxrule=0pt, colback=pagepanel, arc=10pt, outer arc=10pt,
+      left=16pt, right=16pt, top=13pt, bottom=13pt, before skip=0pt, after skip=12pt,
+      overlay={\ifx\paperstyle@logo\@empty\else
+        \node[anchor=south east, inner sep=0pt] at ([xshift=-16pt, yshift=13pt]frame.south east) {\paperstyle@logo};\fi}]
+    \setlength{\parindent}{0pt}%
+    {\pagesfsb\fontsize{8}{10}\selectfont\color{pagemuted}\textls[160]{\MakeUppercase{Reader's Guide \& Overview}}\par}%
+    \vskip 6pt
+    {\small\color{pageink}\setlength{\parskip}{4pt}\paperstyle@abstract\par}%
+    \ifx\paperstyle@meta\@empty\else
+      \vskip 10pt
+      {\raggedright\footnotesize\color{pagemuted}\setlength{\parskip}{1pt}\paperstyle@meta\par}%
+    \fi
+  \end{tcolorbox}%
+  \endgroup
+  \vskip 13pt
+}
+\fi
+
+\newif\ifpaperstyle@titlepending
+\renewcommand{\maketitle}{%
+  \ifx\paperstyle@abstract\relax\global\paperstyle@titlependingtrue\else\paperstyle@panel\fi
+}
+\RenewEnviron{abstract}{%
+  \global\let\paperstyle@abstract\BODY
+  \ifpaperstyle@titlepending\global\paperstyle@titlependingfalse\paperstyle@panel\fi
+}
+
+\endinput
