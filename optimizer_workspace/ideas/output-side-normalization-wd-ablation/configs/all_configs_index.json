@@ -1,0 +1,482 @@
+{
+  "wt_mlp_lag_130m_1x_seed0_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0113": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0113": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 0,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p016": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p016": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 0,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0226": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0226": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 0,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed0_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed0_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_130m_1x_seed0_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p032": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p032": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 0,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed0/wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0113": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0113": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 1,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p016": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p016": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 1,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0226": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0226": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 1,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed1_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed1_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_130m_1x_seed1_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p032": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_iso_130m_1x_seed1_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p032": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 1,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed1/wt_mlp_lag_wd_lr2_130m_1x_seed1_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0113": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0113": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 2,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p016": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p016": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 2,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0226": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0226": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 2,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed2_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed2_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_130m_1x_seed2_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p032": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_iso_130m_1x_seed2_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p032": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 2,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed2/wt_mlp_lag_wd_lr2_130m_1x_seed2_lr0p032.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p0113": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p0113",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0113": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0113.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0113": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0113",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 3,
+    "lr_tag": "0p0113",
+    "lr": 0.01131370849898476,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0113.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p016": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p016",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p016": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p016.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p016": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p016",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 3,
+    "lr_tag": "0p016",
+    "lr": 0.016,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p016.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p0226": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p0226",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0226": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p0226.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0226": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0226",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 3,
+    "lr_tag": "0p0226",
+    "lr": 0.02262741696,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p0226.json"
+  },
+  "wt_mlp_lag_130m_1x_seed3_lr0p032": {
+    "name": "wt_mlp_lag_130m_1x_seed3_lr0p032",
+    "arm_key": "wt_mlp_lag",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "default",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_130m_1x_seed3_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p032": {
+    "name": "wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_iso",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "isotropic",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_iso_130m_1x_seed3_lr0p032.json"
+  },
+  "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p032": {
+    "name": "wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p032",
+    "arm_key": "wt_mlp_lag_wd_lr2",
+    "arm": "inner_outer_mlpdiag_lag",
+    "decay_mode": "two_sided",
+    "seed": 3,
+    "lr_tag": "0p032",
+    "lr": 0.032,
+    "config": "/root/dl/runtime/script/marin-testbench/optimizer_workspace/ideas/output-side-normalization-wd-ablation/configs/seed3/wt_mlp_lag_wd_lr2_130m_1x_seed3_lr0p032.json"
+  }
+}

@@ -1,0 +1,97 @@
+% Paper v4: optimizer-first narrative revision.
+% Build: PATH="/opt/texlive/2026/bin/x86_64-linux:$PATH" latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+\ifdefined\pdftexversion\pdfoutput=1\fi
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in, top=1.1in, bottom=0.8in]{geometry}
+\setlength{\skip\footins}{30pt}
+\usepackage{amsmath, amssymb, amsfonts, amsthm, mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable,placeins}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage[authoryear, sort&compress, round]{natbib}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{xurl}
+\usepackage[colorlinks, pagebackref, linktoc=page]{hyperref}
+\usepackage[nameinlink, capitalize]{cleveref}
+\usepackage{paperstyle}
+
+\crefname{equation}{}{}
+\crefformat{section}{\S#2#1#3}
+\crefformat{appendix}{\S#2#1#3}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\captionsetup{width=\textwidth}
+\hypersetup{hypertexnames=false}
+\setlength{\headsep}{15pt}
+
+\pagestyle{paper}
+\papershorttitle{Width-thresholded output preconditioning for Muon}
+\graphicspath{{figs/}}
+\urlstyle{tt}
+\interfootnotelinepenalty=10000
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.80}
+
+% Mathematical notation macros
+\newcommand{\Tr}{{\mathsf{T}}}
+\newcommand{\Nten}{\mathcal{N}_{10}}
+\newcommand{\unitrms}{\operatorname{unitRMS}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Diag}{\operatorname{Diag}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dm}{d_{\mathrm{model}}}
+\newcommand{\dff}{d_{\mathrm{ff}}}
+\newcommand{\Lsel}{\mathcal{L}_{\mathrm{sel}}}
+\newcommand{\Lc}{\mathcal{L}_{\mathrm{C4}}}
+\newcommand{\Lpal}{\mathcal{L}_{\mathrm{Paloma}}}
+
+% Consistent method names
+\newcommand{\mname}[1]{#1}
+\definecolor{colWT}{HTML}{1B4F9C}
+\definecolor{colOD}{HTML}{0E7C7B}
+\definecolor{colNull}{HTML}{C87D20}
+\definecolor{colBad}{HTML}{C0392B}
+\definecolor{rowtint}{HTML}{F2F6FC}
+
+\title{Width-Thresholded Output\\Preconditioning for Muon Optimizers}
+\author{Optimizer Research Team}
+\paperaffiliations{Preprint}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\mname{Muon} orthogonalizes matrix momentum via Newton--Schulz iterations, and \mname{MuonT} improves pretraining loss by preconditioning on forward input activations while leaving backpropagated output cotangents unused. Extending \mname{MuonT} to the output side faces a sharp cost--quality tradeoff: dense output roots at every projection stall the end of backpropagation with cubic eigendecompositions, whereas purely diagonal output scaling (\mname{OD-All}) misses cross-channel correlations, giving little held-out gain and falling behind \mname{MuonT} out of distribution as model width grows. We introduce \mname{WT-MLP-Lag}, a two-sided preconditioned Muon optimizer that pairs \mname{MuonT}'s dense input factors with width-thresholded output factors and one-step asynchronous execution. \mname{WT-MLP-Lag} applies dense $(-1/2,-1/8)$ inverse roots to hidden-width outputs ($\dm$: \texttt{q,k,v,o,down}), exact per-step diagonal scaling to expanded SwiGLU outputs ($\dff=4\dm$: \texttt{gate,up}), and a one-update lag that overlaps output statistics and root solves with the next training step. This design matches Transformer second-moment structure: expanded SwiGLU outputs account for 96.2\% of nominal dense output eigendecomposition work yet carry 78--91\% of their anisotropy on the coordinate diagonal, whereas residual-stream outputs (\texttt{o,down}) carry over 99\% of their anisotropy in cross-channel correlations and rotate eigenspaces far faster than RMSNormed inputs. Relative to tuned \mname{MuonT}, \mname{WT-MLP-Lag} lowers final held-out loss by 0.0035 nats across three fresh 130M seeds at their shared full-budget optimum, 0.0040 nats at four times the token budget, and 0.0046 nats at 520M, extending \mname{MuonT}'s improvement over \mname{Muon} by 29--51\% (the longer and wider runs use one seed each). Counterfactual probes and trajectory diagnostics show that dense output factors rotate residual updates without inflating step norms and reduce leading output-subspace drift by 17--21\% relative to \mname{Muon}. Median step-time overhead over \mname{MuonT} is 5.3\% at 130M and 3.3\% at 520M; mean overhead is 8.9\% and 11.4\%. The measured benefit is lower loss at a fixed token budget, with a remaining throughput cost.
+\end{abstract}
+
+\input{sections/01_intro}
+\input{sections/02_method}
+\input{sections/03_diagnosis}
+\input{sections/04_experiments}
+\input{sections/05_ablations}
+\input{sections/06_mechanism_cost}
+\input{sections/07_related_conclusion}
+
+\FloatBarrier
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\clearpage
+\appendix
+\crefalias{section}{appendix}
+\input{sections/99_appendix}
+
+\end{document}

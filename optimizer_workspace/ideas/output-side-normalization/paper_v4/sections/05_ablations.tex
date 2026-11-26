@@ -1,0 +1,52 @@
+\FloatBarrier
+\section{Controls, ablations, and two-sided baselines}
+\label{sec:controls_ablations}
+
+Because \mname{MuonT} already removes forward input ill-conditioning, the incremental output-side improvement is a few millinats—a scale where numerical execution differences, short-horizon hyperparameter tuning, or altered regularization can confound optimizer comparisons. We pair execution-path and learning-rate controls with targeted factor-placement ablations and long-horizon comparisons against recent two-sided polar optimizers.
+
+\subsection{Execution-path and learning-rate controls}
+\label{sec:falsification}
+
+\mname{Null-WT} executes synchronous cotangent capture, cross-rank pooling, and inverse-root construction identically to the two-sided pipeline, then substitutes identity output factors ($L=\hat L=I$) at the update. While it does not separately test asynchronous scheduling, it directly tests whether altered kernel batching and mixed-precision accumulation manufacture an apparent gain. At $\eta=0.02263$ on 130M seed 0, \mname{Null-WT} finishes just $0.0003$ nats below \mname{MuonT}, compared with $0.0043$ nats for \mname{WT-MLP-Lag} (\Cref{fig:confounds}(b,c), \Cref{tab:controls}), making execution-path drift an unlikely explanation for the improvement.
+
+\begin{figure}[t]
+ \centering\includegraphics[width=\textwidth]{fig4_confounds_lr_null.pdf}
+ \caption{\textbf{The output-side gain survives full-budget learning-rate bracketing and a matched execution-path control.}
+ \textbf{(a)} Matrix learning rates chosen on a compressed 320-step proxy sweep transfer poorly to the full 5,120-step budget.
+ \textbf{(b)} Full-budget held-out loss across $\eta\in\{0.0113,0.0160,0.0226,0.0320\}$, alongside the matched-path identity control (\mname{Null-WT}).
+ \textbf{(c)} Second-half trajectory differences from \mname{MuonT} at $\eta=0.02263$: \mname{Null-WT} stays near zero while \mname{WT-MLP-Lag} wins all 11 late checkpoints. All panels use 130M, seed 0 (2.68B tokens).}
+ \label{fig:confounds}
+\end{figure}
+
+\input{tables/controls}
+
+Short-schedule learning-rate screening is a second major pitfall~\citep{choi2019empirical,schmidt2021crowded,kaddour2023nodata,dang2026batchsize}. A 320-step proxy sweep selects $\eta\in[0.064,0.0905]$—roughly four times the full-budget optimum—and transferring those rates to 5,120 steps degrades final loss by $0.04\text{--}0.09$ nats, swamping second-side differences (\Cref{fig:confounds}(a), \Cref{tab:controls}; complete sweep in \Cref{app:appendix_lr,tab:lr_cliff}). Across the full 2.68B-token bracket $\eta\in\{0.01131,0.016,0.02263,0.032\}$, all four core methods share a strict interior minimum at $\eta^*=0.0160$, and \mname{WT-MLP-Lag} outperforms \mname{MuonT} by $0.0038\text{--}0.0043$ nats at every matched rate.
+
+\subsection{Factor placement, exponent split, and one-step lag}
+\label{sec:ablations}
+
+\Cref{tab:ablations} and \Cref{fig:ablations_related}(a) isolate each design element of \mname{WT-MLP-Lag} at 130M (complete 19-arm multi-wave ledger in \Cref{app:ablations,tab:ablations_full}):
+\begin{itemize}
+ \item \textbf{Dense input whitening remains indispensable.} Replacing input factors with dense output factors alone (\mname{Abl-OutOnly}, $+8.71$ mnats; which also switches weight decay to $\hat L^2 W$) or diagonalizing both sides (\mname{Abl-BothDiag}, $+18.01$ mnats) performs substantially worse than \mname{MuonT}. Diagonalizing the $\dff$-wide \texttt{down} input alongside expanded outputs (\mname{WT-Sym-Lag}, $-1.13$ mnats) likewise sacrifices most of \mname{WT-MLP-Lag}'s gain ($-5.68$ mnats), confirming the input--output asymmetry identified in \Cref{sec:dichotomy}.
+ \item \textbf{Both output width classes and both $(-1/2,-1/8)$ factors contribute.} Dropping preconditioning on \texttt{gate,up} (\mname{Abl-No2048}, $-3.07$ mnats) loses roughly half of synchronous \mname{WT-MLP}'s gain ($-6.58$ mnats), whereas upgrading \texttt{gate,up} from diagonal to dense spectral factors (\mname{DT-All}, $-5.78$ mnats) yields no held-out benefit despite raising median step-time overhead to $+21.6\%$. Applying only the post-polar outer factor (\mname{Abl-OuterDense}, $-3.98$ mnats) also underperforms the inner/outer pair.
+ \item \textbf{One-step lag retains quality while halving exposed overhead.} Comparing synchronous \mname{WT-MLP} ($-6.58$ mnats) with lagged \mname{WT-MLP-Lag} ($-5.68$ mnats), and synchronous \mname{DT-All} ($-5.78$ mnats) with \mname{DT-All-Lag} ($-5.89$ mnats), retains nearly all of the held-out improvement while cutting unified 8-GPU median step time from $1.221$ to $1.155$\,s ($+11.3\%$ to $+5.3\%$). Because these exploratory arms span implementation waves, they provide provisional component evidence that the fresh-seed campaign in \Cref{sec:scaling} confirms end-to-end.
+\end{itemize}
+
+\input{tables/ablations}
+
+\begin{figure}[t]
+ \centering\includegraphics[width=\textwidth]{fig7_ablations_and_related.pdf}
+ \caption{\textbf{Width-thresholded output preconditioning outperforms factor-placement ablations and alternative two-sided polar baselines.}
+ \textbf{(a)} Second-half held-out loss differences from cohort \mname{MuonT} across 14 configurations at 130M, 2.68B tokens (seed 0; exploratory multi-wave settings in \Cref{tab:ablations,tab:ablations_full}).
+ \textbf{(b)} Held-out trajectories relative to \mname{Muon} under shared isotropic matrix decay ($\lambda=0.1,\eta=0.032$, mean of fresh seeds 1 and 2). Inset: early training loss over steps 1--300, where \mname{GO-MUON}'s initial lead reverses near step 200 while \mname{WT-MLP} retains its advantage through 2.68B tokens.}
+ \label{fig:ablations_related}
+\end{figure}
+
+\subsection{Comparison with two-sided polar baselines}
+\label{sec:related_baselines}
+
+We also compare synchronous \mname{WT-MLP} against two recent methods that combine second-order statistics with polar updates: \mname{GO-MUON}~\citep{che2026gomuon}, which applies symmetric $(-1/4,-1/4)$ activation/cotangent powers with norm grafting, and \mname{Mousse}~\citep{zhang2026mousse}, which applies symmetric $(-1/8,-1/8)$ powers of full gradient Gram matrices $GG^{\Tr}$ and $G^{\Tr}G$ with norm grafting. For each baseline, we evaluate both a controlled profile sharing our EMA, damping, refresh cadence, and $\Nten$ map, and a paper profile following method-specific choices, under shared isotropic matrix decay ($\lambda=0.1,\eta=0.032$) across two fresh seeds (\Cref{tab:related}, \Cref{fig:ablations_related}(b); a controlled recipe comparison rather than independent hyperparameter tuning).
+
+\input{tables/related_results}
+
+At 2.68B tokens, both \mname{GO-MUON} profiles finish roughly $0.03$ nats worse than \mname{Muon}—reversing an early 200-step training-loss lead—while both \mname{Mousse} profiles finish close to \mname{Muon}. Under the same isotropic decay, \mname{WT-MLP} lowers held-out loss by $0.0099$ nats below \mname{Muon}, showing that its benefit does not depend on \mname{MuonT}'s shaped weight decay. Two operator differences are consistent with this gap: a gradient Gram $GG^{\Tr}=\sum_{i,j}\langle x_i,x_j\rangle\delta_i\delta_j^{\Tr}$ entangles cotangents with activation inner products and cross-token terms that separate $(C,B)$ moments avoid, and steeper $(-1/4,-1/4)$ outer inverse powers with norm grafting place heavier weight on noisy low-variance cotangent modes—though because these baselines change multiple choices together, this comparison does not isolate a single causal factor.

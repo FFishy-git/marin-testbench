@@ -1,0 +1,64 @@
+\FloatBarrier
+\section{Optimization mechanism and systems cost}
+\label{sec:mechanism_cost}
+
+Having established where \mname{WT-MLP-Lag} improves pretraining loss, we examine how its output factors alter individual parameter updates and multi-checkpoint cotangent trajectories, and quantify the remaining runtime overhead across GPU scales.
+
+\subsection{Output factors rotate updates with little norm change}
+\label{sec:mechanism}
+
+To isolate the immediate action of the output operator, we hold checkpoint momentum and input factors fixed and recompute counterfactual updates under identity (\mname{MuonT}), all-diagonal (\mname{OD-All}), and width-thresholded (\mname{WT}) output factors on saved 130M (32 layers, step 2,500) and 520M ($\eta^*=0.016$, 16 layers, step 5,120) checkpoints (\Cref{tab:mechanism_rotation}, \Cref{fig:mech_pareto}(a)). Across projections, \mname{WT} update Frobenius norms remain $0.985\times$ their input-only counterparts at 130M and $1.006\times$ at 520M, ruling out global step-size inflation.
+
+An exact row-polar identity explains why inner whitening reorients the update even after singular values are equalized. For a full-row-rank pre-polar matrix $Z_0=UR=S_0P_0$ with $m\le n$, $S_0\succ0$, and $P_0P_0^{\Tr}=I_m$, left-multiplying by $L\succ0$ yields
+\begin{equation}
+ \operatorname{Polar}(LZ_0)=\Omega P_0,\qquad
+ \Omega=(LS_0^2L)^{-1/2}LS_0\in SO(m).
+ \label{eq:som_rotation}
+\end{equation}
+Whenever $L$ and $S_0$ do not commute, $\Omega$ rotates the orthogonal row frame tangentially along the Stiefel manifold, while post-multiplying by symmetric $\hat L$ scales output directions orthogonally in first-order Frobenius inner product ($\tr(HK^{\Tr})=0$ for symmetric $H$ and skew-symmetric $K$; derivations and empirical inner/outer angles for finite $\Nten$ and tall matrices appear in \Cref{app:appendix_mech,tab:rotation_detail}).
+
+\input{tables/rotation}
+
+\begin{figure}[t]
+ \centering\includegraphics[width=\textwidth]{fig8_mechanism_and_pareto.pdf}
+ \caption{\textbf{Dense output factors rotate residual-stream updates while retaining a bounded runtime cost.}
+ \textbf{(a)} Counterfactual update rotation relative to input-only updates at 130M, step 2,500 (each arm on its own trained state; bars show 32-layer means and whiskers $\pm1$ SD; common-state probes at both widths are in \Cref{tab:mechanism_rotation}).
+ \textbf{(b)} 130M median step-time overhead versus \mname{Muon} and per-GPU peak memory on $8\times\text{A100}$.
+ \textbf{(c, d)} Quality gain versus median step-time overhead at 130M ($8\times\text{A100}$) and 520M ($32\times$ and $8\times\text{A100}$). Frontiers combine fixed-token losses with steady-step timing benchmarks rather than wall-clock time to a target loss.}
+ \label{fig:mech_pareto}
+\end{figure}
+
+Empirically, at 520M \mname{WT} rotates the residual-stream \texttt{o} and \texttt{down} updates by $15.4^\circ$ and $14.6^\circ$, compared with just $6.4^\circ$ and $6.0^\circ$ under \mname{OD-All} (\Cref{tab:mechanism_rotation}). At 130M, inner whitening reduces top-16 overlap between pre-polar momentum singular vectors and dominant $B_t$ eigenvectors from $30\text{--}68\%$ to $2.8\text{--}3.7\%$ ($19.6\to1.1\%$ on \texttt{v}) while increasing row alignment across 69--82\% of the trailing 80\% of output modes (\Cref{tab:rotation_detail}). Why does coordinate scaling miss these residual rotations more severely as width grows? Residual-output eigenvectors are delocalized across coordinates, with median normalized inverse participation ratios $d\sum_i u_i^4\approx 3.01\text{--}3.02$ across the two widths—close to the Haar-random value $3d/(d+2)$. Under a reference model with Haar-distributed eigenvectors and fixed non-isotropic eigenvalues, expected diagonal anisotropy decays inversely with width:
+\begin{equation}
+ \E_{U\sim\mathrm{Haar}}[\mathrm{DiagAniso}(U\Lambda U^{\Tr})]=\frac{2}{d+2},
+ \label{eq:haar_scaling}
+\end{equation}
+qualitatively matching the observed drop in residual-output diagonal share from $\approx 0.8\%$ at $\dm=512$ to $0.45\%$ at $\dm=1{,}024$. Width-thresholded updates also increase the directional quadratic proxy $\Phi_{B,C}(\hat D)=\langle U,\hat D\rangle^2/\tr(\tilde B\hat D\tilde C\hat D^{\Tr})$ relative to \mname{MuonT}, though because observed-label cotangent moments are not true Hessians or model Fishers~\citep{kunstner2019limitations} (and \mname{GO-MUON} can score high on $\Phi_{B,C}$ despite poor training loss), these probes describe directional redistribution rather than certifying causal generalization gains.
+
+\subsection{Trajectory-level reduction in output-subspace drift}
+\label{sec:output_drift}
+
+Beyond single-step rotation, training with \mname{WT-MLP-Lag} slows the temporal drift of leading output-cotangent subspaces across saved checkpoints (\Cref{tab:output_drift}, \Cref{fig:output_drift}). To compare all seven output roles on common inputs without minibatch-order confounds, we evaluate each saved checkpoint passively on two disjoint fixed sets $\mathcal S$ of 4,576 token positions (16 windows of 4,096 tokens each) to form $B_{p,t}^{\mathcal S}=|\mathcal S|^{-1}\sum_{s\in\mathcal S}\delta_{p,t}(s)\delta_{p,t}(s)^{\Tr}$, and compute principal-angle subspace drift $D_k(p;t_1,t_2)=1-\|V_{p,t_1}^{\Tr}V_{p,t_2}\|_F^2/k$ at $k=16$ between consecutive checkpoints (complete protocol, per-role trajectories, EMA audit, and sensitivity checks in \Cref{app:drift_details,fig:output_drift_roles}).
+
+\input{tables/output_drift}
+
+\begin{figure}[tbp]
+ \centering\includegraphics[width=\textwidth]{fig9_output_drift.pdf}
+ \caption{\textbf{\mname{WT-MLP-Lag} reduces leading output-subspace drift across 130M and 520M training trajectories.}
+ \textbf{(a, b)} Fixed-data top-16 cotangent-subspace drift across saved \mname{Muon}, \mname{MuonT}, and \mname{WT-MLP-Lag} checkpoints, averaged over seven output roles, 32 layers, and two disjoint probe sets (shading spans the two probe-set means; 19 intervals of 250 steps at 130M and three 2,560-step intervals at 520M).
+ \textbf{(c, d)} Role-wise percentage drift reduction relative to \mname{Muon}. All three 520M runs share $\eta=0.016$, whereas 130M seed-0 runs use $\eta=0.016$ for \mname{Muon} and $\eta=0.02263$ for \mname{MuonT}/\mname{WT}; matched-rate fresh-seed checks appear in \Cref{tab:output_drift}.}
+ \label{fig:output_drift}
+\end{figure}
+
+Relative to \mname{Muon}, \mname{WT-MLP-Lag} (\mname{WT}) lowers all-role mean top-16 drift by 16.7\% across 19 equal 250-step intervals at 130M ($0.463\to0.386$, whereas \mname{MuonT} is $2.9\%$ higher at $0.476$) and by 20.5\% across the three 2,560-step intervals spanning the final three quarters of matched-rate ($\eta=0.016$) 520M training ($0.609\to0.485$, versus $0.579$ or $+5.1\%$ reduction for \mname{MuonT}). The largest reductions occur on \texttt{gate} ($23.6\%,22.9\%$) and \texttt{up} ($38.6\%,38.4\%$); at 520M all seven roles decrease in every interval (including $+3.3\%$ on \texttt{v}), whereas on the mixed-rate 130M seed-0 curve \texttt{v} is $-4.6\%$ higher than \mname{Muon}. Incrementally against \mname{MuonT}, \mname{WT} reduces all-role drift by 19.0\% at 130M and 16.2\% at 520M, improving every role in every equal-length interval. Because the densely saved 130M seed-0 curve uses $\eta=0.016$ for \mname{Muon} and $\eta=0.02263$ for \mname{MuonT}/\mname{WT}, we also probe the three fresh 130M seeds at matched $\eta=0.016$ (steps 2,560--5,120): just as at 520M, \mname{WT} reduces drift relative to \mname{Muon} in all seven roles on every seed, averaging $18.8\pm0.6\%$ overall versus $3.3\pm2.9\%$ for \mname{MuonT}.
+
+Uninterrupted 130M training-EMA checkpoints relative to a passive \mname{MuonT} control confirm lower average top-16 drift across all five saved dense output roles ($16.3\%,12.0\%,11.4\%,7.8\%,28.0\%$ on \texttt{q,k,v,o,down}), while qualifying \Cref{tab:diagnosis_summary}'s resumed replay window where uninterrupted steps 2,250--2,500 are slightly higher on \texttt{o,down} ($0.138,0.109$ versus $0.134,0.107$) despite lower full-training averages. Signs on fixed-data probes hold across $k\in\{8,16,32,64\}$ and under a 1\% eigenvalue-gap filter (\Cref{app:drift_details}). These results characterize trajectory subspace stability; they do not prove that lower drift causes lower held-out loss or allows less frequent root refreshes.
+
+\subsection{Step-time overhead and token-versus-time tradeoff}
+\label{sec:pareto}
+
+Width thresholding and one-step overlap remove most—but not all—of two-sided execution cost (\Cref{tab:timing_summary}, \Cref{fig:mech_pareto}(b--d); excluding compilation, evaluation, and checkpoint I/O). On matched 130M checkpoints ($8\times\text{A100}$), synchronous dense outputs (\mname{DT-All}) add $+21.6\%$ median step time over \mname{MuonT}; width thresholding (\mname{WT-MLP}) halves that to $+11.3\%$, and one-step lag (\mname{WT-MLP-Lag}) cuts it to $+5.3\%$. At 520M across $32\times\text{A100}$, matched-checkpoint median overhead is $+3.3\%$.
+
+\input{tables/timing_summary}
+
+Periodic exact-eigendecomposition repairs create a heavier upper tail in mean step times: the same matched benchmarks record mean overheads of $+8.9\%$ at 130M and $+11.4\%$ at 520M ($+5.6\%$ median and $+11.1\%$ mean when resuming each method's own warmed 520M state on 32 GPUs; full 8- and 32-GPU windows in \Cref{tab:bench19,tab:bench520m}). Consequently, at a recorded 130M C4 target of $3.52$ nats, \mname{WT-MLP-Lag} reaches the target in $5.3\%$ fewer tokens than \mname{MuonT} (step 4,501 vs.\ 4,751; $2.36\text{B}$ vs.\ $2.49\text{B}$ tokens) but $1.8\%$ more elapsed wall-clock time ($5{,}564.6$ vs.\ $5{,}468.4$\,s). Our experiments therefore establish a fixed-token quality improvement while leaving wall-clock speedup open.

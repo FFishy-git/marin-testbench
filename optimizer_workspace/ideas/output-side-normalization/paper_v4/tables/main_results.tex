@@ -1,0 +1,26 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{2.2pt}
+\caption{\textbf{Confirmatory and scaling results across fresh seeds, longer horizon, and greater width.} Held-out reports final cross-entropy $\Lsel$ in nats; all $\Delta$ columns report differences from same-regime Muon in millinats (negative favors the row method). MuonT applies input preconditioning only, so the gap between the MuonT and WT-MLP-Lag rows isolates the output-side contribution. Late-11 averages the 11 second-half checkpoints; Wins counts the 16 Paloma domains improved over Muon. All four methods share their verified seed-0 optimum within each regime ($\eta^*=0.01600$ at 130M and 520M 20 TPP, and $0.01600\times4^{-0.3}=0.01056$ at 130M 80 TPP). Complete absolute losses and $\eta=0.02263$ replicates appear in \Cref{tab:absolute_results,tab:seeds}.}\label{tab:main_scaling}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrr@{}}
+\toprule
+& & (nats) & \multicolumn{4}{c}{Differences from Muon (millinats, $\downarrow$)} & Paloma \\
+\cmidrule(lr){4-7}
+Method & LR $\eta$ & Held-out & $\Delta$ Held-out & Late-11 $\Delta$ & $\Delta$ C4 & $\Delta$ Paloma & Wins \\
+\midrule
+\addlinespace[2pt]\multicolumn{8}{@{}l}{\textit{130M confirmation: 20 TPP, 2.68B tokens, fresh seeds 1--3 (matched $\eta^*=0.0160$, paired mean $\pm$ SD)}}\\
+Muon & 0.01600 & 3.2035 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & --- \\
+MuonT & 0.01600 & 3.1916 & $-11.91\pm1.40$ & $-23.26\pm2.07$ & $-11.79\pm0.98$ & $-11.49\pm4.18$ & 16/16 \\
+OD-All & 0.01600 & 3.1919 & $-11.62\pm1.09$ & $-22.91\pm1.63$ & $-12.63\pm1.22$ & $-12.79\pm1.92$ & 16/16 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01600 & \textbf{3.1881} & $\mathbf{-15.41\pm2.18}$ & $\mathbf{-26.78\pm2.30}$ & $\mathbf{-15.64\pm1.80}$ & $\mathbf{-15.91\pm1.68}$ & \textbf{16/16} \\
+\addlinespace[5pt]\multicolumn{8}{@{}l}{\textit{130M longer training: 80 TPP, 10.74B tokens, seed 0 (matched rate)}}\\
+Muon & 0.01056 & 3.0778 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & --- \\
+MuonT & 0.01056 & 3.0675 & $-10.28$ & $-22.28$ & $-10.26$ & $-11.12$ & 15/16 \\
+OD-All & 0.01056 & 3.0656 & $-12.19$ & $-23.85$ & $-12.82$ & $-13.71$ & 16/16 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01056 & \textbf{3.0636} & $\mathbf{-14.23}$ & $\mathbf{-26.82}$ & $\mathbf{-14.07}$ & $\mathbf{-16.78}$ & \textbf{16/16} \\
+\addlinespace[5pt]\multicolumn{8}{@{}l}{\textit{520M width transfer: 20 TPP, 10.74B tokens, $\dm=1{,}024$, seed 0 (matched $\eta^*=0.0160$)}}\\
+Muon & 0.01600 & 2.8528 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & --- \\
+MuonT & 0.01600 & 2.8438 & $-9.02$ & $-20.00$ & $-7.33$ & $-3.56$ & 15/16 \\
+OD-All & 0.01600 & 2.8433 & $-9.52$ & $-21.97$ & $-9.52$ & $-2.90$ & 12/16 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01600 & \textbf{2.8392} & $\mathbf{-13.57}$ & $\mathbf{-24.68}$ & $\mathbf{-11.62}$ & $\mathbf{-11.19}$ & \textbf{16/16} \\
+\bottomrule\end{tabularx}
+\end{table}

@@ -1,0 +1,20 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{4.5pt}
+\caption{\textbf{Counterfactual update rotation, top-mode de-hijacking, and width scaling across 130M (32-layer means) and 520M (16-layer means).} Holding checkpoint momentum and input factors fixed, $\theta_{\rm WT}$ and $\theta_{\rm OD}$ measure update angles relative to input-only updates ($\|D_{\rm WT}\|_F/\|D_{\rm MT}\|_F = 0.985$ at 130M and $1.006$ at 520M). Hijack reports top-16 overlap between pre-polar momentum singular vectors and $B_t$ eigenvectors before and after inner whitening; DA is 520M median diagonal anisotropy share (residual $\mathrm{IPR}=3.02$); $\Phi$ ratios are directional quadratic proxies relative to MuonT, not measured loss gains. At 520M, \texttt{gate,up} track 1D diagonals online ($\text{WT}=\text{OD}$).}\label{tab:mechanism_rotation}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrrr@{}}
+\toprule
+& \multicolumn{4}{c}{130M ($\dm=512$, step 2,500)} & \multicolumn{5}{c}{520M ($\dm=1{,}024$, step 5,120)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-10}
+Output & Hijack & $\theta_{\rm WT}$ & $\theta_{\rm OD}$ & $\Phi_{\rm WT}/\Phi_{\rm MT}$ & DA & $\theta_{\rm WT}$ & $\theta_{\rm OD}$ & $\Phi_{\rm WT}/\Phi_{\rm MT}$ & $\Phi_{\rm OD}/\Phi_{\rm MT}$ \\
+\midrule
+q & $67.8\to2.8\%$ & $22.7^\circ$ & $20.8^\circ$ & 1.155 & 9.8\% & $24.0^\circ$ & $22.7^\circ$ & 1.625 & 1.182 \\
+k & $64.2\to3.7\%$ & $22.6^\circ$ & $22.8^\circ$ & 1.233 & 16.8\% & $24.8^\circ$ & $24.5^\circ$ & 1.737 & 1.247 \\
+v & $19.6\to1.1\%$ & $24.2^\circ$ & $17.2^\circ$ & 1.264 & 0.7\% & $25.1^\circ$ & $16.5^\circ$ & 3.341 & 1.137 \\
+\addlinespace[2.5pt]
+\rowcolor{rowtint}[0pt][0pt]\textbf{o} (res.) & $30.4\to3.5\%$ & $15.5^\circ$ & $3.9^\circ$ & 1.002 & 0.5\% & $\mathbf{15.4^\circ}$ & $6.4^\circ$ & \textbf{1.334} & 1.028 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{down} (res.) & $64.5\to2.8\%$ & $15.7^\circ$ & $5.1^\circ$ & 1.098 & 0.4\% & $\mathbf{14.6^\circ}$ & $6.0^\circ$ & \textbf{1.263} & 1.009 \\
+\addlinespace[2.5pt]
+gate & $22.7\to3.1\%$ & $15.9^\circ$ & $15.9^\circ$ & 1.292 & --- & $18.8^\circ$ & $18.8^\circ$ & --- & --- \\
+up & $33.7\to4.7\%$ & $16.4^\circ$ & $16.4^\circ$ & 1.249 & --- & $18.6^\circ$ & $18.6^\circ$ & --- & --- \\
+\bottomrule\end{tabularx}
+\end{table}
