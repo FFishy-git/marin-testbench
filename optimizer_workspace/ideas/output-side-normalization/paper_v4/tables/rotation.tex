@@ -1,11 +1,11 @@
 \begin{table}[!htb]\centering\small
-\setlength{\tabcolsep}{4.5pt}
-\caption{\textbf{Counterfactual update rotation, top-mode de-hijacking, and width scaling across 130M (32-layer means) and 520M (16-layer means).} Holding checkpoint momentum and input factors fixed, $\theta_{\rm WT}$ and $\theta_{\rm OD}$ measure update angles relative to input-only updates ($\|D_{\rm WT}\|_F/\|D_{\rm MT}\|_F = 0.985$ at 130M and $1.006$ at 520M). Hijack reports top-16 overlap between pre-polar momentum singular vectors and $B_t$ eigenvectors before and after inner whitening; DA is 520M median diagonal anisotropy share (residual $\mathrm{IPR}=3.02$); $\Phi$ ratios are directional quadratic proxies relative to MuonT, not measured loss gains. At 520M, \texttt{gate,up} track 1D diagonals online ($\text{WT}=\text{OD}$).}\label{tab:mechanism_rotation}
+\setlength{\tabcolsep}{4.4pt}
+\caption{\textbf{Counterfactual update rotation, top-mode de-hijacking, and width scaling across 130M (32-layer means) and 520M (16-layer means).} Holding checkpoint momentum and input factors fixed, $\theta_{\rm ED}$ and $\theta_{\rm Diag}$ measure update angles for Muon2-ExpDiag and Muon2-Diag relative to input-only MuonT updates ($\|D_{\rm ED}\|_F/\|D_{\rm MT}\|_F = 0.985$ at 130M and $1.006$ at 520M). Hijack reports top-16 overlap between pre-polar momentum singular vectors and $B_t$ eigenvectors before and after inner whitening; DA is 520M median diagonal anisotropy share (residual $\mathrm{IPR}=3.02$); $\Phi$ ratios are directional quadratic proxies relative to MuonT, not measured loss gains. At 520M, \texttt{gate,up} track 1D diagonals online ($\text{ED}=\text{Diag}$).}\label{tab:mechanism_rotation}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrrr@{}}
 \toprule
 & \multicolumn{4}{c}{130M ($\dm=512$, step 2,500)} & \multicolumn{5}{c}{520M ($\dm=1{,}024$, step 5,120)} \\
 \cmidrule(lr){2-5}\cmidrule(lr){6-10}
-Output & Hijack & $\theta_{\rm WT}$ & $\theta_{\rm OD}$ & $\Phi_{\rm WT}/\Phi_{\rm MT}$ & DA & $\theta_{\rm WT}$ & $\theta_{\rm OD}$ & $\Phi_{\rm WT}/\Phi_{\rm MT}$ & $\Phi_{\rm OD}/\Phi_{\rm MT}$ \\
+Output & Hijack & $\theta_{\rm ED}$ & $\theta_{\rm Diag}$ & $\Phi_{\rm ED}/\Phi_{\rm MT}$ & DA & $\theta_{\rm ED}$ & $\theta_{\rm Diag}$ & $\Phi_{\rm ED}/\Phi_{\rm MT}$ & $\Phi_{\rm Diag}/\Phi_{\rm MT}$ \\
 \midrule
 q & $67.8\to2.8\%$ & $22.7^\circ$ & $20.8^\circ$ & 1.155 & 9.8\% & $24.0^\circ$ & $22.7^\circ$ & 1.625 & 1.182 \\
 k & $64.2\to3.7\%$ & $22.6^\circ$ & $22.8^\circ$ & 1.233 & 16.8\% & $24.8^\circ$ & $24.5^\circ$ & 1.737 & 1.247 \\

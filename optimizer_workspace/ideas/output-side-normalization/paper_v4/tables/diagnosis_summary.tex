@@ -1,26 +1,26 @@
 \begin{table}[tbp]\centering\footnotesize
 \setlength{\tabcolsep}{5.8pt}
-\caption{\textbf{Moment geometry and subspace drift by projection role at 130M.} Static columns report 32-layer medians on the MuonT trajectory at step 2,500. For diagonal anisotropy share (DA), parentheses give the range of these medians across Muon, MuonT, and WT-MLP-Lag. $\rho_{\rm rms}$ is the RMS of off-diagonal uncentered correlations; root $R^2$ compares diagonal and dense inverse roots. Drift compares the subspaces at steps 2,250 and 2,500, averaged over 32 layers for each trajectory (WT denotes WT-MLP-Lag). WT uses a resumed trajectory; uninterrupted-checkpoint comparisons are reported in \Cref{sec:output_drift}. Tinted expansion outputs account for 96.2\% of nominal dense output eigendecomposition work.}\label{tab:diagnosis_summary}
+\caption{\textbf{Moment geometry and subspace drift by projection role at 130M.} Static columns report 32-layer medians on the Muon baseline trajectory at step 2,500 (matching \Cref{fig:overview}(a)). For diagonal anisotropy share (DA), parentheses give the range of these medians across Muon, MuonT, and Muon2-ExpDiag. $\rho_{\rm rms}$ is the RMS of off-diagonal uncentered correlations; root $R^2$ compares diagonal and dense inverse roots. Drift compares the subspaces at steps 2,250 and 2,500, averaged over 32 layers for each trajectory (ExpDiag denotes Muon2-ExpDiag). ExpDiag uses a resumed trajectory; uninterrupted-checkpoint comparisons are reported in \Cref{sec:output_drift}. Tinted expansion outputs account for 96.2\% of nominal dense output eigendecomposition work.}\label{tab:diagnosis_summary}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrr@{}}
 \toprule
 & & & \multicolumn{2}{c}{Diagonal fidelity} & \multicolumn{3}{c}{250-step $\mathrm{Drift}_{16}$} \\
 \cmidrule(lr){4-5}\cmidrule(lr){6-8}
-Moment & $d$ & $\rho_{\rm rms}$ & DA (\%, 3-traj) & Root $R^2$ (\%) & Muon & MuonT & WT \\
+Moment & $d$ & $\rho_{\rm rms}$ & DA (\%, 3-traj) & Root $R^2$ (\%) & Muon & MuonT & ExpDiag \\
 \midrule
 \addlinespace[2pt]\multicolumn{8}{@{}l}{\textit{Input activation moments $C_t=\E[xx^{\Tr}]$ (4 per block)}}\\
-attention & 512 & 0.203 & 1.0 (0.8--1.4) & 10.6 & 0.041 & 0.021 & 0.023 \\
-o & 512 & 0.212 & 1.8 (1.8--9.8) & 22.5 & 0.107 & 0.094 & 0.108 \\
-MLP & 512 & 0.196 & 0.8 (0.7--1.0) & 6.0 & 0.046 & 0.021 & 0.025 \\
-down & 2,048 & 0.035 & 43.4 (20--43) & 79.4 & 0.186 & 0.106 & 0.087 \\
+attention & 512 & 0.147 & 1.4 (0.8--1.4) & 8.2 & 0.041 & 0.021 & 0.023 \\
+o & 512 & 0.097 & 9.8 (1.8--9.8) & 30.1 & 0.107 & 0.094 & 0.108 \\
+MLP & 512 & 0.141 & 1.0 (0.7--1.0) & 4.9 & 0.046 & 0.021 & 0.025 \\
+down & 2,048 & 0.028 & 20.3 (20.3--43.4) & 91.3 & 0.186 & 0.106 & 0.087 \\
 \addlinespace[5pt]\multicolumn{8}{@{}l}{\textit{Output cotangent moments $B_t=\E[\delta\delta^{\Tr}]$ (7 per block)}}\\
-q & 512 & 0.064 & 18.0 (13--18) & 62.4 & 0.150 & 0.140 & 0.110 \\
-k & 512 & 0.077 & 14.4 (14--16) & 71.8 & 0.178 & 0.165 & 0.147 \\
-v & 512 & 0.056 & 12.2 (7--12) & 31.2 & 0.664 & 0.662 & 0.586 \\
+q & 512 & 0.061 & 16.4 (13.3--18.0) & 64.8 & 0.150 & 0.140 & 0.110 \\
+k & 512 & 0.075 & 15.5 (14.4--15.5) & 77.6 & 0.178 & 0.165 & 0.147 \\
+v & 512 & 0.060 & 11.5 (6.8--12.2) & 38.6 & 0.664 & 0.662 & 0.586 \\
 \addlinespace[2.5pt]
-o (res.) & 512 & 0.030 & 0.8 (0.8--1.0) & 1.2 & 0.164 & 0.134 & 0.103 \\
-down (res.) & 512 & 0.031 & 0.8 (0.8--0.9) & 1.2 & 0.123 & 0.107 & 0.072 \\
+o (res.) & 512 & 0.031 & 1.0 (0.8--1.0) & 3.6 & 0.164 & 0.134 & 0.103 \\
+down (res.) & 512 & 0.032 & 0.9 (0.8--0.9) & 2.3 & 0.123 & 0.107 & 0.072 \\
 \addlinespace[2.5pt]
-\rowcolor{rowtint}[0pt][0pt]gate (exp.) & 2,048 & 0.005 & 82.0 (81--89) & 82.2 & 0.292 & 0.240 & 0.159 \\
-\rowcolor{rowtint}[0pt][0pt]up (exp.) & 2,048 & 0.007 & 78.1 (78--91) & 75.9 & 0.251 & 0.215 & 0.130 \\
+\rowcolor{rowtint}[0pt][0pt]gate (exp.) & 2,048 & 0.005 & 80.6 (80.6--89.5) & 98.8 & 0.292 & 0.240 & 0.159 \\
+\rowcolor{rowtint}[0pt][0pt]up (exp.) & 2,048 & 0.007 & 77.9 (77.9--90.8) & 98.2 & 0.251 & 0.215 & 0.130 \\
 \bottomrule\end{tabularx}
 \end{table}

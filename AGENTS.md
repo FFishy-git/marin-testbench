@@ -183,6 +183,11 @@ uv run --no-project infra/ci/run_tests.py
 - Follow [experiment records](docs/dev-guide/experiment-records.md) for
   research evidence and durable experiment reporting.
 
+## Paper & Mathematical Writing
+
+- Define every mathematical symbol explicitly in prose at or before its first use. Never introduce a symbol in an equation (e.g., writing $M_t$ and $U_t$ under a generic phrase like "Nesterov momentum" without naming what each symbol is, or using an unintroduced subscript like $p$) without stating what it represents.
+- Avoid gratuitous subscripts and indices: only index quantities by layer/projection (e.g., $p$) when equations actually couple or contrast across that index; otherwise fix a single parameter in prose and keep notation uniform across equations, prose, tables, and figures.
+
 ## Agent Artifacts
 
 - Publish live infrastructure incidents through

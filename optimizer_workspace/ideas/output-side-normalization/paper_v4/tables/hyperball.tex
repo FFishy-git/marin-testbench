@@ -1,0 +1,21 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{1.5pt}
+\caption{\textbf{Frobenius Hyperball retraction across \mname{Muon}, \mname{MuonHT}, and \mname{Muon2-ExpDiagH} at 130M (20 TPP, 2.68B tokens).} Following \Cref{tab:main_scaling}, Held-out reports final cross-entropy $\Lsel$ in nats and all $\Delta$ columns report differences from same-seed \mname{Muon} ($\eta^*=0.01600$) in millinats (negative favors the row method). Replacing decoupled weight decay with Frobenius Hyperball retraction~\citep{wen2026hyperball} fixes $\|W_t\|_F=\|W_0\|_F$ and normalizes $D_t/\|D_t\|_F$, shifting the shared full-budget interior optimum down by one $\sqrt{2}$ grid step from $\eta^*=0.01600$ to $\eta^*_{\mathrm{HB}}=0.01131$ across all three Hyperball variants (\mname{MuonH}, input-preconditioned \mname{MuonHT}, and structure-aware two-sided \mname{Muon2-ExpDiagH}). Entries marked --- await completion of the final multi-seed and 16-domain Paloma evaluations.}\label{tab:hyperball}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrr@{}}
+\toprule
+& & (nats) & \multicolumn{4}{c}{Differences from Muon (millinats, $\downarrow$)} & OOD \\
+\cmidrule(lr){4-7}
+Method & LR $\eta$ & Held-out & $\Delta$ Held-out & Late-11 $\Delta$ & $\Delta$ C4 & $\Delta$ Paloma & Wins \\
+\midrule
+\addlinespace[2pt]\multicolumn{8}{@{}l}{\textit{130M seed-0 full-budget evaluation: 20 TPP, 2.68B tokens (matched Hyperball optimum $\eta^*_{\mathrm{HB}}=0.01131$)}}\\
+Muon & 0.01600 & 3.2461 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & --- \\
+MuonH & 0.01131 & 3.2442 & $-1.90$ & $-22.18$ & $-0.36$ & --- & --- \\
+MuonHT & 0.01131 & \textbf{3.2349} & $\mathbf{-11.19}$ & $\mathbf{-32.89}$ & $\mathbf{-8.77}$ & --- & --- \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiagH} & 0.01131 & 3.2359 & $-10.17$ & $-32.83$ & $-7.44$ & --- & --- \\
+\addlinespace[5pt]\multicolumn{8}{@{}l}{\textit{130M confirmation: 20 TPP, 2.68B tokens, fresh seeds 1--3 (matched $\eta^*_{\mathrm{HB}}=0.01131$, paired mean $\pm$ SD)}}\\
+Muon & 0.01600 & 3.2035 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & --- \\
+MuonH & 0.01131 & 3.2025 & $-0.99\pm1.19$ & $-21.23\pm0.53$ & $-1.42\pm1.36$ & --- & --- \\
+MuonHT & 0.01131 & 3.1923 & $-11.27\pm0.96$ & $-32.82\pm0.34$ & $-9.85\pm1.31$ & --- & --- \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiagH} & 0.01131 & --- & --- & --- & --- & --- & --- \\
+\bottomrule\end{tabularx}
+\end{table}

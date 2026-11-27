@@ -1,27 +1,27 @@
 \begin{table}[tbp]\centering\footnotesize
 \setlength{\tabcolsep}{7.5pt}
-\caption{\textbf{Individual fresh-seed replication at 130M (20 TPP, 2.68B tokens).} Subheaders report each seed's absolute MuonT losses ($\eta=0.01600$); rows report paired differences from same-seed MuonT in millinats (negative favors the row method; Late-11 is omitted for $\eta=0.02263$ rows because intermediate decay schedules differ). WT-MLP-Lag improves over both Muon and MuonT on every seed across all evaluation suites at both learning rates.}\label{tab:seeds}
+\caption{\textbf{Individual fresh-seed replication at 130M (20 TPP, 2.68B tokens).} Subheaders report each seed's absolute Muon losses ($\eta^*=0.01600$); rows report paired differences from same-seed Muon in millinats (negative favors the row method; Late-11 is omitted for $\eta=0.02263$ rows because intermediate decay schedules differ). Muon2-ExpDiag improves over both Muon and MuonT on every seed across all evaluation suites at both learning rates.}\label{tab:seeds}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrr@{}}
 \toprule
 Method & Matrix $\eta$ & $\Delta$ Held-out & Late-11 $\Delta$ & $\Delta$ C4 & $\Delta$ Paloma \\
 \midrule
-\addlinespace[2pt]\multicolumn{6}{@{}l}{\textit{Seed 1: MuonT reference ($\Lsel=3.1879$, Late-11 $=3.3113$, $\Lc=3.4528$, $\Lpal=3.4046$ nats)}}\\
-Muon & 0.01600 & $+12.44$ & $+24.87$ & $+12.66$ & $+11.64$ \\
-OD-All & 0.01600 & $+0.61$ & $+0.79$ & $-0.45$ & $-0.26$ \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01600 & $\mathbf{-1.58}$ & $\mathbf{-1.63}$ & $\mathbf{-3.53}$ & $\mathbf{-4.05}$ \\
-OD-All (hotter LR) & 0.02263 & $-1.02$ & --- & $-4.08$ & $-2.62$ \\
-WT-MLP-Lag (hotter LR) & 0.02263 & $-2.87$ & --- & $-4.35$ & $-4.35$ \\
-\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 2: MuonT reference ($\Lsel=3.1634$, Late-11 $=3.2849$, $\Lc=3.4519$, $\Lpal=3.4026$ nats)}}\\
-Muon & 0.01600 & $+12.97$ & $+23.99$ & $+11.98$ & $+15.59$ \\
-OD-All & 0.01600 & $+0.39$ & $+0.37$ & $-1.57$ & $+0.60$ \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01600 & $\mathbf{-4.95}$ & $\mathbf{-5.23}$ & $\mathbf{-5.13}$ & $\mathbf{-2.09}$ \\
-OD-All (hotter LR) & 0.02263 & $-0.02$ & --- & $-2.60$ & $+4.73$ \\
-WT-MLP-Lag (hotter LR) & 0.02263 & $-2.23$ & --- & $-3.45$ & $-1.15$ \\
-\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 3: MuonT reference ($\Lsel=3.2236$, Late-11 $=3.3466$, $\Lc=3.4520$, $\Lpal=3.4076$ nats)}}\\
-Muon & 0.01600 & $+10.33$ & $+20.92$ & $+10.73$ & $+7.25$ \\
-OD-All & 0.01600 & $-0.12$ & $-0.12$ & $-0.52$ & $-4.24$ \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 0.01600 & $\mathbf{-3.95}$ & $\mathbf{-3.71}$ & $\mathbf{-2.90}$ & $\mathbf{-7.10}$ \\
-OD-All (hotter LR) & 0.02263 & $-0.59$ & --- & $-2.04$ & $-4.77$ \\
-WT-MLP-Lag (hotter LR) & 0.02263 & $-5.00$ & --- & $-2.69$ & $-6.53$ \\
+\addlinespace[2pt]\multicolumn{6}{@{}l}{\textit{Seed 1: Muon reference ($\Lsel=3.2003$, Late-11 $=3.3362$, $\Lc=3.4655$, $\Lpal=3.4162$ nats)}}\\
+MuonT & 0.01600 & $-12.44$ & $-24.87$ & $-12.66$ & $-11.64$ \\
+Muon2-Diag & 0.01600 & $-11.83$ & $-24.08$ & $-13.10$ & $-11.90$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & 0.01600 & $\mathbf{-14.02}$ & $\mathbf{-26.50}$ & $\mathbf{-16.18}$ & $\mathbf{-15.69}$ \\
+Muon2-Diag (hotter LR) & 0.02263 & $-13.46$ & --- & $-16.73$ & $-14.26$ \\
+Muon2-ExpDiag (hotter LR) & 0.02263 & $-15.31$ & --- & $-17.01$ & $-15.99$ \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 2: Muon reference ($\Lsel=3.1764$, Late-11 $=3.3089$, $\Lc=3.4639$, $\Lpal=3.4182$ nats)}}\\
+MuonT & 0.01600 & $-12.97$ & $-23.99$ & $-11.98$ & $-15.59$ \\
+Muon2-Diag & 0.01600 & $-12.58$ & $-23.61$ & $-13.55$ & $-14.99$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & 0.01600 & $\mathbf{-17.93}$ & $\mathbf{-29.22}$ & $\mathbf{-17.11}$ & $\mathbf{-17.68}$ \\
+Muon2-Diag (hotter LR) & 0.02263 & $-12.99$ & --- & $-14.58$ & $-10.86$ \\
+Muon2-ExpDiag (hotter LR) & 0.02263 & $-15.21$ & --- & $-15.43$ & $-16.75$ \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 3: Muon reference ($\Lsel=3.2339$, Late-11 $=3.3675$, $\Lc=3.4627$, $\Lpal=3.4148$ nats)}}\\
+MuonT & 0.01600 & $-10.33$ & $-20.92$ & $-10.73$ & $-7.25$ \\
+Muon2-Diag & 0.01600 & $-10.44$ & $-21.04$ & $-11.25$ & $-11.48$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & 0.01600 & $\mathbf{-14.27}$ & $\mathbf{-24.63}$ & $\mathbf{-13.63}$ & $\mathbf{-14.35}$ \\
+Muon2-Diag (hotter LR) & 0.02263 & $-10.91$ & --- & $-12.77$ & $-12.02$ \\
+Muon2-ExpDiag (hotter LR) & 0.02263 & $-15.32$ & --- & $-13.42$ & $-13.78$ \\
 \bottomrule\end{tabularx}
 \end{table}

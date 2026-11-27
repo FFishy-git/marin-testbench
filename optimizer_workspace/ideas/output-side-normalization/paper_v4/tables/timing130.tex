@@ -1,28 +1,28 @@
 \begin{table}[tbp]\centering\footnotesize
 \setlength{\tabcolsep}{9.5pt}
-\caption{\textbf{Complete 19-arm 130M timing and memory benchmark on 8$\times$A100.} Sorted by median step duration over steps 37--96 (after 36 warmup steps) from identical step-2,500 weights and fresh optimizer/moment state. Both median and mean overheads ($\Delta$) are relative to MuonT.}\label{tab:bench19}
+\caption{\textbf{Complete 19-arm 130M timing and memory benchmark on 8$\times$A100.} Sorted by median step duration over steps 37--96 (after 36 warmup steps) from identical step-2,500 weights and fresh optimizer/moment state. Both median and mean overheads ($\Delta$) are relative to Muon.}\label{tab:bench19}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrr@{}}
 \toprule
 Method & Median (s) & Median $\Delta$ & Mean (s) & Mean $\Delta$ & Peak GiB \\
 \midrule
-Muon & 1.0810 & $-1.4\%$ & 1.0792 & $-1.6\%$ & 18.97 \\
-Abl-BothDiag & 1.0926 & $-0.4\%$ & 1.0911 & $-0.5\%$ & 19.55 \\
-MuonT & 1.0967 & $+0.0\%$ & 1.0971 & $+0.0\%$ & 20.54 \\
-Abl-DownSwap & 1.1005 & $+0.3\%$ & 1.0976 & $+0.0\%$ & 19.41 \\
-Null-OD & 1.1121 & $+1.4\%$ & 1.1121 & $+1.4\%$ & 20.55 \\
-OD-Outer & 1.1131 & $+1.5\%$ & 1.1134 & $+1.5\%$ & 20.55 \\
-Abl-DownOnly & 1.1202 & $+2.1\%$ & 1.1283 & $+2.8\%$ & 20.76 \\
-OD-All & 1.1211 & $+2.2\%$ & 1.1196 & $+2.0\%$ & 20.55 \\
-WT-Sym-Lag & 1.1331 & $+3.3\%$ & 1.1751 & $+7.1\%$ & 20.82 \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 1.1548 & $+5.3\%$ & 1.1944 & $+8.9\%$ & 21.60 \\
-WT-Sym & 1.1986 & $+9.3\%$ & 1.2356 & $+12.6\%$ & 20.74 \\
-WT-MLP & 1.2208 & $+11.3\%$ & 1.2501 & $+13.9\%$ & 21.52 \\
-Abl-No2048 & 1.2288 & $+12.0\%$ & 1.2517 & $+14.1\%$ & 21.52 \\
-Null-WT & 1.2313 & $+12.3\%$ & 1.2493 & $+13.9\%$ & 21.52 \\
-DT-All-Lag & 1.2782 & $+16.5\%$ & 1.4585 & $+32.9\%$ & 24.78 \\
-DT-All & 1.3333 & $+21.6\%$ & 1.4595 & $+33.0\%$ & 24.21 \\
-Null-Dense & 1.3785 & $+25.7\%$ & 1.4638 & $+33.4\%$ & 24.21 \\
-Abl-OuterDense & 1.3861 & $+26.4\%$ & 1.5004 & $+36.8\%$ & 24.21 \\
-Abl-OutOnly & 1.4232 & $+29.8\%$ & 1.4579 & $+32.9\%$ & 22.21 \\
+Muon & 1.0810 & $+0.0\%$ & 1.0792 & $+0.0\%$ & 18.97 \\
+Abl-BothDiag & 1.0926 & $+1.1\%$ & 1.0911 & $+1.1\%$ & 19.55 \\
+MuonT & 1.0967 & $+1.5\%$ & 1.0971 & $+1.7\%$ & 20.54 \\
+Abl-DownSwap & 1.1005 & $+1.8\%$ & 1.0976 & $+1.7\%$ & 19.41 \\
+Null-Diag & 1.1121 & $+2.9\%$ & 1.1121 & $+3.0\%$ & 20.55 \\
+Abl-OuterDiag & 1.1131 & $+3.0\%$ & 1.1134 & $+3.2\%$ & 20.55 \\
+Abl-DownOnly & 1.1202 & $+3.6\%$ & 1.1283 & $+4.5\%$ & 20.76 \\
+Muon2-Diag & 1.1211 & $+3.7\%$ & 1.1196 & $+3.7\%$ & 20.55 \\
+Abl-SymDiag & 1.1331 & $+4.8\%$ & 1.1751 & $+8.9\%$ & 20.82 \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & 1.1548 & $+6.8\%$ & 1.1944 & $+10.7\%$ & 21.60 \\
+Abl-SymDiag (sync) & 1.1986 & $+10.9\%$ & 1.2356 & $+14.5\%$ & 20.74 \\
+Muon2-ExpDiag (sync) & 1.2208 & $+12.9\%$ & 1.2501 & $+15.8\%$ & 21.52 \\
+Abl-NoExp & 1.2288 & $+13.7\%$ & 1.2517 & $+16.0\%$ & 21.52 \\
+Null-Ctrl & 1.2313 & $+13.9\%$ & 1.2493 & $+15.8\%$ & 21.52 \\
+Muon2-Dense (lag) & 1.2782 & $+18.2\%$ & 1.4585 & $+35.1\%$ & 24.78 \\
+Muon2-Dense & 1.3333 & $+23.3\%$ & 1.4595 & $+35.2\%$ & 24.21 \\
+Null-Dense & 1.3785 & $+27.5\%$ & 1.4638 & $+35.6\%$ & 24.21 \\
+Abl-OuterDense & 1.3861 & $+28.2\%$ & 1.5004 & $+39.0\%$ & 24.21 \\
+Abl-OutOnly & 1.4232 & $+31.7\%$ & 1.4579 & $+35.1\%$ & 22.21 \\
 \bottomrule\end{tabularx}
 \end{table}

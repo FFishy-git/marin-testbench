@@ -1,43 +1,95 @@
-\section{The WT-MLP-Lag optimizer}
+\section{The Muon2-ExpDiag optimizer}
 \label{sec:method}
 
-\mname{WT-MLP-Lag} extends input-whitened \mname{MuonT} into a practical two-sided polar optimizer through two co-designed choices: width-thresholded output preconditioning—retaining dense spectral factors on hidden-width outputs while diagonalizing expanded MLP outputs—and a one-update asynchronous lag that moves post-backward output processing off the critical path.
+\paragraph{Overview.}
+\mname{Muon2-ExpDiag} extends input-preconditioned \mname{MuonT} into a practical two-sided polar optimizer for Transformer blocks. We first derive the general two-sided update from steepest descent under a preconditioned spectral norm (\Cref{sec:operator}), then motivate our role-dependent output approximations, decoupled inner and outer inverse-root powers, and right-only weight decay (\Cref{sec:factor_assignment}), and finally describe the one-step-lagged asynchronous execution pipeline (\Cref{sec:systems}).
 
 \subsection{Two-sided preconditioned Muon update}
 \label{sec:operator}
 
-We consider pre-RMSNorm SwiGLU Transformer blocks with hidden width $\dm$ and MLP expansion width $\dff=4\dm$. Each block contains seven 2D linear projections $y=W_{p,t}x$ with weight matrix $W_{p,t}\in\R^{m_p\times n_p}$: four square attention projections (\texttt{q,k,v,o} of shape $\dm\times\dm$), two tall expansion projections (\texttt{gate,up} of shape $\dff\times\dm$), and one wide contraction projection (\texttt{down} of shape $\dm\times\dff$). Given the globally averaged stochastic gradient $G_{p,t}\in\R^{m_p\times n_p}$, we maintain Nesterov momentum
+\paragraph{Block projections and momentum.}
+We study pre-RMSNorm SwiGLU Transformer blocks with hidden width $\dm$ and MLP expansion width $\dff=4\dm$. Each block applies seven 2D linear projections $y=W_t x$ with weights $W_t\in\R^{m\times n}$: four square attention projections \texttt{q,k,v,o} ($\dm\times\dm$), two tall expansion projections \texttt{gate,up} ($\dff\times\dm$), and one wide contraction projection \texttt{down} ($\dm\times\dff$). Given the globally averaged stochastic gradient $G_t\in\R^{m\times n}$ at step $t$, each projection maintains a momentum buffer $M_t$ (initialized at $M_{-1}=0$) and a Nesterov lookahead momentum $U_t$:
 \begin{equation}
- M_{p,t}=\mu M_{p,t-1}+G_{p,t},\qquad U_{p,t}=G_{p,t}+\mu M_{p,t},\qquad\mu=0.95,
+ M_t=\mu M_{t-1}+G_t,\qquad U_t=G_t+\mu M_t,\qquad\mu=0.95.
  \label{eq:momentum}
 \end{equation}
-initialized at $M_{p,-1}=0$, and let $\Nten$ denote the ten-step mixed-precision Newton--Schulz polar map specified in \Cref{app:appendix_math}.
 
-During forward and backward passes over $N_t$ sampled token positions $j$, each projection observes input activations $x_{p,t,j}\in\R^{n_p}$ and backpropagated output cotangents $\delta_{p,t,j}=\partial\ell/\partial y_{p,t,j}\in\R^{m_p}$. We track exponential moving averages of their uncentered second moments:
+\paragraph{Steepest descent under a preconditioned spectral norm.}
+Unpreconditioned \mname{Muon} computes steepest descent under the spectral (Schatten-$\infty$) norm $\|\cdot\|_{\mathrm{op}}$, treating all input and output directions equally~\citep{jordan2024muon}. To incorporate two-sided geometry, let $P_L\in\R^{m\times m}$ and $P_R\in\R^{n\times n}$ be symmetric positive-definite left (output) and right (input) preconditioners. Under the coordinate change $W=P_L\widetilde W P_R$, a parameter increment $\Delta W$ corresponds to the preconditioned step $Z=P_L^{-1}\Delta W P_R^{-1}$. Minimizing the linearized loss $\langle U_t,\Delta W\rangle=\tr(U_t^{\Tr}\Delta W)$ within a spectral-norm budget on $Z$ defines the directional update
+\begin{equation}
+ \Delta W_{\mathrm{dir}}
+ =\arg\min_{\Delta W\in\R^{m\times n}}\langle U_t,\Delta W\rangle
+ \quad\text{s.t.}\quad
+ \|P_L^{-1}\Delta W P_R^{-1}\|_{\mathrm{op}}\le\eta_t s,
+ \label{eq:constrained_opt}
+\end{equation}
+with aspect-ratio scale $s=\sqrt{\max(1,m/n)}$. Rewriting the objective in preconditioned coordinates gives $\langle P_L U_t P_R,Z\rangle$ subject to $\|Z\|_{\mathrm{op}}\le\eta_t s$. By spectral--nuclear norm duality, the optimal preconditioned step and resulting parameter update take the closed form
+\[
+ Z^\star=-\eta_t s\operatorname{Polar}(P_L U_t P_R),
+ \qquad
+ \Delta W_{\mathrm{dir}}=-\eta_t s\,P_L\operatorname{Polar}(P_L U_t P_R)P_R,
+\]
+which is unique whenever $P_L U_t P_R$ has full rank $\min(m,n)$.
+
+\paragraph{Decoupled two-sided update rule.}
+To turn this idealized step into a practical optimizer, we make three modifications. First, we approximate exact polar decomposition with the ten-step mixed-precision Newton--Schulz polynomial $\Nten$ (\Cref{app:appendix_math}). Second, we relax $P_L$ and $P_R$ into distinct pre-polar inner factors and post-polar outer factors: $(R_t,\hat R_t)$ on the input side and $(L_t,\hat L_t)$ on the output side (in \Cref{sec:systems}, dense output factors use the previous step's roots to overlap with training). Third, we include a decoupled weight-decay operator $Q_t$ with coefficient $\lambda=0.1$:
 \begin{align}
- C_{g(p),t}&=\beta C_{g(p),t-1}+(1-\beta)N_t^{-1}\sum_jx_{p,t,j}x_{p,t,j}^{\Tr},\nonumber\\
- B_{p,t}&=\beta B_{p,t-1}+(1-\beta)N_t^{-1}\sum_j\delta_{p,t,j}\delta_{p,t,j}^{\Tr},
+ D_t&=\hat L_t\,\Nten\!\left(L_t U_t R_t\right)\hat R_t,\nonumber\\
+ W_{t+1}&=W_t-\eta_t\left(s D_t+\lambda Q_t\right).
+ \label{eq:update}
+\end{align}
+Non-matrix parameters (embeddings, RMSNorm gains, and the untied output head) are updated with AdamW. Tying $L_t=\hat L_t=P_L$ and $R_t=\hat R_t=P_R$ recovers the directional solution of \cref{eq:constrained_opt} up to the polynomial polar approximation.
+
+\paragraph{Deriving metric weight decay.}
+Standard decoupled weight decay applies a Euclidean gradient step to the Frobenius penalty $\mathcal R(W)=\frac{\lambda}{2}\|W\|_F^2$, giving $Q_t=W_t$. Under two-sided preconditioning, however, $D_t$ does not step uniformly in raw parameter space: inside $\Nten(L_t U_t R_t)$, polar orthogonalization equalizes singular values so the inner factors $(L_t,R_t)$ act as an orthogonal frame rotation (\Cref{sec:mechanism}, \Cref{app:left_decay_asymmetry}), whereas the post-polar outer factors $(\hat L_t,\hat R_t)$ stretch step lengths across output and input modes. To match weight decay to a general linear reparameterization $W=A\widetilde W B$ (with invertible $A,B$ held fixed at step $t$), we take a Euclidean gradient step on $\widetilde{\mathcal R}(\widetilde W)=\frac{\lambda}{2}\|A\widetilde W B\|_F^2$ in $\widetilde W$-coordinates and map back to $W$:
+\begin{align*}
+ \nabla_{\widetilde W}\widetilde{\mathcal R}(\widetilde W)
+ &=A^{\Tr}\bigl(\nabla_W\mathcal R(W)\bigr)B^{\Tr}
+  =\lambda A^{\Tr}WB^{\Tr},\\
+ \Delta W_{\mathrm{wd}}
+ &=A\bigl(-\eta_t\nabla_{\widetilde W}\widetilde{\mathcal R}(\widetilde W)\bigr)B
+  =-\eta_t\lambda\,(AA^{\Tr})\,W\,(B^{\Tr}B).
+\end{align*}
+One factor of $(A,B)$ enters through the chain rule and a second enters when mapping $\Delta\widetilde W$ back to $W$. Crucially, when $A=\hat L_t\Omega_L$ and $B=\Omega_R\hat R_t$ combine symmetric post-polar scalings with orthogonal inner rotations, the rotations cancel ($AA^{\Tr}=\hat L_t^2$ and $B^{\Tr}B=\hat R_t^2$), leaving
+\[
+ Q_t=\hat L_t^2 W_t\hat R_t^2.
+\]
+Choosing which sides of $W$ are reparameterized motivates the three regularizers studied in this paper (\Cref{sec:wd_ablation}, \Cref{app:weight_decay,app:left_decay_asymmetry}):
+\begin{itemize}
+ \item \textbf{Two-sided metric decay ($Q_t=\hat L_t^2 W_t\hat R_t^2$).} Setting $(A,B)=(\hat L_t,\hat R_t)$ applies $\ell_2$ decay in the full post-polar coordinates $W=\hat L_t\widetilde W\hat R_t$ (equivalently, a raw-coordinate gradient step on $\frac{\lambda}{2}\|\hat L_t W\hat R_t\|_F^2$), aligning weight shrinkage across both output and input eigendirections with the post-polar scaling of $D_t$.
+ \item \textbf{Right-only metric decay ($Q_t=W_t\hat R_t^2$, used in \mname{MuonT} and \mname{Muon2-ExpDiag}).} Setting $(A,B)=(I_m,\hat R_t)$ applies $\ell_2$ decay in input-reparameterized coordinates $W=\widetilde W\hat R_t$ while leaving output rows unscaled. As detailed in \Cref{sec:factor_assignment}, omitting $\hat L_t^2$ avoids adverse output-channel feedback on $y=Wx$ and cleanly isolates the directional effect of $D_t$ relative to \mname{MuonT}.
+ \item \textbf{Isotropic decay ($Q_t=W_t$, used in \mname{Muon}).} Setting $(A,B)=(I_m,I_n)$ applies standard Frobenius decay in raw parameter coordinates. The same operator $Q_t=W_t$ also arises from a conditional-gradient (Frank--Wolfe) step over the preconditioned spectral ball $\|P_L^{-1}VP_R^{-1}\|_{\mathrm{op}}\le s/\lambda$, which shrinks weights uniformly toward the origin regardless of $(P_L,P_R)$.
+\end{itemize}
+
+\paragraph{Activation and cotangent second moments.}
+To construct the input and output preconditioners in \cref{eq:update}, we sample $N_t$ token positions $j$ in step $t$, record forward activations $x_{t,j}\in\R^n$ and backpropagated output cotangents $\delta_{t,j}=\partial\ell/\partial y_{t,j}\in\R^m$, and update exponential moving averages of their uncentered second moments:
+\begin{align}
+ C_t&=\beta C_{t-1}+\frac{1-\beta}{N_t}\sum_j x_{t,j}x_{t,j}^{\Tr},\nonumber\\
+ B_t&=\beta B_{t-1}+\frac{1-\beta}{N_t}\sum_j\delta_{t,j}\delta_{t,j}^{\Tr},
  \qquad \beta=0.938,
  \label{eq:moments}
 \end{align}
-corresponding to an effective horizon of $(1-\beta)^{-1}\approx 16$ updates. Moment sharing is inherently asymmetric between the two sides: because \texttt{q,k,v} share the pre-attention input and \texttt{gate,up} share the pre-MLP input, $g(p)$ collapses forward statistics to four input moments per block (three at width $\dm$ and \texttt{down} at width $\dff$), whereas distinct backward cotangents require seven separate output moments per block (five at width $\dm$ and \texttt{gate,up} at width $\dff$). To remove overall layerwise scale before forming inverse roots, any positive-trace moment $F\in\R^{d\times d}$ is trace-normalized and damped:
+corresponding to an effective horizon of $(1-\beta)^{-1}\approx 16$ updates. For ideal moments $C=\E[xx^{\Tr}]$ and $B=\E[\delta\delta^{\Tr}]$, choosing $P_L=B^{-1/2}$ and $P_R=C^{-1/2}$ in \cref{eq:constrained_opt} factors each token's first-order output coupling as
+\[
+ \delta^{\Tr}\Delta W x
+ =\bigl(B^{-1/2}\delta\bigr)^{\Tr}
+  \bigl(B^{1/2}\Delta W C^{1/2}\bigr)
+  \bigl(C^{-1/2}x\bigr).
+\]
+Bounding $\|B^{1/2}\Delta W C^{1/2}\|_{\mathrm{op}}$ therefore controls the worst-case coupling between whitened inputs and whitened cotangents, extending \mname{MuonT}'s input-RMS norm~\citep{mohamadi2026toner} to both sides of the projection.
+
+\paragraph{Moment sharing and trace-normalized damping.}
+Moment sharing differs between forward and backward passes. Because \texttt{q,k,v} share the pre-attention activation and \texttt{gate,up} share the pre-MLP activation, forward statistics collapse to four input moments per block (three of width $\dm$ plus \texttt{down} of width $\dff$). Separate backward cotangents, by contrast, require all seven output moments per block (five of width $\dm$ and \texttt{gate,up} of width $\dff$). Before taking inverse roots, any positive-trace moment $F\in\R^{d\times d}$ is trace-normalized to unit average diagonal and damped:
 \begin{equation}
  \tilde F=\frac{dF}{\tr(F)},\qquad A_d(F)=\tilde F+\epsilon I_d,\qquad\epsilon=10^{-3}.
  \label{eq:trace_norm}
 \end{equation}
 
-Using right (input) inner and outer factors $(R_{p,t},\hat R_{p,t})$ built from $C_{g(p),t}$ and left (output) inner and outer factors $(L_{p,t-\tau},\hat L_{p,t-\tau})$ built from $B_{p,t-\tau}$ at staleness lag $\tau\in\{0,1\}$, we update each 2D projection via
-\begin{align}
- D_{p,t}&=\hat L_{p,t-\tau}\,\Nten\!\left(L_{p,t-\tau}U_{p,t}R_{p,t}\right)\hat R_{p,t},\nonumber\\
- W_{p,t+1}&=W_{p,t}-\eta_t\left(s_{m_p,n_p}D_{p,t}+\lambda W_{p,t}\hat R_{p,t}^2\right),
- \label{eq:update}
-\end{align}
-with aspect-ratio scale $s_{m,n}=\sqrt{\max(1,m/n)}$, decoupled weight decay $\lambda=0.1$, and auxiliary AdamW on embeddings, RMSNorm gains, and the untied output head. Setting all four factors to identity recovers \mname{Muon}; setting $L=\hat L=I$ recovers \mname{MuonT}. Here $W_{p,t}\hat R_{p,t}^2$ is \mname{MuonT}'s metric-shaped weight decay from the right reparameterization $W=\widetilde W\hat R$ (\Cref{app:weight_decay}); \Cref{app:left_decay_asymmetry} derives the two-sided counterpart $\hat L^2 W\hat R^2$ and analyzes the structural and experimental-control motivations for retaining one-sided $W\hat R^2$.
-
-\subsection{Width-thresholded factor assignment}
+\subsection{Structure-aware factors, exponent split, and weight decay}
 \label{sec:factor_assignment}
 
-Following \mname{MuonT}'s decoupled exponent split, each preconditioned side pairs a $-1/2$ inner whitening factor before $\Nten$ with a unit-RMS $-1/8$ outer scaling factor after $\Nten$, instantiated in either dense spectral ($\mathsf{Dense}$) or coordinate diagonal ($\mathsf{Diag}$) form:
+\paragraph{Inner whitening and outer scaling operators.}
+Completing the update in \cref{eq:update} requires specifying dense versus diagonal moment approximations, inner versus outer inverse-root exponents, and the weight-decay operator. On every preconditioned side, we pair an inner inverse square root (exponent $-1/2$, applied before $\Nten$) with a unit-RMS outer inverse eighth root (exponent $-1/8$, applied after $\Nten$). Depending on projection role, these factor pairs take either dense spectral form or coordinate-diagonal form:
 \begin{align}
  R&=A_n(C)^{-1/2},&\hat R&=\unitrms\!\left(A_n(C)^{-1/8}\right),\nonumber\\
  L^{\mathsf{Dense}}&=A_m(B)^{-1/2},&\hat L^{\mathsf{Dense}}&=\unitrms\!\left(A_m(B)^{-1/8}\right),
@@ -45,36 +97,64 @@ Following \mname{MuonT}'s decoupled exponent split, each preconditioned side pai
  L^{\mathsf{Diag}}&=\Diag(a^{-1/2}),&\hat L^{\mathsf{Diag}}&=\unitrms\!\left(\Diag(a^{-1/8})\right),
  \label{eq:diag_roots}
 \end{align}
-where $a=m\diag(B)/\tr(B)+\epsilon\mathbf1$ and $\unitrms(X)=\sqrt d\,X/\|X\|_F$ for a $d\times d$ matrix. Scaling outer factors to unit RMS prevents trivial step-size inflation from matrix trace changes; we verify empirical update norms directly on saved checkpoints in \Cref{sec:mechanism}.
+with damped coordinate diagonal $a$ and Frobenius-normalized scaling defined for $X\in\R^{d\times d}$ by
+\[
+ a=\diag(\tilde B)+\epsilon\mathbf1=\frac{m\,\diag(B)}{\tr(B)}+\epsilon\mathbf1,
+ \qquad
+ \unitrms(X)=\frac{\sqrt d\,X}{\|X\|_F}.
+\]
 
 \input{tables/taxonomy}
 
-\mname{WT-MLP-Lag} assigns these operators asymmetrically by side and projection width (\Cref{tab:taxonomy}, \Cref{fig:method_pipeline}(a)):
+\paragraph{Role-aware dense and diagonal assignment.}
+Guided by the second-moment audit in \Cref{sec:diagnosis} (\Cref{fig:overview}(a), \Cref{fig:structural_audit}(a)), which decomposes departure from isotropy into coordinate-diagonal and cross-channel shares, \mname{Muon2-ExpDiag} assigns preconditioners asymmetrically by side and projection role (\Cref{tab:taxonomy}, \Cref{fig:method_pipeline}(a)):
 \begin{itemize}
- \item \textbf{All inputs ($\dm$ and $\dff$):} Dense spectral factors $(R,\hat R)$ on all four input moments, including the $\dff$-wide \texttt{down} input, exactly as in \mname{MuonT}.
- \item \textbf{Hidden-width outputs ($\dm$: \texttt{q,k,v,o,down}):} Dense spectral factors $(L^{\mathsf{Dense}},\hat L^{\mathsf{Dense}})$ to capture cross-channel cotangent correlations, held for one update ($\tau=1$).
- \item \textbf{Expansion-width outputs ($\dff$: \texttt{gate,up}):} Exact per-step diagonal factors $(L^{\mathsf{Diag}},\hat L^{\mathsf{Diag}})$ computed inline without forming $\dff\times\dff$ Gram matrices or eigendecompositions.
+ \item \textbf{All inputs (\texttt{attn,o,mlp} at $\dm$; \texttt{down} at $\dff$).} All four input moments use dense spectral factors $(R,\hat R)$, matching \mname{MuonT}. Even at expansion width $\dff$, post-SwiGLU activations stay coupled through their shared $\dm$-dimensional token input, leaving 57--80\% of \texttt{down}'s input anisotropy off the coordinate diagonal (\Cref{fig:structural_audit}(a)).
+ \item \textbf{Hidden-width outputs (\texttt{q,k,v,o,down} at $\dm$).} All five hidden-width outputs use dense spectral factors $(L^{\mathsf{Dense}},\hat L^{\mathsf{Dense}})$, lagged by one step (\Cref{sec:systems}). The residual writers (\texttt{o,down}) carry less than 1\% of their anisotropy on the diagonal---over 99\% lies in cross-channel correlations---and attention outputs (\texttt{q,k,v}) carry only 7--18\% (\Cref{fig:structural_audit}(a)), so purely diagonal output scaling (\mname{Muon2-Diag}) acts nearly as the identity on residual projections.
+ \item \textbf{Gated MLP expansion outputs (\texttt{gate,up} at $\dff$).} Both expansion outputs use exact per-step diagonal factors $(L^{\mathsf{Diag}},\hat L^{\mathsf{Diag}})$, computed inline without forming $\dff\times\dff$ Gram matrices or eigendecompositions. Because cotangents backpropagate through elementwise SwiGLU gates, 78--91\% of \texttt{gate,up} output anisotropy lies on the coordinate diagonal across \mname{Muon}, \mname{MuonT}, and \mname{Muon2-ExpDiag} (\Cref{fig:structural_audit}(a)).
 \end{itemize}
-With five $\dm$-wide and two $\dff$-wide output moments per block, the two expansion outputs account for
+Across the five $\dm$-wide and two $\dff$-wide output moments per block (with $\dff=4\dm$), the two expansion outputs account for
 \begin{equation}
  \frac{2(4\dm)^3}{5\dm^3+2(4\dm)^3}=96.2\%
  \label{eq:cubic_share}
 \end{equation}
-of nominal dense output $O(d^3)$ eigendecomposition work and 86.5\% of output Gram storage. Width thresholding therefore eliminates nearly all cubic output-side work while retaining dense spectral conditioning on every hidden-width projection.
+of nominal dense output $O(d^3)$ eigendecomposition work and 86.5\% of output Gram storage. Diagonalizing the expansion outputs thus removes nearly all cubic output-side work while preserving dense spectral conditioning wherever anisotropy is cross-channel.
 
 \begin{figure}[t]
  \centering\includegraphics[width=\textwidth]{fig3_method_pipeline.pdf}
- \caption{\textbf{Factor assignment and asynchronous execution pipeline of \mname{WT-MLP-Lag}.}
- \textbf{(a)} Update rule and width-thresholded output classes: dense spectral factors on the five $\dm$-wide outputs (\texttt{q,k,v,o,down}), inline exact diagonal scaling on the two $\dff$-wide expansion outputs (\texttt{gate,up}), and dense input factors throughout. Chip percentages preview each output moment's diagonal share of anisotropy along \mname{MuonT} (\Cref{sec:diagnosis}).
- \textbf{(b)} Single-step execution timeline at 130M scaled to measured eight-A100 medians (\Cref{tab:bench19}). Synchronous \mname{WT-MLP} stalls at the step boundary waiting for output reductions and fallback eigensolves; with a one-update lag ($\tau=1$), \mname{WT-MLP-Lag} applies ready factors immediately while computing new output roots alongside step $t+1$.}
+ \caption{\textbf{Structure-aware factor assignment and asynchronous execution pipeline of \mname{Muon2-ExpDiag}.}
+ \textbf{(a)} Update rule and role-matched output classes: dense spectral factors on the five $\dm$-wide outputs (\texttt{q,k,v,o,down}), inline exact diagonal scaling on the two $\dff$-wide gated MLP expansion outputs (\texttt{gate,up}), and dense input factors throughout. Chip percentages preview each output moment's diagonal share of anisotropy along \mname{MuonT} (\Cref{sec:diagnosis}, \Cref{fig:structural_audit}(a)).
+ \textbf{(b)} Single-step execution timeline at 130M scaled to measured eight-A100 medians (\Cref{tab:bench19}). Synchronous \mname{Muon2-ExpDiag (sync)} stalls at the step boundary waiting for output reductions and fallback eigensolves; with a one-update lag ($\tau=1$), \mname{Muon2-ExpDiag} applies ready factors immediately while computing new output roots alongside step $t+1$.}
  \label{fig:method_pipeline}
 \end{figure}
 
-The inner and outer output factors play distinct geometric roles around $\Nten$. Inner whitening ($L$) changes which output directions dominate the pre-polar singular frame; even when polar orthogonalization normalizes singular values, non-commuting left whitening rotates the resulting orthogonal row frame (\Cref{sec:mechanism}). Post-polar scaling ($\hat L$) subsequently adjusts how much update magnitude is allocated along each output eigendirection. Inherited from \mname{MuonT}, the gentler $-1/8$ outer exponent avoids over-amplifying low-variance cotangent modes and is tested against outer-only and steeper-exponent alternatives in \Cref{sec:controls_ablations}.
+\paragraph{Why inner and outer exponents are decoupled.}
+Applying a single inverse-root exponent both before and after polar orthogonalization---as in the tied formulation \cref{eq:constrained_opt}---forces a compromise between singular-frame orientation and tail-noise amplification:
+\begin{itemize}
+ \item \textbf{Pre-polar inner whitening ($-1/2$).} The inner factors $L$ and $R$ determine which output and input directions dominate the singular frame before $\Nten$ flattens singular values; even after orthogonalization, non-commuting left whitening rotates the row frame along the Stiefel manifold (\Cref{sec:mechanism}, \cref{eq:som_rotation}). Full $-1/2$ whitening prevents high-variance modes from dominating leading singular vectors, whereas milder powers such as $-1/8$ leave pre-polar momentum under-whitened and omitting inner $L$ in \mname{Abl-OuterDense} loses substantial held-out quality (\Cref{sec:ablations}).
+ \item \textbf{Post-polar outer scaling ($-1/8$).} Once singular values are equalized, the outer factors $\hat L$ and $\hat R$ set relative step lengths across modes. Steeper post-polar powers such as $-1/4$ (applied symmetrically in \mname{GO-MUON}; \Cref{sec:related_baselines}) amplify noisy, low-variance cotangent directions. Pairing $-1/2$ inner whitening with unit-RMS $-1/8$ outer scaling, following \mname{MuonT}~\citep{mohamadi2026toner}, tempers tail noise and keeps update Frobenius norms near unpreconditioned scale without norm grafting (\Cref{sec:mechanism}).
+\end{itemize}
+Because the inner and outer exponents differ, the preconditioned direction $D_t$ in \cref{eq:update} is a decoupled relaxation of \cref{eq:constrained_opt}.
+
+\paragraph{Why weight decay remains right-only.}
+Although \mname{Muon2-ExpDiag} preconditions the update direction $D_t$ on both sides, it retains right-only weight decay $Q_t=W_t\hat R_t^2$ rather than the symmetric two-sided operator $\hat L_t^2 W_t\hat R_t^2$ derived in \Cref{sec:operator} (\Cref{app:weight_decay,app:left_decay_asymmetry}). While forward activations and backward cotangents enter the gradient symmetrically, input and output decay shaping act asymmetrically on $y=Wx$ because $W$ does not generate its RMSNormed input $x$, whereas $W$ directly generates its output $y$. Left-multiplying decay by the post-polar output factor introduces the multiplier
+\[
+ \hat L^2\propto(\tilde B+\epsilon I_m)^{-1/4},
+ \qquad
+ \frac{1}{m}\tr(\hat L^2)=1.
+\]
+Because $\hat L^2$ inverts cotangent second moments while holding their mean multiplier at one, quiet output channels receive stronger shrinkage (multipliers above one)---risking positive-feedback attenuation in gated SwiGLU branches---whereas volatile cotangent modes receive weaker regularization (multipliers below one). Moreover, rapidly drifting cotangent eigenspaces (\Cref{fig:structural_audit}(b)) subject weights to a rotating penalty ellipsoid, and left-multiplying by $\hat L^2$ adds a dense $\dm\times\dm$ matrix product per step on \texttt{q,k,v,o,down}. Holding $Q_t=W_t\hat R_t^2$ fixed avoids these issues while isolating $D_t$ relative to \mname{MuonT}; in three-seed 130M ablations (\Cref{sec:wd_ablation}, \Cref{tab:wd_ablation,fig:wd_ablation}), right-only decay outperforms both isotropic decay ($+7.51\pm 1.10$ mnats worse held-out, falling behind \mname{MuonT}) and two-sided decay ($+2.34\pm 0.63$ mnats worse at $\eta^*=0.016$), whose mid-schedule lead reverses during linear cooldown.
 
 \subsection{Asynchronous one-step-lagged execution}
 \label{sec:systems}
 
-Forward activations materialize during the forward pass, allowing \mname{MuonT} to overlap input-factor updates with backpropagation. Output cotangents, by contrast, finish arriving only at the end of backward right before the parameter update. To remove output moment reduction and root solving from this critical boundary, \mname{WT-MLP-Lag} sets $\tau=1$ (\Cref{fig:method_pipeline}(b)): step $t$'s parameter update immediately consumes $(L_{t-1},\hat L_{t-1})$ (initialized to identity at $t=0$) together with current input factors, while a priority-0 CUDA side stream contracts, reduce-scatters, and roots step $t$'s captured output statistics underneath step $t+1$'s forward and backward passes. The next update waits only if those background kernels have not yet finished. Although a one-step lag is small relative to the 16-update EMA horizon, we verify directly in \Cref{sec:ablations} that $\tau=1$ preserves nearly all of synchronous \mname{WT-MLP}'s loss improvement.
+\paragraph{Why dense output roots are lagged by one step.}
+In \cref{eq:update}, input factors $(R_t,\hat R_t)$ can be computed at step $t$ without stalling training because forward activations arrive during the forward pass, letting \mname{MuonT} overlap input Gram reductions and root solves with backpropagation. Output cotangents, by contrast, finish arriving only at the end of backpropagation right before the parameter step. Computing dense output reductions and frequent fallback eigensolves (\Cref{sec:drift_cost}) synchronously therefore stalls every step boundary (\Cref{fig:method_pipeline}(b)). To move this work off the critical path, \mname{Muon2-ExpDiag} introduces a one-step lag ($\tau=1$) on the five dense $\dm$-wide outputs, substituting the previous step's ready factors $(L_{t-1},\hat L_{t-1})$ (initialized to $I_m$ at $t=0$) for $(L_t,\hat L_t)$ in \cref{eq:update} while keeping inline diagonal factors on \texttt{gate,up} and all input factors $(R_t,\hat R_t)$ current at step $t$. Concurrently, a priority-0 background CUDA stream contracts, reduce-scatters, and computes inverse roots for step $t$'s dense output statistics during the forward and backward passes of step $t+1$; step $t+1$'s update waits only if those background kernels are still running. Because $B_t$ is an exponential moving average with horizon $(1-\beta)^{-1}\approx 16$ updates, a one-step lag shifts the underlying moment by only one EMA increment, and \Cref{sec:ablations} verifies that $\tau=1$ preserves nearly all of synchronous \mname{Muon2-ExpDiag (sync)}'s ($\tau=0$) loss gain while roughly halving exposed step-time overhead.
 
-Three kernel-level optimizations keep statistics capture and dense products lightweight. First, grouped Triton backward hooks capture cotangents at shared autograd nodes; for diagonal \texttt{gate,up} outputs, an inline reduction accumulates squared cotangents directly into FP32 vectors, while dense $\dm$-wide outputs use chunked row buffers that flush partial Grams during gradient accumulation so memory does not grow with microbatch count (permitting larger per-GPU microbatches at 520M). Second, because cotangent eigenspaces rotate rapidly (\Cref{sec:drift_cost}), the cached-eigenbasis root tracker uses GPU-resident residual checks and batched exact fallback eigendecompositions to avoid host synchronization. Third, matching-shape projections share batched update kernels, grouped projections reuse input-factor products, and dense pre- and post-polar matrix multiplications use the FP16-split Tensor-Core arithmetic detailed in \Cref{app:appendix_math}.
+\paragraph{Low-overhead capture and root-solver kernels.}
+Three kernel-level optimizations keep statistics capture and dense matrix products fast:
+\begin{itemize}
+ \item \textbf{Inline diagonal capture and chunked Gram buffers.} Grouped Triton backward hooks capture cotangents at shared autograd nodes. Diagonal \texttt{gate,up} outputs accumulate squared cotangents inline into FP32 vectors, while dense $\dm$-wide outputs flush chunked partial Gram buffers during gradient accumulation so memory stays independent of microbatch count, allowing larger per-GPU microbatches at 520M.
+ \item \textbf{Device-resident eigenbasis tracking.} Because cotangent eigenspaces rotate rapidly (\Cref{sec:drift_cost}), the cached-eigenbasis root tracker runs GPU-resident residual checks and batched fallback eigendecompositions without host synchronization.
+ \item \textbf{Batched updates and Tensor-Core arithmetic.} Projections of matching shape share batched update kernels, grouped projections reuse input-factor products, and dense pre- and post-polar matrix multiplications use the FP16-split Tensor-Core kernels in \Cref{app:appendix_math}.
+\end{itemize}

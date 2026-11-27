@@ -1,6 +1,6 @@
 \begin{table}[!htb]\centering\small
-\setlength{\tabcolsep}{4.5pt}
-\caption{\textbf{Factor assignment and nominal output $O(d^3)$ share across core methods.} Dense and Diag denote the $(-1/2,-1/8)$ factor pairs in \Cref{eq:dense_roots,eq:diag_roots}. Splitting both sides by width ($\dm$ versus $\dff=4\dm$) highlights the input--output asymmetry: WT-MLP-Lag retains dense factors on the $\dff$-wide \texttt{down} input while diagonalizing both $\dff$-wide expansion outputs. Fine-grained placement ablations appear in \Cref{tab:ablations}.}\label{tab:taxonomy}
+\setlength{\tabcolsep}{4.0pt}
+\caption{\textbf{Factor assignment and nominal output $O(d^3)$ share across core methods.} Dense and Diag denote the $(-1/2,-1/8)$ factor pairs in \Cref{eq:dense_roots,eq:diag_roots}. Splitting both sides by projection role and width ($\dm$ versus $\dff=4\dm$) highlights the structural asymmetry: Muon2-ExpDiag retains dense factors on the $\dff$-wide \texttt{down} input while diagonalizing the two $\dff$-wide gated MLP expansion outputs (\texttt{gate,up}). Fine-grained placement ablations appear in \Cref{tab:ablations}.}\label{tab:taxonomy}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xcccccr@{}}
 \toprule
 & \multicolumn{2}{c}{Input factors ($R,\hat R$)} & \multicolumn{2}{c}{Output factors ($L,\hat L$)} & & \\
@@ -9,11 +9,11 @@ Method & $\dm$ (\texttt{attn,o,mlp}) & $\dff$ (\texttt{down}) & $\dm$ (\texttt{q
 \midrule
 Muon & $I$ & $I$ & $I$ & $I$ & --- & 0\% \\
 MuonT & Dense & Dense & $I$ & $I$ & --- & 0\% \\
-OD-All & Dense & Dense & Diag & Diag & 0 & 0\% \\
-WT-Sym-Lag & Dense & Diag & Dense & Diag & 1 & 3.8\% \\
-WT-MLP & Dense & Dense & Dense & Diag & 0 & 3.8\% \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & \textbf{Dense} & \textbf{Dense} & \textbf{Dense} & \textbf{Diag} & \textbf{1} & \textbf{3.8\%} \\
-DT-All & Dense & Dense & Dense & Dense & 0 & 100\% \\
-Null-WT & Dense & Dense & $I$ (after solve) & $I$ (after solve) & 0 & 3.8\% \\
+Muon2-Diag & Dense & Dense & Diag & Diag & 0 & 0\% \\
+Abl-SymDiag & Dense & Diag & Dense & Diag & 1 & 3.8\% \\
+Muon2-ExpDiag (sync) & Dense & Dense & Dense & Diag & 0 & 3.8\% \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & \textbf{Dense} & \textbf{Dense} & \textbf{Dense} & \textbf{Diag} & \textbf{1} & \textbf{3.8\%} \\
+Muon2-Dense & Dense & Dense & Dense & Dense & 0 & 100\% \\
+Null-Ctrl & Dense & Dense & $I$ (after solve) & $I$ (after solve) & 0 & 3.8\% \\
 \bottomrule\end{tabularx}
 \end{table}

@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    "28.216.17.9",
+    "28.216.17.80",
+    "28.216.17.144",
+    "28.216.17.139"
+  ],
+  "python": "/opt/conda/envs/torch-base/bin/python",
+  "output_root": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization",
+  "gpus_per_run": 8,
+  "environment": {
+    "NCCL_INSPECTOR_ENABLE": "0",
+    "PYTHONFAULTHANDLER": "1",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
+  },
+  "wave": [
+    {
+      "arm": "muont",
+      "seed": 0,
+      "batch": "0p5m"
+    },
+    {
+      "arm": "inner_outer_sym_mlpdiag",
+      "seed": 0,
+      "batch": "0p5m"
+    },
+    {
+      "arm": "inner_outer_sym_mlpdiag_lag",
+      "seed": 0,
+      "batch": "0p5m"
+    },
+    {
+      "arm": "inner_outer_mlpdiag_lag",
+      "seed": 0,
+      "batch": "0p5m"
+    }
+  ],
+  "wave_name": "wave_sym_fastlag"
+}

@@ -19,7 +19,7 @@ import numpy as np
 PAPER = Path(__file__).resolve().parents[1]
 KINDS = ("q", "k", "v", "o", "down", "gate", "up")
 COLORS = {"Muon": "#67717E", "MuonT": "#D18B3A", "WT": "#2459A6"}
-LABELS = {"Muon": "Muon", "MuonT": "MuonT", "WT": "WT-MLP-Lag"}
+LABELS = {"Muon": "Muon", "MuonT": "MuonT", "WT": "Muon2-ExpDiag"}
 SCALES = (("130M", 250, 5120), ("520M", 2560, 10240))
 
 
@@ -72,16 +72,16 @@ def table(data):
         r"averaged equally over 32 layers, two probe sets, and 19 intervals of 250 steps at 130M or "
         r"three intervals of 2,560 steps at 520M. At 520M and in fresh 130M seeds 1--3 (one "
         r"2,560--5,120 interval per seed), all three methods share $\eta=0.016$; the densely saved "
-        r"130M seed-0 trajectories use $0.016$ for Muon and $0.02263$ for MuonT/WT, so that column "
+        r"130M seed-0 trajectories use $0.016$ for Muon and $0.02263$ for MuonT and ExpDiag, so that column "
         r"does not isolate optimizer effects at a common rate. Reductions are $100(1-\overline D_{\rm method}/"
         r"\overline D_{\rm Muon})$; positive values mean lower drift than Muon. Seed summaries are "
         r"mean $\pm$ sample SD across three seeds. The all-role row averages drift before taking "
-        r"ratios; absolute drift is not compared across model sizes. WT denotes WT-MLP-Lag.}"
+        r"ratios; absolute drift is not compared across model sizes. ExpDiag denotes Muon2-ExpDiag.}"
         r"\label{tab:output_drift}",
         r"\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X*{6}{>{\raggedleft\arraybackslash}X}@{}}\toprule",
         r"& \multicolumn{3}{c}{130M: absolute drift} & \multicolumn{3}{c}{520M: absolute drift} \\",
         r"\cmidrule(lr){2-4}\cmidrule(lr){5-7}",
-        r"Output & Muon & MuonT & WT & Muon & MuonT & WT \\\midrule",
+        r"Output & Muon & MuonT & ExpDiag & Muon & MuonT & ExpDiag \\\midrule",
     ]
     for kind in (*KINDS, "All roles"):
         row = [rf"\texttt{{{kind}}}" if kind in KINDS else kind]
@@ -108,7 +108,7 @@ def table(data):
             r"& \multicolumn{2}{c}{130M: reduction (\%)} & \multicolumn{2}{c}{520M: reduction (\%)} "
             r"& \multicolumn{2}{c}{130M seeds 1--3: reduction (\%)} \\",
             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}",
-            r"Output & MuonT & WT & MuonT & WT & MuonT & WT \\\midrule",
+            r"Output & MuonT & ExpDiag & MuonT & ExpDiag & MuonT & ExpDiag \\\midrule",
         ]
     )
     for kind in (*KINDS, "All roles"):
@@ -209,7 +209,7 @@ def main():
                     ls="--" if scale == "130M" else "-",
                     ms=2.5,
                     lw=1.2,
-                    label=f"{scale} {arm}",
+                    label=f"{scale} {'ExpDiag' if arm == 'WT' else arm}",
                 )
         ax.axhline(0, color=COLORS["Muon"], lw=0.7)
         ax.set_title(kind, loc="left", fontweight="bold")

@@ -312,10 +312,10 @@ def build_fig1():
         ax2.scatter([ox[k]], [g_pal[k]], s=26, facecolors="white", edgecolors=c, marker="o",
                     linewidths=1.3, zorder=5)
 
-    lab = dict(fontsize=7.1, fontweight="bold", va="center")
-    ax2.text(ox["wt_mlp_lag"], g_sel["wt_mlp_lag"] + 1.05, "WT-MLP-Lag", color=COL["wt"], ha="center", **lab)
+    lab = dict(fontsize=7.0, fontweight="bold", va="center")
+    ax2.text(ox["wt_mlp_lag"] - 0.15, g_sel["wt_mlp_lag"] + 1.05, "Muon2-ExpDiag", color=COL["wt"], ha="center", **lab)
     ax2.text(ox["muont"] - 0.42, g_sel["muont"] + 0.35, "MuonT", color=COL["muont"], ha="right", **lab)
-    ax2.text(ox["od_all"] + 0.42, g_pal["od_all"] + 0.35, "OD-All", color=COL["od"],
+    ax2.text(ox["od_all"] + 0.42, g_pal["od_all"] + 0.35, "Muon2-Diag", color=COL["od"],
              ha="left", **lab)
     ax2.text(ox["muon"] + 0.42, -0.85, "Muon", color=COL["muon"], ha="left", **lab)
 
@@ -326,7 +326,7 @@ def build_fig1():
     ax2.legend(loc="upper left", bbox_to_anchor=(0.0, 1.0), fontsize=6.6, borderaxespad=0.2,
                handletextpad=0.2, labelspacing=0.35, labelcolor=COL["sub"])
 
-    ax2.set_xlim(-0.8, 10.4)
+    ax2.set_xlim(-0.8, 10.9)
     ax2.set_ylim(-1.8, 16.4)
     ax2.set_xticks([0, 2, 4, 6, 8, 10])
     ax2.set_xticklabels(["0", "2", "4", "6", "8", "10%"])
@@ -366,7 +366,7 @@ def build_fig2():
     y_out_hdr, y_in_hdr = -1.0, -1.0 - len(outs) - 1.3
     y = np.concatenate([y_out_hdr - 1.0 - np.arange(len(outs)), y_in_hdr - 1.0 - np.arange(len(ins))])
 
-    trajs = ["Muon", "MuonT", "WT-MLP-Lag"]
+    trajs = ["Muon", "MuonT", "ExpDiag"]
     da = np.array([[src[k]["diag_aniso_pct"]["median"] for k, _, _ in rows] for src in (m25_muon, m25, m25_wt)])
     dr = np.array([[src[k]["drift_top16"]["mean"] for k, _, _ in rows] for src in (mdrift_muon, mdrift, mdrift_wt)])
 
@@ -547,7 +547,7 @@ def build_fig3():
     top = FIG3_YMAX
 
     # ---------------- (a) Which factor enters which slot ----------------
-    ax.text(0.8, top - 2.2, "(a)  One update rule, two output-factor classes selected by projection width",
+    ax.text(0.8, top - 2.2, "(a)  One update rule, two output-factor classes matched to projection role",
             fontsize=8.0, fontweight="bold", color=COL["ink"], va="center")
 
     eq_y = top - 8.6
@@ -566,7 +566,7 @@ def build_fig3():
     for i in (5, 7):
         _slot(ax, spans[i], eq_y, "#8A96A4", "#EDF0F4")
 
-    ax.text(49.4, eq_y - 5.0, "output (left) factors from $B_p = \\mathbb{E}[\\delta\\delta^{\\mathsf{T}}]$: set by width below",
+    ax.text(49.4, eq_y - 5.0, "output (left) factors from $B_p = \\mathbb{E}[\\delta\\delta^{\\mathsf{T}}]$: set by role below",
             fontsize=6.1, color=COL["wt"], ha="right", va="center")
     ax.text(50.6, eq_y - 5.0, "input (right) factors from $C_{g(p)} = \\mathbb{E}[xx^{\\mathsf{T}}]$: dense throughout, as in MuonT",
             fontsize=6.1, color=COL["muont"], ha="left", va="center")
@@ -574,7 +574,7 @@ def build_fig3():
     band_y, band_h = top - 34.5, 18.6
     _width_band(
         ax, 0.8, 60.4, band_y, band_h, COL["wt"], COL["wt_tint"],
-        "Outputs of width $d_{\\mathrm{model}}$ = 512 / 1024  ·  off-diagonal anisotropy",
+        "Hidden-width outputs ($d_{\\mathrm{model}}$ = 512 / 1024)  ·  off-diagonal anisotropy",
         "$\\Rightarrow$  dense spectral inverse roots, cached-basis tracker, held one step",
         [("$W_q$", "18%"), ("$W_k$", "14%"), ("$W_v$", "12%"),
          ("$W_o$", "0.8%"), ("$W_{\\mathrm{down}}$", "0.8%")],
@@ -583,7 +583,7 @@ def build_fig3():
     )
     _width_band(
         ax, 63.0, 36.2, band_y, band_h, COL["od"], COL["od_tint"],
-        "Width $d_{\\mathrm{ff}}$ = 2048 / 4096  ·  mostly diagonal",
+        "MLP expansion ($d_{\\mathrm{ff}}$ = 2048/4096) · diagonal",
         "$\\Rightarrow$  exact diagonal scaling, every step",
         [("$W_{\\mathrm{gate}}$", "82%"), ("$W_{\\mathrm{up}}$", "78%")],
         "$L = \\mathrm{Diag}(a(B)^{-1/2})$,  inline Triton",
@@ -624,7 +624,7 @@ def build_fig3():
             color=COL["muont"], ha="left", va="center")
 
     # Row 2: synchronous two-sided.
-    row_label(y_sync + rh / 2, "WT-MLP", COL["bad"], "synchronous")
+    row_label(y_sync + rh / 2, "Muon2-ExpDiag", COL["bad"], "sync ($\\tau = 0$)")
     bar(0, T_MUONT * 1000, y_sync, rh, "forward + backward, step $t$", compute_fc, compute_ec, COL["sub"], fw="normal")
     bar(T_MUONT * 1000, T_SYNC * 1000, y_sync, rh, "", COL["bad_tint"], COL["bad"], COL["bad"])
     ax.text(tx(T_SYNC * 1000) + 1.2, y_sync + rh / 2, "1.221 s  ($+11.3\\%$)", fontsize=5.8,
@@ -634,7 +634,7 @@ def build_fig3():
             fontsize=5.5, fontweight="bold", color=COL["bad"], ha="right", va="center")
 
     # Row 3: asynchronous one-step lag (compute stream + side stream).
-    row_label(y_lag + rh / 2, "WT-MLP-Lag", COL["wt"], "$\\tau = 1$")
+    row_label(y_lag + rh / 2, "Muon2-ExpDiag", COL["wt"], "lagged ($\\tau = 1$)")
     bar(0, T_MUONT * 1000, y_lag, rh, "forward + backward, step $t$", compute_fc, compute_ec, COL["sub"], fw="normal")
     bar(T_MUONT * 1000, T_LAG * 1000, y_lag, rh, "", COL["wt_soft"], COL["wt"], COL["wt"])
     ax.text(tx(T_LAG * 1000) + 1.2, y_lag + rh / 2, "1.155 s  ($+5.3\\%$)", fontsize=5.8,
@@ -701,7 +701,7 @@ def build_fig4():
     ax1_top.plot(lrs_short, mt_short, "--o", color=COL["muont"], lw=1.1, markersize=2.6,
                  markerfacecolor="white", markeredgewidth=0.8, label="MuonT")
     ax1_top.plot(lrs_short, od_short, "--^", color=COL["od"], lw=1.1, markersize=2.8,
-                 markerfacecolor="white", markeredgewidth=0.8, label="OD-All")
+                 markerfacecolor="white", markeredgewidth=0.8, label="Muon2-Diag")
     ax1_top.scatter([0.064, 0.09051], [4.2510, 4.2314], s=26, facecolors="none", edgecolors=COL["bad"], linewidths=0.85, zorder=5)
     ax1_top.axvline(0.064, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
     ax1_top.axvline(0.09051, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
@@ -725,8 +725,8 @@ def build_fig4():
     ax1_bot.axvline(0.064, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
     ax1_bot.axvline(0.09051, color=COL["bad"], linestyle=":", lw=0.65, alpha=0.65)
     ax1_bot.plot(mt_full_lr, mt_full_sel, "-o", color=COL["muont"], lw=1.35, markersize=2.8, label="MuonT")
-    ax1_bot.plot(od_full_lr, od_full_sel, "-^", color=COL["od"], lw=1.3, markersize=2.9, label="OD-All")
-    ax1_bot.plot(wt_full_lr, wt_full_sel, "-s", color=COL["wt"], lw=1.65, markersize=2.9, label="WT-MLP-Lag")
+    ax1_bot.plot(od_full_lr, od_full_sel, "-^", color=COL["od"], lw=1.3, markersize=2.9, label="Muon2-Diag")
+    ax1_bot.plot(wt_full_lr, wt_full_sel, "-s", color=COL["wt"], lw=1.65, markersize=2.9, label="Muon2-ExpDiag")
 
     ax1_bot.annotate(
         "Proxy optima crash\nat 2.68B (+0.043–0.088)",
@@ -763,9 +763,9 @@ def build_fig4():
     ax2.plot(lrs4, mu_sel, "--o", color=COL["muon"], lw=1.2,
              markersize=3.2, markerfacecolor="white", markeredgewidth=0.9, label="Muon")
     ax2.plot(lrs4, mt_sel, "-o", color=COL["muont"], lw=1.45, markersize=3.2, label="MuonT")
-    ax2.plot(lrs4, od_sel, "-^", color=COL["od"], lw=1.35, markersize=3.3, label="OD-All")
-    ax2.plot(lrs4, wt_sel, "-s", color=COL["wt"], lw=1.75, markersize=3.4, label="WT-MLP-Lag")
-    ax2.scatter([0.0226274], [3.23510], s=44, c=COL["null"], marker="*", zorder=6, label="Null-WT (−0.3)")
+    ax2.plot(lrs4, od_sel, "-^", color=COL["od"], lw=1.35, markersize=3.3, label="Muon2-Diag")
+    ax2.plot(lrs4, wt_sel, "-s", color=COL["wt"], lw=1.75, markersize=3.4, label="Muon2-ExpDiag")
+    ax2.scatter([0.0226274], [3.23510], s=44, c=COL["null"], marker="*", zorder=6, label="Null-Ctrl (−0.3)")
 
     # Vertical paired delta guides between MuonT and WT-MLP-Lag across all 4 LRs
     for lr_x, y_mt, y_wt in zip(lrs4, mt_sel, wt_sel):
@@ -809,12 +809,12 @@ def build_fig4():
     ax3.text(1.41, 0.65, "$\\pm 0.5$ null gate", fontsize=5.1, color=COL["null"], ha="left", va="bottom")
 
     ax3.plot(tk, (v_null[mask] - v_mt226[mask]) * 1e3, "-o", color=COL["null"], lw=1.15,
-             markersize=2.4, markerfacecolor="white", markeredgewidth=0.8, label="Null-WT (.0226)")
-    ax3.plot(tk, (v_od226[mask] - v_mt226[mask]) * 1e3, "-", color=COL["od"], lw=1.15, alpha=0.88, label="OD-All (.0226)")
-    ax3.plot(tk, (v_wt016[mask] - v_mt016[mask]) * 1e3, "--", color=COL["wt_mid"], lw=1.25, label="WT-Lag (.016)")
-    ax3.plot(tk, (v_wt226[mask] - v_mt226[mask]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.7, label="WT-Lag (.0226)")
+             markersize=2.4, markerfacecolor="white", markeredgewidth=0.8, label="Null-Ctrl (.0226)")
+    ax3.plot(tk, (v_od226[mask] - v_mt226[mask]) * 1e3, "-", color=COL["od"], lw=1.15, alpha=0.88, label="Muon2-Diag (.0226)")
+    ax3.plot(tk, (v_wt016[mask] - v_mt016[mask]) * 1e3, "--", color=COL["wt_mid"], lw=1.25, label="ExpDiag (.016)")
+    ax3.plot(tk, (v_wt226[mask] - v_mt226[mask]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.7, label="ExpDiag (.0226)")
 
-    ax3.text(2.14, -8.35, "WT-MLP-Lag: 11/11 late wins", fontsize=5.8, fontweight="bold",
+    ax3.text(2.14, -8.35, "Muon2-ExpDiag: 11/11 late wins", fontsize=5.8, fontweight="bold",
              color=COL["wt"], ha="center", va="center", path_effects=HALO)
     ax3.set_xlim(1.38, 2.76)
     ax3.set_ylim(-9.3, 4.4)
@@ -846,8 +846,8 @@ def build_fig5():
     ax1.text(2.42, 0.45, "Muon", fontsize=5.6, color=COL["muon"], ha="right", va="bottom")
 
     metrics = [("sel", "Held-out\nSelection"), ("c4", "Paloma\nC4-EN"), ("paloma", "Paloma\n16-Dom.")]
-    arms = [("muont", "MuonT", COL["muont"]), ("od_all", "OD-All", COL["od_soft"]),
-            ("wt_mlp_lag", "WT-MLP-Lag", COL["wt"])]
+    arms = [("muont", "MuonT", COL["muont"]), ("od_all", "Muon2-Diag", COL["od_soft"]),
+            ("wt_mlp_lag", "Muon2-ExpDiag", COL["wt"])]
     xm, w = np.arange(3), 0.24
     for j, (arm, lbl, col) in enumerate(arms):
         off = (j - 1) * w
@@ -865,9 +865,9 @@ def build_fig5():
     ax1.set_ylim(-1.0, 22.8)
     ax1.set_ylabel("Paired reduction vs. Muon ($\\times 10^{-3}$, $\\uparrow$)")
     panel_title(ax1, "(a)", "130M 1$\\times$ (seeds 1–3)")
-    ax1.legend(loc="upper left", bbox_to_anchor=(-0.02, 1.02), fontsize=5.6, ncol=3,
-               handlelength=0.9, handletextpad=0.3, columnspacing=0.7)
-    ax1.text(0.50, 0.855, "WT-MLP-Lag: 3/3 seed wins",
+    ax1.legend(loc="upper left", bbox_to_anchor=(-0.03, 1.02), fontsize=5.2, ncol=3,
+               handlelength=0.85, handletextpad=0.25, columnspacing=0.45)
+    ax1.text(0.50, 0.855, "Muon2-ExpDiag: 3/3 seed wins",
              transform=ax1.transAxes, fontsize=5.6, fontweight="bold", color=COL["wt"],
              ha="center", va="center", path_effects=HALO_SM)
 
@@ -893,9 +893,9 @@ def build_fig5():
     ax2.axvspan(5.24, 10.9, color=COL["wt_tint"], alpha=0.55, zorder=0)
 
     ax2.plot(tk4[m4], (v_mu4[m4] - v_mt4[m4]) * 1e3, "--", color=COL["muon"], lw=1.1, label="Muon (+10.3)")
-    ax2.plot(tk4[m4], (v_wt4_hot[m4] - v_mt4[m4]) * 1e3, ":", color=COL["bad_soft"], lw=1.3, label="WT (+41% LR)")
-    ax2.plot(tk4[m4], (v_od4[m4] - v_mt4[m4]) * 1e3, "-", color=COL["od"], lw=1.25, label="OD-All (−1.9)")
-    ax2.plot(tk4[m4], (v_wt4[m4] - v_mt4[m4]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.3, label="WT-Lag (−4.0)")
+    ax2.plot(tk4[m4], (v_wt4_hot[m4] - v_mt4[m4]) * 1e3, ":", color=COL["bad_soft"], lw=1.3, label="ExpDiag (+41% LR)")
+    ax2.plot(tk4[m4], (v_od4[m4] - v_mt4[m4]) * 1e3, "-", color=COL["od"], lw=1.25, label="Muon2-Diag (−1.9)")
+    ax2.plot(tk4[m4], (v_wt4[m4] - v_mt4[m4]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.3, label="ExpDiag (−4.0)")
 
     ax2.text(8.05, -8.55, "11/11 2nd-half wins (−4.44)", fontsize=5.6, fontweight="bold",
              color=COL["wt"], ha="center", va="center", path_effects=HALO)
@@ -926,11 +926,11 @@ def build_fig5():
     ax3.axvspan(5.24, 10.9, color=COL["wt_tint"], alpha=0.55, zorder=0)
 
     ax3.plot(tk5[m5], (v_mu5[m5] - v_mt5[m5]) * 1e3, "--", color=COL["muon"], lw=1.1, label="Muon (+9.0)")
-    ax3.plot(tk5[m5], (v_od5[m5] - v_mt5[m5]) * 1e3, "-^", color=COL["od"], lw=1.25, markersize=2.3, label="OD-All (−0.5)")
-    ax3.plot(tk5[m5], (v_wt5[m5] - v_mt5[m5]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.4, label="WT-MLP-Lag (−4.6)")
+    ax3.plot(tk5[m5], (v_od5[m5] - v_mt5[m5]) * 1e3, "-^", color=COL["od"], lw=1.25, markersize=2.3, label="Muon2-Diag (−0.5)")
+    ax3.plot(tk5[m5], (v_wt5[m5] - v_mt5[m5]) * 1e3, "-o", color=COL["wt"], lw=1.65, markersize=2.4, label="Muon2-ExpDiag (−4.6)")
 
     ax3.annotate(
-        "OD-All fades at\ncooldown (−0.50)",
+        "Muon2-Diag fades at\ncooldown (−0.50)",
         xy=(10.74, -0.50), xytext=(7.65, 2.35),
         fontsize=5.4, fontweight="bold", color=COL["od"], ha="center", va="center", linespacing=1.1,
         arrowprops=dict(arrowstyle="->", color=COL["od"], lw=0.6, shrinkA=1, shrinkB=2,
@@ -1011,8 +1011,8 @@ def build_fig6():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.5, 3.52), sharey=True, gridspec_kw={"wspace": 0.12})
 
     for ax, od_vals, wt_vals, tag, ttl, sub in [
-        (ax1, od4_d, wt4_d, "(a)", "130M 4× Overtraining (80 TPP)", "WT-MLP-Lag: 16/16 wins (−5.66)   ·   OD-All: 15/16 (−2.59)"),
-        (ax2, od5_d, wt5_d, "(b)", "520M Width Scaling ($d = 1024$)", "WT-MLP-Lag: 16/16 wins (−7.63)   ·   OD-All: 12/16 (+0.66)"),
+        (ax1, od4_d, wt4_d, "(a)", "130M 4× Overtraining (80 TPP)", "Muon2-ExpDiag: 16/16 (−5.66)  ·  Muon2-Diag: 15/16 (−2.59)"),
+        (ax2, od5_d, wt5_d, "(b)", "520M Width Scaling ($d = 1024$)", "Muon2-ExpDiag: 16/16 (−7.63)  ·  Muon2-Diag: 12/16 (+0.66)"),
     ]:
         style_ax(ax, grid_axis="x", hide_left=True)
         # Subtle highlight only on bottom macro-mean summary row (clean white above!)
@@ -1043,8 +1043,8 @@ def build_fig6():
 
     # Shared frameless top legend
     top_handles = [
-        mpl.lines.Line2D([], [], marker="o", linestyle="None", color=COL["wt"], markersize=5.2, label="WT-MLP-Lag (ours)"),
-        mpl.lines.Line2D([], [], marker="^", linestyle="None", color=COL["od"], markersize=5.0, label="OD-All (purely diagonal)"),
+        mpl.lines.Line2D([], [], marker="o", linestyle="None", color=COL["wt"], markersize=5.2, label="Muon2-ExpDiag (ours)"),
+        mpl.lines.Line2D([], [], marker="^", linestyle="None", color=COL["od"], markersize=5.0, label="Muon2-Diag (all outputs diagonal)"),
         mpl.lines.Line2D([], [], linestyle="--", color=COL["muont"], lw=0.85, label="MuonT baseline (0)"),
     ]
     fig.legend(handles=top_handles, loc="upper center", bbox_to_anchor=(0.59, 0.995),
@@ -1068,15 +1068,15 @@ def build_fig7():
     # --- Panel (a): Disciplined Semantic Color Hierarchy for 14 Ablations ---
     style_ax(ax1, grid_axis="x", hide_left=True)
     abl_rows = [
-        ("WT-MLP (sync)", -6.58, COL["wt"]),
-        ("DT-All (dense out)", -5.78, COL["dt"]),
-        ("WT-MLP-Lag (ours)", -5.68, COL["wt"]),
-        ("OD-All (diag out)", -4.50, COL["od"]),
+        ("Muon2-ExpDiag (sync)", -6.58, COL["wt"]),
+        ("Muon2-Dense", -5.78, COL["dt"]),
+        ("Muon2-ExpDiag (ours)", -5.68, COL["wt"]),
+        ("Muon2-Diag", -4.50, COL["od"]),
         ("Abl-OuterDense", -3.98, COL["neutral_bar"]),
-        ("Abl-No2048", -3.07, COL["neutral_bar"]),
-        ("WT-Sym (sym. $d_{\\mathrm{ff}}$)", -2.50, COL["neutral_bar"]),
+        ("Abl-NoExp", -3.07, COL["neutral_bar"]),
+        ("Abl-SymDiag (sync)", -2.50, COL["neutral_bar"]),
         ("Abl-DownOnly", -1.37, COL["neutral_bar"]),
-        ("Null-WT (control)", -0.73, COL["null"]),
+        ("Null-Ctrl", -0.73, COL["null"]),
         ("MuonT (baseline)", 0.00, COL["muont"]),
         ("Abl-DownSwap", +2.51, COL["bad_soft"]),
         ("Muon (no factors)", +5.51, COL["muon"]),
@@ -1091,20 +1091,20 @@ def build_fig7():
     ax1.axvline(0.0, color=COL["muont"], linestyle="--", lw=0.75, zorder=2)
     ax1.barh(ya, vals_a, height=0.64, color=cols_a, zorder=3)
     for idx, (lbl, v, c) in enumerate(abl_rev):
-        is_key = "WT-MLP" in lbl or "OD-All" in lbl
+        is_key = "Muon2-ExpDiag" in lbl or "Muon2-Diag" in lbl
         txt_c = c if (is_key or c in (COL["bad"], COL["null"])) else COL["sub"]
         if v < -0.1:
             ax1.text(v - 0.45, idx, f"{v:+.1f}", fontsize=5.6, color=txt_c,
-                     fontweight="bold" if "WT-MLP" in lbl else "normal", ha="right", va="center", path_effects=HALO_SM)
+                     fontweight="bold" if "Muon2-ExpDiag" in lbl else "normal", ha="right", va="center", path_effects=HALO_SM)
         elif v > 0.1:
             ax1.text(v + 0.45, idx, f"{v:+.1f}", fontsize=5.6, color=txt_c, ha="left", va="center", path_effects=HALO_SM)
         else:
             ax1.text(0.45, idx, "0.0", fontsize=5.5, color=COL["muont"], fontweight="bold", ha="left", va="center")
 
     ax1.set_yticks(ya)
-    ax1.set_yticklabels([r[0] for r in abl_rev], fontsize=6.2)
+    ax1.set_yticklabels([r[0] for r in abl_rev], fontsize=6.0)
     for tick, (lbl, _, _) in zip(ax1.get_yticklabels(), abl_rev):
-        if lbl.startswith("WT-MLP"):
+        if lbl.startswith("Muon2-ExpDiag"):
             tick.set_fontweight("bold")
             tick.set_color(COL["wt"])
         elif lbl.startswith("MuonT"):
@@ -1141,7 +1141,7 @@ def build_fig7():
     ax2.plot(tk_e[idx_e], (sel_gc[idx_e] - sel_mu[idx_e]), "-", color=COL["bad"], lw=1.35, label="GO-MUON ctrl (+0.031)")
     ax2.plot(tk_e[idx_e], (sel_mp[idx_e] - sel_mu[idx_e]), "--", color=COL["null"], lw=1.1, alpha=0.85, label="Mousse paper (+0.003)")
     ax2.plot(tk_e[idx_e], (sel_mc[idx_e] - sel_mu[idx_e]), "-", color=COL["null"], lw=1.25, label="Mousse ctrl (−0.001)")
-    ax2.plot(tk_e[idx_e], (sel_wt[idx_e] - sel_mu[idx_e]), "-o", color=COL["wt"], lw=1.75, markersize=2.6, label="WT-MLP (−0.010)")
+    ax2.plot(tk_e[idx_e], (sel_wt[idx_e] - sel_mu[idx_e]), "-o", color=COL["wt"], lw=1.75, markersize=2.6, label="Muon2-ExpDiag sync (−0.010)")
 
     # Clean inset in lower-right open area strictly below WT-MLP curve (-0.010)
     ins = ax2.inset_axes([0.44, 0.08, 0.53, 0.235])
@@ -1172,7 +1172,7 @@ def build_fig7():
     ax2.legend(loc="upper right", bbox_to_anchor=(1.02, 1.03), fontsize=5.3, ncol=1,
                handlelength=1.15, handletextpad=0.3, labelspacing=0.14)
 
-    fig.subplots_adjust(left=0.18, right=0.99, bottom=0.16, top=0.88, wspace=0.31)
+    fig.subplots_adjust(left=0.205, right=0.99, bottom=0.16, top=0.88, wspace=0.31)
     fig.savefig(OUT_DIR / "fig7_ablations_and_related.pdf")
     plt.close(fig)
 
@@ -1202,21 +1202,21 @@ def build_fig8():
 
     bw = 0.35
     ax1.axvspan(2.55, 4.45, color=COL["wt_tint"], alpha=0.8, zorder=0)
-    ax1.bar(xp - bw / 2, ang_od, width=bw, color=COL["od_soft"], zorder=2, label="OD-All")
-    ax1.bar(xp + bw / 2, ang_wt, width=bw, color=COL["wt"], zorder=2, label="WT-MLP")
+    ax1.bar(xp - bw / 2, ang_od, width=bw, color=COL["od_soft"], zorder=2, label="Muon2-Diag")
+    ax1.bar(xp + bw / 2, ang_wt, width=bw, color=COL["wt"], zorder=2, label="Muon2-ExpDiag")
 
     ax1.errorbar(xp - bw / 2, ang_od, yerr=std_od, fmt="none", ecolor=COL["od"], lw=0.6, capsize=1.5, capthick=0.6, zorder=3)
     ax1.errorbar(xp + bw / 2, ang_wt, yerr=std_wt, fmt="none", ecolor="#0B254D", lw=0.6, capsize=1.5, capthick=0.6, zorder=3)
 
     ax1.annotate(
-        "Residual (o, down)\nWT: 17.7° / 17.0°\nOD: 4.3° / 5.4°",
+        "Residual (o, down)\nExpDiag: 17.7° / 17.0°\nDiag: 4.3° / 5.4°",
         xy=(3.5, 19.8), xytext=(3.5, 28.0),
         fontsize=5.5, fontweight="bold", color=COL["wt"], ha="center", va="center", linespacing=1.15,
         arrowprops=dict(arrowstyle="->", color=COL["wt"], lw=0.6, shrinkA=1, shrinkB=2),
         path_effects=HALO
     )
     ax1.text(
-        0.02, 0.98, "$\\|D_{\\mathrm{WT}}\\|_F / \\|D_{\\mathrm{MT}}\\|_F = 0.985$ ($-1.5\\%$)",
+        0.02, 0.98, "$\\|D_{\\mathrm{ED}}\\|_F / \\|D_{\\mathrm{MT}}\\|_F = 0.985$ ($-1.5\\%$)",
         transform=ax1.transAxes, fontsize=5.6, va="top", ha="left", color=COL["ink"], fontweight="bold"
     )
 
@@ -1227,20 +1227,20 @@ def build_fig8():
     ax1.set_xlabel("Projection $W_p$ (130M, step 2,500)")
     ax1.set_ylabel("Rotation $\\theta(D, D_{\\mathrm{MuonT}})$ (deg)")
     panel_title(ax1, "(a)", "Counterfactual subspace rotation")
-    ax1.legend(loc="upper left", bbox_to_anchor=(-0.01, 0.89), fontsize=5.7, ncol=2,
-               handlelength=0.95, handletextpad=0.3, columnspacing=0.7)
+    ax1.legend(loc="upper left", bbox_to_anchor=(-0.01, 0.89), fontsize=5.5, ncol=2,
+               handlelength=0.9, handletextpad=0.28, columnspacing=0.6)
 
     # --- Panel (b): Disciplined Minimalist 8xA100 Overhead Hierarchy (130M) ---
     style_ax(ax2, grid_axis="x", hide_left=True)
     sys_items = [
         ("Muon", timings["muon"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["muon"], "19.0G"),
         ("MuonT", 0.0, COL["muont"], "20.5G"),
-        ("OD-All", timings["inner_outer_leftdiag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["od"], "20.5G"),
-        ("WT-Sym-Lag", timings["inner_outer_sym_mlpdiag_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["wt_mid"], "20.8G"),
-        ("WT-MLP-Lag", timings["inner_outer_mlpdiag_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["wt"], "21.6G"),
-        ("WT-MLP", timings["inner_outer_mlpdiag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "21.5G"),
-        ("DT-All-Lag", timings["inner_outer_all_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "24.8G"),
-        ("DT-All", timings["inner_outer_all"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "24.2G"),
+        ("Muon2-Diag", timings["inner_outer_leftdiag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["od"], "20.5G"),
+        ("Abl-SymDiag", timings["inner_outer_sym_mlpdiag_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["wt_mid"], "20.8G"),
+        ("Muon2-ExpDiag", timings["inner_outer_mlpdiag_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["wt"], "21.6G"),
+        ("ExpDiag (sync)", timings["inner_outer_mlpdiag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "21.5G"),
+        ("Muon2-Dense (lag)", timings["inner_outer_all_lag"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "24.8G"),
+        ("Muon2-Dense", timings["inner_outer_all"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "24.2G"),
         ("Null-Dense", timings["null_all"]["measured_benchmark"]["median_overhead_vs_muont_pct"], COL["neutral_lt"], "24.2G"),
     ]
     sys_rev = list(reversed(sys_items))
@@ -1257,15 +1257,15 @@ def build_fig8():
     ax2.barh(yb, vb, height=0.62, color=cb, zorder=3)
     for idx, (lbl, val, col, mem) in enumerate(sys_rev):
         xpos = max(val, 0.0) + 0.65
-        is_hi = lbl in ("WT-MLP-Lag", "WT-Sym-Lag")
+        is_hi = lbl in ("Muon2-ExpDiag", "Abl-SymDiag")
         ax2.text(xpos, idx, f"{val:+.1f}% ({mem})", fontsize=5.5,
-                 color=COL["wt"] if lbl == "WT-MLP-Lag" else (COL["sub"] if is_hi else COL["muted"]),
+                 color=COL["wt"] if lbl == "Muon2-ExpDiag" else (COL["sub"] if is_hi else COL["muted"]),
                  fontweight="bold" if is_hi else "normal", va="center", path_effects=HALO_SM)
 
     ax2.set_yticks(yb)
-    ax2.set_yticklabels([r[0] for r in sys_rev], fontsize=6.3)
+    ax2.set_yticklabels([r[0] for r in sys_rev], fontsize=6.0)
     for tick, (lbl, _, _, _) in zip(ax2.get_yticklabels(), sys_rev):
-        if lbl == "WT-MLP-Lag":
+        if lbl == "Muon2-ExpDiag":
             tick.set_fontweight("bold")
             tick.set_color(COL["wt"])
         elif lbl == "MuonT":
@@ -1296,13 +1296,13 @@ def build_fig8():
     pareto_pts = [
         (-1.43, -5.51, "Muon", COL["muon"], "o", True, (0.6, -5.51), "left"),
         (0.00, 0.00, "MuonT", COL["muont"], "D", True, (1.2, -0.75), "left"),
-        (2.22, 4.50, "OD-All", COL["od"], "^", True, (0.9, 5.55), "center"),
-        (5.29, 5.68, "WT-MLP-Lag", COL["wt"], "o", True, (5.3, 7.25), "center"),
-        (11.31, 6.58, "WT-MLP", COL["wt"], "s", True, (11.6, 7.70), "center"),
-        (3.32, 2.50, "WT-Sym", COL["wt_mid"], "d", False, (4.6, 2.35), "left"),
-        (12.05, 3.07, "No2048", COL["muted"], "o", False, (12.1, 1.75), "center"),
-        (16.55, 5.89, "DT-All-Lag", COL["dt"], "v", False, (16.5, 4.50), "center"),
-        (21.57, 5.78, "DT-All", COL["dt"], "P", False, (21.6, 4.40), "center"),
+        (2.22, 4.50, "Muon2-Diag", COL["od"], "^", True, (1.2, 5.55), "center"),
+        (5.29, 5.68, "Muon2-ExpDiag", COL["wt"], "o", True, (5.5, 7.25), "center"),
+        (11.31, 6.58, "ExpDiag (sync)", COL["wt"], "s", True, (13.2, 7.75), "center"),
+        (3.32, 2.50, "Abl-SymDiag", COL["wt_mid"], "d", False, (4.6, 2.35), "left"),
+        (12.05, 3.07, "Abl-NoExp", COL["muted"], "o", False, (12.1, 1.75), "center"),
+        (16.55, 5.89, "Dense (lag)", COL["dt"], "v", False, (16.2, 4.50), "center"),
+        (21.57, 5.78, "Muon2-Dense", COL["dt"], "P", False, (22.0, 4.40), "center"),
         (26.38, 3.98, "OuterDense", COL["muted"], "s", False, (24.8, 2.55), "center"),
     ]
 
@@ -1311,7 +1311,7 @@ def build_fig8():
 
     for ox, gy, lbl, col, mk, is_front, (tx, ty), ha in pareto_pts:
         if is_front:
-            sz = 46 if "WT-MLP" in lbl else 34
+            sz = 46 if "ExpDiag" in lbl else 34
             ax3.scatter([ox], [gy], s=sz, c=col, marker=mk, zorder=5, edgecolors="white", linewidths=0.65)
         else:
             ax3.scatter([ox], [gy], s=21, facecolors="white", edgecolors=col, marker=mk, linewidths=0.85, zorder=4)
@@ -1319,8 +1319,8 @@ def build_fig8():
         if abs(tx - ox) > 1.2 or abs(ty - gy) > 1.0:
             ax3.plot([ox, tx], [gy, ty - (0.35 if ty > gy else -0.35)], color=col, lw=0.45, alpha=0.55, zorder=3)
 
-        ax3.text(tx, ty, lbl, fontsize=5.6,
-                 fontweight="bold" if lbl in ("WT-MLP-Lag", "WT-MLP", "MuonT") else "normal",
+        ax3.text(tx, ty, lbl, fontsize=5.4,
+                 fontweight="bold" if lbl in ("Muon2-ExpDiag", "ExpDiag (sync)", "MuonT") else "normal",
                  color=col if is_front else COL["muted"], ha=ha, va="center", path_effects=HALO_SM, zorder=6)
 
     ax3.set_xlim(-1.2, 30.5)
@@ -1389,9 +1389,9 @@ def build_fig8():
     ax4.text(0.35, -0.20, "Muon", fontsize=5.5, color=COL["muon"], ha="left", va="top")
     ax4.text(ox["muont"] - 0.35, g_sel["muont"] + 0.35, "MuonT", fontsize=5.6, fontweight="bold",
              color=COL["muont"], ha="right", va="bottom", path_effects=HALO_SM)
-    ax4.text(ox["wt_mlp_lag"] + 0.45, g_pal["wt_mlp_lag"], "WT-MLP-Lag", fontsize=5.5, fontweight="bold",
+    ax4.text(ox["wt_mlp_lag"] + 0.45, g_pal["wt_mlp_lag"], "Muon2-ExpDiag", fontsize=5.4, fontweight="bold",
              color=COL["wt"], ha="left", va="center", path_effects=HALO_SM)
-    ax4.annotate("OD-All: off both frontiers\n(Paloma worse than MuonT)",
+    ax4.annotate("Muon2-Diag: off both frontiers\n(Paloma worse than MuonT)",
                  xy=(ox["od_all"] + 0.15, g_pal["od_all"]), xytext=(ox["od_all"] + 1.5, 1.35),
                  fontsize=5.2, fontweight="bold", color=COL["od"], ha="left", va="center", linespacing=1.12,
                  arrowprops=dict(arrowstyle="->", color=COL["od"], lw=0.6, shrinkA=1, shrinkB=2),
@@ -1408,8 +1408,146 @@ def build_fig8():
     ax4.legend(loc="upper left", bbox_to_anchor=(-0.02, 1.01), fontsize=5.15, ncol=1,
                handlelength=1.15, handletextpad=0.3, labelspacing=0.14)
 
-    fig.subplots_adjust(left=0.075, right=0.99, bottom=0.095, top=0.935, wspace=0.30, hspace=0.38)
+    fig.subplots_adjust(left=0.075, right=0.99, bottom=0.095, top=0.935, wspace=0.35, hspace=0.38)
     fig.savefig(OUT_DIR / "fig8_mechanism_and_pareto.pdf")
+    plt.close(fig)
+
+
+# ===========================================================================
+# FIGURE 11: Weight-Decay Operator Ablation (3-Seed Finals & Cooldown Crossing)
+# ===========================================================================
+def build_fig11():
+    wd = json.load(open(RES_DIR / "wd_ablation_summary.json"))["seeds123_summaries"]
+
+    fig, (ax1, ax2) = plt.subplots(
+        1, 2, figsize=(6.5, 2.55), gridspec_kw={"width_ratios": [1.05, 1.05], "wspace": 0.31}
+    )
+
+    # --- Panel (a): Paired 3-Seed Final Loss Differences vs. Matched-LR Q = W R^2 ---
+    style_ax(ax1, grid_axis="y")
+    suites = [
+        ("sel_seeds", "Held-out\nMixture"),
+        ("c4_seeds", "C4\nEval"),
+        ("paloma_seeds", "Paloma\n16-Dom"),
+    ]
+    bars_spec = [
+        ("wt_mlp_lag_wd_iso@0p016", "0p016", "ExpDiag [$Q = W$] (0.016)", COL["bad_soft"]),
+        ("muont@0p016", "0p016", "MuonT [$Q = W\\hat{R}^2$] (0.016)", COL["muont"]),
+        ("wt_mlp_lag_wd_lr2@0p016", "0p016", "ExpDiag [$Q = \\hat{L}^2 W\\hat{R}^2$] (0.016)", COL["null"]),
+        ("wt_mlp_lag_wd_lr2@0p0226", "0p0226", "ExpDiag [$Q = \\hat{L}^2 W\\hat{R}^2$] (0.0226)", COL["dt"]),
+    ]
+
+    xm = np.arange(len(suites))
+    bw = 0.185
+    ax1.axhline(0.0, color=COL["wt"], linestyle="--", lw=0.85, zorder=2, label="ExpDiag [$Q = W\\hat{R}^2$] (0)")
+
+    for j, (key, ref_lr, lbl, col) in enumerate(bars_spec):
+        off = (j - 1.5) * bw
+        ref = wd[f"wt_mlp_lag@{ref_lr}"]
+        seed_deltas = [
+            (np.array(wd[key][m]) - np.array(ref[m])) * 1e3 for m, _ in suites
+        ]
+        means = [float(np.mean(v)) for v in seed_deltas]
+        ax1.bar(xm + off, means, width=bw * 0.90, color=col, alpha=0.90, zorder=3, label=lbl)
+        for i, v in enumerate(seed_deltas):
+            ax1.scatter(
+                np.full(3, xm[i] + off) + np.array([-0.032, 0.0, 0.032]),
+                v,
+                s=10,
+                c="white",
+                edgecolors=col,
+                linewidths=0.75,
+                zorder=5,
+            )
+
+    ax1.set_xticks(xm)
+    ax1.set_xticklabels([lbl for _, lbl in suites], fontsize=6.4)
+    ax1.tick_params(axis="x", length=0)
+    ax1.set_ylim(-0.65, 15.6)
+    ax1.set_yticks([0, 3, 6, 9, 12])
+    ax1.set_ylabel("Paired $\\Delta$ Loss vs. $W\\hat{R}^2$ ($\\times 10^{-3}$, $\\downarrow$)")
+    panel_title(ax1, "(a)", "Final loss penalty vs. $Q = W\\hat{R}_t^2$ (seeds 1–3)")
+    ax1.legend(
+        loc="upper left",
+        bbox_to_anchor=(-0.01, 1.02),
+        fontsize=5.05,
+        ncol=2,
+        handlelength=0.95,
+        handletextpad=0.28,
+        columnspacing=0.65,
+        labelspacing=0.16,
+    )
+
+    # --- Panel (b): 3-Seed Mean Trajectory Relative to Q = W R^2 (Cooldown Reversal) ---
+    style_ax(ax2, grid_axis="y")
+
+    def _mean_curve(rel_pattern: str):
+        arrs = []
+        toks = None
+        for s in (1, 2, 3):
+            rows = load_jsonl_gz(rel_pattern.format(s=s))
+            st, tk, vl = eval_series(rows, "selection_loss")
+            toks = (st, tk)
+            arrs.append(vl)
+        return toks[0], toks[1], np.mean(arrs, axis=0)
+
+    st_grid, tk_grid, c_wt16 = _mean_curve("campaigns/lr-bracket-20261125/runs/wt_mlp_lag_130m_1x_seed{s}_lr0p016/metrics_from_000000.jsonl.gz")
+    mt_curves = [
+        eval_series(load_jsonl_gz(f"campaigns/confirmation-20261121/runs/wave2{w}/muont_130m_1x_seed{s}/metrics_from_000000.jsonl.gz"))[2]
+        for s, w in ((1, "a"), (2, "b"), (3, "c"))
+    ]
+    wt22_curves = [
+        eval_series(load_jsonl_gz(f"campaigns/confirmation-20261121/runs/wave2{w}/wt_mlp_lag_130m_1x_seed{s}/metrics_from_000000.jsonl.gz"))[2]
+        for s, w in ((1, "a"), (2, "b"), (3, "c"))
+    ]
+    c_mt16 = np.mean(mt_curves, axis=0)
+    c_wt22 = np.mean(wt22_curves, axis=0)
+    _, _, c_iso16 = _mean_curve("campaigns/wd-ablation-20261127/runs/wt_mlp_lag_wd_iso_130m_1x_seed{s}_lr0p016/metrics_from_000000.jsonl.gz")
+    _, _, c_lr2_16 = _mean_curve("campaigns/wd-ablation-20261127/runs/wt_mlp_lag_wd_lr2_130m_1x_seed{s}_lr0p016/metrics_from_000000.jsonl.gz")
+    _, _, c_lr2_22 = _mean_curve("campaigns/wd-ablation-20261127/runs/wt_mlp_lag_wd_lr2_130m_1x_seed{s}_lr0p0226/metrics_from_000000.jsonl.gz")
+
+    mask = st_grid >= 501
+    set_piecewise_ylim(ax2, y_min=-15.5, y_knee=8.0, y_max=64.0, compress=0.18)
+    ax2.set_yticks([-12, -6, 0, 6, 20, 32])
+    ax2.axhline(8.0, color=COL["spine"], linestyle=":", lw=0.5, alpha=0.75, zorder=1)
+    ax2.axhline(0.0, color=COL["wt"], linestyle="--", lw=0.85, zorder=2)
+    ax2.axvspan(1.44, 2.72, color=COL["wt_tint"], alpha=0.50, zorder=0)
+
+    ax2.plot(tk_grid[mask], (c_iso16[mask] - c_wt16[mask]) * 1e3, "-", color=COL["bad_soft"], lw=1.35, label="ExpDiag [$Q = W$] (+7.51)")
+    ax2.plot(tk_grid[mask], (c_mt16[mask] - c_wt16[mask]) * 1e3, "--", color=COL["muont"], lw=1.1, label="MuonT (+3.49)")
+    ax2.plot(tk_grid[mask], (c_lr2_16[mask] - c_wt16[mask]) * 1e3, "-o", color=COL["null"], lw=1.45, markersize=2.2, label="ExpDiag [$\\hat{L}^2 W\\hat{R}^2$] .016 (+2.34)")
+    ax2.plot(tk_grid[mask], (c_lr2_22[mask] - c_wt22[mask]) * 1e3, "--^", color=COL["dt"], lw=1.25, markersize=2.2, label="ExpDiag [$\\hat{L}^2 W\\hat{R}^2$] .0226 (+1.15)")
+
+    ax2.annotate(
+        "Mid-schedule lead\nreverses at cooldown",
+        xy=(2.46, 0.2),
+        xytext=(1.94, -12.6),
+        fontsize=5.3,
+        fontweight="bold",
+        color=COL["null"],
+        ha="center",
+        va="center",
+        linespacing=1.12,
+        arrowprops=dict(arrowstyle="->", color=COL["null"], lw=0.65, shrinkA=1, shrinkB=2, connectionstyle="arc3,rad=0.14"),
+        path_effects=HALO,
+    )
+    ax2.set_xlim(0.22, 2.74)
+    ax2.set_xlabel("Training tokens (B) [130M, seeds 1–3 mean]")
+    ax2.set_ylabel("$\\Delta$ Sel. vs. $W\\hat{R}^2$ ($\\times 10^{-3}$, $\\downarrow$)")
+    panel_title(ax2, "(b)", "Trajectory & cooldown reversal")
+    ax2.legend(
+        loc="upper left",
+        bbox_to_anchor=(-0.01, 1.02),
+        fontsize=4.95,
+        ncol=2,
+        handlelength=1.0,
+        handletextpad=0.25,
+        columnspacing=0.55,
+        labelspacing=0.15,
+    )
+
+    fig.subplots_adjust(left=0.078, right=0.99, bottom=0.175, top=0.88, wspace=0.31)
+    fig.savefig(OUT_DIR / "fig11_wd_ablation.pdf")
     plt.close(fig)
 
 
@@ -1428,6 +1566,7 @@ def main():
         6: build_fig6,
         7: build_fig7,
         8: build_fig8,
+        11: build_fig11,
     }
     selected = args.only if args.only else sorted(builders)
     for k in selected:

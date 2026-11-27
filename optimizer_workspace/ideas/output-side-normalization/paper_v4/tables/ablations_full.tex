@@ -1,34 +1,34 @@
 \begin{table}[tbp]\centering\footnotesize
-\setlength{\tabcolsep}{3.6pt}
-\caption{\textbf{Complete 19-arm placement and operator ledger at 130M (seed 0, 2.68B tokens).} Cohort identifies the implementation wave providing each arm's paired MuonT reference (W0--W4, W10, or FastLag); loss columns are millinats from that reference (Late averages 11 second-half checkpoints; Train averages the final 537M tokens). Step $\Delta t$ is median overhead from the unified 8-GPU benchmark. Because earlier waves precede the unified confirmation runner, cross-wave differences are exploratory.}\label{tab:ablations_full}
+\setlength{\tabcolsep}{3.1pt}
+\caption{\textbf{Complete 19-arm placement and operator ledger at 130M (seed 0, 2.68B tokens).} Cohort identifies the implementation wave providing each arm's paired MuonT reference (W0--W4, W10, or FastLag); loss columns report cohort-adjusted differences (millinats) relative to Muon ($\text{arm}-\text{cohort MuonT}$ shifted by W0 MuonT minus Muon, which equals raw difference from Muon on W0--W4; Late averages 11 second-half checkpoints; Train averages the final 537M tokens). Step $\Delta t$ is median overhead relative to Muon in the unified 8-GPU benchmark. Because earlier waves precede the unified confirmation runner, cross-wave differences are exploratory.}\label{tab:ablations_full}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xlllrrrrr@{}}
 \toprule
-& & ($\dm/\dff$) & ($\dm/\dff$) & \multicolumn{4}{c}{$\Delta$ vs.\ cohort MuonT (mnats)} & \\
+& & ($\dm/\dff$) & ($\dm/\dff$) & \multicolumn{4}{c}{$\Delta$ vs.\ Muon (mnats, $\downarrow$)} & \\
 \cmidrule(lr){5-8}
 Method & Cohort & Inputs & Outputs & Final & Late & Late C4 & Train & Step $\Delta t$ \\
 \midrule
 \addlinespace[2pt]\multicolumn{9}{@{}l}{\textit{Reference baselines and execution-path control}}\\
-Muon & W0 & $I$ / $I$ & $I$ / $I$ & $+9.48$ & $+5.50$ & $+5.34$ & $+6.16$ & $-1.4\%$ \\
-MuonT & W0 & Dense / Dense & $I$ / $I$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.0\%$ \\
-Null-WT & W3 & Dense / Dense & $I$ / $I$ (solved) & $-1.33$ & $-0.65$ & $-2.04$ & $-0.69$ & $+12.3\%$ \\
-Null-Dense & W1 & Dense / Dense & $I$ / $I$ (solved) & $-1.17$ & $-1.29$ & $-2.30$ & $-1.36$ & $+25.7\%$ \\
-Null-OD & W10 & Dense / Dense & $I$ / $I$ (solved) & $-1.40$ & $-2.01$ & $-1.22$ & $-1.14$ & $+1.4\%$ \\
+Muon & W0 & $I$ / $I$ & $I$ / $I$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ & $+0.0\%$ \\
+MuonT & W0 & Dense / Dense & $I$ / $I$ & $-9.48$ & $-5.50$ & $-5.34$ & $-6.16$ & $+1.5\%$ \\
+Null-Ctrl & W3 & Dense / Dense & $I$ / $I$ (solved) & $-10.82$ & $-6.15$ & $-7.39$ & $-6.85$ & $+13.9\%$ \\
+Null-Dense & W1 & Dense / Dense & $I$ / $I$ (solved) & $-10.65$ & $-6.79$ & $-7.64$ & $-7.52$ & $+27.5\%$ \\
+Null-Diag & W10 & Dense / Dense & $I$ / $I$ (solved) & $-10.89$ & $-7.51$ & $-6.57$ & $-7.30$ & $+2.9\%$ \\
 \addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Replacing or weakening input whitening}}\\
-Abl-BothDiag & W1 & Diag / Diag & Diag / Diag & $+7.33$ & $+18.01$ & $+17.69$ & $+13.37$ & $-0.4\%$ \\
-Abl-OutOnly & W1 & $I$ / $I$ & Dense / Dense & $+3.25$ & $+8.71$ & $+10.90$ & $+7.87$ & $+29.8\%$ \\
-Abl-DownSwap & W0 & Dense / $I$ & $I$ (\texttt{down} Dense) & $+1.06$ & $+2.51$ & $+3.61$ & $+3.18$ & $+0.3\%$ \\
-WT-Sym & FastLag & Dense / Diag & Dense / Diag & $-2.99$ & $-2.52$ & $-2.03$ & $-1.26$ & $+9.3\%$ \\
-WT-Sym-Lag & FastLag & Dense / Diag & Dense / Diag & $-2.46$ & $-1.13$ & $-1.60$ & $-1.48$ & $+3.3\%$ \\
+Abl-BothDiag & W1 & Diag / Diag & Diag / Diag & $-2.15$ & $+12.51$ & $+12.34$ & $+7.21$ & $+1.1\%$ \\
+Abl-OutOnly & W1 & $I$ / $I$ & Dense / Dense & $-6.23$ & $+3.20$ & $+5.55$ & $+1.71$ & $+31.7\%$ \\
+Abl-DownSwap & W0 & Dense / $I$ & $I$ (\texttt{down} Dense) & $-8.42$ & $-2.99$ & $-1.74$ & $-2.98$ & $+1.8\%$ \\
+Abl-SymDiag (sync) & FastLag & Dense / Diag & Dense / Diag & $-12.48$ & $-8.02$ & $-7.37$ & $-7.42$ & $+10.9\%$ \\
+Abl-SymDiag & FastLag & Dense / Diag & Dense / Diag & $-11.94$ & $-6.63$ & $-6.95$ & $-7.64$ & $+4.8\%$ \\
 \addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Output projection role and inner/outer exponent placement}}\\
-Abl-DownOnly & W0 & Dense / Dense & $\hat L_{\rm down}$ only & $-1.27$ & $-1.37$ & $-0.78$ & $-1.16$ & $+2.1\%$ \\
-OD-Outer & W10 & Dense / Dense & $\hat L$ Diag / $\hat L$ Diag & $-1.79$ & $-2.45$ & $-2.60$ & $-1.38$ & $+1.5\%$ \\
-Abl-No2048 & W2 & Dense / Dense & Dense / $I$ & $-3.11$ & $-3.07$ & $-2.63$ & $-2.13$ & $+12.0\%$ \\
-Abl-OuterDense & W2 & Dense / Dense & $\hat L$ Dense ($L=I$) & $-4.18$ & $-3.98$ & $-4.77$ & $-3.88$ & $+26.4\%$ \\
-OD-All & W2 & Dense / Dense & Diag / Diag & $-4.13$ & $-4.50$ & $-3.61$ & $-3.69$ & $+2.2\%$ \\
-\addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Dense two-sided ceiling versus width thresholding and one-step lag}}\\
-DT-All & W1 & Dense / Dense & Dense / Dense & $-6.14$ & $-5.78$ & $-6.38$ & $-4.97$ & $+21.6\%$ \\
-DT-All-Lag & W3 & Dense / Dense & Dense / Dense & $-6.21$ & $-5.89$ & $-5.86$ & $-5.73$ & $+16.5\%$ \\
-WT-MLP & W2 & Dense / Dense & Dense / Diag & $\mathbf{-6.89}$ & $\mathbf{-6.58}$ & $-6.08$ & $-5.06$ & $+11.3\%$ \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & W4 & Dense / Dense & Dense / Diag & $\mathbf{-6.56}$ & $\mathbf{-5.68}$ & $\mathbf{-4.99}$ & $\mathbf{-4.95}$ & $+5.3\%$ \\
+Abl-DownOnly & W0 & Dense / Dense & $\hat L_{\rm down}$ only & $-10.76$ & $-6.87$ & $-6.13$ & $-7.32$ & $+3.6\%$ \\
+Abl-OuterDiag & W10 & Dense / Dense & $\hat L$ Diag / $\hat L$ Diag & $-11.27$ & $-7.96$ & $-7.94$ & $-7.54$ & $+3.0\%$ \\
+Abl-NoExp & W2 & Dense / Dense & Dense / $I$ & $-12.59$ & $-8.57$ & $-7.97$ & $-8.29$ & $+13.7\%$ \\
+Abl-OuterDense & W2 & Dense / Dense & $\hat L$ Dense ($L=I$) & $-13.67$ & $-9.48$ & $-10.12$ & $-10.04$ & $+28.2\%$ \\
+Muon2-Diag & W2 & Dense / Dense & Diag / Diag & $-13.62$ & $-10.01$ & $-8.95$ & $-9.85$ & $+3.7\%$ \\
+\addlinespace[4pt]\multicolumn{9}{@{}l}{\textit{Dense two-sided ceiling versus expansion-diagonal outputs and one-step lag}}\\
+Muon2-Dense & W1 & Dense / Dense & Dense / Dense & $-15.63$ & $-11.29$ & $-11.72$ & $-11.14$ & $+23.3\%$ \\
+Muon2-Dense (lag) & W3 & Dense / Dense & Dense / Dense & $-15.69$ & $-11.40$ & $-11.21$ & $-11.89$ & $+18.2\%$ \\
+Muon2-ExpDiag (sync) & W2 & Dense / Dense & Dense / Diag & $\mathbf{-16.37}$ & $\mathbf{-12.09}$ & $-11.42$ & $-11.23$ & $+12.9\%$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & W4 & Dense / Dense & Dense / Diag & $\mathbf{-16.04}$ & $\mathbf{-11.19}$ & $\mathbf{-10.33}$ & $\mathbf{-11.11}$ & $+6.8\%$ \\
 \bottomrule\end{tabularx}
 \end{table}

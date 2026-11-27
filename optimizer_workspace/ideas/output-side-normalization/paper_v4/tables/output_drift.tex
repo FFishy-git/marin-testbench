@@ -1,10 +1,10 @@
 \begin{table}[tbp]\centering\footnotesize
 \setlength{\tabcolsep}{5pt}
-\caption{\textbf{Output-subspace drift with Muon as the baseline.} Fixed-data top-16 drift, averaged equally over 32 layers, two probe sets, and 19 intervals of 250 steps at 130M or three intervals of 2,560 steps at 520M. At 520M and in fresh 130M seeds 1--3 (one 2,560--5,120 interval per seed), all three methods share $\eta=0.016$; the densely saved 130M seed-0 trajectories use $0.016$ for Muon and $0.02263$ for MuonT/WT, so that column does not isolate optimizer effects at a common rate. Reductions are $100(1-\overline D_{\rm method}/\overline D_{\rm Muon})$; positive values mean lower drift than Muon. Seed summaries are mean $\pm$ sample SD across three seeds. The all-role row averages drift before taking ratios; absolute drift is not compared across model sizes. WT denotes WT-MLP-Lag.}\label{tab:output_drift}
+\caption{\textbf{Output-subspace drift with Muon as the baseline.} Fixed-data top-16 drift, averaged equally over 32 layers, two probe sets, and 19 intervals of 250 steps at 130M or three intervals of 2,560 steps at 520M. At 520M and in fresh 130M seeds 1--3 (one 2,560--5,120 interval per seed), all three methods share $\eta=0.016$; the densely saved 130M seed-0 trajectories use $0.016$ for Muon and $0.02263$ for MuonT and ExpDiag, so that column does not isolate optimizer effects at a common rate. Reductions are $100(1-\overline D_{\rm method}/\overline D_{\rm Muon})$; positive values mean lower drift than Muon. Seed summaries are mean $\pm$ sample SD across three seeds. The all-role row averages drift before taking ratios; absolute drift is not compared across model sizes. ExpDiag denotes Muon2-ExpDiag.}\label{tab:output_drift}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X*{6}{>{\raggedleft\arraybackslash}X}@{}}\toprule
 & \multicolumn{3}{c}{130M: absolute drift} & \multicolumn{3}{c}{520M: absolute drift} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
-Output & Muon & MuonT & WT & Muon & MuonT & WT \\\midrule
+Output & Muon & MuonT & ExpDiag & Muon & MuonT & ExpDiag \\\midrule
 \texttt{q} & 0.363 & 0.368 & 0.304 & 0.352 & 0.348 & 0.277 \\
 \texttt{k} & 0.399 & 0.390 & 0.366 & 0.494 & 0.469 & 0.431 \\
 \texttt{v} & 0.565 & 0.614 & 0.591 & 0.771 & 0.762 & 0.745 \\
@@ -19,7 +19,7 @@ All roles & 0.463 & 0.476 & 0.386 & 0.609 & 0.579 & 0.485 \\
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrr@{}}\toprule
 & \multicolumn{2}{c}{130M: reduction (\%)} & \multicolumn{2}{c}{520M: reduction (\%)} & \multicolumn{2}{c}{130M seeds 1--3: reduction (\%)} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
-Output & MuonT & WT & MuonT & WT & MuonT & WT \\\midrule
+Output & MuonT & ExpDiag & MuonT & ExpDiag & MuonT & ExpDiag \\\midrule
 \texttt{q} & -1.6 & +16.2 & +1.1 & +21.3 & $+2.7\pm1.1$ & $+17.5\pm2.7$ \\
 \texttt{k} & +2.3 & +8.4 & +5.1 & +12.7 & $+5.9\pm1.5$ & $+8.9\pm0.8$ \\
 \texttt{v} & -8.7 & -4.6 & +1.1 & +3.3 & $+2.0\pm0.6$ & $+3.2\pm0.8$ \\

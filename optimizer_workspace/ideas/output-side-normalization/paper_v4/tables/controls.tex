@@ -1,16 +1,16 @@
 \begin{table}[tbp]\centering\small
 \setlength{\tabcolsep}{5.2pt}
-\caption{\textbf{Seed-0 learning-rate bracket, execution-path control, and short-schedule transfer at 130M (2.68B tokens).} Entries are final held-out losses in nats across the complete four-point bracket (bold marks each row's full-budget minimum, $\eta^*=0.0160$ for every method); $\Delta_{0.0226}$ is the paired difference from MuonT at $\eta=0.02263$ in millinats where Null-WT is evaluated. The rightmost column transfers each checked arm's 320-step argmax learning rate (\Cref{tab:lr_cliff}) to the full 5,120-step schedule.}\label{tab:controls}
+\caption{\textbf{Seed-0 learning-rate bracket, execution-path control, and short-schedule transfer at 130M (2.68B tokens).} Entries are final held-out losses in nats across the complete four-point bracket (bold marks each row's full-budget minimum, $\eta^*=0.0160$ for every method); $\Delta_{0.0226}$ is the paired difference from Muon at $\eta=0.02263$ in millinats where Null-Ctrl is evaluated. The rightmost column transfers each checked arm's 320-step argmax learning rate (\Cref{tab:lr_cliff}) to the full 5,120-step schedule.}\label{tab:controls}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrr@{}}
 \toprule
 & \multicolumn{4}{c}{Full-budget held-out loss $\Lsel$ (nats)} & & \\
 \cmidrule(lr){2-5}
 Method & $0.0113$ & $0.0160$ & $0.0226$ & $0.0320$ & $\Delta_{0.0226}$ (mnats) & 320-step $\eta^* \to$ full \\
 \midrule
-Muon & 3.2496 & \textbf{3.2461} & 3.2524 & 3.2667 & $+16.96$ & --- \\
-MuonT & 3.2404 & \textbf{3.2342} & 3.2354 & 3.2398 & $+0.00$ & $0.0640 \to 3.2775$ \\
-Null-WT (ctrl) & --- & --- & 3.2351 & --- & $-0.30$ & --- \\
-OD-All & 3.2383 & \textbf{3.2318} & 3.2333 & 3.2403 & $-2.13$ & $0.0905 \to 3.3200$ \\
-\rowcolor{rowtint}[0pt][0pt]\textbf{WT-MLP-Lag} & 3.2363 & \textbf{3.2303} & 3.2311 & 3.2356 & $\mathbf{-4.29}$ & --- \\
+Muon & 3.2496 & \textbf{3.2461} & 3.2524 & 3.2667 & $+0.00$ & --- \\
+MuonT & 3.2404 & \textbf{3.2342} & 3.2354 & 3.2398 & $-16.96$ & $0.0640 \to 3.2775$ \\
+Null-Ctrl & --- & --- & 3.2351 & --- & $-17.26$ & --- \\
+Muon2-Diag & 3.2383 & \textbf{3.2318} & 3.2333 & 3.2403 & $-19.08$ & $0.0905 \to 3.3200$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & 3.2363 & \textbf{3.2303} & 3.2311 & 3.2356 & $\mathbf{-21.25}$ & --- \\
 \bottomrule\end{tabularx}
 \end{table}

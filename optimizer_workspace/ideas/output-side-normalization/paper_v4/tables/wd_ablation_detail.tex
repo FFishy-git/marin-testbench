@@ -1,0 +1,43 @@
+\begin{table}[tbp]\centering\scriptsize
+\setlength{\tabcolsep}{3.1pt}
+\caption{\textbf{Complete Seed-0 two-LR screening and per-seed confirmation for the 130M weight-decay ablation (2.68B tokens).} Top: Seed-0 absolute losses across $\eta\in\{0.01600,0.02263\}$ and final held-out difference $\Delta_{0.016}$ (millinats) relative to Seed-0 Muon at $\eta^*=0.01600$. Bottom: Individual fresh-seed differences (millinats) relative to same-seed Muon ($\eta^*=0.01600$; negative favors the row method).}\label{tab:wd_ablation_detail}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrrr@{}}
+\toprule
+& \multicolumn{4}{c}{Seed 0 at $\eta=0.01600$ (nats)} & \multicolumn{4}{c}{Seed 0 at $\eta=0.02263$ (nats)} & $\Delta_{0.016}$ \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Method ($Q_t$) & $\Lsel$ & Late-11 & $\Lc$ & $\Lpal$ & $\Lsel$ & Late-11 & $\Lc$ & $\Lpal$ & (mnats) \\
+\midrule
+Muon ($Q=W$) & 3.2461 & 3.3824 & 3.4618 & --- & 3.2524 & 3.4064 & 3.4675 & --- & $+0.00$ \\
+MuonT ($Q=W\hat R_t^2$) & 3.2342 & 3.3591 & 3.4511 & 3.4041 & 3.2354 & 3.3763 & 3.4511 & 3.4021 & $-11.93$ \\
+Muon2-ExpDiag ($Q=W$) & 3.2389 & 3.3750 & 3.4576 & 3.4102 & 3.2468 & 3.4035 & 3.4634 & 3.4184 & $-7.19$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag ($Q=W\hat R_t^2$)} & \textbf{3.2303} & 3.3544 & \textbf{3.4472} & \textbf{3.3985} & 3.2311 & 3.3716 & 3.4491 & 3.4019 & $\mathbf{-15.77}$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$) & 3.2326 & 3.3523 & 3.4498 & 3.4035 & 3.2309 & 3.3635 & 3.4479 & 3.4019 & $-13.51$ \\
+\bottomrule\end{tabularx}
+\par\vspace{6pt}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrr@{}}
+\toprule
+Method ($Q_t$) & Matrix $\eta$ & $\Delta$ Held-out & Late-11 $\Delta$ & $\Delta$ C4 & $\Delta$ Paloma \\
+\midrule
+\addlinespace[2pt]\multicolumn{6}{@{}l}{\textit{Seed 1: Muon reference ($\Lsel=3.2003$, Late-11 $=3.3362$, $\Lc=3.4655$, $\Lpal=3.4162$ nats)}}\\
+MuonT ($Q=W\hat R_t^2$) & 0.01600 & $-12.44$ & $-24.87$ & $-12.66$ & $-11.64$ \\
+Muon2-ExpDiag ($Q=W$) & 0.01600 & $-5.78$ & $-7.33$ & $-6.66$ & $-7.80$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag ($Q=W\hat R_t^2$)} & 0.01600 & $\mathbf{-14.02}$ & $-26.50$ & $\mathbf{-16.18}$ & $\mathbf{-15.69}$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$) & 0.01600 & $-10.97$ & $-29.83$ & $-13.64$ & $-12.81$ \\
+Muon2-ExpDiag ($Q=W\hat R_t^2$, hotter LR) & 0.02263 & $-15.31$ & $-13.88$ & $-17.01$ & $-15.99$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$, hotter LR) & 0.02263 & $-14.86$ & $-19.66$ & $-15.99$ & $-15.90$ \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 2: Muon reference ($\Lsel=3.1764$, Late-11 $=3.3089$, $\Lc=3.4639$, $\Lpal=3.4182$ nats)}}\\
+MuonT ($Q=W\hat R_t^2$) & 0.01600 & $-12.97$ & $-23.99$ & $-11.98$ & $-15.59$ \\
+Muon2-ExpDiag ($Q=W$) & 0.01600 & $-11.67$ & $-11.57$ & $-10.25$ & $-8.54$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag ($Q=W\hat R_t^2$)} & 0.01600 & $\mathbf{-17.93}$ & $-29.22$ & $\mathbf{-17.11}$ & $\mathbf{-17.68}$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$) & 0.01600 & $-15.80$ & $-31.60$ & $-15.07$ & $-16.77$ \\
+Muon2-ExpDiag ($Q=W\hat R_t^2$, hotter LR) & 0.02263 & $-15.21$ & $-9.49$ & $-15.43$ & $-16.75$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$, hotter LR) & 0.02263 & $-15.27$ & $-17.71$ & $-15.00$ & $-16.69$ \\
+\addlinespace[4pt]\multicolumn{6}{@{}l}{\textit{Seed 3: Muon reference ($\Lsel=3.2339$, Late-11 $=3.3675$, $\Lc=3.4627$, $\Lpal=3.4148$ nats)}}\\
+MuonT ($Q=W\hat R_t^2$) & 0.01600 & $-10.33$ & $-20.92$ & $-10.73$ & $-7.25$ \\
+Muon2-ExpDiag ($Q=W$) & 0.01600 & $-6.25$ & $-5.29$ & $-5.98$ & $-3.55$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag ($Q=W\hat R_t^2$)} & 0.01600 & $\mathbf{-14.27}$ & $-24.63$ & $\mathbf{-13.63}$ & $\mathbf{-14.35}$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$) & 0.01600 & $-12.43$ & $-27.98$ & $-10.46$ & $-12.04$ \\
+Muon2-ExpDiag ($Q=W\hat R_t^2$, hotter LR) & 0.02263 & $-15.32$ & $-9.61$ & $-13.42$ & $-13.78$ \\
+Muon2-ExpDiag ($Q=\hat L_{t-1}^2 W\hat R_t^2$, hotter LR) & 0.02263 & $-12.28$ & $-13.78$ & $-12.12$ & $-12.46$ \\
+\bottomrule\end{tabularx}
+\end{table}

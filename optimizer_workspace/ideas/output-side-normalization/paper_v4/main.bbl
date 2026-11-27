@@ -1,4 +1,4 @@
-\begin{thebibliography}{19}
+\begin{thebibliography}{20}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -119,6 +119,12 @@ Nikhil Vyas, Depen Morwani, Rosie Zhao, Itai Shapira, David Brandfonbrener,
   Lucas Janson, and Sham Kakade.
 \newblock {SOAP}: Improving and stabilizing {Shampoo} using {Adam}.
 \newblock \emph{arXiv preprint arXiv:2409.11321}, 2024.
+
+\bibitem[Wen et~al.(2026)Wen, Dang, Lyu, Ma, and Liang]{wen2026hyperball}
+Kaiyue Wen, Xingyu Dang, Kaifeng Lyu, Tengyu Ma, and Percy Liang.
+\newblock Fantastic pretraining optimizers and where to find them {II}:
+  {Hyperball} optimization.
+\newblock \emph{arXiv preprint arXiv:2606.16899}, 2026.
 
 \bibitem[Yu et~al.(2015)Yu, Wang, and Samworth]{yu2015davis}
 Yi~Yu, Tengyao Wang, and Richard~J. Samworth.

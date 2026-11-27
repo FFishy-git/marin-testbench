@@ -32,7 +32,7 @@
 \setlength{\headsep}{15pt}
 
 \pagestyle{paper}
-\papershorttitle{Width-thresholded output preconditioning for Muon}
+\papershorttitle{Structure-aware two-sided preconditioning for Muon}
 \graphicspath{{figs/}}
 \urlstyle{tt}
 \interfootnotelinepenalty=10000
@@ -65,7 +65,7 @@
 \definecolor{colBad}{HTML}{C0392B}
 \definecolor{rowtint}{HTML}{F2F6FC}
 
-\title{Width-Thresholded Output\\Preconditioning for Muon Optimizers}
+\title{Structure-Aware Two-Sided\\Preconditioning for Muon Optimizers}
 \author{Optimizer Research Team}
 \paperaffiliations{Preprint}
 
@@ -74,7 +74,7 @@
 \maketitle
 
 \begin{abstract}
-\mname{Muon} orthogonalizes matrix momentum via Newton--Schulz iterations, and \mname{MuonT} improves pretraining loss by preconditioning on forward input activations while leaving backpropagated output cotangents unused. Extending \mname{MuonT} to the output side faces a sharp cost--quality tradeoff: dense output roots at every projection stall the end of backpropagation with cubic eigendecompositions, whereas purely diagonal output scaling (\mname{OD-All}) misses cross-channel correlations, giving little held-out gain and falling behind \mname{MuonT} out of distribution as model width grows. We introduce \mname{WT-MLP-Lag}, a two-sided preconditioned Muon optimizer that pairs \mname{MuonT}'s dense input factors with width-thresholded output factors and one-step asynchronous execution. \mname{WT-MLP-Lag} applies dense $(-1/2,-1/8)$ inverse roots to hidden-width outputs ($\dm$: \texttt{q,k,v,o,down}), exact per-step diagonal scaling to expanded SwiGLU outputs ($\dff=4\dm$: \texttt{gate,up}), and a one-update lag that overlaps output statistics and root solves with the next training step. This design matches Transformer second-moment structure: expanded SwiGLU outputs account for 96.2\% of nominal dense output eigendecomposition work yet carry 78--91\% of their anisotropy on the coordinate diagonal, whereas residual-stream outputs (\texttt{o,down}) carry over 99\% of their anisotropy in cross-channel correlations and rotate eigenspaces far faster than RMSNormed inputs. Relative to tuned \mname{MuonT}, \mname{WT-MLP-Lag} lowers final held-out loss by 0.0035 nats across three fresh 130M seeds at their shared full-budget optimum, 0.0040 nats at four times the token budget, and 0.0046 nats at 520M, extending \mname{MuonT}'s improvement over \mname{Muon} by 29--51\% (the longer and wider runs use one seed each). Counterfactual probes and trajectory diagnostics show that dense output factors rotate residual updates without inflating step norms and reduce leading output-subspace drift by 17--21\% relative to \mname{Muon}. Median step-time overhead over \mname{MuonT} is 5.3\% at 130M and 3.3\% at 520M; mean overhead is 8.9\% and 11.4\%. The measured benefit is lower loss at a fixed token budget, with a remaining throughput cost.
+\mname{Muon} orthogonalizes matrix momentum with Newton--Schulz iterations, and \mname{MuonT} lowers Transformer pretraining loss by preconditioning on input activations alone. Extending \mname{MuonT} to backpropagated output cotangents is costly if done densely at every layer (\mname{Muon2-Dense}), because cubic eigendecompositions sit at the end of backpropagation; yet purely diagonal output scaling (\mname{Muon2-Diag}) misses cross-channel correlations, adding little held-out benefit and falling behind \mname{MuonT} out of distribution on wider models. We introduce \mname{Muon2-ExpDiag}, a structure-aware two-sided preconditioned Muon optimizer that pairs \mname{MuonT}'s dense input factors and right-only weight decay ($W\hat R^2$) with expansion-diagonal output factors and a one-step lag. \mname{Muon2-ExpDiag} applies dense $(-1/2,-1/8)$ inverse roots to the five hidden-width outputs ($\dm$: \texttt{q,k,v,o,down}), exact per-step diagonal scaling to the two gated SwiGLU expansion outputs ($\dff=4\dm$: \texttt{gate,up}), and asynchronous background root updates overlapped with the next training step. Across audited trajectories, expanded SwiGLU outputs account for 96.2\% of nominal dense output eigendecomposition work while carrying 78--91\% of their anisotropy on the coordinate diagonal, whereas residual-stream outputs (\texttt{o,down}) carry over 99\% of their anisotropy in cross-channel correlations and rotate eigenspaces far faster than RMSNormed inputs. Relative to tuned \mname{MuonT}, \mname{Muon2-ExpDiag} lowers final held-out loss by 0.0035 nats across three 130M seeds, 0.0040 nats at four times the token budget, and 0.0046 nats at 520M, extending \mname{MuonT}'s improvement over \mname{Muon} by 29--51\%. The longer and wider runs each use one seed. Multi-seed ablations confirm that right-only weight decay outperforms both isotropic ($W$) and two-sided ($\hat L^2 W\hat R^2$) decay across held-out, C4, and Paloma evaluations. Checkpoint probes further show that dense output factors rotate residual updates without inflating step norms and cut leading output-subspace drift by 17--21\% relative to \mname{Muon}. Relative to \mname{Muon}, median step-time overhead is 6.8\% at 130M and 8.2\% at 520M (5.3\% and 3.3\% above \mname{MuonT}), with mean overheads of 10.7\% and 17.0\% (8.9\% and 11.4\% above \mname{MuonT}), establishing a fixed-token loss improvement at a modest throughput cost.
 \end{abstract}
 
 \input{sections/01_intro}

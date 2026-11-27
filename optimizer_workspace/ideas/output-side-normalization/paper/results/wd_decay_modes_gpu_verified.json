@@ -1,0 +1,96 @@
+{
+  "time": "2026-11-26T16:58:17.448589+00:00",
+  "passed": true,
+  "cases": [
+    {
+      "case": "qkv_dense_left",
+      "default_bitwise_diff": 0.0,
+      "modes": {
+        "default": {
+          "rel_l2_error": 1.7154239200434795e-06,
+          "max_abs_error": 1.3737007975578308e-08
+        },
+        "isotropic": {
+          "rel_l2_error": 1.714532864720555e-06,
+          "max_abs_error": 1.3737007975578308e-08
+        },
+        "two_sided": {
+          "rel_l2_error": 1.725542357675823e-06,
+          "max_abs_error": 1.3271346688270569e-08
+        }
+      }
+    },
+    {
+      "case": "down_dense_left",
+      "default_bitwise_diff": 0.0,
+      "modes": {
+        "default": {
+          "rel_l2_error": 4.513375533263942e-06,
+          "max_abs_error": 1.885928213596344e-08
+        },
+        "isotropic": {
+          "rel_l2_error": 4.47919906240537e-06,
+          "max_abs_error": 1.8277205526828766e-08
+        },
+        "two_sided": {
+          "rel_l2_error": 4.483821369972159e-06,
+          "max_abs_error": 1.932494342327118e-08
+        }
+      }
+    },
+    {
+      "case": "gate_up_diag_left",
+      "default_bitwise_diff": 0.0,
+      "modes": {
+        "default": {
+          "rel_l2_error": 8.900612862195715e-07,
+          "max_abs_error": 1.6298145055770874e-08
+        },
+        "isotropic": {
+          "rel_l2_error": 8.846773477545864e-07,
+          "max_abs_error": 1.5366822481155396e-08
+        },
+        "two_sided": {
+          "rel_l2_error": 8.917577009722694e-07,
+          "max_abs_error": 1.30385160446167e-08
+        }
+      }
+    },
+    {
+      "case": "step1_no_left_512",
+      "default_bitwise_diff": 0.0,
+      "modes": {
+        "default": {
+          "rel_l2_error": 9.280028271689948e-07,
+          "max_abs_error": 7.683411240577698e-09
+        },
+        "isotropic": {
+          "rel_l2_error": 9.220019167047162e-07,
+          "max_abs_error": 9.546056389808655e-09
+        },
+        "two_sided": {
+          "rel_l2_error": 9.280028271689948e-07,
+          "max_abs_error": 7.683411240577698e-09
+        }
+      }
+    },
+    {
+      "case": "step1_no_left_2048",
+      "default_bitwise_diff": 0.0,
+      "modes": {
+        "default": {
+          "rel_l2_error": 8.675505042606121e-07,
+          "max_abs_error": 8.614733815193176e-09
+        },
+        "isotropic": {
+          "rel_l2_error": 8.615470440061063e-07,
+          "max_abs_error": 7.916241884231567e-09
+        },
+        "two_sided": {
+          "rel_l2_error": 8.675505042606121e-07,
+          "max_abs_error": 8.614733815193176e-09
+        }
+      }
+    }
+  ]
+}

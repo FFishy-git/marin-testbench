@@ -1,0 +1,113 @@
+{
+  "observed": "2026-11-27T16:08:33.443319+00:00",
+  "phase": "running",
+  "orchestrator_gen": 3,
+  "orchestrator_pid": 4100312,
+  "draining_prior_pid": 3990337,
+  "draining_prior_alive": false,
+  "wsd_stage1_optima": {
+    "muonh": "0p0113",
+    "muonth": "0p0113",
+    "wt_mlp_lag_muonh": "0p016"
+  },
+  "marin_stage1_optima": {
+    "muonh_marin": "0p0113",
+    "muonth_marin": "0p016",
+    "wt_mlp_lag_muonh_marin": "0p016"
+  },
+  "active_runs": [
+    {
+      "name": "wt_mlp_lag_muonh_130m_1x_seed1_lr0p0113",
+      "node": "28.216.17.139",
+      "owner": "gen3",
+      "lr": 0.01131370849898476,
+      "seed": 1,
+      "step": 4100,
+      "planned_steps": 5120,
+      "train_loss": 3.2715723514556885,
+      "finite": true,
+      "median_step_seconds": 1.155349007807672,
+      "eta_minutes": 19.6
+    },
+    {
+      "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p0113",
+      "node": "28.216.17.80",
+      "owner": "gen3",
+      "lr": 0.01131370849898476,
+      "seed": 2,
+      "step": 3514,
+      "planned_steps": 5120,
+      "train_loss": 3.400359630584717,
+      "finite": true,
+      "median_step_seconds": 1.1364479307085276,
+      "eta_minutes": 30.4
+    },
+    {
+      "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p016",
+      "node": "28.216.17.144",
+      "owner": "gen3",
+      "lr": 0.016,
+      "seed": 2,
+      "step": 4269,
+      "planned_steps": 5120,
+      "train_loss": 3.3005385398864746,
+      "finite": true,
+      "median_step_seconds": 1.135500012896955,
+      "eta_minutes": 16.1
+    },
+    {
+      "name": "wt_mlp_lag_muonh_130m_1x_seed3_lr0p016",
+      "node": "28.216.17.9",
+      "owner": "gen3",
+      "lr": 0.016,
+      "seed": 3,
+      "step": 4076,
+      "planned_steps": 5120,
+      "train_loss": 3.2901949882507324,
+      "finite": true,
+      "median_step_seconds": 1.1424064822494984,
+      "eta_minutes": 19.9
+    }
+  ],
+  "completed_new_runs": [
+    "muonh@0p008:seed0",
+    "muonh@0p0113:seed0",
+    "muonh@0p0113:seed1",
+    "muonh@0p0113:seed2",
+    "muonh@0p0113:seed3",
+    "muonh@0p016:seed0",
+    "muonh@0p0226:seed0",
+    "muonh@0p032:seed0",
+    "muonh_marin@0p008:seed0",
+    "muonh_marin@0p0113:seed0",
+    "muonh_marin@0p0113:seed1",
+    "muonh_marin@0p016:seed0",
+    "muonh_marin@0p0226:seed0",
+    "muonth@0p008:seed0",
+    "muonth@0p0113:seed0",
+    "muonth@0p0113:seed1",
+    "muonth@0p0113:seed2",
+    "muonth@0p0113:seed3",
+    "muonth@0p016:seed0",
+    "muonth@0p0226:seed0",
+    "muonth@0p032:seed0",
+    "muonth_marin@0p0113:seed0",
+    "muonth_marin@0p016:seed0",
+    "muonth_marin@0p016:seed1",
+    "muonth_marin@0p016:seed2",
+    "muonth_marin@0p016:seed3",
+    "muonth_marin@0p0226:seed0",
+    "wt_mlp_lag_muonh@0p0113:seed0",
+    "wt_mlp_lag_muonh@0p016:seed0",
+    "wt_mlp_lag_muonh@0p016:seed1",
+    "wt_mlp_lag_muonh@0p0226:seed0",
+    "wt_mlp_lag_muonh@0p032:seed0",
+    "wt_mlp_lag_muonh_marin@0p0113:seed0",
+    "wt_mlp_lag_muonh_marin@0p016:seed0",
+    "wt_mlp_lag_muonh_marin@0p0226:seed0"
+  ],
+  "queued_runs": [
+    "wt_mlp_lag_muonh@0p0113:seed3"
+  ],
+  "failed_runs": []
+}

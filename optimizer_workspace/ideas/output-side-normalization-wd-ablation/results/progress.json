@@ -1,64 +1,22 @@
 {
-  "observed": "2026-11-26T17:16:08.381859+00:00",
+  "observed": "2026-11-26T23:50:48.283144+00:00",
   "orchestrator_pid": 3851349,
-  "active_runs": [
-    {
-      "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p016",
-      "node": "28.216.17.9",
-      "lr": 0.016,
-      "seed": 0,
-      "step": 629,
-      "planned_steps": 5120,
-      "train_loss": 3.908801317214966,
-      "finite": true,
-      "median_step_seconds": 1.1222912734374404,
-      "eta_minutes": 84.0
-    },
-    {
-      "name": "wt_mlp_lag_wd_iso_130m_1x_seed0_lr0p0226",
-      "node": "28.216.17.144",
-      "lr": 0.02262741696,
-      "seed": 0,
-      "step": 628,
-      "planned_steps": 5120,
-      "train_loss": 3.9103457927703857,
-      "finite": true,
-      "median_step_seconds": 1.1261164443567395,
-      "eta_minutes": 84.3
-    },
-    {
-      "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p016",
-      "node": "28.216.17.80",
-      "lr": 0.016,
-      "seed": 0,
-      "step": 636,
-      "planned_steps": 5120,
-      "train_loss": 3.9009244441986084,
-      "finite": true,
-      "median_step_seconds": 1.1190106626600027,
-      "eta_minutes": 83.6
-    },
-    {
-      "name": "wt_mlp_lag_wd_lr2_130m_1x_seed0_lr0p0226",
-      "node": "28.216.17.139",
-      "lr": 0.02262741696,
-      "seed": 0,
-      "step": 628,
-      "planned_steps": 5120,
-      "train_loss": 3.8698253631591797,
-      "finite": true,
-      "median_step_seconds": 1.1265728995203972,
-      "eta_minutes": 84.3
-    }
-  ],
-  "completed_new_runs": [],
-  "queued_runs": [
+  "active_runs": [],
+  "completed_new_runs": [
+    "wt_mlp_lag_wd_iso@0p016:seed0",
     "wt_mlp_lag_wd_iso@0p016:seed1",
     "wt_mlp_lag_wd_iso@0p016:seed2",
     "wt_mlp_lag_wd_iso@0p016:seed3",
+    "wt_mlp_lag_wd_iso@0p0226:seed0",
+    "wt_mlp_lag_wd_lr2@0p016:seed0",
     "wt_mlp_lag_wd_lr2@0p016:seed1",
     "wt_mlp_lag_wd_lr2@0p016:seed2",
-    "wt_mlp_lag_wd_lr2@0p016:seed3"
+    "wt_mlp_lag_wd_lr2@0p016:seed3",
+    "wt_mlp_lag_wd_lr2@0p0226:seed0",
+    "wt_mlp_lag_wd_lr2@0p0226:seed1",
+    "wt_mlp_lag_wd_lr2@0p0226:seed2",
+    "wt_mlp_lag_wd_lr2@0p0226:seed3"
   ],
+  "queued_runs": [],
   "failed_runs": []
 }

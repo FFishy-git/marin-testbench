@@ -1,9 +1,9 @@
 \begin{table}[tbp]\centering\footnotesize
 \setlength{\tabcolsep}{3.2pt}
-\caption{\textbf{Complete 130M inner/outer decomposition and spectral alignment probes (32-layer means, step 2,500).} Inner SVD and Inner $\Nten$ measure left-factor rotation under exact polar decomposition versus ten-step Newton--Schulz; Outer $\Nten$ isolates the post-polar $-1/8$ factor; Cosine compares the inner and outer update deltas (near zero on $m\le n$ projections, confirming orthogonal tangent/normal action). \texttt{bot80} win is the fraction of trailing 80\% $B_t$ modes gaining row alignment; $\mathrm{erank}$ compares pre-polar effective rank ($Z_0\to L Z_0$); $\mathcal Q_{\rm WT}/\mathcal Q_{\rm MT}$ and $\Phi_{\rm OD}/\Phi_{\rm MT}$ complete the quadratic surrogate ratios.}\label{tab:rotation_detail}
+\caption{\textbf{Complete 130M inner/outer decomposition and spectral alignment probes (32-layer means, step 2,500).} Inner SVD and Inner $\Nten$ measure left-factor rotation under exact polar decomposition versus ten-step Newton--Schulz; Outer $\Nten$ isolates the post-polar $-1/8$ factor; Cosine compares the inner and outer update deltas (near zero on $m\le n$ projections, confirming orthogonal tangent/normal action). \texttt{bot80} win is the fraction of trailing 80\% $B_t$ modes gaining row alignment; $\mathrm{erank}$ compares pre-polar effective rank ($Z_0\to L Z_0$); $\mathcal Q_{\rm ED}/\mathcal Q_{\rm MT}$ and $\Phi_{\rm Diag}/\Phi_{\rm MT}$ complete the quadratic surrogate ratios for Muon2-ExpDiag (ED) and Muon2-Diag (Diag).}\label{tab:rotation_detail}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrrrrrrrr@{}}
 \toprule
-Output & Inner SVD & Inner $\Nten$ & Outer $\Nten$ & Cosine & Hijack & \texttt{bot80} win & $\mathrm{erank}$ & $\mathcal Q_{\rm WT}/\mathcal Q_{\rm MT}$ & $\Phi_{\rm OD}/\Phi_{\rm MT}$ \\
+Output & Inner SVD & Inner $\Nten$ & Outer $\Nten$ & Cosine & Hijack & \texttt{bot80} win & $\mathrm{erank}$ & $\mathcal Q_{\rm ED}/\mathcal Q_{\rm MT}$ & $\Phi_{\rm Diag}/\Phi_{\rm MT}$ \\
 \midrule
 q & $13.4^\circ$ & $21.7^\circ$ & $7.5^\circ$ & $+0.016$ & $67.8\to2.8\%$ & 70.7\% & $65.5\to78.5\%$ & 0.667 & 1.056 \\
 k & $14.2^\circ$ & $21.7^\circ$ & $7.7^\circ$ & $+0.027$ & $64.2\to3.7\%$ & 78.6\% & $58.3\to76.3\%$ & 0.607 & 1.064 \\

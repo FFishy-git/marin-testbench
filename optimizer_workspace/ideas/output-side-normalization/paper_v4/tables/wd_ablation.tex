@@ -1,0 +1,21 @@
+\begin{table}[!htb]\centering\small
+\setlength{\tabcolsep}{3.8pt}
+\caption{\textbf{Weight-decay operator ablation at 130M (20 TPP, 2.68B tokens, fresh seeds 1--3).} Holding the two-sided direction $D_t$ and $\lambda=0.1$ fixed, we compare isotropic ($W$), right-only ($W\hat R_t^2$, default), and two-sided ($\hat L_{t-1}^2 W\hat R_t^2$) weight decay. Held-out reports mean final $\Lsel$ in nats; $\Delta$ columns report paired differences (mean $\pm$ SD, millinats) from same-seed Muon ($\eta^*=0.0160$; negative favors the row method). Seed-0 screens and per-seed breakdowns appear in \Cref{tab:wd_ablation_detail}.}\label{tab:wd_ablation}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xlrrrrr@{}}
+\toprule
+& & (nats) & \multicolumn{4}{c}{Differences from Muon (millinats, $\downarrow$)} \\
+\cmidrule(lr){4-7}
+Method & $Q_t$ & Held-out & $\Delta$ Held-out & Late-11 $\Delta$ & $\Delta$ C4 & $\Delta$ Paloma \\
+\midrule
+\addlinespace[2pt]\multicolumn{7}{@{}l}{\textit{Matched full-budget optimum $\eta^*=0.0160$ (fresh seeds 1--3)}}\\
+Muon & $W$ & 3.2035 & $+0.00$ & $+0.00$ & $+0.00$ & $+0.00$ \\
+MuonT & $W\hat R_t^2$ & 3.1916 & $-11.91\pm1.40$ & $-23.26\pm2.07$ & $-11.79\pm0.98$ & $-11.49\pm4.18$ \\
+\addlinespace[3pt]
+Muon2-ExpDiag & $W$ & 3.1956 & $-7.90\pm3.28$ & $-8.07\pm3.21$ & $-7.63\pm2.29$ & $-6.63\pm2.70$ \\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & $\boldsymbol{W\hat R_t^2}$ & \textbf{3.1881} & $\mathbf{-15.41\pm2.18}$ & $-26.78\pm2.30$ & $\mathbf{-15.64\pm1.80}$ & $\mathbf{-15.91\pm1.68}$ \\
+Muon2-ExpDiag & $\hat L_{t-1}^2 W\hat R_t^2$ & 3.1905 & $-13.07\pm2.48$ & $\mathbf{-29.80\pm1.81}$ & $-13.06\pm2.36$ & $-13.87\pm2.54$ \\
+\addlinespace[5pt]\multicolumn{7}{@{}l}{\textit{Hotter learning-rate check $\eta=0.02263$ (fresh seeds 1--3; $\Delta$ vs.\ $\eta^*=0.0160$ Muon)}}\\
+\rowcolor{rowtint}[0pt][0pt]\textbf{Muon2-ExpDiag} & $\boldsymbol{W\hat R_t^2}$ & \textbf{3.1883} & $\mathbf{-15.28\pm0.07}$ & $-10.99\pm2.50$ & $\mathbf{-15.29\pm1.80}$ & $\mathbf{-15.50\pm1.54}$ \\
+Muon2-ExpDiag & $\hat L_{t-1}^2 W\hat R_t^2$ & 3.1894 & $-14.14\pm1.62$ & $\mathbf{-17.05\pm3.00}$ & $-14.37\pm2.01$ & $-15.01\pm2.25$ \\
+\bottomrule\end{tabularx}
+\end{table}
