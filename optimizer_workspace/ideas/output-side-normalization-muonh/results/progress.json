@@ -1,5 +1,5 @@
 {
-  "observed": "2026-11-27T16:08:33.443319+00:00",
+  "observed": "2026-11-27T16:09:34.951640+00:00",
   "phase": "running",
   "orchestrator_gen": 3,
   "orchestrator_pid": 4100312,
@@ -22,12 +22,12 @@
       "owner": "gen3",
       "lr": 0.01131370849898476,
       "seed": 1,
-      "step": 4100,
+      "step": 4153,
       "planned_steps": 5120,
-      "train_loss": 3.2715723514556885,
+      "train_loss": 3.324721336364746,
       "finite": true,
-      "median_step_seconds": 1.155349007807672,
-      "eta_minutes": 19.6
+      "median_step_seconds": 1.1485188137739897,
+      "eta_minutes": 18.5
     },
     {
       "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p0113",
@@ -35,12 +35,12 @@
       "owner": "gen3",
       "lr": 0.01131370849898476,
       "seed": 2,
-      "step": 3514,
+      "step": 3567,
       "planned_steps": 5120,
-      "train_loss": 3.400359630584717,
+      "train_loss": 3.3908238410949707,
       "finite": true,
-      "median_step_seconds": 1.1364479307085276,
-      "eta_minutes": 30.4
+      "median_step_seconds": 1.1359241344034672,
+      "eta_minutes": 29.4
     },
     {
       "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p016",
@@ -48,12 +48,12 @@
       "owner": "gen3",
       "lr": 0.016,
       "seed": 2,
-      "step": 4269,
+      "step": 4323,
       "planned_steps": 5120,
-      "train_loss": 3.3005385398864746,
+      "train_loss": 3.210744619369507,
       "finite": true,
-      "median_step_seconds": 1.135500012896955,
-      "eta_minutes": 16.1
+      "median_step_seconds": 1.1314109470695257,
+      "eta_minutes": 15.0
     },
     {
       "name": "wt_mlp_lag_muonh_130m_1x_seed3_lr0p016",
@@ -61,12 +61,12 @@
       "owner": "gen3",
       "lr": 0.016,
       "seed": 3,
-      "step": 4076,
+      "step": 4129,
       "planned_steps": 5120,
-      "train_loss": 3.2901949882507324,
+      "train_loss": 3.38080096244812,
       "finite": true,
-      "median_step_seconds": 1.1424064822494984,
-      "eta_minutes": 19.9
+      "median_step_seconds": 1.1359833478927612,
+      "eta_minutes": 18.8
     }
   ],
   "completed_new_runs": [
