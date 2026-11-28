@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="410" viewBox="0 0 1040 410" style="background:#ffffff;font-family:DejaVu Sans,Arial,sans-serif;">
+<text x="520" y="28" text-anchor="middle" font-size="15.5" font-weight="bold" fill="#111111">130M 8×A100 Control-Aligned Full-Run Step-Time &amp; Total Pure Training Time (compile_ns = False)</text>
+<line x1="391.4" y1="58" x2="391.4" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="391.4" y="366" text-anchor="middle" font-size="11" fill="#374151">90m</text>
+<line x1="452.9" y1="58" x2="452.9" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="452.9" y="366" text-anchor="middle" font-size="11" fill="#374151">92m</text>
+<line x1="514.3" y1="58" x2="514.3" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="514.3" y="366" text-anchor="middle" font-size="11" fill="#374151">94m</text>
+<line x1="575.7" y1="58" x2="575.7" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="575.7" y="366" text-anchor="middle" font-size="11" fill="#374151">96m</text>
+<line x1="637.1" y1="58" x2="637.1" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="637.1" y="366" text-anchor="middle" font-size="11" fill="#374151">98m</text>
+<line x1="698.6" y1="58" x2="698.6" y2="348" stroke="#e5e7eb" stroke-dasharray="3,3"/>
+<text x="698.6" y="366" text-anchor="middle" font-size="11" fill="#374151">100m</text>
+<line x1="452.7" y1="58" x2="452.7" y2="348" stroke="#D97706" stroke-width="1.3" stroke-dasharray="4,3"/>
+<text x="320" y="80.1" text-anchor="end" font-size="11.0" font-weight="normal" fill="#111827">Muon2-ExpDiag (paper_v4)</text>
+<rect x="330" y="65.6" width="363.7" height="21.0" rx="3" fill="#B91C1C" fill-opacity="0.82"/>
+<text x="701.7" y="80.1" font-size="10.2" font-weight="normal" fill="#111827">99.84m | med 1.1405s | sel 3.23033</text>
+<text x="320" y="116.4" text-anchor="end" font-size="11.0" font-weight="normal" fill="#111827">MuonT Baseline (Input-Only)</text>
+<rect x="330" y="101.9" width="204.4" height="21.0" rx="3" fill="#2563EB" fill-opacity="0.82"/>
+<text x="542.4" y="116.4" font-size="10.2" font-weight="normal" fill="#111827">94.65m | med 1.0987s | sel 3.23417</text>
+<text x="320" y="152.6" text-anchor="end" font-size="11.0" font-weight="normal" fill="#111827">Muon Baseline (1st-Order)</text>
+<rect x="330" y="138.1" width="129.9" height="21.0" rx="3" fill="#6B7280" fill-opacity="0.82"/>
+<text x="467.9" y="152.6" font-size="10.2" font-weight="normal" fill="#111827">92.23m | med 1.0744s | sel 3.24610</text>
+<text x="320" y="188.9" text-anchor="end" font-size="11.0" font-weight="bold" fill="#111827">MuonH Baseline (Hyperball)</text>
+<rect x="330" y="174.4" width="122.7" height="21.0" rx="3" fill="#D97706" fill-opacity="0.82"/>
+<text x="460.7" y="188.9" font-size="10.2" font-weight="normal" fill="#111827">92.00m | med 1.0731s | sel 3.24420</text>
+<text x="320" y="225.1" text-anchor="end" font-size="11.0" font-weight="normal" fill="#111827">Muon2-ExpDiag-Lazy8 (ctrl)</text>
+<rect x="330" y="210.6" width="155.4" height="21.0" rx="3" fill="#7C3AED" fill-opacity="0.82"/>
+<text x="493.4" y="225.1" font-size="10.2" font-weight="normal" fill="#111827">93.06m | med 1.0774s | sel 3.23048</text>
+<text x="320" y="261.4" text-anchor="end" font-size="11.0" font-weight="normal" fill="#111827">Muon2-HeadDiag-Lazy12 (ctrl)</text>
+<rect x="330" y="246.9" width="147.2" height="21.0" rx="3" fill="#059669" fill-opacity="0.82"/>
+<text x="485.2" y="261.4" font-size="10.2" font-weight="normal" fill="#111827">92.79m | med 1.0755s | sel 3.23102</text>
+<text x="320" y="297.6" text-anchor="end" font-size="11.0" font-weight="bold" fill="#111827">Muon2-HeadDiag-MetricHB-Lazy12 (5120)</text>
+<rect x="330" y="283.1" width="167.7" height="21.0" rx="3" fill="#DC2626" fill-opacity="0.82"/>
+<text x="505.7" y="297.6" font-size="10.2" font-weight="bold" fill="#111827">93.46m | med 1.0823s | sel 3.22994</text>
+<text x="320" y="333.9" text-anchor="end" font-size="11.0" font-weight="bold" fill="#111827">Muon2-HeadDiag-MetricHB-Lazy12 (Iso-Time)</text>
+<rect x="330" y="319.4" width="118.6" height="21.0" rx="3" fill="#991B1B" fill-opacity="0.82"/>
+<text x="456.6" y="333.9" font-size="10.2" font-weight="bold" fill="#111827">91.86m | med 1.0827s | sel 3.23301</text>
+<line x1="330" y1="348" x2="760" y2="348" stroke="#111827" stroke-width="1.2"/>
+<line x1="330" y1="58" x2="330" y2="348" stroke="#111827" stroke-width="1.2"/>
+<text x="545.0" y="388" text-anchor="middle" font-size="11.5" fill="#111827">Total Pure Training Time Across Full Run (minutes, 8×A100, Identical Compilation Controls)</text>
+</svg>

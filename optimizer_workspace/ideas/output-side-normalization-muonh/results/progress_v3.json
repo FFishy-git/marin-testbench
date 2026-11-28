@@ -1,6 +1,6 @@
 {
-  "observed": "2026-11-27T16:09:34.951640+00:00",
-  "phase": "running",
+  "observed": "2026-11-27T18:07:31.997918+00:00",
+  "phase": "stage3_or_finished",
   "orchestrator_gen": 3,
   "orchestrator_pid": 4100312,
   "draining_prior_pid": 3990337,
@@ -15,60 +15,7 @@
     "muonth_marin": "0p016",
     "wt_mlp_lag_muonh_marin": "0p016"
   },
-  "active_runs": [
-    {
-      "name": "wt_mlp_lag_muonh_130m_1x_seed1_lr0p0113",
-      "node": "28.216.17.139",
-      "owner": "gen3",
-      "lr": 0.01131370849898476,
-      "seed": 1,
-      "step": 4153,
-      "planned_steps": 5120,
-      "train_loss": 3.324721336364746,
-      "finite": true,
-      "median_step_seconds": 1.1485188137739897,
-      "eta_minutes": 18.5
-    },
-    {
-      "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p0113",
-      "node": "28.216.17.80",
-      "owner": "gen3",
-      "lr": 0.01131370849898476,
-      "seed": 2,
-      "step": 3567,
-      "planned_steps": 5120,
-      "train_loss": 3.3908238410949707,
-      "finite": true,
-      "median_step_seconds": 1.1359241344034672,
-      "eta_minutes": 29.4
-    },
-    {
-      "name": "wt_mlp_lag_muonh_130m_1x_seed2_lr0p016",
-      "node": "28.216.17.144",
-      "owner": "gen3",
-      "lr": 0.016,
-      "seed": 2,
-      "step": 4323,
-      "planned_steps": 5120,
-      "train_loss": 3.210744619369507,
-      "finite": true,
-      "median_step_seconds": 1.1314109470695257,
-      "eta_minutes": 15.0
-    },
-    {
-      "name": "wt_mlp_lag_muonh_130m_1x_seed3_lr0p016",
-      "node": "28.216.17.9",
-      "owner": "gen3",
-      "lr": 0.016,
-      "seed": 3,
-      "step": 4129,
-      "planned_steps": 5120,
-      "train_loss": 3.38080096244812,
-      "finite": true,
-      "median_step_seconds": 1.1359833478927612,
-      "eta_minutes": 18.8
-    }
-  ],
+  "active_runs": [],
   "completed_new_runs": [
     "muonh@0p008:seed0",
     "muonh@0p0113:seed0",
@@ -98,16 +45,19 @@
     "muonth_marin@0p016:seed3",
     "muonth_marin@0p0226:seed0",
     "wt_mlp_lag_muonh@0p0113:seed0",
+    "wt_mlp_lag_muonh@0p0113:seed1",
+    "wt_mlp_lag_muonh@0p0113:seed2",
+    "wt_mlp_lag_muonh@0p0113:seed3",
     "wt_mlp_lag_muonh@0p016:seed0",
     "wt_mlp_lag_muonh@0p016:seed1",
+    "wt_mlp_lag_muonh@0p016:seed2",
+    "wt_mlp_lag_muonh@0p016:seed3",
     "wt_mlp_lag_muonh@0p0226:seed0",
     "wt_mlp_lag_muonh@0p032:seed0",
     "wt_mlp_lag_muonh_marin@0p0113:seed0",
     "wt_mlp_lag_muonh_marin@0p016:seed0",
     "wt_mlp_lag_muonh_marin@0p0226:seed0"
   ],
-  "queued_runs": [
-    "wt_mlp_lag_muonh@0p0113:seed3"
-  ],
+  "queued_runs": [],
   "failed_runs": []
 }

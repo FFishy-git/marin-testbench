@@ -1,0 +1,146 @@
+[
+  {
+    "name": "bench_muonh",
+    "median_s": 1.07569763623178,
+    "median_delta_pct": 0.0,
+    "mean_s": 1.0761533888580743,
+    "mean_delta_pct": 0.0,
+    "est_5120_min": 91.83175584922235,
+    "peak_gib": 18.53358507156372
+  },
+  {
+    "name": "bench_expdiag_orig",
+    "median_s": 1.1590201184153557,
+    "median_delta_pct": 7.7459017643153105,
+    "mean_s": 1.2491452235844918,
+    "mean_delta_pct": 16.075016490909544,
+    "est_5120_min": 106.59372574587663,
+    "peak_gib": 21.592936515808105
+  },
+  {
+    "name": "bench_expdiag_lazy8",
+    "median_s": 1.0806868309155107,
+    "median_delta_pct": 0.4638101373177772,
+    "mean_s": 1.1749943471804727,
+    "mean_delta_pct": 9.184653353856941,
+    "est_5120_min": 100.26618429273367,
+    "peak_gib": 20.082485675811768
+  },
+  {
+    "name": "bench_expdiag_lazy16",
+    "median_s": 1.0816927468404174,
+    "median_delta_pct": 0.5573230252358341,
+    "mean_s": 1.1295153798128013,
+    "mean_delta_pct": 4.958585969919249,
+    "est_5120_min": 96.38531241069238,
+    "peak_gib": 20.082485675811768
+  },
+  {
+    "name": "bench_headdiag_qk_lazy8",
+    "median_s": 1.0837774369865656,
+    "median_delta_pct": 0.7511219214991982,
+    "mean_s": 1.168174331105547,
+    "mean_delta_pct": 8.55091320625936,
+    "est_5120_min": 99.68420958767335,
+    "peak_gib": 20.037489414215088
+  },
+  {
+    "name": "bench_headdiag_qkv_lazy8",
+    "median_s": 1.0825435183942318,
+    "median_delta_pct": 0.6364132384294452,
+    "mean_s": 1.1592765485984273,
+    "mean_delta_pct": 7.724099612654323,
+    "est_5120_min": 98.9249321470658,
+    "peak_gib": 20.00208854675293
+  },
+  {
+    "name": "bench_resdense_lazy8",
+    "median_s": 1.0832990622147918,
+    "median_delta_pct": 0.7066508028817253,
+    "mean_s": 1.1493069241987541,
+    "mean_delta_pct": 6.79768665861884,
+    "est_5120_min": 98.07419086496036,
+    "peak_gib": 19.844552993774414
+  },
+  {
+    "name": "bench_headdiag_qk_lazy8_cns",
+    "median_s": 1.077765935100615,
+    "median_delta_pct": 0.1922751151597124,
+    "mean_s": 1.1639325293072034,
+    "mean_delta_pct": 8.156749898104486,
+    "est_5120_min": 99.32224250088136,
+    "peak_gib": 20.03748655319214
+  },
+  {
+    "name": "bench_expdiag_fast8",
+    "median_s": 1.0818537781015038,
+    "median_delta_pct": 0.572292962480514,
+    "mean_s": 1.1002913948323112,
+    "mean_delta_pct": 2.2429893567356807,
+    "est_5120_min": 93.89153235902388,
+    "peak_gib": 20.535706520080566
+  },
+  {
+    "name": "bench_headdiag_qk_fast8",
+    "median_s": 1.0798841547220945,
+    "median_delta_pct": 0.38919100956473773,
+    "mean_s": 1.1055638425168581,
+    "mean_delta_pct": 2.7329239459062293,
+    "est_5120_min": 94.34144789477189,
+    "peak_gib": 20.482885360717773
+  },
+  {
+    "name": "bench_headdiag_qk_fast8_cns",
+    "median_s": 1.0730475075542927,
+    "median_delta_pct": -0.24636371673836255,
+    "mean_s": 1.0991241572482977,
+    "mean_delta_pct": 2.1345254894005405,
+    "est_5120_min": 93.79192808518808,
+    "peak_gib": 20.482876777648926
+  },
+  {
+    "name": "bench_headdiag_qkv_fast8_cns",
+    "median_s": 1.0798806995153427,
+    "median_delta_pct": 0.3888698034343774,
+    "mean_s": 1.1048234830377623,
+    "mean_delta_pct": 2.664127110179937,
+    "est_5120_min": 94.27827055255572,
+    "peak_gib": 20.443562030792236
+  },
+  {
+    "name": "bench_expdiag_fullasync8_cns",
+    "median_s": 1.0743000721558928,
+    "median_delta_pct": -0.12992164608476298,
+    "mean_s": 1.0744753417384345,
+    "mean_delta_pct": -0.15593010596941514,
+    "est_5120_min": 91.68856249501307,
+    "peak_gib": 20.17632007598877
+  },
+  {
+    "name": "bench_headdiag_qk_fullasync8_cns",
+    "median_s": 1.0694201719015837,
+    "median_delta_pct": -0.5835714534231595,
+    "mean_s": 1.071015038935002,
+    "mean_delta_pct": -0.4774737482845959,
+    "est_5120_min": 91.3932833224535,
+    "peak_gib": 20.123496055603027
+  },
+  {
+    "name": "bench_headdiag_qkv_fullasync8_cns",
+    "median_s": 1.0726899756118655,
+    "median_delta_pct": -0.2796009323261628,
+    "mean_s": 1.09070646026521,
+    "mean_delta_pct": 1.352323150009127,
+    "est_5120_min": 93.07361794263124,
+    "peak_gib": 20.08417844772339
+  },
+  {
+    "name": "bench_headdiag_qk_fullasync16_cns",
+    "median_s": 1.0748343607410789,
+    "median_delta_pct": -0.08025261575597131,
+    "mean_s": 1.081243971188087,
+    "mean_delta_pct": 0.47303501366235956,
+    "est_5120_min": 92.26615220805009,
+    "peak_gib": 20.123496055603027
+  }
+]

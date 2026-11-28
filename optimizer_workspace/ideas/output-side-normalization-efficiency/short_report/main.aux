@@ -1,0 +1,56 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Problem Diagnosis and Control Alignment}{1}{section*.1}\protected@file@percent }
+\newlabel{sec:diagnosis}{{1}{1}{Problem Diagnosis and Control Alignment}{section*.1}{}}
+\newlabel{sec:diagnosis@cref}{{[section][1][]1}{[1][1][]1}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Benchmark and strict compilation alignment.}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Two bottlenecks in \texttt  {paper\_v4}'s Muon2-ExpDiag.}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Method: Three Orthogonal Innovations}{2}{section*.4}\protected@file@percent }
+\newlabel{sec:method}{{2}{2}{Method: Three Orthogonal Innovations}{section*.4}{}}
+\newlabel{sec:method@cref}{{[section][2][]2}{[1][2][]2}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Lazy Single-Microbatch Capture and Dual-Sided Async-Host Exact Roots}{2}{subsection*.5}\protected@file@percent }
+\newlabel{sec:lazy}{{2.1}{2}{Lazy Single-Microbatch Capture and Dual-Sided Async-Host Exact Roots}{subsection*.5}{}}
+\newlabel{sec:lazy@cref}{{[subsection][1][2]2.1}{[1][2][]2}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Compile-time gated zero-capture microbatches ($97.9\%$ fast path).}{2}{subsection*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Zero-\texttt  {cuSOLVER} asynchronous CPU \texttt  {eigh} on both sides.}{2}{subsection*.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 32-layer checkpoint audit (\texttt  {step\_002560}) of output second moments $B_p = \mathbb  {E}[\delta _p \delta _p^{\mathsf  {T}}]$ and exact damped $(-1/2)$ inverse roots across projection roles at 130M ($H=8$, $d_{\mathrm  {head}}=64$).}}{3}{table.caption.10}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:audit}{{1}{3}{32-layer checkpoint audit (\texttt {step\_002560}) of output second moments $B_p = \E [\delta _p \delta _p^\Tr ]$ and exact damped $(-1/2)$ inverse roots across projection roles at 130M ($H=8$, $\dhd =64$)}{table.caption.10}{}}
+\newlabel{tab:audit@cref}{{[table][1][]1}{[1][2][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Per-Head Block-Diagonal Output Preconditioning on Queries and Keys (HeadQK)}{3}{subsection*.9}\protected@file@percent }
+\newlabel{sec:headqk}{{2.2}{3}{Per-Head Block-Diagonal Output Preconditioning on Queries and Keys (\mname {HeadQK})}{subsection*.9}{}}
+\newlabel{sec:headqk@cref}{{[subsection][2][2]2.2}{[1][2][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Right-Metric Tangential Hyperball (MetricHB)}{3}{subsection*.11}\protected@file@percent }
+\newlabel{sec:metrichb}{{2.3}{3}{Right-Metric Tangential Hyperball (\mname {MetricHB})}{subsection*.11}{}}
+\newlabel{sec:metrichb@cref}{{[subsection][3][2]2.3}{[1][3][]3}{}{}{}}
+\newlabel{eq:metrichb}{{1}{3}{Right-Metric Tangential Hyperball (\mname {MetricHB})}{equation*.12}{}}
+\newlabel{eq:metrichb@cref}{{[equation][1][]1}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Empirical Results at 130M (1$\times $ Chinchilla, 2.68B Tokens)}{3}{section*.14}\protected@file@percent }
+\newlabel{sec:results}{{3}{3}{Empirical Results at 130M (\texorpdfstring {1$\times $}{1x} Chinchilla, 2.68B Tokens)}{section*.14}{}}
+\newlabel{sec:results@cref}{{[section][3][]3}{[1][3][]3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Component-by-Component Ablation and Strict Iso-Time Verification (Seed 0)}{3}{subsection*.15}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Full-run pure training time and steady-state median step time across strictly control-aligned 130M runs (\texttt  {compile\_ns = False}, $8\times \text  {A100}$). Lazy capture + dual-sided async-host roots eliminate $\approx 89\text  {--}95\%$ of \texttt  {paper\_v4}'s overhead; the $5{,}030$-step iso-time schedule finishes strictly faster ($91.86\text  {m}$) than both MuonH ($92.00\text  {m}$) and Muon ($92.23\text  {m}$).}}{4}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:waterfall}{{1}{4}{Full-run pure training time and steady-state median step time across strictly control-aligned 130M runs (\texttt {compile\_ns = False}, $8\times \text {A100}$). Lazy capture + dual-sided async-host roots eliminate $\approx 89\text {--}95\%$ of \texttt {paper\_v4}'s overhead; the $5{,}030$-step iso-time schedule finishes strictly faster ($91.86\text {m}$) than both \mname {MuonH} ($92.00\text {m}$) and \mname {Muon} ($92.23\text {m}$)}{figure.caption.13}{}}
+\newlabel{fig:waterfall@cref}{{[figure][1][]1}{[1][3][]4}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Seed-0 component ablations and strict iso-time verification under identical compilation controls (\texttt  {compile\_ns = False}, $8\times \text  {A100}$). $\mathcal  {L}_{\mathrm  {sel}}\text  { @ }92.0\text  {m}$ evaluates each curve at MuonH's exact completion time.}}{4}{table.caption.16}\protected@file@percent }
+\newlabel{tab:seed0}{{2}{4}{Seed-0 component ablations and strict iso-time verification under identical compilation controls (\texttt {compile\_ns = False}, $8\times \text {A100}$). $\Lsel \text { @ }92.0\text {m}$ evaluates each curve at \mname {MuonH}'s exact completion time}{table.caption.16}{}}
+\newlabel{tab:seed0@cref}{{[table][2][]2}{[1][4][]4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Paired Fresh Multi-Seed Confirmation (Seeds 1, 2, 3)}{4}{subsection*.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Seed-0 training loss ($51$-step MA) and held-out selection loss vs.\ cumulative pure training time ($8\times \text  {A100}$, \texttt  {compile\_ns = False}). Vertical/horizontal orange dashed guides mark MuonH's finish ($92.0\text  {m}$, $\mathcal  {L}_{\mathrm  {sel}}= 3.2442$).}}{5}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:seed0}{{2}{5}{Seed-0 training loss ($51$-step MA) and held-out selection loss vs.\ cumulative pure training time ($8\times \text {A100}$, \texttt {compile\_ns = False}). Vertical/horizontal orange dashed guides mark \mname {MuonH}'s finish ($92.0\text {m}$, $\Lsel = 3.2442$)}{figure.caption.17}{}}
+\newlabel{fig:seed0@cref}{{[figure][2][]2}{[1][4][]5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Paired fresh \texttt  {Seeds 1, 2, 3} confirmation at 130M ($5{,}120$ steps $= 2.68\text  {B}$ tokens, \texttt  {compile\_ns = False}). Paired $\Delta $ values are reported in $10^{-3}$ nats ($\text  {mean} \pm \text  {SD}$ across paired seeds; negative favors our method).}}{5}{table.caption.19}\protected@file@percent }
+\newlabel{tab:seeds}{{3}{5}{Paired fresh \texttt {Seeds 1, 2, 3} confirmation at 130M ($5{,}120$ steps $= 2.68\text {B}$ tokens, \texttt {compile\_ns = False}). Paired $\Delta $ values are reported in $10^{-3}$ nats ($\text {mean} \pm \text {SD}$ across paired seeds; negative favors our method)}{table.caption.19}{}}
+\newlabel{tab:seeds@cref}{{[table][3][]3}{[1][5][]5}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Mean held-out selection loss $\mathcal  {L}_{\mathrm  {sel}}(t)$ across paired \texttt  {Seeds 1--3} interpolated at matched pure wall-clock training minutes $t \in [40, 92.01]$ (\texttt  {compile\_ns = False}).}}{6}{table.caption.20}\protected@file@percent }
+\newlabel{tab:isotime_ms}{{4}{6}{Mean held-out selection loss $\Lsel (t)$ across paired \texttt {Seeds 1--3} interpolated at matched pure wall-clock training minutes $t \in [40, 92.01]$ (\texttt {compile\_ns = False})}{table.caption.20}{}}
+\newlabel{tab:isotime_ms@cref}{{[table][4][]4}{[1][5][]6}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Paired fresh \texttt  {Seeds 1--3}: (a)~mean held-out selection loss vs.\ pure training time; (b)~paired difference vs.\ same-step Muon plotted against each method's own cumulative pure training time.}}{6}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:seeds123}{{3}{6}{Paired fresh \texttt {Seeds 1--3}: (a)~mean held-out selection loss vs.\ pure training time; (b)~paired difference vs.\ same-step \mname {Muon} plotted against each method's own cumulative pure training time}{figure.caption.21}{}}
+\newlabel{fig:seeds123@cref}{{[figure][3][]3}{[1][5][]6}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Summary of Recommendations}{6}{section*.22}\protected@file@percent }
+\newlabel{sec:conclusion}{{4}{6}{Summary of Recommendations}{section*.22}{}}
+\newlabel{sec:conclusion@cref}{{[section][4][]4}{[1][6][]6}{}{}{}}
+\gdef \@abspage@last{6}

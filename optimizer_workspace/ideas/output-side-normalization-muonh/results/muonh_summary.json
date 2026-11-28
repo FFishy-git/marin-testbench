@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T14:58:10.527025+00:00",
+  "generated_at": "2026-11-27T18:22:52.072221+00:00",
   "wsd_stage1_optima": {
     "muonh": "0p0113",
     "muonth": "0p0113",
@@ -268,8 +268,12 @@
         "peak_allocated_gib": 18.53358507156372,
         "elapsed_seconds": 5649.741897787899,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_130m_1x_seed0_lr0p008",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.432154591681067,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005197749121237573,
+          "mean_block_rel_norm_drift": 0.0011097013636330163,
+          "head_rel_norm_drift": 1.1882773892751632
+        }
       },
       "0p0113": {
         "name": "muonh_130m_1x_seed0_lr0p0113",
@@ -291,8 +295,12 @@
         "peak_allocated_gib": 18.53358507156372,
         "elapsed_seconds": 5635.884024478495,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.416050407424585,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005198345339899575,
+          "mean_block_rel_norm_drift": 0.0011120726034780902,
+          "head_rel_norm_drift": 1.2324210368399682
+        }
       },
       "0p016": {
         "name": "muonh_130m_1x_seed0_lr0p016",
@@ -314,8 +322,12 @@
         "peak_allocated_gib": 18.53358507156372,
         "elapsed_seconds": 5625.157122597098,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.419253405526458,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.00518301400287667,
+          "mean_block_rel_norm_drift": 0.0011108914438172268,
+          "head_rel_norm_drift": 0.9744012232210939
+        }
       },
       "0p0226": {
         "name": "muonh_130m_1x_seed0_lr0p0226",
@@ -337,8 +349,12 @@
         "peak_allocated_gib": 18.53358507156372,
         "elapsed_seconds": 5618.065000647679,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4512017114781948,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005166319880340618,
+          "mean_block_rel_norm_drift": 0.001102313327495076,
+          "head_rel_norm_drift": 0.9876351322197162
+        }
       },
       "0p032": {
         "name": "muonh_130m_1x_seed0_lr0p032",
@@ -360,8 +376,12 @@
         "peak_allocated_gib": 18.53358507156372,
         "elapsed_seconds": 5612.468961225823,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_130m_1x_seed0_lr0p032",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.50380907201966,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005183865743822387,
+          "mean_block_rel_norm_drift": 0.0011054502246993895,
+          "head_rel_norm_drift": 0.9796534965105087
+        }
       }
     },
     "muonth": {
@@ -385,8 +405,12 @@
         "peak_allocated_gib": 20.530574798583984,
         "elapsed_seconds": 5802.411270694807,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_130m_1x_seed0_lr0p008",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4300306217567793,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.0051975787730484295,
+          "mean_block_rel_norm_drift": 0.001110074605051504,
+          "head_rel_norm_drift": 1.2523680070940155
+        }
       },
       "0p0113": {
         "name": "muonth_130m_1x_seed0_lr0p0113",
@@ -408,8 +432,12 @@
         "peak_allocated_gib": 20.530574798583984,
         "elapsed_seconds": 5800.4452106542885,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.405462395445785,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005190764845482694,
+          "mean_block_rel_norm_drift": 0.001111683936657964,
+          "head_rel_norm_drift": 0.9974894171876212
+        }
       },
       "0p016": {
         "name": "muonth_130m_1x_seed0_lr0p016",
@@ -431,8 +459,12 @@
         "peak_allocated_gib": 20.530574798583984,
         "elapsed_seconds": 5803.40228853561,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4040093622372534,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.0051925535014687,
+          "mean_block_rel_norm_drift": 0.001110717304910026,
+          "head_rel_norm_drift": 1.0201601935539715
+        }
       },
       "0p0226": {
         "name": "muonth_130m_1x_seed0_lr0p0226",
@@ -454,8 +486,12 @@
         "peak_allocated_gib": 20.530574798583984,
         "elapsed_seconds": 5772.510696303099,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4286336086967295,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005171004455542061,
+          "mean_block_rel_norm_drift": 0.0011046491353051376,
+          "head_rel_norm_drift": 1.2400114737749666
+        }
       },
       "0p032": {
         "name": "muonth_130m_1x_seed0_lr0p032",
@@ -477,8 +513,12 @@
         "peak_allocated_gib": 20.530574798583984,
         "elapsed_seconds": 5806.917921297252,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_130m_1x_seed0_lr0p032",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4675445313680715,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005198345339899575,
+          "mean_block_rel_norm_drift": 0.0011059881700142672,
+          "head_rel_norm_drift": 1.011139528344157
+        }
       }
     },
     "wt_mlp_lag_muonh": {
@@ -502,8 +542,12 @@
         "peak_allocated_gib": 21.592976570129395,
         "elapsed_seconds": 6054.748080126941,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.409685322568264,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005194682853832992,
+          "mean_block_rel_norm_drift": 0.0011115767511035125,
+          "head_rel_norm_drift": 0.983154491132958
+        }
       },
       "0p016": {
         "name": "wt_mlp_lag_muonh_130m_1x_seed0_lr0p016",
@@ -525,8 +569,12 @@
         "peak_allocated_gib": 21.592976570129395,
         "elapsed_seconds": 6147.8935163505375,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.404059333613898,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005192127630995841,
+          "mean_block_rel_norm_drift": 0.0011113708386323816,
+          "head_rel_norm_drift": 1.0251945554090176
+        }
       },
       "0p0226": {
         "name": "wt_mlp_lag_muonh_130m_1x_seed0_lr0p0226",
@@ -548,8 +596,12 @@
         "peak_allocated_gib": 21.592976570129395,
         "elapsed_seconds": 6235.499342268333,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4295104418048328,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005178159079486083,
+          "mean_block_rel_norm_drift": 0.0011044253936786906,
+          "head_rel_norm_drift": 1.1777101606024636
+        }
       },
       "0p032": {
         "name": "wt_mlp_lag_muonh_130m_1x_seed0_lr0p032",
@@ -571,8 +623,12 @@
         "peak_allocated_gib": 21.592976570129395,
         "elapsed_seconds": 6457.6073008757085,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_130m_1x_seed0_lr0p032",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4762581411820914,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005189742756347834,
+          "mean_block_rel_norm_drift": 0.0011059067666119367,
+          "head_rel_norm_drift": 0.9814924606550487
+        }
       }
     },
     "muonh_adamh": {},
@@ -599,8 +655,12 @@
         "peak_allocated_gib": 18.533584594726562,
         "elapsed_seconds": 5642.737023379654,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_marin_130m_1x_seed0_lr0p008",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4493578368422044,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005200304344074724,
+          "mean_block_rel_norm_drift": 0.0011092299283355727,
+          "head_rel_norm_drift": 0.0004578744640876313
+        }
       },
       "0p0113": {
         "name": "muonh_marin_130m_1x_seed0_lr0p0113",
@@ -622,8 +682,12 @@
         "peak_allocated_gib": 18.533584594726562,
         "elapsed_seconds": 5649.848984884098,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_marin_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4226491986980974,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.00518701718532154,
+          "mean_block_rel_norm_drift": 0.001111293718490427,
+          "head_rel_norm_drift": 0.000625431861829218
+        }
       },
       "0p016": {
         "name": "muonh_marin_130m_1x_seed0_lr0p016",
@@ -645,8 +709,12 @@
         "peak_allocated_gib": 18.533584594726562,
         "elapsed_seconds": 5614.42712972872,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_marin_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.424499005227151,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.0051896575822532615,
+          "mean_block_rel_norm_drift": 0.0011113313973343784,
+          "head_rel_norm_drift": 0.0006667568987851741
+        }
       },
       "0p0226": {
         "name": "muonh_marin_130m_1x_seed0_lr0p0226",
@@ -668,8 +736,12 @@
         "peak_allocated_gib": 18.533584594726562,
         "elapsed_seconds": 5636.699379734695,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonh_marin_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4650935497305175,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005171600674204063,
+          "mean_block_rel_norm_drift": 0.0011057725990298467,
+          "head_rel_norm_drift": 0.0006177051217261085
+        }
       }
     },
     "muonth_marin": {
@@ -693,8 +765,12 @@
         "peak_allocated_gib": 20.530574321746826,
         "elapsed_seconds": 5791.070458615199,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_marin_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4139427642623366,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005202604044628159,
+          "mean_block_rel_norm_drift": 0.0011109697802452357,
+          "head_rel_norm_drift": 0.0006205700927755762
+        }
       },
       "0p016": {
         "name": "muonth_marin_130m_1x_seed0_lr0p016",
@@ -716,8 +792,12 @@
         "peak_allocated_gib": 20.530574321746826,
         "elapsed_seconds": 5797.996906714514,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_marin_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.415631088261106,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005191701760522982,
+          "mean_block_rel_norm_drift": 0.0011115662122335422,
+          "head_rel_norm_drift": 0.0006156215064174049
+        }
       },
       "0p0226": {
         "name": "muonth_marin_130m_1x_seed0_lr0p0226",
@@ -739,8 +819,12 @@
         "peak_allocated_gib": 20.530574321746826,
         "elapsed_seconds": 5804.337023861706,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/muonth_marin_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4357660614033447,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.0051880392744564,
+          "mean_block_rel_norm_drift": 0.001106342578551133,
+          "head_rel_norm_drift": 0.0005663960947492807
+        }
       }
     },
     "wt_mlp_lag_muonh_marin": {
@@ -764,8 +848,12 @@
         "peak_allocated_gib": 21.592976093292236,
         "elapsed_seconds": 6050.601865235716,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_marin_130m_1x_seed0_lr0p0113",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4170617607098857,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005197919469426716,
+          "mean_block_rel_norm_drift": 0.0011112679850344763,
+          "head_rel_norm_drift": 0.0004436364261448229
+        }
       },
       "0p016": {
         "name": "wt_mlp_lag_muonh_marin_130m_1x_seed0_lr0p016",
@@ -787,8 +875,12 @@
         "peak_allocated_gib": 21.592976093292236,
         "elapsed_seconds": 6178.843943938613,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_marin_130m_1x_seed0_lr0p016",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.4124284863088423,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.0051981749917104315,
+          "mean_block_rel_norm_drift": 0.0011115869390283565,
+          "head_rel_norm_drift": 0.0005560648355102917
+        }
       },
       "0p0226": {
         "name": "wt_mlp_lag_muonh_marin_130m_1x_seed0_lr0p0226",
@@ -810,8 +902,12 @@
         "peak_allocated_gib": 21.592976093292236,
         "elapsed_seconds": 6268.295860324055,
         "run_dir": "/apdcephfs_tj32/share_303214315/hunyuan/kenanchen/toner/output-side-normalization/campaigns/muonh-20261127/runs/wt_mlp_lag_muonh_marin_130m_1x_seed0_lr0p0226",
-        "paloma_macro_mean": null,
-        "norm_conservation": null
+        "paloma_macro_mean": 3.435173171607112,
+        "norm_conservation": {
+          "max_block_rel_norm_drift": 0.005184376788389817,
+          "mean_block_rel_norm_drift": 0.0011067891027527284,
+          "head_rel_norm_drift": 0.0005010226644387031
+        }
       }
     }
   },
@@ -989,9 +1085,9 @@
       "c4_mean": 3.4626243208774428,
       "c4_std": 0.001525632400736172,
       "late11_sel_mean": 3.316299297415468,
-      "paloma_mean": null,
-      "paloma_std": null,
-      "max_block_rel_norm_drift": null,
+      "paloma_mean": 3.4158654774760584,
+      "paloma_std": 0.0022530042468475145,
+      "max_block_rel_norm_drift": 0.005700895409039245,
       "paired_delta_vs_muont_0p016_mnat": {
         "mean": 10.922973029057944,
         "std": 1.8651333768400116,
@@ -1040,9 +1136,9 @@
       "c4_mean": 3.4541923287203256,
       "c4_std": 0.0012747782576720268,
       "late11_sel_mean": 3.3047080175638115,
-      "paloma_mean": null,
-      "paloma_std": null,
-      "max_block_rel_norm_drift": null,
+      "paloma_mean": 3.404160178136437,
+      "paloma_std": 0.0006813143746940748,
+      "max_block_rel_norm_drift": 0.005711471576464752,
       "paired_delta_vs_muont_0p016_mnat": {
         "mean": 0.6396288558327967,
         "std": 1.7236755896948923,
@@ -1071,6 +1167,108 @@
         ]
       }
     },
+    "wt_mlp_lag_muonh@0p0113": {
+      "arm_key": "wt_mlp_lag_muonh",
+      "label": "WT-MLP-Lag + MuonH (WSD, head=AdamW)",
+      "lr_tag": "0p0113",
+      "lr": 0.01131370849898476,
+      "sel_seeds": [
+        3.189905097570272,
+        3.162599808241355,
+        3.2189924579650127
+      ],
+      "sel_mean": 3.19049912125888,
+      "sel_std": 0.028201017425276698,
+      "c4_seeds": [
+        3.4537834071789364,
+        3.450043883967761,
+        3.4502734052752775
+      ],
+      "c4_mean": 3.451366898807325,
+      "c4_std": 0.0020959018441238817,
+      "late11_sel_mean": 3.3016053897628916,
+      "paloma_mean": 3.402926344828655,
+      "paloma_std": 0.0019447590006797897,
+      "max_block_rel_norm_drift": 0.005717953743596515,
+      "paired_delta_vs_muont_0p016_mnat": {
+        "mean": -1.1275939618506925,
+        "std": 3.2982090096510293,
+        "seeds": [
+          2.006422490979265,
+          -0.8206656027893722,
+          -4.56853877374197
+        ]
+      },
+      "paired_delta_vs_muonh_opt_mnat": {
+        "mean": -12.050566990908637,
+        "std": 1.4398821976596285,
+        "seeds": [
+          -10.754979592019875,
+          -11.795946865094553,
+          -13.60077451561148
+        ]
+      },
+      "paired_delta_vs_muonth_opt_mnat": {
+        "mean": -1.7672228176834892,
+        "std": 1.578278572444423,
+        "seeds": [
+          -0.21784888948550574,
+          -1.7109202660829936,
+          -3.3728992974819683
+        ]
+      }
+    },
+    "wt_mlp_lag_muonh@0p016": {
+      "arm_key": "wt_mlp_lag_muonh",
+      "label": "WT-MLP-Lag + MuonH (WSD, head=AdamW)",
+      "lr_tag": "0p016",
+      "lr": 0.016,
+      "sel_seeds": [
+        3.1915601021931974,
+        3.1644062079438675,
+        3.2229655860778545
+      ],
+      "sel_mean": 3.1929772987383065,
+      "sel_std": 0.02930540097653369,
+      "c4_seeds": [
+        3.456246130944226,
+        3.4531419883053918,
+        3.452797916005037
+      ],
+      "c4_mean": 3.4540620117515517,
+      "c4_std": 0.0018993101176016465,
+      "late11_sel_mean": 3.328296140272855,
+      "paloma_mean": 3.4042126635837957,
+      "paloma_std": 0.0005759030553082609,
+      "max_block_rel_norm_drift": 0.005692110366742252,
+      "paired_delta_vs_muont_0p016_mnat": {
+        "mean": 1.3505835175759984,
+        "std": 2.151744242128256,
+        "seeds": [
+          3.661427113904825,
+          0.9857340997232455,
+          -0.5954106609000753
+        ]
+      },
+      "paired_delta_vs_muonh_opt_mnat": {
+        "mean": -9.572389511481946,
+        "std": 0.4473529533630849,
+        "seeds": [
+          -9.099974969094315,
+          -9.989547162581935,
+          -9.627646402769585
+        ]
+      },
+      "paired_delta_vs_muonth_opt_mnat": {
+        "mean": 0.7109546617432017,
+        "std": 0.6776569790704398,
+        "seeds": [
+          1.4371557334400542,
+          0.09547943642962409,
+          0.6002288153599267
+        ]
+      }
+    },
     "muonth_marin@0p016": {
       "arm_key": "muonth_marin",
       "label": "MuonTH (Marin exact: 1pct-noclip + AdamH + quintic5)",
@@ -1091,9 +1289,9 @@
       "c4_mean": 3.4627795452588486,
       "c4_std": 0.0013415065159416103,
       "late11_sel_mean": 3.3400554267718103,
-      "paloma_mean": null,
-      "paloma_std": null,
-      "max_block_rel_norm_drift": null,
+      "paloma_mean": 3.4094449061733627,
+      "paloma_std": 0.0031153145437548303,
+      "max_block_rel_norm_drift": 0.005689295741540303,
       "paired_delta_vs_muont_0p016_mnat": {
         "mean": 9.991931330424345,
         "std": 2.0205913551870283,
